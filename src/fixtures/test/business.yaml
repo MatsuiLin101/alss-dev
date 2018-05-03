@@ -1,0 +1,12 @@
+- model: surveys18.Business
+  pk: 1
+  fields:
+    survey: 1
+    farm_related_businesses: [1, 2]
+
+- model: surveys18.Business
+  pk: 2
+  fields:
+    survey: 2
+    farm_related_businesses: [3]
+

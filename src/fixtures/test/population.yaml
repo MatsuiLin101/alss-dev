@@ -1,0 +1,47 @@
+- model: surveys18.Population
+  pk: 1
+  fields:
+    survey: 1
+    relationship: 1
+    gender: 1
+    birth_year: 47
+    education_level: 1
+    farmer_work_day: 3
+    life_style: 4
+    other_farm_work: 2
+
+- model: surveys18.Population
+  pk: 2
+  fields:
+    survey: 1
+    relationship: 2
+    gender: 2
+    birth_year: 52
+    education_level: 1
+    farmer_work_day: 1
+    life_style: 6
+    other_farm_work: 2
+
+- model: surveys18.Population
+  pk: 3
+  fields:
+    survey: 1
+    relationship: 3
+    gender: 2
+    birth_year: 78
+    education_level: 8
+    farmer_work_day: 1
+    life_style: 8
+    other_farm_work: 3
+
+- model: surveys18.Population
+  pk: 4
+  fields:
+    survey: 2
+    relationship: 1
+    gender: 2
+    birth_year: 58
+    education_level: 7
+    farmer_work_day: 1
+    life_style: 5
+    other_farm_work: 2

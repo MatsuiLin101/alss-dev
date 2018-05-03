@@ -1,0 +1,17 @@
+- model: surveys18.Phone
+  pk: 1
+  fields:
+    survey: 1
+    phone: 123455677
+
+- model: surveys18.Phone
+  pk: 2
+  fields:
+    survey: 1
+    phone: 12222
+
+- model: surveys18.Phone
+  pk: 3
+  fields:
+    survey: 2
+    phone: 1111111

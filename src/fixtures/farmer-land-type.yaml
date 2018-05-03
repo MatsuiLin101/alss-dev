@@ -1,0 +1,35 @@
+- model: surveys18.FarmerLandType
+  pk: 1
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 自有
+
+- model: surveys18.FarmerLandType
+  pk: 2
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 租(借)或占用
+
+- model: surveys18.FarmerLandType
+  pk: 3
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 接受委託經營
+
+- model: surveys18.FarmerLandType
+  pk: 4
+  fields:
+    land_type_name: 人工餔面
+    production_type_name: 自有
+
+- model: surveys18.FarmerLandType
+  pk: 5
+  fields:
+    land_type_name: 人工餔面
+    production_type_name: 租(借)或占用
+
+- model: surveys18.FarmerLandType
+  pk: 6
+  fields:
+    land_type_name: 無
+    production_type_name:

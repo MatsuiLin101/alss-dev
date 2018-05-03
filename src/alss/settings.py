@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # local
+    'surveys18',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -119,3 +122,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'fixtures/test'),
+]
