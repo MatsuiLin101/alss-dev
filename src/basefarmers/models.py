@@ -195,6 +195,79 @@ class Chart(Model):
 '''
 
 
+class BaseFarmer(Model):
+    """
+    read_only: Keep original data(read_only=True). Modify data(read_only=False).
+    """
+    farmer_id = CharField(max_length=12, verbose_name=_('Farmer Id'))
+    farmer_name = CharField(max_length=10, verbose_name=_('Farmer Name'))
+    total_pages = IntegerField( verbose_name=_('Total Pages'))
+    page = IntegerField( verbose_name=_('Page'))
+    ori_class = IntegerField(null=True, blank=True, verbose_name=_('Original Class'))
+    address = CharField(max_length=100, null=True, blank=True, verbose_name=_('Address'))
+    investigator_name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Investigator Name'))
+    investigationp_period = IntegerField(null=True, blank=True, verbose_name=_('Investigation Period'))
+    investigation_date = DateField(null=True, blank=True, verbose_name=_('Investigation Date'))
+    investigation_distance_km = IntegerField(null=True, blank=True, verbose_name=_('Investigation Distance KM'))
+    note = TextField(null=True, blank=True, verbose_name=_('Note'))
+    read_only = BooleanField(default=True, verbose_name=_('Read Only'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    annual_income = ManyToManyField('basefarmers.AnnualIncome', blank=True, verbose_name=_('Annual Income'))
+    #address_match = ForeignKey('basefarmers.AddressMatch', related_name='basefarmer', null=True, blank=True, verbose_name=_('Is Address Match'))
+    lack = ManyToManyField('basefarmers.Lack', blank=True, verbose_name=_('Lack'))
+
+    class Meta:
+        verbose_name = _('BaseFarmer')
+        verbose_name_plural = _('BaseFarmer')
+
+    def __str__(self):
+        return self.farmer_id
+
+    def __unicode__(self):
+        return self.farmer_id
+
+
+class Lack(Model):
+    #enough_worker = BooleanField(default=False, verbose_name=_('Enough Worker'))
+    #uncertain_worker = BooleanField(default=False, verbose_name=_('Uncertain Worker'))
+    #add_value_others = BooleanField(default=False, verbose_name=_('Add Value Others'))
+    #is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
+    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    #is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
+
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Lack')
+        verbose_name_plural = _('Lack')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class AddressMatch(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='basefarmer', verbose_name=_('BaseFarmer'))
+    match = BooleanField(default=False, verbose_name=_('Address Match'))
+    different = BooleanField(default=False, verbose_name=_('Address Different'))
+    address = CharField(max_length=100, null=True, blank=True, verbose_name=_('Address'))
+
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AddressMatch')
+        verbose_name_plural = _('AddressMatch')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
 class IncomeRangeCode(Model):
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     minimum = IntegerField(verbose_name=_('Minimum Income'))
@@ -228,6 +301,7 @@ class MarketType(Model):
 
 
 class AnnualIncome(Model):
+    #basefarmer = ForeignKey('basefarmers.BaseFarmer', null=True, blank=True, verbose_name=_('BaseFarmer'))
     market_type = ForeignKey('basefarmers.MarketType', verbose_name=_('Market Type'))
     income_range_code = ForeignKey('basefarmers.IncomeRangeCode', verbose_name=_('Income Range Code'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
@@ -243,31 +317,3 @@ class AnnualIncome(Model):
         return '%s(%s)' % (self.market_type, self.income_range_code)
 
 
-class BaseFarmer(Model):
-    farmer_id = CharField(max_length=12, verbose_name=_('Farmer Id'))
-    farmer_name = CharField(max_length=10, verbose_name=_('Farmer Name'))
-    total_pages = IntegerField(verbose_name=_('Total Pages'))
-    page = IntegerField(verbose_name=_('Page'))
-    #is_address_match = CharField(max_length=1, null=True, blank=True, verbose_name=_('Is Address Match'))
-    #address = CharField(max_length=100, null=True, blank=True, verbose_name=_('Address'))
-    ori_class = IntegerField(null=True, blank=True, verbose_name=_('Original Class'))
-    #is_lack = CharField(max_length=1, null=True, blank=True, verbose_name=_('Is Lack'))
-    investigator_name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Investigator Name'))
-    investigation_time = IntegerField(null=True, blank=True, verbose_name=_('Investigation Time'))
-    investigation_date = DateField(null=True, blank=True, verbose_name=_('Investigation Date'))
-    investigation_distance_km = IntegerField(null=True, blank=True, verbose_name=_('Investigation Distance KM'))
-    note = TextField(null=True, blank=True, verbose_name=_('Note'))
-
-    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-
-    annual_income = ManyToManyField('basefarmers.AnnualIncome', verbose_name=_('Annual Income'))
-
-    class Meta:
-        verbose_name = _('AnnualIncome')
-        verbose_name_plural = _('AnnualIncomes')
-
-    def __str__(self):
-        return '%s(%s)' % (self.market_type, self.income_range_code)
-
-    def __unicode__(self):
-        return '%s(%s)' % (self.market_type, self.income_range_code)
