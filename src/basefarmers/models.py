@@ -53,71 +53,153 @@ class BaseFarmer(Model):
         return self.farmer_id
 
 
-# class Loss(Model):
-#     code = IntegerField(verbose_name=_('Loss Code'))
-#     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Loss Name'))
-#     type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Loss Type'))
-#     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-#
-#     class Meta:
-#         verbose_name = _('Loss')
-#         verbose_name_plural = _('Loss')
-#
-#     def __str__(self):
-#         return str(self.name)
-#
-#     def __unicode__(self):
-#         return str(self.name)
-#
-#
-# class Unit(Model):
-#     code = IntegerField(verbose_name=_('Unit Code'))
-#     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Unit Name'))
-#     type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Unit Type'))
-#     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-#
-#     class Meta:
-#         verbose_name = _('Unit')
-#         verbose_name_plural = _('Unit')
-#
-#     def __str__(self):
-#         return str(self.name)
-#
-#     def __unicode__(self):
-#         return str(self.name)
-#
-#
-# class ProductCode(Model):
-#     code = IntegerField(verbose_name=_('Product Code'))
-#     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Product Code Name'))
-#     type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Product Type'))
-#     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-#
-#     class Meta:
-#         verbose_name = _('ProductCode')
-#         verbose_name_plural = _('ProductCode')
-#
-#     def __str__(self):
-#         return str(self.name)
-#
-#     def __unicode__(self):
-#         return str(self.name)
-#
-#
-# class Contract(Model):
-#     code = IntegerField(verbose_name=_('Contract Code'))
-#     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Contract Name'))
-#     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-#
-#     class Meta:
-#         verbose_name = _('AnimalUnit')
-#         verbose_name_plural = _('AnimalUnit')
-#
-#     def __str__(self):
-#         return str(self.name)
-#
-#     def __unicode__(self):
-#         return str(self.name)
+class PopulationNumber(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='population_number', verbose_name=_('BaseFarmer'))
+    under_15_men = IntegerField(null=True, blank=True, verbose_name=_('Under 15 Men'))
+    under_15_women = IntegerField(null=True, blank=True, verbose_name=_('Under 15 Women'))
+    over_15_men = IntegerField(null=True, blank=True, verbose_name=_('Over 15 Men'))
+    over_15_women = IntegerField(null=True, blank=True, verbose_name=_('Over 15 Women'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('PopulationNumber')
+        verbose_name_plural = _('PopulationNumber')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class CropMarketing(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='crop_marketing', blank=True, verbose_name=_('BaseFarmer'))
+    product_code = ForeignKey('basefarmers.ProductCode', related_name='crop_marketing_product_code', null=True, blank=True, verbose_name=_('Product Code'))
+    loss = ForeignKey('basefarmers.Loss', related_name='crop_marketing_loss', null=True, blank=True, verbose_name=_('Loss'))
+    unit = ForeignKey('basefarmers.Unit', related_name='crop_marketing_unit', null=True, blank=True, verbose_name=_('Unit'))
+    land_number = IntegerField(null=True, blank=True, verbose_name=_('Land Number'))
+    land_area = IntegerField(null=True, blank=True, verbose_name=_('Land Area'))
+    plant_times = IntegerField(null=True, blank=True, verbose_name=_('Plant Times'))
+    total_yield = IntegerField(null=True, blank=True, verbose_name=_('Total Yield'))
+    unit_price = IntegerField(null=True, blank=True, verbose_name=_('Unit Price'))
+    is_facility = ForeignKey('basefarmers.IsFacility', related_name='is_facility', null=True, blank=True, verbose_name=_('Is Facility'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+
+    class Meta:
+        verbose_name = _('CropMarketing')
+        verbose_name_plural = _('CropMarketing')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class AnimalMarketing(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='animal_marketing', blank=True, verbose_name=_('BaseFarmer'))
+    product_code = ForeignKey('basefarmers.ProductCode', related_name='animal_marketing_product_code', null=True, blank=True, verbose_name=_('Product Code'))
+    loss = ForeignKey('basefarmers.Loss', related_name='animal_marketing_loss', null=True, blank=True, verbose_name=_('Loss'))
+    unit = ForeignKey('basefarmers.Unit', related_name='animal_marketing_unit', null=True, blank=True, verbose_name=_('Unit'))
+    contract = ForeignKey('basefarmers.Contract', related_name='contract', null=True, blank=True, verbose_name=_('Contract'))
+    raising_number = IntegerField(null=True, blank=True, verbose_name=_('Raising Number'))
+    total_yield = IntegerField(null=True, blank=True, verbose_name=_('Total Yield'))
+    unit_price = IntegerField(null=True, blank=True, verbose_name=_('Unit Price'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AnimalMarketing')
+        verbose_name_plural = _('AnimalMarketing')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class Loss(Model):
+    code = IntegerField(verbose_name=_('Loss Code'))
+    name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Loss Name'))
+    type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Loss Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Loss')
+        verbose_name_plural = _('Loss')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class IsFacility(Model):
+    code = IntegerField(verbose_name=_('Facility Code'))
+    name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Facility Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('IsFacility')
+        verbose_name_plural = _('IsFacility')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Unit(Model):
+    code = IntegerField(verbose_name=_('Unit Code'))
+    name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Unit Name'))
+    type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Unit Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Unit')
+        verbose_name_plural = _('Unit')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class ProductCode(Model):
+    code = IntegerField(verbose_name=_('Product Code'))
+    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Product Code Name'))
+    type = CharField(max_length=20, null=True, blank=True, verbose_name=_('Product Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ProductCode')
+        verbose_name_plural = _('ProductCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Contract(Model):
+    code = IntegerField(verbose_name=_('Contract Code'))
+    name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Contract Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AnimalUnit')
+        verbose_name_plural = _('AnimalUnit')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
 
 
 class ManagementType(Model):

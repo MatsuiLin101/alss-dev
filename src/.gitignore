@@ -1,8 +1,10 @@
-# local
-dashboard/settings/local.py
-*.sqlite
-*.DS_Store
-web.config
+#local
+src/dashboard/settings
+src/*.sqlite3
+#server
+src/web.config
+#MAC
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -109,9 +111,3 @@ ENV/
 # pycharm
 .idea
 *.pyc
-
-# celery
-*.pid
-*.bak
-*.dat
-*.dir

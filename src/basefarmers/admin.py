@@ -14,6 +14,14 @@ from .models import (
     Business,
     Management,
     ManagementType,
+    Loss,
+    Unit,
+    ProductCode,
+    Contract,
+    CropMarketing,
+    AnimalMarketing,
+    IsFacility,
+    PopulationNumber
 )
 
 admin.site.register(MarketType)
@@ -30,3 +38,12 @@ admin.site.register(FarmRelatedBusiness)
 admin.site.register(Business)
 admin.site.register(ManagementType)
 admin.site.register(Management)
+admin.site.register(Loss)
+admin.site.register(Unit)
+admin.site.register(ProductCode)
+admin.site.register(Contract)
+admin.site.register(CropMarketing)
+admin.site.register(AnimalMarketing)
+admin.site.register(IsFacility)
+admin.site.register(PopulationNumber)
+
