@@ -54,7 +54,7 @@ class BaseFarmer(Model):
 
 
 class PopulationNumber(Model):
-    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='population_number', verbose_name=_('BaseFarmer'))
+    basefarmer = OneToOneField('basefarmers.BaseFarmer', related_name='population_number', verbose_name=_('BaseFarmer'))
     under_15_men = IntegerField(null=True, blank=True, verbose_name=_('Under 15 Men'))
     under_15_women = IntegerField(null=True, blank=True, verbose_name=_('Under 15 Women'))
     over_15_men = IntegerField(null=True, blank=True, verbose_name=_('Over 15 Men'))
