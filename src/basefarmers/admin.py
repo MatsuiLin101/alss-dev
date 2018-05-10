@@ -21,7 +21,20 @@ from .models import (
     CropMarketing,
     AnimalMarketing,
     IsFacility,
-    PopulationNumber
+    PopulationNumber,
+    Population,
+    EducationLevelCode,
+    FarmerWorkDay,
+    LifeStyleCode,
+    OtherFarmWorkCode,
+    Subsidy,
+    ApplicationContent,
+    AgeScope,
+    WorkTypeCode,
+    LongTermForHire,
+    ShortTermForHire,
+    WorkType
+
 )
 
 admin.site.register(MarketType)
@@ -46,4 +59,18 @@ admin.site.register(CropMarketing)
 admin.site.register(AnimalMarketing)
 admin.site.register(IsFacility)
 admin.site.register(PopulationNumber)
+admin.site.register(Population)
+admin.site.register(EducationLevelCode)
+admin.site.register(FarmerWorkDay)
+admin.site.register(LifeStyleCode)
+admin.site.register(OtherFarmWorkCode)
+admin.site.register(Subsidy)
+admin.site.register(ApplicationContent)
+admin.site.register(AgeScope)
+admin.site.register(WorkTypeCode)
+admin.site.register(LongTermForHire)
+admin.site.register(ShortTermForHire)
+admin.site.register(WorkType)
+
+
 

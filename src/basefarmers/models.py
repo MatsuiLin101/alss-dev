@@ -53,6 +53,232 @@ class BaseFarmer(Model):
         return self.farmer_id
 
 
+class WorkType(Model):
+    shortterm_for_hire = ForeignKey('basefarmers.ShortTermForHire', related_name='shortterm_hire_work_type', blank=True,
+                            verbose_name=_('Shortterm For Hire'))
+    work_type_code = OneToOneField('basefarmers.WorkTypeCode', related_name='shortterm_hire_work_type_code', blank=True,
+                                       verbose_name=_('Work Type Code'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('WorkType')
+        verbose_name_plural = _('WorkType')
+
+    def __str__(self):
+        return str(self.shortterm_for_hire)
+
+    def __unicode__(self):
+        return str(self.shortterm_for_hire)
+
+
+class AgeScope(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Age Scope Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AgeScope')
+        verbose_name_plural = _('AgeScope')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class WorkTypeCode(Model):
+    code = IntegerField(null=True, blank=True, verbose_name=_('Work Type Code'))
+    name = CharField(max_length=30, null=True, blank=True, verbose_name=_('WorkType Code Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('WorkTypeCode')
+        verbose_name_plural = _('WorkTypeCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class ShortTermForHire(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='shortterm_hire', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    work_unit_day = IntegerField(null=True, blank=True, verbose_name=_('Work Unit Day'))
+    month = IntegerField(null=True, blank=True, verbose_name=_('month'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ShortTermForHire')
+        verbose_name_plural = _('ShortTermForHire')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class LongTermForHire(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='longterm_hire', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    work_unit_day = IntegerField(null=True, blank=True, verbose_name=_('Work Unit Day'))
+    work_type_code = OneToOneField('basefarmers.WorkTypeCode', related_name='work_type_code_longterm_hire', verbose_name=_('Work Type Code'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LongTermForHire')
+        verbose_name_plural = _('LongTermForHire')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class Subsidy(Model):
+    basefarmer = OneToOneField('basefarmers.BaseFarmer', related_name='subsidy', verbose_name=_('BaseFarmer'))
+    is_subsidy = CharField(max_length=5, null=True, blank=True, verbose_name=_('Is Subsidy'))
+    number_of_people = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
+    application_time = DateField(null=True, blank=True, verbose_name=_('Application Time'))
+    remark = CharField(max_length=100, null=True, blank=True, verbose_name=_('Remark'))
+    application_content = ForeignKey('basefarmers.ApplicationContent', related_name='application_content', null=True,
+                                   blank=True, verbose_name=_('ApplicationContent'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Subsidy')
+        verbose_name_plural = _('Subsidy')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class ApplicationContent(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Application Content Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ApplicationContent')
+        verbose_name_plural = _('ApplicationContent')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Population(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='population', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    relationship_code = ForeignKey('basefarmers.RelationshipCode', related_name='relationship_code', null=True,
+                                   blank=True, verbose_name=_('Relationship Code'))
+    sex = CharField(max_length=5, null=True, blank=True, verbose_name=_('Sex'))
+    birth_year = IntegerField(null=True, blank=True, verbose_name=_('Birth Year'))
+    education_level_code = ForeignKey('basefarmers.EducationLevelCode', related_name='education_level_code', null=True,
+                                   blank=True, verbose_name=_('Education Level Code'))
+    farmer_work_day = ForeignKey('basefarmers.FarmerWorkDay', related_name='farmer_work_day', null=True,
+                                   blank=True, verbose_name=_('Farmer Work Day'))
+    life_style_code = ForeignKey('basefarmers.LifeStyleCode', related_name='life_style_code', null=True,
+                                 blank=True, verbose_name=_('Life Style Code'))
+    other_farm_work_code = ForeignKey('basefarmers.OtherFarmWorkCode', related_name='other_farm_work_code', null=True,
+                                 blank=True, verbose_name=_('Other Farm Work Code'))
+
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Population')
+        verbose_name_plural = _('Population')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class FarmerWorkDay(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Farmer Work Day Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('FarmerWorkDay')
+        verbose_name_plural = _('FarmerWorkDay')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class OtherFarmWorkCode(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Other Farm Work Code Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('OtherFarmWorkCode')
+        verbose_name_plural = _('OtherFarmWorkCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class RelationshipCode(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Relationship Code Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('RelationshipCode')
+        verbose_name_plural = _('RelationshipCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class EducationLevelCode(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Education Level Name'))
+    age = IntegerField(null=True, blank=True, verbose_name=_('Age'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('EducationLevelCode')
+        verbose_name_plural = _('EducationLevelCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class LifeStyleCode(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Life Style Code Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LifeStyleCode')
+        verbose_name_plural = _('LifeStyleCode')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
 class PopulationNumber(Model):
     basefarmer = OneToOneField('basefarmers.BaseFarmer', related_name='population_number', verbose_name=_('BaseFarmer'))
     under_15_men = IntegerField(null=True, blank=True, verbose_name=_('Under 15 Men'))
