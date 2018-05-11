@@ -53,10 +53,113 @@ class BaseFarmer(Model):
         return self.farmer_id
 
 
-class WorkType(Model):
-    shortterm_for_hire = ForeignKey('basefarmers.ShortTermForHire', related_name='shortterm_hire_work_type', blank=True,
+class Months(Model):
+    shortterm_for_lack = ForeignKey('basefarmers.ShortTermForLack', related_name='shortterm_for_lack_months', null=True, blank=True,
+                            verbose_name=_('Shortterm For Lack'))
+    longterm_for_lack = ForeignKey('basefarmers.LongTermForLack', related_name='longterm_for_lack_months', null=True,
+                                   blank=True,
+                                   verbose_name=_('Longterm For Lack'))
+    longterm_for_hire = ForeignKey('basefarmers.LongTermForHire', related_name='longterm_for_hire_months', null=True,
+                                    blank=True,
+                                    verbose_name=_('LongTerm For Hire'))
+    month = IntegerField(null=True, blank=True, verbose_name=_('Month'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Months')
+        verbose_name_plural = _('Months')
+
+    def __str__(self):
+        return '%s/%s/%s' % (self.shortterm_for_lack,self.longterm_for_lack, self.longterm_for_hire)
+
+    def __unicode__(self):
+        return '%s/%s/%s' % (self.shortterm_for_lack,self.longterm_for_lack, self.longterm_for_hire)
+
+
+class ShortTermForLack(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='shortterm_for_lack', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    product_code = ForeignKey('basefarmers.ProductCode', related_name='shortterm_for_lack_product_code', null=True,
+                              blank=True, verbose_name=_('Product Code'))
+    work_type_code = ManyToManyField('basefarmers.WorkTypeCode', related_name='shortterm_for_lack_work_type_code', blank=True,
+                                     verbose_name=_('Work Type Code'))
+    number_of_people = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ShortTermForLack')
+        verbose_name_plural = _('ShortTermForLack')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class LongTermForLack(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='longterm_for_lack', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    work_type_code = ForeignKey('basefarmers.WorkTypeCode', related_name='longterm_for_lack_work_type_code', blank=True,
+                                     verbose_name=_('Work Type Code'))
+    number_of_people = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LongTermForLack')
+        verbose_name_plural = _('LongTermForLack')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class NoSalaryForHire(Model):
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='no_salary_for_hire', blank=True,
+                            verbose_name=_('BaseFarmer'))
+    month = IntegerField(null=True, blank=True, verbose_name=_('No Salary For Hire Month'))
+    number_of_people = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('NoSalaryForHire')
+        verbose_name_plural = _('NoSalaryForHire')
+
+    def __str__(self):
+        return str(self.basefarmer)
+
+    def __unicode__(self):
+        return str(self.basefarmer)
+
+
+class NumberWorkers(Model):
+    shortterm_for_hire = OneToOneField('basefarmers.ShortTermForHire', related_name='shortterm_for_hire_number_workers', null=True, blank=True,
                             verbose_name=_('Shortterm For Hire'))
-    work_type_code = OneToOneField('basefarmers.WorkTypeCode', related_name='shortterm_hire_work_type_code', blank=True,
+    longterm_for_hire = OneToOneField('basefarmers.LongTermForHire', related_name='longterm_for_hire_number_workers', null=True,
+                                    blank=True,
+                                    verbose_name=_('LongTerm For Hire'))
+    AgeScope = ForeignKey('basefarmers.AgeScope', related_name='age_scope_number_workers',null=True, blank=True,
+                                       verbose_name=_('Age Scope'))
+    value = IntegerField(null=True, blank=True, verbose_name=_('Value'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('NumberWorkers')
+        verbose_name_plural = _('NumberWorkers')
+
+    def __str__(self):
+        return '%s(%s)' % (self.shortterm_for_hire, self.longterm_for_hire)
+
+    def __unicode__(self):
+        return '%s(%s)' % (self.shortterm_for_hire, self.longterm_for_hire)
+
+
+class WorkType(Model):
+    shortterm_for_hire = ForeignKey('basefarmers.ShortTermForHire', related_name='shortterm_for_hire_work_type', blank=True,
+                            verbose_name=_('Shortterm For Hire'))
+    work_type_code = ManyToManyField('basefarmers.WorkTypeCode', related_name='work_type_code', blank=True,
                                        verbose_name=_('Work Type Code'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
@@ -103,7 +206,7 @@ class WorkTypeCode(Model):
 
 
 class ShortTermForHire(Model):
-    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='shortterm_hire', blank=True,
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='shortterm_for_hire', blank=True,
                             verbose_name=_('BaseFarmer'))
     work_unit_day = IntegerField(null=True, blank=True, verbose_name=_('Work Unit Day'))
     month = IntegerField(null=True, blank=True, verbose_name=_('month'))
@@ -121,7 +224,7 @@ class ShortTermForHire(Model):
 
 
 class LongTermForHire(Model):
-    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='longterm_hire', blank=True,
+    basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='longterm_for_hire', blank=True,
                             verbose_name=_('BaseFarmer'))
     work_unit_day = IntegerField(null=True, blank=True, verbose_name=_('Work Unit Day'))
     work_type_code = OneToOneField('basefarmers.WorkTypeCode', related_name='work_type_code_longterm_hire', verbose_name=_('Work Type Code'))

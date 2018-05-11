@@ -33,7 +33,12 @@ from .models import (
     WorkTypeCode,
     LongTermForHire,
     ShortTermForHire,
-    WorkType
+    WorkType,
+    NumberWorkers,
+    NoSalaryForHire,
+    ShortTermForLack,
+    LongTermForLack,
+    Months
 
 )
 
@@ -71,6 +76,13 @@ admin.site.register(WorkTypeCode)
 admin.site.register(LongTermForHire)
 admin.site.register(ShortTermForHire)
 admin.site.register(WorkType)
+admin.site.register(NumberWorkers)
+admin.site.register(NoSalaryForHire)
+admin.site.register(ShortTermForLack)
+admin.site.register(LongTermForLack)
+admin.site.register(Months)
+
+
 
 
 
