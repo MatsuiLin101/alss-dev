@@ -9,7 +9,6 @@ from .models import (
     Phone,
     FarmerLandArea,
     FarmerLandType,
-    FarmerProductionType,
     FarmRelatedBusiness,
     Business,
     Management,
@@ -51,7 +50,6 @@ admin.site.register(Lack)
 admin.site.register(Phone)
 admin.site.register(FarmerLandArea)
 admin.site.register(FarmerLandType)
-admin.site.register(FarmerProductionType)
 admin.site.register(FarmRelatedBusiness)
 admin.site.register(Business)
 admin.site.register(ManagementType)

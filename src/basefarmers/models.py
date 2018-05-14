@@ -595,23 +595,9 @@ class Business(Model):
         return str(self.basefarmer)
 
 
-class FarmerProductionType(Model):
-    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Production Type Name'))
-    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
-
-    class Meta:
-        verbose_name = _('FarmerProductionType')
-        verbose_name_plural = _('FarmerProductionType')
-
-    def __str__(self):
-        return str(self.name)
-
-    def __unicode__(self):
-        return str(self.name)
-
-
 class FarmerLandType(Model):
-    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Land Type Name'))
+    land_type_name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Land Type Name'))
+    production_type_name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Production Type Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
     class Meta:
@@ -619,16 +605,15 @@ class FarmerLandType(Model):
         verbose_name_plural = _('FarmerLandType')
 
     def __str__(self):
-        return str(self.name)
+        return '%s(%s)' % (self.land_type_name, self.production_type_name)
 
     def __unicode__(self):
-        return str(self.name)
+        return '%s(%s)' % (self.land_type_name, self.production_type_name)
 
 
 class FarmerLandArea(Model):
     basefarmer = ForeignKey('basefarmers.BaseFarmer', related_name='farmer_land_areas', blank=True, verbose_name=_('BaseFarmer'))
-    farmer_production_type = ForeignKey('basefarmers.FarmerProductionType', related_name='farmer_production_type', verbose_name=_('Farmer Production Type'))
-    farmer_land_type = ForeignKey('basefarmers.FarmerLandType', related_name='farmer_land_type', verbose_name=_('Farmer Land Type'))
+    farmer_land_type = ForeignKey('basefarmers.FarmerLandType', related_name='farmer_land_type', null=True, blank=True, verbose_name=_('Farmer Land Type'))
     value = IntegerField(null=True, blank=True, verbose_name=_('Area Value'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
