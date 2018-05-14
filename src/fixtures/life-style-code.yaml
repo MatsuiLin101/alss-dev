@@ -1,0 +1,39 @@
+- model: basefarmers.LifeStyleCode
+  pk: 181
+  fields:
+    name: 自營農牧業工作
+
+- model: basefarmers.LifeStyleCode
+  pk: 182
+  fields:
+    name: 受僱農牧業工作
+
+- model: basefarmers.LifeStyleCode
+  pk: 183
+  fields:
+    name: 受託提供農事及畜牧服務
+
+- model: basefarmers.LifeStyleCode
+  pk: 184
+  fields:
+    name: 自營農牧業外工作
+
+- model: basefarmers.LifeStyleCode
+  pk: 185
+  fields:
+    name: 受僱農牧業外工作
+
+- model: basefarmers.LifeStyleCode
+  pk: 186
+  fields:
+    name: 料理家務、育兒
+
+- model: basefarmers.LifeStyleCode
+  pk: 187
+  fields:
+    name: 學生
+
+- model: basefarmers.LifeStyleCode
+  pk: 188
+  fields:
+    name: 其他
