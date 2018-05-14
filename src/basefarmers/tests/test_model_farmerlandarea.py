@@ -51,10 +51,7 @@ class ModelTestCase(TestCase):
         self.assertEquals(len(landarea_list), 0)
         self.assertEquals(farmer_landtype_list_before_size, farmer_landtype_list_after_size)
 
-    def test_relatedbusiness_delete(self):
+    def test_farmerLandType_delete(self):
         FarmerLandType.objects.filter(id=24).delete()
         landtype_landarea_list = FarmerLandArea.objects.all().filter(farmer_land_type__id=24)
         self.assertEquals(landtype_landarea_list.count(), 0)
-
-
-

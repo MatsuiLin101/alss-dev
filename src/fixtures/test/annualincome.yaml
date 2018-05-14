@@ -1,0 +1,49 @@
+- model: basefarmers.IncomeRangeCode
+  pk: 61
+  fields:
+    name: 未滿20
+    minimum: 0
+    maximum: 20
+
+- model: basefarmers.IncomeRangeCode
+  pk: 62
+  fields:
+    name: 150~未滿175
+    minimum: 150
+    maximum: 175
+
+- model: basefarmers.MarketType
+  pk: 63
+  fields:
+    name: 農作物及其製品
+
+- model: basefarmers.MarketType
+  pk: 64
+  fields:
+    name: 受託提供農事及畜牧服務
+
+- model: basefarmers.AnnualIncome
+  pk: 65
+  fields:
+    basefarmer: 1
+    market_type: 63
+    income_range_code: 61
+
+- model: basefarmers.AnnualIncome
+  pk: 66
+  fields:
+    basefarmer: 1
+    market_type: 64
+    income_range_code: 62
+
+- model: basefarmers.IncomeRangeCode
+  pk: 67
+  fields:
+    name: 500以上
+    minimum: 500
+    maximum: 99999
+
+- model: basefarmers.MarketType
+  pk: 68
+  fields:
+    name: 畜禽產品及其製品
