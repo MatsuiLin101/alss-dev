@@ -40,9 +40,7 @@ class BaseFarmer(Model):
     read_only = BooleanField(default=True, verbose_name=_('Read Only'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
-    #annual_income = ManyToManyField('basefarmers.AnnualIncome', blank=True, verbose_name=_('Annual Income'))
-    #address_match = ForeignKey('basefarmers.AddressMatch', related_name='basefarmer', null=True, blank=True, verbose_name=_('Is Address Match'))
-    lack = ManyToManyField('basefarmers.Lack', blank=True, verbose_name=_('Lack'))
+    lack = ManyToManyField('basefarmers.Lack', blank=True, null=True, verbose_name=_('Lack'))
 
     class Meta:
         verbose_name = _('BaseFarmer')
@@ -738,10 +736,8 @@ class AnnualIncome(Model):
 
     def __str__(self):
         return str(self.basefarmer)
-        #return '%s(%s)' % (self.market_type, self.income_range_code)
 
     def __unicode__(self):
         return str(self.basefarmer)
-        #return '%s(%s)' % (self.market_type, self.income_range_code)
 
 
