@@ -28,11 +28,11 @@ def test_loaddata(self):
 
 def test_create_population(self):
     basefarmer_id = BaseFarmer.objects.get(id=3)
-    relationship_code = RelationshipCode.objects.get(id=201)
-    education_level_code = EducationLevelCode.objects.get(id=163)
-    farmer_work_day = FarmerWorkDay.objects.get(id=242)
-    life_style_code = LifeStyleCode.objects.get(id=184)
-    other_farm_work_code = OtherFarmWorkCode.objects.get(id=222)
+    relationship_code = RelationshipCode.objects.get(id=701)
+    education_level_code = EducationLevelCode.objects.get(id=663)
+    farmer_work_day = FarmerWorkDay.objects.get(id=742)
+    life_style_code = LifeStyleCode.objects.get(id=684)
+    other_farm_work_code = OtherFarmWorkCode.objects.get(id=722)
 
     population_list_before_size = len(Population.objects.all())
 
