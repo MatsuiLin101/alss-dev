@@ -1,0 +1,105 @@
+- model: basefarmers.Unit
+  pk: 581
+  fields:
+    code: 0
+    name: 平方公尺
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 582
+  fields:
+    code: 1
+    name: 公斤
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 583
+  fields:
+    code: 2
+    name: 箱
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 584
+  fields:
+    code: 3
+    name: 打
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 585
+  fields:
+    code: 4
+    name: 盆
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 586
+  fields:
+    code: 5
+    name: 支
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 587
+  fields:
+    code: 6
+    name: 包
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 588
+  fields:
+    code: 7
+    name: 把
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 589
+  fields:
+    code: 8
+    name: 瓶
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 590
+  fields:
+    code: 9
+    name: 株
+    type: crop
+
+- model: basefarmers.Unit
+  pk: 591
+  fields:
+    code: 1
+    name: 公斤
+    type: animal
+
+- model: basefarmers.Unit
+  pk: 592
+  fields:
+    code: 2
+    name: 箱
+    type: animal
+
+- model: basefarmers.Unit
+  pk: 593
+  fields:
+    code: 3
+    name: 頭
+    type: animal
+
+- model: basefarmers.Unit
+  pk: 594
+  fields:
+    code: 4
+    name: 隻
+    type: animal
+
+- model: basefarmers.Unit
+  pk: 595
+  fields:
+    code: 5
+    name: 兩
+    type: animal
+

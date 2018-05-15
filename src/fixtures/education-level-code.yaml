@@ -1,59 +1,59 @@
 - model: basefarmers.EducationLevelCode
-  pk: 161
+  pk: 661
   fields:
     name: 不識字
     age: 0
 
 - model: basefarmers.EducationLevelCode
-  pk: 162
+  pk: 662
   fields:
     name: 自修
     age: 6
 
 - model: basefarmers.EducationLevelCode
-  pk: 163
+  pk: 663
   fields:
     name: 國小
     age: 6
 
 - model: basefarmers.EducationLevelCode
-  pk: 164
+  pk: 664
   fields:
     name: 國(初)中(初職)
     age: 12
 
 - model: basefarmers.EducationLevelCode
-  pk: 165
+  pk: 665
   fields:
     name: 高中
     age: 15
 
 - model: basefarmers.EducationLevelCode
-  pk: 166
+  pk: 666
   fields:
     name: 高職
     age: 15
 
 - model: basefarmers.EducationLevelCode
-  pk: 167
+  pk: 667
   fields:
     name: 專科
     age: 18
 
 - model: basefarmers.EducationLevelCode
-  pk: 168
+  pk: 668
   fields:
     name: 大學
     age: 18
 
 - model: basefarmers.EducationLevelCode
-  pk: 169
+  pk: 669
   fields:
     name: 碩士
     age: 22
 
 - model: basefarmers.EducationLevelCode
-  pk: 170
+  pk: 670
   fields:
     name: 博士
     age: 24

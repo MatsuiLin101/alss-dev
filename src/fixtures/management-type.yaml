@@ -1,0 +1,69 @@
+- model: basefarmers.ManagementType
+  pk: 541
+  fields:
+    name: 稻作
+
+- model: basefarmers.ManagementType
+  pk: 542
+  fields:
+    name: 雜糧
+
+- model: basefarmers.ManagementType
+  pk: 543
+  fields:
+    name: 其他特作
+
+- model: basefarmers.ManagementType
+  pk: 544
+  fields:
+    name: 茶
+
+- model: basefarmers.ManagementType
+  pk: 545
+  fields:
+    name: 蔬菜
+
+- model: basefarmers.ManagementType
+  pk: 546
+  fields:
+    name: 果樹
+
+- model: basefarmers.ManagementType
+  pk: 547
+  fields:
+    name: 食用菇蕈
+
+- model: basefarmers.ManagementType
+  pk: 548
+  fields:
+    name: 花卉
+
+- model: basefarmers.ManagementType
+  pk: 549
+  fields:
+    name: 種苗
+
+- model: basefarmers.ManagementType
+  pk: 550
+  fields:
+    name: 其他農作物
+
+- model: basefarmers.ManagementType
+  pk: 551
+  fields:
+    name: 乳牛
+
+- model: basefarmers.ManagementType
+  pk: 552
+  fields:
+    name: 豬
+
+- model: basefarmers.ManagementType
+  pk: 553
+  fields:
+    name: 雞
+
+- model: basefarmers.ManagementType
+  pk: 554
+  fields:
+    name: 其他畜禽

@@ -1,14 +1,14 @@
 - model: basefarmers.OtherFarmWorkCode
-  pk: 221
+  pk: 721
   fields:
     name: 無
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 222
+  pk: 722
   fields:
     name: 農牧業時間為多
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 223
+  pk: 723
   fields:
     name: 非農牧業時間為多

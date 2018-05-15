@@ -1,69 +1,69 @@
 - model: basefarmers.RelationshipCode
-  pk: 201
+  pk: 701
   fields:
     name: 經濟戶長
 
 - model: basefarmers.RelationshipCode
-  pk: 202
+  pk: 702
   fields:
     name: 配偶
 
 - model: basefarmers.RelationshipCode
-  pk: 203
+  pk: 703
   fields:
     name: 子女(含養子女)
 
 - model: basefarmers.RelationshipCode
-  pk: 204
+  pk: 704
   fields:
     name: 孫子女
 
 - model: basefarmers.RelationshipCode
-  pk: 205
+  pk: 705
   fields:
     name: 父母(含繼、養父母)
 
 - model: basefarmers.RelationshipCode
-  pk: 206
+  pk: 706
   fields:
     name: 祖父母(含內外祖父母)
 
 - model: basefarmers.RelationshipCode
-  pk: 207
+  pk: 707
   fields:
     name: 兄弟姐妹
 
 - model: basefarmers.RelationshipCode
-  pk: 208
+  pk: 708
   fields:
     name: 子女之配偶
 
 - model: basefarmers.RelationshipCode
-  pk: 209
+  pk: 709
   fields:
     name: 孫子女之配偶
 
 - model: basefarmers.RelationshipCode
-  pk: 210
+  pk: 710
   fields:
     name: 兄弟姐妹之配偶
 
 - model: basefarmers.RelationshipCode
-  pk: 211
+  pk: 711
   fields:
     name: 配偶之父母
 
 - model: basefarmers.RelationshipCode
-  pk: 212
+  pk: 712
   fields:
     name: 配偶之兄弟姐妹
 
 - model: basefarmers.RelationshipCode
-  pk: 213
+  pk: 713
   fields:
     name: 其他親屬
 
 - model: basefarmers.RelationshipCode
-  pk: 214
+  pk: 714
   fields:
     name: 其他

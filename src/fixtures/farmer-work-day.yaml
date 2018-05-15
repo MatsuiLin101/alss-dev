@@ -1,39 +1,39 @@
 - model: basefarmers.OtherFarmWorkCode
-  pk: 241
+  pk: 741
   fields:
     name: 無
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 242
+  pk: 742
   fields:
     name: 1～29日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 243
+  pk: 743
   fields:
     name: 30～59日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 244
+  pk: 744
   fields:
     name: 60～89日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 245
+  pk: 745
   fields:
     name: 90～149日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 246
+  pk: 746
   fields:
     name: 150～179日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 247
+  pk: 747
   fields:
     name: 180～249日
 
 - model: basefarmers.OtherFarmWorkCode
-  pk: 248
+  pk: 748
   fields:
     name: 250日以上

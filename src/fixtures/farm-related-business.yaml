@@ -1,0 +1,53 @@
+- model: basefarmers.FarmRelatedBusiness
+  pk: 521
+  fields:
+    name: 無兼營農業相關事業
+    has_business: N
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 522
+  fields:
+    name: 農產品加工
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 523
+  fields:
+    name: 休閒農業(含休閒農場、觀光農園、農村民宿)
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 524
+  fields:
+    name: 網路銷售
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 525
+  fields:
+    name: 餐廳
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 526
+  fields:
+    name: 農產品自行外銷出口
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 527
+  fields:
+    name: 販售門市
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 528
+  fields:
+    name: 攤販
+    has_business: Y
+
+- model: basefarmers.FarmRelatedBusiness
+  pk: 529
+  fields:
+    name:
+    has_business:

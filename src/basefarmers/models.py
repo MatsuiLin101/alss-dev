@@ -30,6 +30,8 @@ class BaseFarmer(Model):
     page = IntegerField( verbose_name=_('Page'))
     ori_class = IntegerField(null=True, blank=True, verbose_name=_('Original Class'))
     address = CharField(max_length=100, null=True, blank=True, verbose_name=_('Address'))
+    is_hire = ManyToManyField('basefarmers.IsHire', related_name='is_hire', null=True,
+                                    blank=True, verbose_name=_('Is Hire'))
     investigator_name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Investigator Name'))
     investigationp_period = IntegerField(null=True, blank=True, verbose_name=_('Investigation Period'))
     investigation_date = DateField(null=True, blank=True, verbose_name=_('Investigation Date'))
@@ -51,6 +53,21 @@ class BaseFarmer(Model):
 
     def __unicode__(self):
         return self.farmer_id
+
+
+class IsHire(Model):
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Is Hire Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('IsHire')
+        verbose_name_plural = _('IsHire')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
 
 
 class Months(Model):
@@ -247,7 +264,7 @@ class Subsidy(Model):
     number_of_people = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
     application_time = DateField(null=True, blank=True, verbose_name=_('Application Time'))
     remark = CharField(max_length=100, null=True, blank=True, verbose_name=_('Remark'))
-    application_content = ForeignKey('basefarmers.ApplicationContent', related_name='application_content', null=True,
+    application_content = ManyToManyField('basefarmers.ApplicationContent', related_name='application_content', null=True,
                                    blank=True, verbose_name=_('ApplicationContent'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 

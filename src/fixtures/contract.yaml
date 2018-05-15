@@ -1,0 +1,19 @@
+- model: basefarmers.Contract
+  pk: 601
+  fields:
+    name: 代養
+
+- model: basefarmers.Contract
+  pk: 602
+  fields:
+    name: 保價
+
+- model: basefarmers.Contract
+  pk: 603
+  fields:
+    name: 時價
+
+- model: basefarmers.Contract
+  pk: 604
+  fields:
+    name: 無

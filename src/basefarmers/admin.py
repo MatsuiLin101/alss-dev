@@ -37,7 +37,8 @@ from .models import (
     NoSalaryForHire,
     ShortTermForLack,
     LongTermForLack,
-    Months
+    Months,
+    IsHire
 
 )
 
@@ -79,6 +80,8 @@ admin.site.register(NoSalaryForHire)
 admin.site.register(ShortTermForLack)
 admin.site.register(LongTermForLack)
 admin.site.register(Months)
+admin.site.register(IsHire)
+
 
 
 

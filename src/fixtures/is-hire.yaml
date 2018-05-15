@@ -1,0 +1,9 @@
+- model: basefarmers.IsHire
+  pk: 741
+  fields:
+    name: 無
+
+- model: basefarmers.IsHire
+  pk: 742
+  fields:
+    name: 有外僱人力

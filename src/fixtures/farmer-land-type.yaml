@@ -1,0 +1,35 @@
+- model: basefarmers.FarmerLandType
+  pk: 501
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 自有
+
+- model: basefarmers.FarmerLandType
+  pk: 502
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 租(借)或占用
+
+- model: basefarmers.FarmerLandType
+  pk: 503
+  fields:
+    land_type_name: 可耕作地
+    production_type_name: 接受委託經營
+
+- model: basefarmers.FarmerLandType
+  pk: 504
+  fields:
+    land_type_name: 人工餔面
+    production_type_name: 自有
+
+- model: basefarmers.FarmerLandType
+  pk: 505
+  fields:
+    land_type_name: 人工餔面
+    production_type_name: 租(借)或占用
+
+- model: basefarmers.FarmerLandType
+  pk: 506
+  fields:
+    land_type_name: 無
+    production_type_name:
