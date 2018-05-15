@@ -1,0 +1,47 @@
+- model: basefarmers.Population
+  pk: 81
+  fields:
+    basefarmer: 1
+    relationship_code: 201
+    sex: 男
+    birth_year: 47
+    education_level_code: 165
+    farmer_work_day: 243
+    life_style_code: 184
+    other_farm_work_code: 222
+
+- model: basefarmers.Population
+  pk: 82
+  fields:
+    basefarmer: 1
+    relationship_code: 202
+    sex: 女
+    birth_year: 52
+    education_level_code: 166
+    farmer_work_day: 241
+    life_style_code: 186
+    other_farm_work_code: 222
+
+- model: basefarmers.Population
+  pk: 83
+  fields:
+    basefarmer: 1
+    relationship_code: 203
+    sex: 女
+    birth_year: 78
+    education_level_code: 168
+    farmer_work_day: 241
+    life_style_code: 188
+    other_farm_work_code: 223
+
+- model: basefarmers.Population
+  pk: 84
+  fields:
+    basefarmer: 2
+    relationship_code: 201
+    sex: 女
+    birth_year: 58
+    education_level_code: 167
+    farmer_work_day: 241
+    life_style_code: 185
+    other_farm_work_code: 222
