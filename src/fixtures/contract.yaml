@@ -1,19 +1,23 @@
 - model: basefarmers.Contract
   pk: 601
   fields:
+    code: 1
     name: 代養
 
 - model: basefarmers.Contract
   pk: 602
   fields:
+    code: 2
     name: 保價
 
 - model: basefarmers.Contract
   pk: 603
   fields:
+    code: 3
     name: 時價
 
 - model: basefarmers.Contract
   pk: 604
   fields:
+    code: 0
     name: 無

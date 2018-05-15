@@ -660,13 +660,9 @@ class Phone(Model):
     def __unicode__(self):
         return str(self.basefarmer)
 
+
 class Lack(Model):
-    #enough_worker = BooleanField(default=False, verbose_name=_('Enough Worker'))
-    #uncertain_worker = BooleanField(default=False, verbose_name=_('Uncertain Worker'))
-    #add_value_others = BooleanField(default=False, verbose_name=_('Add Value Others'))
-    #is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
-    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
-    #is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
+    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Lack Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
     class Meta:
@@ -699,7 +695,7 @@ class AddressMatch(Model):
 
 
 class IncomeRangeCode(Model):
-    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    name = CharField(max_length=50, unique=True, verbose_name=_('Income Range Code Name'))
     minimum = IntegerField(verbose_name=_('Minimum Income'))
     maximum = IntegerField(verbose_name=_('Maximum Income'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
@@ -716,7 +712,7 @@ class IncomeRangeCode(Model):
 
 
 class MarketType(Model):
-    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    name = CharField(max_length=50, unique=True, verbose_name=_('Market Type Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True, verbose_name=_('Updated'))
 
     class Meta:

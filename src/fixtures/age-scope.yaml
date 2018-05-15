@@ -1,0 +1,14 @@
+- model: basefarmers.AgeScope
+  pk: 761
+  fields:
+    name: 44歲以下
+
+- model: basefarmers.AgeScope
+  pk: 762
+  fields:
+    name: 45~64歲
+
+- model: basefarmers.AgeScope
+  pk: 763
+  fields:
+    name: 65歲以上
