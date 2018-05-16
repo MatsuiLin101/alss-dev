@@ -1,9 +1,9 @@
 from django.contrib import admin
 from .models import (
     MarketType,
-    IncomeRangeCode,
+    IncomeRange,
     AnnualIncome,
-    BaseFarmer,
+    Survey,
     AddressMatch,
     Lack,
     Phone,
@@ -15,37 +15,35 @@ from .models import (
     ManagementType,
     Loss,
     Unit,
-    ProductCode,
+    Product,
     Contract,
     CropMarketing,
-    AnimalMarketing,
-    IsFacility,
-    PopulationNumber,
+    LivestockMarketing,
+    Facility,
+    PopulationAge,
     Population,
-    EducationLevelCode,
+    EducationLevel,
     FarmerWorkDay,
-    LifeStyleCode,
-    OtherFarmWorkCode,
+    LifeStyle,
+    OtherFarmWork,
     Subsidy,
-    ApplicationContent,
+    RefuseReason,
     AgeScope,
-    WorkTypeCode,
-    LongTermForHire,
-    ShortTermForHire,
+    LongTermHire,
+    ShortTermHire,
     WorkType,
     NumberWorkers,
-    NoSalaryForHire,
-    ShortTermForLack,
-    LongTermForLack,
-    Months,
-    IsHire
-
+    NoSalaryHire,
+    ShortTermLack,
+    LongTermLack,
+    Gender,
+    ProductType,
 )
 
 admin.site.register(MarketType)
-admin.site.register(IncomeRangeCode)
+admin.site.register(IncomeRange)
 admin.site.register(AnnualIncome)
-admin.site.register(BaseFarmer)
+admin.site.register(Survey)
 admin.site.register(AddressMatch)
 admin.site.register(Lack)
 admin.site.register(Phone)
@@ -57,30 +55,29 @@ admin.site.register(ManagementType)
 admin.site.register(Management)
 admin.site.register(Loss)
 admin.site.register(Unit)
-admin.site.register(ProductCode)
+admin.site.register(Product)
 admin.site.register(Contract)
 admin.site.register(CropMarketing)
-admin.site.register(AnimalMarketing)
-admin.site.register(IsFacility)
-admin.site.register(PopulationNumber)
+admin.site.register(LivestockMarketing)
+admin.site.register(Facility)
+admin.site.register(PopulationAge)
 admin.site.register(Population)
-admin.site.register(EducationLevelCode)
+admin.site.register(EducationLevel)
 admin.site.register(FarmerWorkDay)
-admin.site.register(LifeStyleCode)
-admin.site.register(OtherFarmWorkCode)
+admin.site.register(LifeStyle)
+admin.site.register(OtherFarmWork)
 admin.site.register(Subsidy)
-admin.site.register(ApplicationContent)
+admin.site.register(RefuseReason)
 admin.site.register(AgeScope)
-admin.site.register(WorkTypeCode)
-admin.site.register(LongTermForHire)
-admin.site.register(ShortTermForHire)
 admin.site.register(WorkType)
+admin.site.register(LongTermHire)
+admin.site.register(ShortTermHire)
 admin.site.register(NumberWorkers)
-admin.site.register(NoSalaryForHire)
-admin.site.register(ShortTermForLack)
-admin.site.register(LongTermForLack)
-admin.site.register(Months)
-admin.site.register(IsHire)
+admin.site.register(NoSalaryHire)
+admin.site.register(ShortTermLack)
+admin.site.register(LongTermLack)
+admin.site.register(Gender)
+admin.site.register(ProductType)
 
 
 

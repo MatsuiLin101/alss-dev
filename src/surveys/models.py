@@ -1,0 +1,933 @@
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+from django.utils.dates import MONTHS
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import (
+    Model,
+    CASCADE,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    OneToOneField,
+    ManyToManyField,
+    IntegerField,
+    BooleanField,
+    TextField,
+    DateField,
+    PositiveIntegerField,
+    Q
+)
+
+
+YES_NO_CHOICES = (
+    (0, 'Yes'),
+    (1, 'No'),
+)
+
+NUMBER_WORKERS_CHOICES = (
+    Q(app_label='surveys', model='long_term_hire') |
+    Q(app_label='surveys', model='short_term_hire')
+)
+
+
+class Survey(Model):
+    """
+    read_only: Keep original data(read_only=True). Modify data(read_only=False).
+    """
+
+    farmer_id = CharField(max_length=12, verbose_name=_('Farmer Id'))
+    farmer_name = CharField(null=True, blank=True, max_length=10,
+                            verbose_name=_('Name'))
+    total_pages = IntegerField(verbose_name=_('Total Pages'))
+    page = IntegerField(verbose_name=_('Page'))
+    origin_class = IntegerField(null=True, blank=True,
+                                verbose_name=_('Origin Class'))
+    address = CharField(max_length=100, null=True, blank=True,
+                        verbose_name=_('Address'))
+    is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
+                           blank=True, verbose_name=_('Hire'))
+    lacks = ManyToManyField('surveys.Lack', blank=True,
+                            related_name='surveys',
+                            verbose_name=_('Lack'))
+    note = TextField(null=True, blank=True, verbose_name=_('Note'))
+    read_only = BooleanField(default=True, verbose_name=_('Read Only'))
+
+    investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True,
+                              blank=True, on_delete=CASCADE,
+                              verbose_name=_('Investigator'))
+    date = DateField(null=True, blank=True,
+                     verbose_name=_('Investigation Date'))
+    distance = IntegerField(null=True, blank=True,
+                            verbose_name=_('Investigation Distance(km)'
+                                           ))
+    period = IntegerField(null=True, blank=True,
+                          verbose_name=_('Investigation Period'))
+
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Survey')
+        verbose_name_plural = _('Survey')
+
+    def __str__(self):
+        return self.farmer_id
+
+    def __unicode__(self):
+        return self.farmer_id
+
+
+class ShortTermLack(Model):
+    survey = ForeignKey('surveys.Survey',
+                        related_name='short_term_lacks', blank=True,
+                        verbose_name=_('Survey'))
+    product = ForeignKey('surveys.Product',
+                         related_name='short_term_lacks', null=True,
+                         blank=True, verbose_name=_('Product'))
+    work_types = ManyToManyField('surveys.WorkType',
+                                 related_name='short_term_lacks',
+                                 blank=True, verbose_name=_('Work Types'
+                                                            ))
+    count = IntegerField(null=True, blank=True,
+                         verbose_name=_('Number Of People'))
+    months = ManyToManyField('surveys.Month',
+                             related_name='short_term_lacks',
+                             verbose_name=_('Months'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ShortTermLack')
+        verbose_name_plural = _('ShortTermLack')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class LongTermLack(Model):
+    survey = ForeignKey('surveys.Survey', related_name='long_term_lacks'
+                        , blank=True, verbose_name=_('Survey'))
+    work_type = ForeignKey('surveys.WorkType',
+                           related_name='long_term_lacks', blank=True,
+                           verbose_name=_('Work Type'))
+    count = IntegerField(null=True, blank=True,
+                         verbose_name=_('Number Of People'))
+    months = ManyToManyField('surveys.Month',
+                             related_name='long_term_lacks',
+                             verbose_name=_('Months'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LongTermLack')
+        verbose_name_plural = _('LongTermLack')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class NoSalaryHire(Model):
+    survey = ForeignKey('surveys.Survey', related_name='no_salary_hires'
+                        , blank=True, verbose_name=_('Survey'))
+    month = ForeignKey('surveys.Month', null=True, blank=True,
+                       verbose_name=_('Month'))
+    count = IntegerField(null=True, blank=True,
+                         verbose_name=_('Number Of People'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('NoSalaryForHire')
+        verbose_name_plural = _('NoSalaryForHire')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class NumberWorkers(Model):
+    content_type = ForeignKey(ContentType,
+                              limit_choices_to=NUMBER_WORKERS_CHOICES)
+    object_id = PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    age_scope = ForeignKey('surveys.AgeScope',
+                           related_name='number_workers', null=True,
+                           blank=True, verbose_name=_('Age Scope'))
+    value = IntegerField(null=True, blank=True, verbose_name=_('Value'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('NumberWorkers')
+        verbose_name_plural = _('NumberWorkers')
+
+    def __str__(self):
+        return self.content_object
+
+    def __unicode__(self):
+        return self.content_object
+
+
+class AgeScope(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AgeScope')
+        verbose_name_plural = _('AgeScope')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class WorkType(Model):
+    code = IntegerField(null=True, blank=True, verbose_name=_('Code'))
+    name = CharField(max_length=30, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Work Type')
+        verbose_name_plural = _('Work Type')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class ShortTermHire(Model):
+    survey = ForeignKey('surveys.Survey',
+                        related_name='short_term_hires', blank=True,
+                        verbose_name=_('Survey'))
+    avg_work_day = IntegerField(null=True, blank=True,
+                                verbose_name=_('Average Work Day'))
+    month = ForeignKey('surveys.Month', null=True, blank=True,
+                       verbose_name=_('Month'))
+    work_types = ManyToManyField('surveys.WorkType', blank=True,
+                                 related_name='short_term_hires',
+                                 verbose_name=_('Work Types'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ShortTermHire')
+        verbose_name_plural = _('ShortTermHire')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class LongTermHire(Model):
+    survey = ForeignKey('surveys.Survey', related_name='long_term_hires'
+                        , blank=True, verbose_name=_('Survey'))
+    avg_work_day = IntegerField(null=True, blank=True,
+                                verbose_name=_('Average Work Day'))
+    work_type = ForeignKey('surveys.WorkType',
+                           related_name='long_term_hires',
+                           verbose_name=_('Work Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Long Term Hire')
+        verbose_name_plural = _('Long Term Hire')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class Subsidy(Model):
+    survey = OneToOneField('surveys.Survey', related_name='subsidy',
+                           verbose_name=_('Survey'))
+    is_subsidy = IntegerField(null=True, blank=True,
+                              choices=YES_NO_CHOICES,
+                              verbose_name=_('Is Subsidy'))
+    count = IntegerField(null=True, blank=True,
+                         verbose_name=_('Number Of People'))
+    month_delta = IntegerField(null=True, blank=True,
+                               verbose_name=_('Month Delta'))
+    day_delta = IntegerField(null=True, blank=True,
+                             verbose_name=_('Day Delta'))
+    hour_delta = IntegerField(null=True, blank=True,
+                              verbose_name=_('Hour Delta'))
+    remark = CharField(max_length=100, null=True, blank=True,
+                       verbose_name=_('Remark'))
+    reasons = ManyToManyField('surveys.RefuseReason',
+                              related_name='subsidy', blank=True,
+                              verbose_name=_('subsidies'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Subsidy')
+        verbose_name_plural = _('Subsidy')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class RefuseReason(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Refuse Reason')
+        verbose_name_plural = _('Refuse Reason')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Population(Model):
+    survey = ForeignKey('surveys.Survey', related_name='populations',
+                        blank=True, verbose_name=_('Survey'))
+    relationship = ForeignKey('surveys.Relationship',
+                              related_name='relationship', null=True,
+                              blank=True, verbose_name=_('Relationship'
+                                                         ))
+    gender = ForeignKey('surveys.Gender', related_name='relationship',
+                        null=True, blank=True, verbose_name=_('Gender'))
+    birth_year = IntegerField(null=True, blank=True,
+                              verbose_name=_('Birth Year'))
+    education_level = ForeignKey('surveys.EducationLevel',
+                                 related_name='education_level',
+                                 null=True, blank=True,
+                                 verbose_name=_('Education Level'))
+    farmer_work_day = ForeignKey('surveys.FarmerWorkDay',
+                                 related_name='farmer_work_day',
+                                 null=True, blank=True,
+                                 verbose_name=_('Farmer Work Day'))
+    life_style = ForeignKey('surveys.LifeStyle',
+                            related_name='life_style', null=True,
+                            blank=True, verbose_name=_('Life Style'))
+    other_farm_work = ForeignKey('surveys.OtherFarmWork',
+                                 related_name='other_farm_work',
+                                 null=True, blank=True,
+                                 verbose_name=_('Other Farm Work'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Population')
+        verbose_name_plural = _('Population')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class FarmerWorkDay(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('FarmerWorkDay')
+        verbose_name_plural = _('FarmerWorkDay')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class OtherFarmWork(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('OtherFarmWork')
+        verbose_name_plural = _('OtherFarmWork')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Relationship(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Relationship')
+        verbose_name_plural = _('Relationship')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class EducationLevel(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    age = IntegerField(null=True, blank=True, verbose_name=_('Age'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('EducationLevel')
+        verbose_name_plural = _('EducationLevel')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class LifeStyle(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LifeStyle')
+        verbose_name_plural = _('LifeStyle')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Gender(Model):
+    name = CharField(max_length=10, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Gender')
+        verbose_name_plural = _('Gender')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class PopulationAge(Model):
+    survey = ForeignKey('surveys.Survey', related_name='population_ages'
+                        , verbose_name=_('Survey'))
+    gender = ForeignKey('surveys.Gender', verbose_name=_('Gender'))
+    is_under_15 = BooleanField(default=False, verbose_name=_('Is Male'))
+    count = IntegerField(null=True, blank=True, verbose_name=_('Count'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Population Age')
+        verbose_name_plural = _('Population Age')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class CropMarketing(Model):
+    survey = ForeignKey('surveys.Survey', related_name='crop_marketings'
+                        , blank=True, verbose_name=_('Survey'))
+    product = ForeignKey('surveys.Product', related_name='products',
+                         null=True, blank=True,
+                         verbose_name=_('Product Code'))
+    loss = ForeignKey('surveys.Loss', related_name='crop_marketing_loss'
+                      , null=True, blank=True, verbose_name=_('Loss'))
+    unit = ForeignKey('surveys.Unit', related_name='crop_marketing_unit'
+                      , null=True, blank=True, verbose_name=_('Unit'))
+    land_number = IntegerField(null=True, blank=True,
+                               verbose_name=_('Land Number'))
+    land_area = IntegerField(null=True, blank=True,
+                             verbose_name=_('Land Area'))
+    plant_times = IntegerField(null=True, blank=True,
+                               verbose_name=_('Plant Times'))
+    total_yield = IntegerField(null=True, blank=True,
+                               verbose_name=_('Total Yield'))
+    unit_price = IntegerField(null=True, blank=True,
+                              verbose_name=_('Unit Price'))
+    has_facility = IntegerField(null=True, blank=True,
+                                choices=YES_NO_CHOICES,
+                                verbose_name=_('Has Facility'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('CropMarketing')
+        verbose_name_plural = _('CropMarketing')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class LivestockMarketing(Model):
+    survey = ForeignKey('surveys.Survey',
+                        related_name='livestock_marketings',
+                        blank=True, verbose_name=_('Survey'))
+    product = ForeignKey('surveys.Product',
+                         related_name='livestock_marketing_product',
+                         null=True, blank=True, verbose_name=_('Product'
+                                                               ))
+    loss = ForeignKey('surveys.Loss',
+                      related_name='livestock_marketing_loss',
+                      null=True, blank=True, verbose_name=_('Loss'))
+    unit = ForeignKey('surveys.Unit',
+                      related_name='livestock_marketing_unit',
+                      null=True, blank=True, verbose_name=_('Unit'))
+    contract = ForeignKey('surveys.Contract', related_name='contract',
+                          null=True, blank=True,
+                          verbose_name=_('Contract'))
+    raising_number = IntegerField(null=True, blank=True,
+                                  verbose_name=_('Raising Number'))
+    total_yield = IntegerField(null=True, blank=True,
+                               verbose_name=_('Total Yield'))
+    unit_price = IntegerField(null=True, blank=True,
+                              verbose_name=_('Unit Price'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Livestock Marketing')
+        verbose_name_plural = _('Livestock Marketing')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class Loss(Model):
+    code = IntegerField(verbose_name=_('Code'))
+    name = CharField(max_length=10, null=True, blank=True,
+                     verbose_name=_('Name'))
+    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+                      verbose_name=_('Product Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Loss')
+        verbose_name_plural = _('Loss')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Facility(Model):
+    code = IntegerField(verbose_name=_('Code'))
+    name = CharField(max_length=10, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Facility')
+        verbose_name_plural = _('Facility')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Unit(Model):
+    code = IntegerField(verbose_name=_('Code'))
+    name = CharField(max_length=10, null=True, blank=True,
+                     verbose_name=_('Name'))
+    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+                      verbose_name=_('Product Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Unit')
+        verbose_name_plural = _('Unit')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class ProductType(Model):
+    name = CharField(max_length=50, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+
+class Product(Model):
+    name = CharField(max_length=50, null=True, blank=True,
+                     verbose_name=_('Name'))
+    code = IntegerField(verbose_name=_('Code'))
+    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+                      verbose_name=_('Product Type'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Product')
+        verbose_name_plural = _('Product')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Contract(Model):
+    code = IntegerField(verbose_name=_('Code'))
+    name = CharField(max_length=10, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LivestockUnit')
+        verbose_name_plural = _('LivestockUnit')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class ManagementType(Model):
+    name = CharField(max_length=50, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('ManagementType')
+        verbose_name_plural = _('ManagementType')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Management(Model):
+    survey = OneToOneField('surveys.Survey', related_name='managements'
+                           , verbose_name=_('Survey'))
+    types = ManyToManyField('surveys.ManagementType',
+                            related_name='managements',
+                            verbose_name=_('Types'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Management')
+        verbose_name_plural = _('Management')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class FarmRelatedBusiness(Model):
+    name = CharField(max_length=50, null=True, blank=True,
+                     verbose_name=_('Name'))
+    has_business = IntegerField(null=True, blank=True,
+                                choices=YES_NO_CHOICES,
+                                verbose_name=_('Has Business'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('FarmRelatedBusiness')
+        verbose_name_plural = _('FarmRelatedBusiness')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Business(Model):
+    survey = OneToOneField('surveys.Survey', related_name='businesses',
+                           verbose_name=_('Survey'))
+    farm_related_businesses = \
+        ManyToManyField('surveys.FarmRelatedBusiness',
+                        related_name='businesses',
+                        verbose_name=_('Farm Related Business'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Business')
+        verbose_name_plural = _('Business')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class FarmerLandType(Model):
+    land_type_name = CharField(max_length=20, null=True, blank=True,
+                               verbose_name=_('Land Type Name'))
+    production_type_name = CharField(max_length=20, null=True,
+                                     blank=True, verbose_name=_('Production Type Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('FarmerLandType')
+        verbose_name_plural = _('FarmerLandType')
+
+    def __str__(self):
+        return '%s(%s)' % (self.land_type_name,
+                           self.production_type_name)
+
+    def __unicode__(self):
+        return '%s(%s)' % (self.land_type_name,
+                           self.production_type_name)
+
+
+class FarmerLandArea(Model):
+    survey = ForeignKey('surveys.Survey',
+                        related_name='farmer_land_areas', blank=True,
+                        verbose_name=_('Survey'))
+    type = ForeignKey('surveys.FarmerLandType',
+                      related_name='farmer_land_areas', null=True,
+                      blank=True, verbose_name=_('Type'))
+    value = IntegerField(null=True, blank=True,
+                         verbose_name=_('Area Value'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('FarmerLandArea')
+        verbose_name_plural = _('FarmerLandArea')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class Phone(Model):
+    survey = ForeignKey('surveys.Survey', related_name='phones',
+                        verbose_name=_('Survey'))
+    phone = CharField(max_length=100, null=True, blank=True,
+                      verbose_name=_('Phone'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Phone')
+        verbose_name_plural = _('Phone')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class Lack(Model):
+    name = CharField(max_length=50, null=True, blank=True,
+                     verbose_name=_('Name'))
+    is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Lack')
+        verbose_name_plural = _('Lack')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class AddressMatch(Model):
+    survey = OneToOneField('surveys.Survey',
+                           related_name='address_match',
+                           verbose_name=_('Survey'))
+    match = BooleanField(default=False, verbose_name=_('Address Match'))
+    different = BooleanField(default=False,
+                             verbose_name=_('Address Different'))
+    address = CharField(max_length=100, null=True, blank=True,
+                        verbose_name=_('Address'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AddressMatch')
+        verbose_name_plural = _('AddressMatch')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class IncomeRange(Model):
+    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    minimum = IntegerField(verbose_name=_('Minimum Income'))
+    maximum = IntegerField(verbose_name=_('Maximum Income'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('IncomeRange')
+        verbose_name_plural = _('IncomeRanges')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class MarketType(Model):
+    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('MarketType')
+        verbose_name_plural = _('MarketTypes')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class AnnualIncome(Model):
+    survey = ForeignKey('surveys.Survey', related_name='annual_incomes'
+                        , blank=True, verbose_name=_('Survey'))
+    market_type = ForeignKey('surveys.MarketType',
+                             verbose_name=_('Market Type'))
+    income_range = ForeignKey('surveys.IncomeRange',
+                              verbose_name=_('Income Range'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('AnnualIncome')
+        verbose_name_plural = _('AnnualIncomes')
+
+    def __str__(self):
+        return str(self.survey)
+
+    def __unicode__(self):
+        return str(self.survey)
+
+
+class Month(Model):
+    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    value = IntegerField(choices=MONTHS.items())
+
+
+
