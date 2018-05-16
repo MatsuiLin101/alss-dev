@@ -1,0 +1,34 @@
+- model: basefarmers.ShortTermForHire
+  pk: 121
+  fields:
+    basefarmer: 1
+    work_unit_day: 8
+    month: 1
+
+- model: basefarmers.ShortTermForHire
+  pk: 122
+  fields:
+    basefarmer: 1
+    work_unit_day: 12
+    month: 2
+
+- model: basefarmers.ShortTermForHire
+  pk: 123
+  fields:
+    basefarmer: 1
+    work_unit_day: 12
+    month: 3
+
+- model: basefarmers.ShortTermForHire
+  pk: 124
+  fields:
+    basefarmer: 1
+    work_unit_day: 20
+    month: 6
+
+- model: basefarmers.ShortTermForHire
+  pk: 125
+  fields:
+    basefarmer: 1
+    work_unit_day: 20
+    month: 7
