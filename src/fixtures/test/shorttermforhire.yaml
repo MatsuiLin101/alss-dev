@@ -1,34 +1,39 @@
-- model: basefarmers.ShortTermForHire
-  pk: 121
+- model: surveys.ShortTermHire
+  pk: 1
   fields:
-    basefarmer: 1
-    work_unit_day: 8
+    survey: 1
+    avg_work_day: 8
     month: 1
+    work_types: 1
 
-- model: basefarmers.ShortTermForHire
-  pk: 122
+- model: surveys.ShortTermHire
+  pk: 2
   fields:
-    basefarmer: 1
-    work_unit_day: 12
+    survey: 1
+    avg_work_day: 12
     month: 2
+    work_types: 2
 
-- model: basefarmers.ShortTermForHire
-  pk: 123
+- model: surveys.ShortTermHire
+  pk: 3
   fields:
-    basefarmer: 1
-    work_unit_day: 12
+    survey: 1
+    avg_work_day: 12
     month: 3
+    work_types: 3
 
-- model: basefarmers.ShortTermForHire
-  pk: 124
+- model: surveys.ShortTermHire
+  pk: 4
   fields:
-    basefarmer: 1
-    work_unit_day: 20
+    survey: 1
+    avg_work_day: 20
     month: 6
+    work_types: 2
 
-- model: basefarmers.ShortTermForHire
-  pk: 125
+- model: surveys.ShortTermHire
+  pk: 5
   fields:
-    basefarmer: 1
-    work_unit_day: 20
+    survey: 1
+    avg_work_day: 20
     month: 7
+    work_types: 5

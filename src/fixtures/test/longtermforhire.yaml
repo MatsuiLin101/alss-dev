@@ -1,20 +1,20 @@
-- model: basefarmers.LongTermForHire
-  pk: 111
+- model: surveys.LongTermHire
+  pk: 1
   fields:
-    basefarmer: 1
-    work_unit_day: 5
-    work_type_code: 782
+    survey: 1
+    avg_work_day: 5
+    work_type: 1
 
-- model: basefarmers.LongTermForHire
-  pk: 112
+- model: surveys.LongTermHire
+  pk: 2
   fields:
-    basefarmer: 1
-    work_unit_day: 10
-    work_type_code: 785
+    survey: 1
+    avg_work_day: 10
+    work_type: 2
 
-- model: basefarmers.LongTermForHire
-  pk: 113
+- model: surveys.LongTermHire
+  pk: 3
   fields:
-    basefarmer: 2
-    work_unit_day: 3
-    work_type_code: 784        
+    survey: 2
+    avg_work_day: 3
+    work_type: 3

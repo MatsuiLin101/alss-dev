@@ -1,47 +1,47 @@
-- model: basefarmers.Population
-  pk: 81
+- model: surveys.Population
+  pk: 1
   fields:
-    basefarmer: 1
-    relationship_code: 701
-    sex: 男
+    survey: 1
+    relationship: 1
+    gender: 1
     birth_year: 47
-    education_level_code: 665
-    farmer_work_day: 243
-    life_style_code: 684
-    other_farm_work_code: 722
+    education_level: 1
+    farmer_work_day: 3
+    life_style: 4
+    other_farm_work: 2
 
-- model: basefarmers.Population
-  pk: 82
+- model: surveys.Population
+  pk: 2
   fields:
-    basefarmer: 1
-    relationship_code: 702
-    sex: 女
+    survey: 1
+    relationship: 2
+    gender: 2
     birth_year: 52
-    education_level_code: 666
-    farmer_work_day: 241
-    life_style_code: 686
-    other_farm_work_code: 722
+    education_level: 1
+    farmer_work_day: 1
+    life_style: 6
+    other_farm_work: 2
 
-- model: basefarmers.Population
-  pk: 83
+- model: surveys.Population
+  pk: 3
   fields:
-    basefarmer: 1
-    relationship_code: 703
-    sex: 女
+    survey: 1
+    relationship: 3
+    gender: 2
     birth_year: 78
-    education_level_code: 668
-    farmer_work_day: 241
-    life_style_code: 688
-    other_farm_work_code: 723
+    education_level: 8
+    farmer_work_day: 1
+    life_style: 8
+    other_farm_work: 3
 
-- model: basefarmers.Population
-  pk: 84
+- model: surveys.Population
+  pk: 4
   fields:
-    basefarmer: 2
-    relationship_code: 701
-    sex: 女
+    survey: 2
+    relationship: 1
+    gender: 2
     birth_year: 58
-    education_level_code: 667
-    farmer_work_day: 241
-    life_style_code: 685
-    other_farm_work_code: 722
+    education_level: 7
+    farmer_work_day: 1
+    life_style: 5
+    other_farm_work: 2

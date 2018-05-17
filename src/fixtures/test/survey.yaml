@@ -1,21 +1,20 @@
-- model: basefarmers.BaseFarmer
+- model: surveys.Survey
   pk: 1
   fields:
     farmer_id: 1
     total_pages: 1
     page: 1
 
-- model: basefarmers.BaseFarmer
+- model: surveys.Survey
   pk: 2
   fields:
     farmer_id: 2
     total_pages: 1
     page: 1
 
-- model: basefarmers.BaseFarmer
+- model: surveys.Survey
   pk: 3
   fields:
     farmer_id: 3
     total_pages: 1
     page: 1
-

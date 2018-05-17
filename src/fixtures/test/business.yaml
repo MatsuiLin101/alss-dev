@@ -1,30 +1,12 @@
-- model: basefarmers.FarmRelatedBusiness
-  pk: 11
+- model: surveys.Business
+  pk: 1
   fields:
-    name: 無
-    has_business: n
-
-- model: basefarmers.FarmRelatedBusiness
-  pk: 12
-  fields:
-    name: 餐廳
-    has_business: y
-
-- model: basefarmers.FarmRelatedBusiness
-  pk: 13
-  fields:
-    name: 攤販
-    has_business: y
-
-- model: basefarmers.Business
-  pk: 14
-  fields:
-    basefarmer: 1
+    survey: 1
     farm_related_business: [11, 12]
 
-- model: basefarmers.Business
-  pk: 15
+- model: surveys.Business
+  pk: 2
   fields:
-    basefarmer: 2
+    survey: 2
     farm_related_business: [13]
 
