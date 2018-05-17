@@ -1,68 +1,68 @@
-- model: basefarmers.IncomeRangeCode
-  pk: 621
+- model: surveys.IncomeRange
+  pk: 1
   fields:
     name: 未滿20
     minimum: 0
     maximum: 20
 
-- model: basefarmers.IncomeRangeCode
-  pk: 622
+- model: surveys.IncomeRange
+  pk: 2
   fields:
     name: 20~未滿50
     minimum: 20
     maximum: 50
 
-- model: basefarmers.IncomeRangeCode
-  pk: 623
+- model: surveys.IncomeRange
+  pk: 3
   fields:
     name: 50~未滿75
     minimum: 50
     maximum: 75
 
-- model: basefarmers.IncomeRangeCode
-  pk: 624
+- model: surveys.IncomeRange
+  pk: 4
   fields:
     name: 75~未滿100
     minimum: 75
     maximum: 100
 
-- model: basefarmers.IncomeRangeCode
-  pk: 625
+- model: surveys.IncomeRange
+  pk: 5
   fields:
     name: 100~未滿150
     minimum: 100
     maximum: 150
 
-- model: basefarmers.IncomeRangeCode
-  pk: 626
+- model: surveys.IncomeRange
+  pk: 6
   fields:
     name: 150~未滿175
     minimum: 150
     maximum: 175
 
-- model: basefarmers.IncomeRangeCode
-  pk: 627
+- model: surveys.IncomeRange
+  pk: 7
   fields:
     name: 175~未滿200
     minimum: 175
     maximum: 200
 
-- model: basefarmers.IncomeRangeCode
-  pk: 628
+- model: surveys.IncomeRange
+  pk: 8
   fields:
     name: 200~未滿300
     minimum: 200
     maximum: 300
 
-- model: basefarmers.IncomeRangeCode
-  pk: 629
+- model: surveys.IncomeRange
+  pk: 9
   fields:
     name: 300~未滿500
     minimum: 300
     maximum: 500
 
-- model: basefarmers.IncomeRangeCode
-  pk: 630
+- model: surveys.IncomeRange
+  pk: 10
   fields:
     name: 500以上
     minimum: 500

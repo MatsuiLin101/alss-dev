@@ -1,0 +1,83 @@
+- model: surveys.Relationship
+  pk: 1
+  fields:
+    code: 1
+    name: 經濟戶長
+
+- model: surveys.Relationship
+  pk: 2
+  fields:
+    code: 2
+    name: 配偶
+
+- model: surveys.Relationship
+  pk: 3
+  fields:
+    code: 3
+    name: 子女(含養子女)
+
+- model: surveys.Relationship
+  pk: 4
+  fields:
+    code: 4
+    name: 孫子女
+
+- model: surveys.Relationship
+  pk: 5
+  fields:
+    code: 5
+    name: 父母(含繼、養父母)
+
+- model: surveys.Relationship
+  pk: 6
+  fields:
+    code: 6
+    name: 祖父母(含內外祖父母)
+
+- model: surveys.Relationship
+  pk: 7
+  fields:
+    code: 7
+    name: 兄弟姐妹
+
+- model: surveys.Relationship
+  pk: 8
+  fields:
+    code: 8
+    name: 子女之配偶
+
+- model: surveys.Relationship
+  pk: 9
+  fields:
+    code: 9
+    name: 孫子女之配偶
+
+- model: surveys.Relationship
+  pk: 10
+  fields:
+    code: 10
+    name: 兄弟姐妹之配偶
+
+- model: surveys.Relationship
+  pk: 11
+  fields:
+    code: 11
+    name: 配偶之父母
+
+- model: surveys.Relationship
+  pk: 12
+  fields:
+    code: 12
+    name: 配偶之兄弟姐妹
+
+- model: surveys.Relationship
+  pk: 13
+  fields:
+    code: 13
+    name: 其他親屬
+
+- model: surveys.Relationship
+  pk: 14
+  fields:
+    code: 14
+    name: 其他

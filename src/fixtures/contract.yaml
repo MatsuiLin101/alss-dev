@@ -1,27 +1,24 @@
-- model: basefarmers.Contract
-  pk: 601
+- model: surveys.Contract
+  pk: 1
   fields:
     code: 1
     name: 代養
 
-- model: basefarmers.Contract
-  pk: 602
+- model: surveys.Contract
+  pk: 2
   fields:
     code: 2
     name: 保價
 
-- model: basefarmers.Contract
-  pk: 603
+- model: surveys.Contract
+  pk: 3
   fields:
     code: 3
     name: 時價
 
-- model: basefarmers.Contract
-  pk: 604
+- model: surveys.Contract
+  pk: 4
   fields:
     code: 0
-<<<<<<< HEAD
     name: 無
-=======
-    name: 無
->>>>>>> 10e452427c2c8b7fb3d44c2b8e71c893c8e2ba8f
+

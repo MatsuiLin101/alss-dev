@@ -21,13 +21,13 @@ from django.db.models import (
 
 
 YES_NO_CHOICES = (
-    (0, 'Yes'),
-    (1, 'No'),
+    (0, 'No'),
+    (1, 'Yes'),
 )
 
 NUMBER_WORKERS_CHOICES = (
-    Q(app_label='surveys', model='long_term_hire') |
-    Q(app_label='surveys', model='short_term_hire')
+    Q(app_label='surveys', model='longtermhire') |
+    Q(app_label='surveys', model='shorttermhire')
 )
 
 
@@ -209,8 +209,8 @@ class WorkType(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('Work Type')
-        verbose_name_plural = _('Work Type')
+        verbose_name = _('WorkType')
+        verbose_name_plural = _('WorkType')
 
     def __str__(self):
         return str(self.name)
@@ -258,8 +258,8 @@ class LongTermHire(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('Long Term Hire')
-        verbose_name_plural = _('Long Term Hire')
+        verbose_name = _('LongTermHire')
+        verbose_name_plural = _('LongTermHire')
 
     def __str__(self):
         return str(self.survey)
@@ -310,8 +310,8 @@ class RefuseReason(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('Refuse Reason')
-        verbose_name_plural = _('Refuse Reason')
+        verbose_name = _('RefuseReason')
+        verbose_name_plural = _('RefuseReason')
 
     def __str__(self):
         return str(self.name)
@@ -362,6 +362,7 @@ class Population(Model):
 
 
 class FarmerWorkDay(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -398,6 +399,7 @@ class OtherFarmWork(Model):
 
 
 class Relationship(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -416,6 +418,7 @@ class Relationship(Model):
 
 
 class EducationLevel(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     age = IntegerField(null=True, blank=True, verbose_name=_('Age'))
@@ -435,6 +438,7 @@ class EducationLevel(Model):
 
 
 class LifeStyle(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -453,6 +457,7 @@ class LifeStyle(Model):
 
 
 class Gender(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True,
                      verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -481,8 +486,8 @@ class PopulationAge(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('Population Age')
-        verbose_name_plural = _('Population Age')
+        verbose_name = _('PopulationAge')
+        verbose_name_plural = _('PopulationAge')
 
     def __str__(self):
         return str(self.survey)
@@ -557,8 +562,8 @@ class LivestockMarketing(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('Livestock Marketing')
-        verbose_name_plural = _('Livestock Marketing')
+        verbose_name = _('LivestockMarketing')
+        verbose_name_plural = _('LivestockMarketing')
 
     def __str__(self):
         return str(self.survey)
@@ -639,7 +644,7 @@ class ProductType(Model):
 class Product(Model):
     name = CharField(max_length=50, null=True, blank=True,
                      verbose_name=_('Name'))
-    code = IntegerField(verbose_name=_('Code'))
+    code = CharField(max_length=50, verbose_name=_('Code'))
     type = ForeignKey('surveys.ProductType', null=True, blank=True,
                       verbose_name=_('Product Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -677,6 +682,7 @@ class Contract(Model):
 
 
 class ManagementType(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True,
                      verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -716,6 +722,7 @@ class Management(Model):
 
 
 class FarmRelatedBusiness(Model):
+    code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True,
                      verbose_name=_('Name'))
     has_business = IntegerField(null=True, blank=True,

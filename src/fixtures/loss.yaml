@@ -1,55 +1,55 @@
-- model: basefarmers.Loss
-  pk: 561
+- model: surveys.Loss
+  pk: 1
   fields:
     code: 1
     name: 災害
-    type: crop
+    type: 1
 
-- model: basefarmers.Loss
-  pk: 562
+- model: surveys.Loss
+  pk: 2
   fields:
     code: 2
     name: 新植
-    type: crop
+    type: 1
 
-- model: basefarmers.Loss
-  pk: 563
+- model: surveys.Loss
+  pk: 3
   fields:
     code: 3
     name: 病蟲害
-    type: crop
+    type: 1
 
-- model: basefarmers.Loss
-  pk: 564
+- model: surveys.Loss
+  pk: 4
   fields:
     code: 0
     name: 無
-    type: crop
+    type: 1
 
-- model: basefarmers.Loss
-  pk: 565
+- model: surveys.Loss
+  pk: 5
   fields:
     code: 1
     name: 災害
-    type: animal
+    type: 2
 
-- model: basefarmers.Loss
-  pk: 566
+- model: surveys.Loss
+  pk: 6
   fields:
     code: 2
     name: 新養
-    type: animal
+    type: 2
 
-- model: basefarmers.Loss
-  pk: 567
+- model: surveys.Loss
+  pk: 7
   fields:
     code: 3
     name: 疫病
-    type: animal
+    type: 2
 
-- model: basefarmers.Loss
-  pk: 568
+- model: surveys.Loss
+  pk: 8
   fields:
     code: 0
     name: 無
-    type: animal
+    type: 2

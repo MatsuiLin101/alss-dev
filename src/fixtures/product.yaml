@@ -1,0 +1,2078 @@
+- model: surveys.Product
+  pk: 1
+  fields:
+    name: 蓬萊米(稉稻)1期
+    code: A001
+    type: 1
+
+- model: surveys.Product
+  pk: 2
+  fields:
+    name: 蓬萊米(稉稻)2期
+    code: A002
+    type: 1
+
+- model: surveys.Product
+  pk: 3
+  fields:
+    name: 在來米1期(秈稻1期)
+    code: A003
+    type: 1
+
+- model: surveys.Product
+  pk: 4
+  fields:
+    name: 在來米2期(秈稻2期)
+    code: A004
+    type: 1
+
+- model: surveys.Product
+  pk: 5
+  fields:
+    name: 糯米1期
+    code: A005
+    type: 1
+
+- model: surveys.Product
+  pk: 6
+  fields:
+    name: 糯米2期
+    code: A006
+    type: 1
+
+- model: surveys.Product
+  pk: 7
+  fields:
+    name: 香米1期
+    code: A007
+    type: 1
+
+- model: surveys.Product
+  pk: 8
+  fields:
+    name: 香米2期
+    code: A008
+    type: 1
+
+- model: surveys.Product
+  pk: 9
+  fields:
+    name: 蘿蔔(菜頭)
+    code: B001
+    type: 1
+
+- model: surveys.Product
+  pk: 10
+  fields:
+    name: 胡蘿蔔
+    code: B002
+    type: 1
+
+- model: surveys.Product
+  pk: 11
+  fields:
+    name: 薑
+    code: B003
+    type: 1
+
+- model: surveys.Product
+  pk: 12
+  fields:
+    name: 芋
+    code: B004
+    type: 1
+
+- model: surveys.Product
+  pk: 13
+  fields:
+    name: 馬鈴薯
+    code: B005
+    type: 1
+
+- model: surveys.Product
+  pk: 14
+  fields:
+    name: 牛蒡
+    code: B006
+    type: 1
+
+- model: surveys.Product
+  pk: 15
+  fields:
+    name: 蔥
+    code: B007
+    type: 1
+
+- model: surveys.Product
+  pk: 16
+  fields:
+    name: 蔥頭
+    code: B008
+    type: 1
+
+- model: surveys.Product
+  pk: 17
+  fields:
+    name: 洋蔥
+    code: B009
+    type: 1
+
+- model: surveys.Product
+  pk: 18
+  fields:
+    name: 青蒜
+    code: B010
+    type: 1
+
+- model: surveys.Product
+  pk: 19
+  fields:
+    name: 蒜頭
+    code: B011
+    type: 1
+
+- model: surveys.Product
+  pk: 20
+  fields:
+    name: 荸薺(馬蹄、馬薯)
+    code: B012
+    type: 1
+
+- model: surveys.Product
+  pk: 21
+  fields:
+    name: 韭
+    code: B013
+    type: 1
+
+- model: surveys.Product
+  pk: 22
+  fields:
+    name: 竹筍
+    code: B014
+    type: 1
+
+- model: surveys.Product
+  pk: 23
+  fields:
+    name: 蘆筍
+    code: B015
+    type: 1
+
+- model: surveys.Product
+  pk: 24
+  fields:
+    name: 茭白筍
+    code: B016
+    type: 1
+
+- model: surveys.Product
+  pk: 25
+  fields:
+    name: 大芥菜
+    code: B017
+    type: 1
+
+- model: surveys.Product
+  pk: 26
+  fields:
+    name: 大心芥菜(菜心)
+    code: B018
+    type: 1
+
+- model: surveys.Product
+  pk: 27
+  fields:
+    name: 芹菜
+    code: B019
+    type: 1
+
+- model: surveys.Product
+  pk: 28
+  fields:
+    name: 蕹菜(空心菜)
+    code: B020
+    type: 1
+
+- model: surveys.Product
+  pk: 29
+  fields:
+    name: 甘藍(高麗菜)
+    code: B021
+    type: 1
+
+- model: surveys.Product
+  pk: 30
+  fields:
+    name: 芥藍(格藍菜)
+    code: B022
+    type: 1
+
+- model: surveys.Product
+  pk: 31
+  fields:
+    name: 結球白菜(包心白菜)
+    code: B023
+    type: 1
+
+- model: surveys.Product
+  pk: 32
+  fields:
+    name: 小白菜
+    code: B024
+    type: 1
+
+- model: surveys.Product
+  pk: 33
+  fields:
+    name: 青江菜(湯匙菜)
+    code: B025
+    type: 1
+
+- model: surveys.Product
+  pk: 34
+  fields:
+    name: 花椰菜(白花、青花)
+    code: B026
+    type: 1
+
+- model: surveys.Product
+  pk: 35
+  fields:
+    name: 菠菜(菠蔆菜)
+    code: B027
+    type: 1
+
+- model: surveys.Product
+  pk: 36
+  fields:
+    name: 莧菜
+    code: B028
+    type: 1
+
+- model: surveys.Product
+  pk: 37
+  fields:
+    name: 萵苣(Ａ菜、吉康菜)
+    code: B029
+    type: 1
+
+- model: surveys.Product
+  pk: 38
+  fields:
+    name: 茼萵
+    code: B030
+    type: 1
+
+- model: surveys.Product
+  pk: 39
+  fields:
+    name: 絲瓜(菜瓜、角瓜)
+    code: B031
+    type: 1
+
+- model: surveys.Product
+  pk: 40
+  fields:
+    name: 越瓜(醃瓜)
+    code: B032
+    type: 1
+
+- model: surveys.Product
+  pk: 41
+  fields:
+    name: 胡瓜(小黃瓜、大黃瓜)
+    code: B033
+    type: 1
+
+- model: surveys.Product
+  pk: 42
+  fields:
+    name: 冬瓜
+    code: B034
+    type: 1
+
+- model: surveys.Product
+  pk: 43
+  fields:
+    name: 苦瓜
+    code: B035
+    type: 1
+
+- model: surveys.Product
+  pk: 44
+  fields:
+    name: 扁蒲(蒲子)
+    code: B036
+    type: 1
+
+- model: surveys.Product
+  pk: 45
+  fields:
+    name: 茄子
+    code: B037
+    type: 1
+
+- model: surveys.Product
+  pk: 46
+  fields:
+    name: 蕃茄
+    code: B038
+    type: 1
+
+- model: surveys.Product
+  pk: 47
+  fields:
+    name: 甜椒、青椒
+    code: B039
+    type: 1
+
+- model: surveys.Product
+  pk: 48
+  fields:
+    name: 辣椒
+    code: B040
+    type: 1
+
+- model: surveys.Product
+  pk: 49
+  fields:
+    name: 毛豆
+    code: B041
+    type: 1
+
+- model: surveys.Product
+  pk: 50
+  fields:
+    name: 豌豆(荷蘭豆)
+    code: B042
+    type: 1
+
+- model: surveys.Product
+  pk: 51
+  fields:
+    name: 長豇豆(菜豆、四季豆、敏豆、粉豆)
+    code: B043
+    type: 1
+
+- model: surveys.Product
+  pk: 52
+  fields:
+    name: 黃帝豆(皇帝豆、萊豆)
+    code: B044
+    type: 1
+
+- model: surveys.Product
+  pk: 53
+  fields:
+    name: 瓜子瓜
+    code: B045
+    type: 1
+
+- model: surveys.Product
+  pk: 54
+  fields:
+    name: 地瓜葉(甘薯葉、蕃薯葉)
+    code: B046
+    type: 1
+
+- model: surveys.Product
+  pk: 55
+  fields:
+    name: 南瓜(金瓜)
+    code: B047
+    type: 1
+
+- model: surveys.Product
+  pk: 56
+  fields:
+    name: 大陸妹
+    code: B048
+    type: 1
+
+- model: surveys.Product
+  pk: 57
+  fields:
+    name: 龍鬚菜
+    code: B049
+    type: 1
+
+- model: surveys.Product
+  pk: 58
+  fields:
+    name: 蓮藕
+    code: B050
+    type: 1
+
+- model: surveys.Product
+  pk: 59
+  fields:
+    name: 蕨類(過貓、山蘇)
+    code: B051
+    type: 1
+
+- model: surveys.Product
+  pk: 60
+  fields:
+    name: 豆苗
+    code: B052
+    type: 1
+
+- model: surveys.Product
+  pk: 61
+  fields:
+    name: 菱角
+    code: B053
+    type: 1
+
+- model: surveys.Product
+  pk: 62
+  fields:
+    name: 金針
+    code: B054
+    type: 1
+
+- model: surveys.Product
+  pk: 63
+  fields:
+    name: 香菜(芫荽)
+    code: B055
+    type: 1
+
+- model: surveys.Product
+  pk: 64
+  fields:
+    name: 蓮子
+    code: B056
+    type: 1
+
+- model: surveys.Product
+  pk: 65
+  fields:
+    name: 秋葵(洋辣椒)
+    code: B057
+    type: 1
+
+- model: surveys.Product
+  pk: 66
+  fields:
+    name: 豆薯
+    code: B058
+    type: 1
+
+- model: surveys.Product
+  pk: 67
+  fields:
+    name: 草莓
+    code: B059
+    type: 1
+
+- model: surveys.Product
+  pk: 68
+  fields:
+    name: 哈蜜瓜(洋香瓜)
+    code: B060
+    type: 1
+
+- model: surveys.Product
+  pk: 69
+  fields:
+    name: 西瓜
+    code: B061
+    type: 1
+
+- model: surveys.Product
+  pk: 70
+  fields:
+    name: 香瓜(甜瓜)
+    code: B062
+    type: 1
+
+- model: surveys.Product
+  pk: 71
+  fields:
+    name: 其他
+    code: B999
+    type: 1
+
+- model: surveys.Product
+  pk: 72
+  fields:
+    name: 香菇
+    code: E003
+    type: 1
+
+- model: surveys.Product
+  pk: 73
+  fields:
+    name: 太空包菌種
+    code: E004
+    type: 1
+
+- model: surveys.Product
+  pk: 74
+  fields:
+    name: 木耳
+    code: E005
+    type: 1
+
+- model: surveys.Product
+  pk: 75
+  fields:
+    name: 洋菇
+    code: E006
+    type: 1
+
+- model: surveys.Product
+  pk: 76
+  fields:
+    name: 草菇
+    code: E007
+    type: 1
+
+- model: surveys.Product
+  pk: 77
+  fields:
+    name: 巴西蘑菇
+    code: E008
+    type: 1
+
+- model: surveys.Product
+  pk: 78
+  fields:
+    name: 秀珍菇
+    code: E009
+    type: 1
+
+- model: surveys.Product
+  pk: 79
+  fields:
+    name: 杏鮑菇
+    code: E010
+    type: 1
+
+- model: surveys.Product
+  pk: 80
+  fields:
+    name: 草皮
+    code: E011
+    type: 1
+
+- model: surveys.Product
+  pk: 81
+  fields:
+    name: 秧苗
+    code: E012
+    type: 1
+
+- model: surveys.Product
+  pk: 82
+  fields:
+    name: 種苗-花卉
+    code: E013
+    type: 1
+
+- model: surveys.Product
+  pk: 83
+  fields:
+    name: 觀賞樹苗
+    code: E014
+    type: 1
+
+- model: surveys.Product
+  pk: 84
+  fields:
+    name: 果樹苗
+    code: E015
+    type: 1
+
+- model: surveys.Product
+  pk: 85
+  fields:
+    name: 菇類-其他
+    code: E888
+    type: 1
+
+- model: surveys.Product
+  pk: 86
+  fields:
+    name: 其他農作
+    code: E999
+    type: 1
+
+- model: surveys.Product
+  pk: 87
+  fields:
+    name: 香蕉
+    code: C001
+    type: 1
+
+- model: surveys.Product
+  pk: 88
+  fields:
+    name: 芭蕉
+    code: C002
+    type: 1
+
+- model: surveys.Product
+  pk: 89
+  fields:
+    name: 鳳梨
+    code: C003
+    type: 1
+
+- model: surveys.Product
+  pk: 90
+  fields:
+    name: 其他柑桔(橘)類
+    code: C004
+    type: 1
+
+- model: surveys.Product
+  pk: 91
+  fields:
+    name: 橘子
+    code: C005
+    type: 1
+
+- model: surveys.Product
+  pk: 92
+  fields:
+    name: 柳丁(柳橙)
+    code: C006
+    type: 1
+
+- model: surveys.Product
+  pk: 93
+  fields:
+    name: 椪柑
+    code: C007
+    type: 1
+
+- model: surveys.Product
+  pk: 94
+  fields:
+    name: 紅柑
+    code: C008
+    type: 1
+
+- model: surveys.Product
+  pk: 95
+  fields:
+    name: 茂谷
+    code: C009
+    type: 1
+
+- model: surveys.Product
+  pk: 96
+  fields:
+    name: 海梨柑
+    code: C010
+    type: 1
+
+- model: surveys.Product
+  pk: 97
+  fields:
+    name: 桶柑
+    code: C011
+    type: 1
+
+- model: surveys.Product
+  pk: 98
+  fields:
+    name: 葡萄柚
+    code: C012
+    type: 1
+
+- model: surveys.Product
+  pk: 99
+  fields:
+    name: 檸檬
+    code: C013
+    type: 1
+
+- model: surveys.Product
+  pk: 100
+  fields:
+    name: 金桔
+    code: C014
+    type: 1
+
+- model: surveys.Product
+  pk: 101
+  fields:
+    name: 柚類
+    code: C015
+    type: 1
+
+- model: surveys.Product
+  pk: 102
+  fields:
+    name: 龍眼
+    code: C016
+    type: 1
+
+- model: surveys.Product
+  pk: 103
+  fields:
+    name: 芒果
+    code: C017
+    type: 1
+
+- model: surveys.Product
+  pk: 104
+  fields:
+    name: 芭樂(番石榴)
+    code: C018
+    type: 1
+
+- model: surveys.Product
+  pk: 105
+  fields:
+    name: 蓮霧
+    code: C019
+    type: 1
+
+- model: surveys.Product
+  pk: 106
+  fields:
+    name: 葡萄
+    code: C020
+    type: 1
+
+- model: surveys.Product
+  pk: 107
+  fields:
+    name: 枇杷
+    code: C021
+    type: 1
+
+- model: surveys.Product
+  pk: 108
+  fields:
+    name: 李
+    code: C022
+    type: 1
+
+- model: surveys.Product
+  pk: 109
+  fields:
+    name: 桃
+    code: C023
+    type: 1
+
+- model: surveys.Product
+  pk: 110
+  fields:
+    name: 柿
+    code: C024
+    type: 1
+
+- model: surveys.Product
+  pk: 111
+  fields:
+    name: 梅
+    code: C025
+    type: 1
+
+- model: surveys.Product
+  pk: 112
+  fields:
+    name: 荔枝
+    code: C026
+    type: 1
+
+- model: surveys.Product
+  pk: 113
+  fields:
+    name: 橄欖
+    code: C027
+    type: 1
+
+- model: surveys.Product
+  pk: 114
+  fields:
+    name: 楊桃
+    code: C028
+    type: 1
+
+- model: surveys.Product
+  pk: 115
+  fields:
+    name: 梨
+    code: C029
+    type: 1
+
+- model: surveys.Product
+  pk: 116
+  fields:
+    name: 蘋果
+    code: C030
+    type: 1
+
+- model: surveys.Product
+  pk: 117
+  fields:
+    name: 木瓜
+    code: C031
+    type: 1
+
+- model: surveys.Product
+  pk: 118
+  fields:
+    name: 棗
+    code: C032
+    type: 1
+
+- model: surveys.Product
+  pk: 119
+  fields:
+    name: 釋迦(番荔枝)
+    code: C033
+    type: 1
+
+- model: surveys.Product
+  pk: 120
+  fields:
+    name: 百香果
+    code: C034
+    type: 1
+
+- model: surveys.Product
+  pk: 121
+  fields:
+    name: 椰子
+    code: C035
+    type: 1
+
+- model: surveys.Product
+  pk: 122
+  fields:
+    name: 檳榔
+    code: C036
+    type: 1
+
+- model: surveys.Product
+  pk: 123
+  fields:
+    name: 火龍果(紅龍果)
+    code: C037
+    type: 1
+
+- model: surveys.Product
+  pk: 124
+  fields:
+    name: 菠蘿蜜
+    code: C038
+    type: 1
+
+- model: surveys.Product
+  pk: 125
+  fields:
+    name: 酪梨
+    code: C039
+    type: 1
+
+- model: surveys.Product
+  pk: 126
+  fields:
+    name: 紅毛丹(毛荔枝)
+    code: C040
+    type: 1
+
+- model: surveys.Product
+  pk: 127
+  fields:
+    name: 四季果(蘿梨、印度桑椹、諾麗果)
+    code: C041
+    type: 1
+
+- model: surveys.Product
+  pk: 128
+  fields:
+    name: 人心果
+    code: C042
+    type: 1
+
+- model: surveys.Product
+  pk: 129
+  fields:
+    name: 蛋黃果
+    code: C043
+    type: 1
+
+- model: surveys.Product
+  pk: 130
+  fields:
+    name: 榴槤蜜(小波羅蜜)
+    code: C044
+    type: 1
+
+- model: surveys.Product
+  pk: 131
+  fields:
+    name: 嘉寶果(樹葡萄)
+    code: C045
+    type: 1
+
+- model: surveys.Product
+  pk: 132
+  fields:
+    name: 楊梅
+    code: C046
+    type: 1
+
+- model: surveys.Product
+  pk: 133
+  fields:
+    name: 櫻桃
+    code: C047
+    type: 1
+
+- model: surveys.Product
+  pk: 134
+  fields:
+    name: 桑椹
+    code: C048
+    type: 1
+
+- model: surveys.Product
+  pk: 135
+  fields:
+    name: 果樹-其他
+    code: C999
+    type: 1
+
+- model: surveys.Product
+  pk: 136
+  fields:
+    name: 硬質玉米(飼料玉米)
+    code: D001
+    type: 1
+
+- model: surveys.Product
+  pk: 137
+  fields:
+    name: 食用玉米
+    code: D002
+    type: 1
+
+- model: surveys.Product
+  pk: 138
+  fields:
+    name: 麥類(大麥、小麥)
+    code: D003
+    type: 1
+
+- model: surveys.Product
+  pk: 139
+  fields:
+    name: 粟(小米)
+    code: D004
+    type: 1
+
+- model: surveys.Product
+  pk: 140
+  fields:
+    name: 高粱
+    code: D005
+    type: 1
+
+- model: surveys.Product
+  pk: 141
+  fields:
+    name: 大豆
+    code: D006
+    type: 1
+
+- model: surveys.Product
+  pk: 142
+  fields:
+    name: 花豆(大紅豆)
+    code: D007
+    type: 1
+
+- model: surveys.Product
+  pk: 143
+  fields:
+    name: 紅豆
+    code: D008
+    type: 1
+
+- model: surveys.Product
+  pk: 144
+  fields:
+    name: 綠豆
+    code: D009
+    type: 1
+
+- model: surveys.Product
+  pk: 145
+  fields:
+    name: 甘藷(地瓜)
+    code: D010
+    type: 1
+
+- model: surveys.Product
+  pk: 146
+  fields:
+    name: 落花生(土豆)
+    code: D011
+    type: 1
+
+- model: surveys.Product
+  pk: 147
+  fields:
+    name: 薏苡(薏仁)
+    code: D012
+    type: 1
+
+- model: surveys.Product
+  pk: 148
+  fields:
+    name: 雜糧-其他
+    code: D888
+    type: 1
+
+- model: surveys.Product
+  pk: 149
+  fields:
+    name: 牧草
+    code: E001
+    type: 1
+
+- model: surveys.Product
+  pk: 150
+  fields:
+    name: 青割玉米
+    code: E002
+    type: 1
+
+- model: surveys.Product
+  pk: 151
+  fields:
+    name: 山藥(淮山、紅薯)
+    code: D013
+    type: 1
+
+- model: surveys.Product
+  pk: 152
+  fields:
+    name: 樹薯(木薯)
+    code: D014
+    type: 1
+
+- model: surveys.Product
+  pk: 153
+  fields:
+    name: 菸草
+    code: D015
+    type: 1
+
+- model: surveys.Product
+  pk: 154
+  fields:
+    name: 芝麻(胡麻)
+    code: D016
+    type: 1
+
+- model: surveys.Product
+  pk: 155
+  fields:
+    name: 瓊麻
+    code: D017
+    type: 1
+
+- model: surveys.Product
+  pk: 156
+  fields:
+    name: 荖花(葉)
+    code: D018
+    type: 1
+
+- model: surveys.Product
+  pk: 157
+  fields:
+    name: 山葵
+    code: D019
+    type: 1
+
+- model: surveys.Product
+  pk: 158
+  fields:
+    name: 油茶(苦茶樹)
+    code: D020
+    type: 1
+
+- model: surveys.Product
+  pk: 159
+  fields:
+    name: 破布子
+    code: D021
+    type: 1
+
+- model: surveys.Product
+  pk: 160
+  fields:
+    name: 咖啡
+    code: D022
+    type: 1
+
+- model: surveys.Product
+  pk: 161
+  fields:
+    name: 製糖用甘蔗(原料甘蔗、白甘蔗)
+    code: D023
+    type: 1
+
+- model: surveys.Product
+  pk: 162
+  fields:
+    name: 生食用甘蔗(紅甘蔗)
+    code: D024
+    type: 1
+
+- model: surveys.Product
+  pk: 163
+  fields:
+    name: 九層塔
+    code: D025
+    type: 1
+
+- model: surveys.Product
+  pk: 164
+  fields:
+    name: 愛玉子
+    code: D026
+    type: 1
+
+- model: surveys.Product
+  pk: 165
+  fields:
+    name: 九尾草(狗尾草)
+    code: D027
+    type: 1
+
+- model: surveys.Product
+  pk: 166
+  fields:
+    name: 茶葉
+    code: D028
+    type: 1
+
+- model: surveys.Product
+  pk: 167
+  fields:
+    name: 茶菁-烏龍
+    code: D029
+    type: 1
+
+- model: surveys.Product
+  pk: 168
+  fields:
+    name: 茶菁-紅茶
+    code: D030
+    type: 1
+
+- model: surveys.Product
+  pk: 169
+  fields:
+    name: 茶菁-金萱
+    code: D031
+    type: 1
+
+- model: surveys.Product
+  pk: 170
+  fields:
+    name: 茶菁-翠玉
+    code: D032
+    type: 1
+
+- model: surveys.Product
+  pk: 171
+  fields:
+    name: 茶菁-四季春
+    code: D033
+    type: 1
+
+- model: surveys.Product
+  pk: 172
+  fields:
+    name: 茶菁-其他
+    code: D034
+    type: 1
+
+- model: surveys.Product
+  pk: 173
+  fields:
+    name: 洛神花
+    code: D035
+    type: 1
+
+- model: surveys.Product
+  pk: 174
+  fields:
+    name: 特作-其他
+    code: D999
+    type: 1
+
+- model: surveys.Product
+  pk: 175
+  fields:
+    name: 蘭花
+    code: K001
+    type: 1
+
+- model: surveys.Product
+  pk: 176
+  fields:
+    name: 水生瞳蓮荷花
+    code: K002
+    type: 1
+
+- model: surveys.Product
+  pk: 177
+  fields:
+    name: 聖誕紅(一品紅、聖誕花)
+    code: K003
+    type: 1
+
+- model: surveys.Product
+  pk: 178
+  fields:
+    name: 石斛蘭
+    code: K004
+    type: 1
+
+- model: surveys.Product
+  pk: 179
+  fields:
+    name: 火鶴花
+    code: K005
+    type: 1
+
+- model: surveys.Product
+  pk: 180
+  fields:
+    name: 蝴蝶蘭
+    code: K006
+    type: 1
+
+- model: surveys.Product
+  pk: 181
+  fields:
+    name: 玫瑰花
+    code: K007
+    type: 1
+
+- model: surveys.Product
+  pk: 182
+  fields:
+    name: 夜來香
+    code: K008
+    type: 1
+
+- model: surveys.Product
+  pk: 183
+  fields:
+    name: 康乃馨
+    code: K009
+    type: 1
+
+- model: surveys.Product
+  pk: 184
+  fields:
+    name: 雞冠花
+    code: K010
+    type: 1
+
+- model: surveys.Product
+  pk: 185
+  fields:
+    name: 洋桔梗
+    code: K011
+    type: 1
+
+- model: surveys.Product
+  pk: 186
+  fields:
+    name: 劍蘭(唐菖蒲)
+    code: K012
+    type: 1
+
+- model: surveys.Product
+  pk: 187
+  fields:
+    name: 菊花
+    code: K013
+    type: 1
+
+- model: surveys.Product
+  pk: 188
+  fields:
+    name: 長壽花(家樂花)
+    code: K014
+    type: 1
+
+- model: surveys.Product
+  pk: 189
+  fields:
+    name: 瓜葉菊(富貴菊、黃瓜花)
+    code: K015
+    type: 1
+
+- model: surveys.Product
+  pk: 190
+  fields:
+    name: 麗格海棠
+    code: K016
+    type: 1
+
+- model: surveys.Product
+  pk: 191
+  fields:
+    name: 百合
+    code: K017
+    type: 1
+
+- model: surveys.Product
+  pk: 192
+  fields:
+    name: 茶花(山茶花)
+    code: K018
+    type: 1
+
+- model: surveys.Product
+  pk: 193
+  fields:
+    name: 牡丹
+    code: K019
+    type: 1
+
+- model: surveys.Product
+  pk: 194
+  fields:
+    name: 蜀葵(一丈紅)
+    code: K020
+    type: 1
+
+- model: surveys.Product
+  pk: 195
+  fields:
+    name: 香水蓮花
+    code: K021
+    type: 1
+
+- model: surveys.Product
+  pk: 196
+  fields:
+    name: 千日紅(圓仔花)
+    code: K022
+    type: 1
+
+- model: surveys.Product
+  pk: 197
+  fields:
+    name: 野薑花
+    code: K023
+    type: 1
+
+- model: surveys.Product
+  pk: 198
+  fields:
+    name: 玉蘭花
+    code: K024
+    type: 1
+
+- model: surveys.Product
+  pk: 199
+  fields:
+    name: 葉蘭
+    code: K025
+    type: 1
+
+- model: surveys.Product
+  pk: 200
+  fields:
+    name: 繡球花/紫陽花
+    code: K026
+    type: 1
+
+- model: surveys.Product
+  pk: 201
+  fields:
+    name: 桔梗
+    code: K027
+    type: 1
+
+- model: surveys.Product
+  pk: 202
+  fields:
+    name: 星辰花
+    code: K028
+    type: 1
+
+- model: surveys.Product
+  pk: 203
+  fields:
+    name: 麒麟草
+    code: K029
+    type: 1
+
+- model: surveys.Product
+  pk: 204
+  fields:
+    name: 深山櫻
+    code: K030
+    type: 1
+
+- model: surveys.Product
+  pk: 205
+  fields:
+    name: 茉莉
+    code: K031
+    type: 1
+
+- model: surveys.Product
+  pk: 206
+  fields:
+    name: 向日葵(太陽花)
+    code: K032
+    type: 1
+
+- model: surveys.Product
+  pk: 207
+  fields:
+    name: 花卉-其他
+    code: K033
+    type: 1
+
+- model: surveys.Product
+  pk: 208
+  fields:
+    name: 櫻
+    code: K034
+    type: 1
+
+- model: surveys.Product
+  pk: 209
+  fields:
+    name: 柏
+    code: K035
+    type: 1
+
+- model: surveys.Product
+  pk: 210
+  fields:
+    name: 羅漢松
+    code: K036
+    type: 1
+
+- model: surveys.Product
+  pk: 211
+  fields:
+    name: 桃花心木
+    code: K037
+    type: 1
+
+- model: surveys.Product
+  pk: 212
+  fields:
+    name: 六月雪
+    code: K038
+    type: 1
+
+- model: surveys.Product
+  pk: 213
+  fields:
+    name: 變葉木
+    code: K039
+    type: 1
+
+- model: surveys.Product
+  pk: 214
+  fields:
+    name: 金錢樹
+    code: K040
+    type: 1
+
+- model: surveys.Product
+  pk: 215
+  fields:
+    name: 松
+    code: K041
+    type: 1
+
+- model: surveys.Product
+  pk: 216
+  fields:
+    name: 袖珍椰子
+    code: K042
+    type: 1
+
+- model: surveys.Product
+  pk: 217
+  fields:
+    name: 黛粉葉
+    code: K043
+    type: 1
+
+- model: surveys.Product
+  pk: 218
+  fields:
+    name: 波斯頓蕨
+    code: K044
+    type: 1
+
+- model: surveys.Product
+  pk: 219
+  fields:
+    name: 桂花
+    code: K045
+    type: 1
+
+- model: surveys.Product
+  pk: 220
+  fields:
+    name: 牛樟
+    code: K046
+    type: 1
+
+- model: surveys.Product
+  pk: 221
+  fields:
+    name: 電信蘭
+    code: K047
+    type: 1
+
+- model: surveys.Product
+  pk: 222
+  fields:
+    name: 波浪火鶴
+    code: K048
+    type: 1
+
+- model: surveys.Product
+  pk: 223
+  fields:
+    name: 無患子
+    code: K049
+    type: 1
+
+- model: surveys.Product
+  pk: 224
+  fields:
+    name: 楊柳
+    code: K050
+    type: 1
+
+- model: surveys.Product
+  pk: 225
+  fields:
+    name: 櫸樹
+    code: K051
+    type: 1
+
+- model: surveys.Product
+  pk: 226
+  fields:
+    name: 鵝掌藤
+    code: K052
+    type: 1
+
+- model: surveys.Product
+  pk: 227
+  fields:
+    name: 竹
+    code: K053
+    type: 1
+
+- model: surveys.Product
+  pk: 228
+  fields:
+    name: 馬拉巴栗(發財樹)
+    code: K054
+    type: 1
+
+- model: surveys.Product
+  pk: 229
+  fields:
+    name: 赤楠
+    code: K055
+    type: 1
+
+- model: surveys.Product
+  pk: 230
+  fields:
+    name: 象牙樹
+    code: K056
+    type: 1
+
+- model: surveys.Product
+  pk: 231
+  fields:
+    name: 山柑
+    code: K057
+    type: 1
+
+- model: surveys.Product
+  pk: 232
+  fields:
+    name: 水燭草
+    code: K058
+    type: 1
+
+- model: surveys.Product
+  pk: 233
+  fields:
+    name: 七里香
+    code: K059
+    type: 1
+
+- model: surveys.Product
+  pk: 234
+  fields:
+    name: 樹蘭
+    code: K060
+    type: 1
+
+- model: surveys.Product
+  pk: 235
+  fields:
+    name: 中東海棗
+    code: K061
+    type: 1
+
+- model: surveys.Product
+  pk: 236
+  fields:
+    name: 鳳梨花
+    code: K062
+    type: 1
+
+- model: surveys.Product
+  pk: 237
+  fields:
+    name: 百合竹
+    code: K063
+    type: 1
+
+- model: surveys.Product
+  pk: 238
+  fields:
+    name: 沉香
+    code: K064
+    type: 1
+
+- model: surveys.Product
+  pk: 239
+  fields:
+    name: 黃梔花/梔子花
+    code: K065
+    type: 1
+
+- model: surveys.Product
+  pk: 240
+  fields:
+    name: 白楊木
+    code: K066
+    type: 1
+
+- model: surveys.Product
+  pk: 241
+  fields:
+    name: 植栽-其他
+    code: K067
+    type: 1
+
+- model: surveys.Product
+  pk: 242
+  fields:
+    name: 棕櫚葉
+    code: K068
+    type: 1
+
+- model: surveys.Product
+  pk: 243
+  fields:
+    name: 黃椰子葉
+    code: K069
+    type: 1
+
+- model: surveys.Product
+  pk: 244
+  fields:
+    name: 熱帶蕉類植物
+    code: K070
+    type: 1
+
+- model: surveys.Product
+  pk: 245
+  fields:
+    name: 寶石葉
+    code: K071
+    type: 1
+
+- model: surveys.Product
+  pk: 246
+  fields:
+    name: 其他花卉
+    code: K999
+    type: 1
+
+- model: surveys.Product
+  pk: 247
+  fields:
+    name: 肉豬
+    code: F001
+    type: 2
+
+- model: surveys.Product
+  pk: 248
+  fields:
+    name: 種豬
+    code: F002
+    type: 2
+
+- model: surveys.Product
+  pk: 249
+  fields:
+    name: 淘汰豬
+    code: F003
+    type: 2
+
+- model: surveys.Product
+  pk: 250
+  fields:
+    name: 小豬
+    code: F004
+    type: 2
+
+- model: surveys.Product
+  pk: 251
+  fields:
+    name: 其他
+    code: F999
+    type: 2
+
+- model: surveys.Product
+  pk: 252
+  fields:
+    name: 蛋雞
+    code: G001
+    type: 2
+
+- model: surveys.Product
+  pk: 253
+  fields:
+    name: 白肉雞
+    code: G002
+    type: 2
+
+- model: surveys.Product
+  pk: 254
+  fields:
+    name: 有色肉雞
+    code: G003
+    type: 2
+
+- model: surveys.Product
+  pk: 255
+  fields:
+    name: 肉種雞
+    code: G004
+    type: 2
+
+- model: surveys.Product
+  pk: 256
+  fields:
+    name: 蛋種雞
+    code: G005
+    type: 2
+
+- model: surveys.Product
+  pk: 257
+  fields:
+    name: 淘汰雞
+    code: G006
+    type: 2
+
+- model: surveys.Product
+  pk: 258
+  fields:
+    name: 小雞(白肉雞)
+    code: G0071
+    type: 2
+
+- model: surveys.Product
+  pk: 259
+  fields:
+    name: 小雞(有色肉雞)
+    code: G0072
+    type: 2
+
+- model: surveys.Product
+  pk: 260
+  fields:
+    name: 小雞(蛋雞)
+    code: G0073
+    type: 2
+
+- model: surveys.Product
+  pk: 261
+  fields:
+    name: 中雞(白肉雞)
+    code: G0081
+    type: 2
+
+- model: surveys.Product
+  pk: 262
+  fields:
+    name: 中雞(有色肉雞)
+    code: G0082
+    type: 2
+
+- model: surveys.Product
+  pk: 263
+  fields:
+    name: 中雞(蛋雞)
+    code: G0083
+    type: 2
+
+- model: surveys.Product
+  pk: 264
+  fields:
+    name: 雞糞
+    code: G009
+    type: 2
+
+- model: surveys.Product
+  pk: 265
+  fields:
+    name: 雞蛋
+    code: G010
+    type: 2
+
+- model: surveys.Product
+  pk: 266
+  fields:
+    name: 其他
+    code: G999
+    type: 2
+
+- model: surveys.Product
+  pk: 267
+  fields:
+    name: 肉羊
+    code: H001
+    type: 2
+
+- model: surveys.Product
+  pk: 268
+  fields:
+    name: 乳羊(泌乳羊)
+    code: H002
+    type: 2
+
+- model: surveys.Product
+  pk: 269
+  fields:
+    name: 淘汰羊
+    code: H003
+    type: 2
+
+- model: surveys.Product
+  pk: 270
+  fields:
+    name: 小羊
+    code: H004
+    type: 2
+
+- model: surveys.Product
+  pk: 271
+  fields:
+    name: 羊乳
+    code: H005
+    type: 2
+
+- model: surveys.Product
+  pk: 272
+  fields:
+    name: 羊糞
+    code: H006
+    type: 2
+
+- model: surveys.Product
+  pk: 273
+  fields:
+    name: 鹿
+    code: H007
+    type: 2
+
+- model: surveys.Product
+  pk: 274
+  fields:
+    name: 鹿茸
+    code: H008
+    type: 2
+
+- model: surveys.Product
+  pk: 275
+  fields:
+    name: 蛋鴨(菜鴨)
+    code: H009
+    type: 2
+
+- model: surveys.Product
+  pk: 276
+  fields:
+    name: 肉鴨
+    code: H010
+    type: 2
+
+- model: surveys.Product
+  pk: 277
+  fields:
+    name: 肉種鴨
+    code: H011
+    type: 2
+
+- model: surveys.Product
+  pk: 278
+  fields:
+    name: 淘汰鴨
+    code: H012
+    type: 2
+
+- model: surveys.Product
+  pk: 279
+  fields:
+    name: 鴨蛋
+    code: H013
+    type: 2
+
+- model: surveys.Product
+  pk: 280
+  fields:
+    name: 鵝
+    code: H014
+    type: 2
+
+- model: surveys.Product
+  pk: 281
+  fields:
+    name: 火雞
+    code: H015
+    type: 2
+
+- model: surveys.Product
+  pk: 282
+  fields:
+    name: 鴕鳥
+    code: H016
+    type: 2
+
+- model: surveys.Product
+  pk: 283
+  fields:
+    name: 蜜蜂
+    code: H017
+    type: 2
+
+- model: surveys.Product
+  pk: 284
+  fields:
+    name: 蜂蜜
+    code: H018
+    type: 2
+
+- model: surveys.Product
+  pk: 285
+  fields:
+    name: 種羊
+    code: H019
+    type: 2
+
+- model: surveys.Product
+  pk: 286
+  fields:
+    name: 其他家畜
+    code: H777
+    type: 2
+
+- model: surveys.Product
+  pk: 287
+  fields:
+    name: 其他家禽
+    code: H888
+    type: 2
+
+- model: surveys.Product
+  pk: 288
+  fields:
+    name: 其他
+    code: H999
+    type: 2
+
+- model: surveys.Product
+  pk: 289
+  fields:
+    name: 泌乳牛
+    code: J001
+    type: 2
+
+- model: surveys.Product
+  pk: 290
+  fields:
+    name: 種乳公牛
+    code: J002
+    type: 2
+
+- model: surveys.Product
+  pk: 291
+  fields:
+    name: 不泌乳牛
+    code: J003
+    type: 2
+
+- model: surveys.Product
+  pk: 292
+  fields:
+    name: 肉牛
+    code: J004
+    type: 2
+
+- model: surveys.Product
+  pk: 293
+  fields:
+    name: 淘汰牛
+    code: J005
+    type: 2
+
+- model: surveys.Product
+  pk: 294
+  fields:
+    name: 小牛
+    code: J006
+    type: 2
+
+- model: surveys.Product
+  pk: 295
+  fields:
+    name: 牛乳
+    code: J007
+    type: 2
+
+- model: surveys.Product
+  pk: 296
+  fields:
+    name: 牛糞
+    code: J008
+    type: 2
+
+- model: surveys.Product
+  pk: 297
+  fields:
+    name: 其他
+    code: J999
+    type: 2

@@ -1,105 +1,105 @@
-- model: basefarmers.Unit
-  pk: 581
+- model: surveys.Unit
+  pk: 1
   fields:
     code: 0
     name: 平方公尺
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 582
+- model: surveys.Unit
+  pk: 2
   fields:
     code: 1
     name: 公斤
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 583
+- model: surveys.Unit
+  pk: 3
   fields:
     code: 2
     name: 箱
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 584
+- model: surveys.Unit
+  pk: 4
   fields:
     code: 3
     name: 打
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 585
+- model: surveys.Unit
+  pk: 5
   fields:
     code: 4
     name: 盆
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 586
+- model: surveys.Unit
+  pk: 6
   fields:
     code: 5
     name: 支
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 587
+- model: surveys.Unit
+  pk: 7
   fields:
     code: 6
     name: 包
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 588
+- model: surveys.Unit
+  pk: 8
   fields:
     code: 7
     name: 把
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 589
+- model: surveys.Unit
+  pk: 9
   fields:
     code: 8
     name: 瓶
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 590
+- model: surveys.Unit
+  pk: 10
   fields:
     code: 9
     name: 株
-    type: crop
+    type: 1
 
-- model: basefarmers.Unit
-  pk: 591
+- model: surveys.Unit
+  pk: 11
   fields:
     code: 1
     name: 公斤
-    type: animal
+    type: 2
 
-- model: basefarmers.Unit
-  pk: 592
+- model: surveys.Unit
+  pk: 12
   fields:
     code: 2
     name: 箱
-    type: animal
+    type: 2
 
-- model: basefarmers.Unit
-  pk: 593
+- model: surveys.Unit
+  pk: 13
   fields:
     code: 3
     name: 頭
-    type: animal
+    type: 2
 
-- model: basefarmers.Unit
-  pk: 594
+- model: surveys.Unit
+  pk: 14
   fields:
     code: 4
     name: 隻
-    type: animal
+    type: 2
 
-- model: basefarmers.Unit
-  pk: 595
+- model: surveys.Unit
+  pk: 15
   fields:
     code: 5
     name: 兩
-    type: animal
+    type: 2
 

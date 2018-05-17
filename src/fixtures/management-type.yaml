@@ -1,69 +1,83 @@
-- model: basefarmers.ManagementType
-  pk: 541
+- model: surveys.ManagementType
+  pk: 1
   fields:
+    code: 1
     name: 稻作
 
-- model: basefarmers.ManagementType
-  pk: 542
+- model: surveys.ManagementType
+  pk: 2
   fields:
+    code: 2
     name: 雜糧
 
-- model: basefarmers.ManagementType
-  pk: 543
+- model: surveys.ManagementType
+  pk: 3
   fields:
+    code: 3
     name: 其他特作
 
-- model: basefarmers.ManagementType
-  pk: 544
+- model: surveys.ManagementType
+  pk: 4
   fields:
+    code: 4
     name: 茶
 
-- model: basefarmers.ManagementType
-  pk: 545
+- model: surveys.ManagementType
+  pk: 5
   fields:
+    code: 5
     name: 蔬菜
 
-- model: basefarmers.ManagementType
-  pk: 546
+- model: surveys.ManagementType
+  pk: 6
   fields:
+    code: 6
     name: 果樹
 
-- model: basefarmers.ManagementType
-  pk: 547
+- model: surveys.ManagementType
+  pk: 7
   fields:
+    code: 7
     name: 食用菇蕈
 
-- model: basefarmers.ManagementType
-  pk: 548
+- model: surveys.ManagementType
+  pk: 8
   fields:
+    code: 8
     name: 花卉
 
-- model: basefarmers.ManagementType
-  pk: 549
+- model: surveys.ManagementType
+  pk: 9
   fields:
+    code: 9
     name: 種苗
 
-- model: basefarmers.ManagementType
-  pk: 550
+- model: surveys.ManagementType
+  pk: 10
   fields:
+    code: 10
     name: 其他農作物
 
-- model: basefarmers.ManagementType
-  pk: 551
+- model: surveys.ManagementType
+  pk: 11
   fields:
+    code: 11
     name: 乳牛
 
-- model: basefarmers.ManagementType
-  pk: 552
+- model: surveys.ManagementType
+  pk: 12
   fields:
+    code: 12
     name: 豬
 
-- model: basefarmers.ManagementType
-  pk: 553
+- model: surveys.ManagementType
+  pk: 13
   fields:
+    code: 13
     name: 雞
 
-- model: basefarmers.ManagementType
-  pk: 554
+- model: surveys.ManagementType
+  pk: 14
   fields:
+    code: 14
     name: 其他畜禽

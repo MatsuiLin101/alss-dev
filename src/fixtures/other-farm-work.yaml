@@ -1,0 +1,14 @@
+- model: surveys.OtherFarmWork
+  pk: 1
+  fields:
+    name: 無
+
+- model: surveys.OtherFarmWork
+  pk: 2
+  fields:
+    name: 農牧業時間為多
+
+- model: surveys.OtherFarmWork
+  pk: 3
+  fields:
+    name: 非農牧業時間為多
