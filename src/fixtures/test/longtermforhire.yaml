@@ -1,18 +1,18 @@
-- model: surveys.LongTermHire
+- model: surveys18.LongTermHire
   pk: 1
   fields:
     survey: 1
     avg_work_day: 5
     work_type: 1
 
-- model: surveys.LongTermHire
+- model: surveys18.LongTermHire
   pk: 2
   fields:
     survey: 1
     avg_work_day: 10
     work_type: 2
 
-- model: surveys.LongTermHire
+- model: surveys18.LongTermHire
   pk: 3
   fields:
     survey: 2

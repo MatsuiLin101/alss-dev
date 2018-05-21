@@ -1,10 +1,10 @@
-- model: surveys.Management
+- model: surveys18.Management
   pk: 1
   fields:
     survey: 1
     types: [1, 2, 5]
 
-- model: surveys.Management
+- model: surveys18.Management
   pk: 2
   fields:
     survey: 2

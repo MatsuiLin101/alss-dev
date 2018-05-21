@@ -1,14 +1,14 @@
-- model: surveys.AgeScope
+- model: surveys18.AgeScope
   pk: 1
   fields:
     name: 44歲以下
 
-- model: surveys.AgeScope
+- model: surveys18.AgeScope
   pk: 2
   fields:
     name: 45~64歲
 
-- model: surveys.AgeScope
+- model: surveys18.AgeScope
   pk: 3
   fields:
     name: 65歲以上

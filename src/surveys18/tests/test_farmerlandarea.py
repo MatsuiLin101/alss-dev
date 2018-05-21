@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from surveys.models import Survey, FarmerLandArea, FarmerLandType
+from surveys18.models import Survey, FarmerLandArea, FarmerLandType
 
 
 class ModelTestCase(TestCase):

@@ -1,67 +1,67 @@
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 1
   fields:
     code: 1
     name: 不識字
     age: 0
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 2
   fields:
     code: 2
     name: 自修
     age: 6
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 3
   fields:
     code: 3
     name: 國小
     age: 6
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 4
   fields:
     code: 4
     name: 國(初)中(初職)
     age: 12
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 5
   fields:
     code: 5
     name: 高中
     age: 15
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 6
   fields:
     code: 6
     name: 高職
     age: 15
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 7
   fields:
     code: 7
     name: 專科
     age: 18
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 8
   fields:
     code: 8
     name: 大學
     age: 18
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 9
   fields:
     code: 9
     name: 碩士
     age: 22
 
-- model: surveys.EducationLevel
+- model: surveys18.EducationLevel
   pk: 10
   fields:
     code: 10

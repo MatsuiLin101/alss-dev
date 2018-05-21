@@ -1,4 +1,4 @@
-- model: surveys.Population
+- model: surveys18.Population
   pk: 1
   fields:
     survey: 1
@@ -10,7 +10,7 @@
     life_style: 4
     other_farm_work: 2
 
-- model: surveys.Population
+- model: surveys18.Population
   pk: 2
   fields:
     survey: 1
@@ -22,7 +22,7 @@
     life_style: 6
     other_farm_work: 2
 
-- model: surveys.Population
+- model: surveys18.Population
   pk: 3
   fields:
     survey: 1
@@ -34,7 +34,7 @@
     life_style: 8
     other_farm_work: 3
 
-- model: surveys.Population
+- model: surveys18.Population
   pk: 4
   fields:
     survey: 2

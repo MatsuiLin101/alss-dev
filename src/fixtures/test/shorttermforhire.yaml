@@ -1,4 +1,4 @@
-- model: surveys.ShortTermHire
+- model: surveys18.ShortTermHire
   pk: 1
   fields:
     survey: 1
@@ -6,7 +6,7 @@
     month: 1
     work_types: 1
 
-- model: surveys.ShortTermHire
+- model: surveys18.ShortTermHire
   pk: 2
   fields:
     survey: 1
@@ -14,7 +14,7 @@
     month: 2
     work_types: 2
 
-- model: surveys.ShortTermHire
+- model: surveys18.ShortTermHire
   pk: 3
   fields:
     survey: 1
@@ -22,7 +22,7 @@
     month: 3
     work_types: 3
 
-- model: surveys.ShortTermHire
+- model: surveys18.ShortTermHire
   pk: 4
   fields:
     survey: 1
@@ -30,7 +30,7 @@
     month: 6
     work_types: 2
 
-- model: surveys.ShortTermHire
+- model: surveys18.ShortTermHire
   pk: 5
   fields:
     survey: 1

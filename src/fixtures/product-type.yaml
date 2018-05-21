@@ -1,9 +1,9 @@
-- model: surveys.ProductType
+- model: surveys18.ProductType
   pk: 1
   fields:
     name: crop
 
-- model: surveys.ProductType
+- model: surveys18.ProductType
   pk: 2
   fields:
     name: animal

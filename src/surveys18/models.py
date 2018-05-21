@@ -26,8 +26,8 @@ YES_NO_CHOICES = (
 )
 
 NUMBER_WORKERS_CHOICES = (
-    Q(app_label='surveys', model='longtermhire') |
-    Q(app_label='surveys', model='shorttermhire')
+    Q(app_label='surveys18', model='longtermhire') |
+    Q(app_label='surveys18', model='shorttermhire')
 )
 
 
@@ -47,8 +47,8 @@ class Survey(Model):
                         verbose_name=_('Address'))
     is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
                            blank=True, verbose_name=_('Hire'))
-    lacks = ManyToManyField('surveys.Lack', blank=True,
-                            related_name='surveys',
+    lacks = ManyToManyField('surveys18.Lack', blank=True,
+                            related_name='surveys18',
                             verbose_name=_('Lack'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))
     is_updated = BooleanField(default=False, verbose_name=_('Is Updated'))
@@ -81,19 +81,19 @@ class Survey(Model):
 
 
 class ShortTermLack(Model):
-    survey = ForeignKey('surveys.Survey',
+    survey = ForeignKey('surveys18.Survey',
                         related_name='short_term_lacks', blank=True,
                         verbose_name=_('Survey'))
-    product = ForeignKey('surveys.Product',
+    product = ForeignKey('surveys18.Product',
                          related_name='short_term_lacks', null=True,
                          blank=True, verbose_name=_('Product'))
-    work_types = ManyToManyField('surveys.WorkType',
+    work_types = ManyToManyField('surveys18.WorkType',
                                  related_name='short_term_lacks',
                                  blank=True, verbose_name=_('Work Types'
                                                             ))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
-    months = ManyToManyField('surveys.Month',
+    months = ManyToManyField('surveys18.Month',
                              related_name='short_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -112,14 +112,14 @@ class ShortTermLack(Model):
 
 
 class LongTermLack(Model):
-    survey = ForeignKey('surveys.Survey', related_name='long_term_lacks'
+    survey = ForeignKey('surveys18.Survey', related_name='long_term_lacks'
                         , blank=True, verbose_name=_('Survey'))
-    work_type = ForeignKey('surveys.WorkType',
+    work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_lacks', blank=True,
                            verbose_name=_('Work Type'))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
-    months = ManyToManyField('surveys.Month',
+    months = ManyToManyField('surveys18.Month',
                              related_name='long_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -138,9 +138,9 @@ class LongTermLack(Model):
 
 
 class NoSalaryHire(Model):
-    survey = ForeignKey('surveys.Survey', related_name='no_salary_hires'
+    survey = ForeignKey('surveys18.Survey', related_name='no_salary_hires'
                         , blank=True, verbose_name=_('Survey'))
-    month = ForeignKey('surveys.Month', null=True, blank=True,
+    month = ForeignKey('surveys18.Month', null=True, blank=True,
                        verbose_name=_('Month'))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
@@ -164,7 +164,7 @@ class NumberWorkers(Model):
                               limit_choices_to=NUMBER_WORKERS_CHOICES)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    age_scope = ForeignKey('surveys.AgeScope',
+    age_scope = ForeignKey('surveys18.AgeScope',
                            related_name='number_workers', null=True,
                            blank=True, verbose_name=_('Age Scope'))
     value = IntegerField(null=True, blank=True, verbose_name=_('Value'))
@@ -221,14 +221,14 @@ class WorkType(Model):
 
 
 class ShortTermHire(Model):
-    survey = ForeignKey('surveys.Survey',
+    survey = ForeignKey('surveys18.Survey',
                         related_name='short_term_hires', blank=True,
                         verbose_name=_('Survey'))
     avg_work_day = IntegerField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
-    month = ForeignKey('surveys.Month', null=True, blank=True,
+    month = ForeignKey('surveys18.Month', null=True, blank=True,
                        verbose_name=_('Month'))
-    work_types = ManyToManyField('surveys.WorkType', blank=True,
+    work_types = ManyToManyField('surveys18.WorkType', blank=True,
                                  related_name='short_term_hires',
                                  verbose_name=_('Work Types'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -247,11 +247,11 @@ class ShortTermHire(Model):
 
 
 class LongTermHire(Model):
-    survey = ForeignKey('surveys.Survey', related_name='long_term_hires'
+    survey = ForeignKey('surveys18.Survey', related_name='long_term_hires'
                         , blank=True, verbose_name=_('Survey'))
     avg_work_day = IntegerField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
-    work_type = ForeignKey('surveys.WorkType',
+    work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -270,7 +270,7 @@ class LongTermHire(Model):
 
 
 class Subsidy(Model):
-    survey = OneToOneField('surveys.Survey', related_name='subsidy',
+    survey = OneToOneField('surveys18.Survey', related_name='subsidy',
                            verbose_name=_('Survey'))
     is_subsidy = IntegerField(null=True, blank=True,
                               choices=YES_NO_CHOICES,
@@ -285,7 +285,7 @@ class Subsidy(Model):
                               verbose_name=_('Hour Delta'))
     remark = CharField(max_length=100, null=True, blank=True,
                        verbose_name=_('Remark'))
-    reasons = ManyToManyField('surveys.RefuseReason',
+    reasons = ManyToManyField('surveys18.RefuseReason',
                               related_name='subsidy', blank=True,
                               verbose_name=_('subsidies'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -322,28 +322,28 @@ class RefuseReason(Model):
 
 
 class Population(Model):
-    survey = ForeignKey('surveys.Survey', related_name='populations',
+    survey = ForeignKey('surveys18.Survey', related_name='populations',
                         blank=True, verbose_name=_('Survey'))
-    relationship = ForeignKey('surveys.Relationship',
+    relationship = ForeignKey('surveys18.Relationship',
                               related_name='relationship', null=True,
                               blank=True, verbose_name=_('Relationship'
                                                          ))
-    gender = ForeignKey('surveys.Gender', related_name='relationship',
+    gender = ForeignKey('surveys18.Gender', related_name='relationship',
                         null=True, blank=True, verbose_name=_('Gender'))
     birth_year = IntegerField(null=True, blank=True,
                               verbose_name=_('Birth Year'))
-    education_level = ForeignKey('surveys.EducationLevel',
+    education_level = ForeignKey('surveys18.EducationLevel',
                                  related_name='education_level',
                                  null=True, blank=True,
                                  verbose_name=_('Education Level'))
-    farmer_work_day = ForeignKey('surveys.FarmerWorkDay',
+    farmer_work_day = ForeignKey('surveys18.FarmerWorkDay',
                                  related_name='farmer_work_day',
                                  null=True, blank=True,
                                  verbose_name=_('Farmer Work Day'))
-    life_style = ForeignKey('surveys.LifeStyle',
+    life_style = ForeignKey('surveys18.LifeStyle',
                             related_name='life_style', null=True,
                             blank=True, verbose_name=_('Life Style'))
-    other_farm_work = ForeignKey('surveys.OtherFarmWork',
+    other_farm_work = ForeignKey('surveys18.OtherFarmWork',
                                  related_name='other_farm_work',
                                  null=True, blank=True,
                                  verbose_name=_('Other Farm Work'))
@@ -477,9 +477,9 @@ class Gender(Model):
 
 
 class PopulationAge(Model):
-    survey = ForeignKey('surveys.Survey', related_name='population_ages'
+    survey = ForeignKey('surveys18.Survey', related_name='population_ages'
                         , verbose_name=_('Survey'))
-    gender = ForeignKey('surveys.Gender', verbose_name=_('Gender'))
+    gender = ForeignKey('surveys18.Gender', verbose_name=_('Gender'))
     is_under_15 = BooleanField(default=False, verbose_name=_('Is Male'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Count'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -498,14 +498,14 @@ class PopulationAge(Model):
 
 
 class CropMarketing(Model):
-    survey = ForeignKey('surveys.Survey', related_name='crop_marketings'
+    survey = ForeignKey('surveys18.Survey', related_name='crop_marketings'
                         , blank=True, verbose_name=_('Survey'))
-    product = ForeignKey('surveys.Product', related_name='products',
+    product = ForeignKey('surveys18.Product', related_name='products',
                          null=True, blank=True,
                          verbose_name=_('Product Code'))
-    loss = ForeignKey('surveys.Loss', related_name='crop_marketing_loss'
+    loss = ForeignKey('surveys18.Loss', related_name='crop_marketing_loss'
                       , null=True, blank=True, verbose_name=_('Loss'))
-    unit = ForeignKey('surveys.Unit', related_name='crop_marketing_unit'
+    unit = ForeignKey('surveys18.Unit', related_name='crop_marketing_unit'
                       , null=True, blank=True, verbose_name=_('Unit'))
     land_number = IntegerField(null=True, blank=True,
                                verbose_name=_('Land Number'))
@@ -536,20 +536,20 @@ class CropMarketing(Model):
 
 
 class LivestockMarketing(Model):
-    survey = ForeignKey('surveys.Survey',
+    survey = ForeignKey('surveys18.Survey',
                         related_name='livestock_marketings',
                         blank=True, verbose_name=_('Survey'))
-    product = ForeignKey('surveys.Product',
+    product = ForeignKey('surveys18.Product',
                          related_name='livestock_marketing_product',
                          null=True, blank=True, verbose_name=_('Product'
                                                                ))
-    loss = ForeignKey('surveys.Loss',
+    loss = ForeignKey('surveys18.Loss',
                       related_name='livestock_marketing_loss',
                       null=True, blank=True, verbose_name=_('Loss'))
-    unit = ForeignKey('surveys.Unit',
+    unit = ForeignKey('surveys18.Unit',
                       related_name='livestock_marketing_unit',
                       null=True, blank=True, verbose_name=_('Unit'))
-    contract = ForeignKey('surveys.Contract', related_name='contract',
+    contract = ForeignKey('surveys18.Contract', related_name='contract',
                           null=True, blank=True,
                           verbose_name=_('Contract'))
     raising_number = IntegerField(null=True, blank=True,
@@ -577,7 +577,7 @@ class Loss(Model):
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True,
                      verbose_name=_('Name'))
-    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+    type = ForeignKey('surveys18.ProductType', null=True, blank=True,
                       verbose_name=_('Product Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
@@ -617,7 +617,7 @@ class Unit(Model):
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True,
                      verbose_name=_('Name'))
-    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+    type = ForeignKey('surveys18.ProductType', null=True, blank=True,
                       verbose_name=_('Product Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
@@ -646,7 +646,7 @@ class Product(Model):
     name = CharField(max_length=50, null=True, blank=True,
                      verbose_name=_('Name'))
     code = CharField(max_length=50, verbose_name=_('Code'))
-    type = ForeignKey('surveys.ProductType', null=True, blank=True,
+    type = ForeignKey('surveys18.ProductType', null=True, blank=True,
                       verbose_name=_('Product Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
@@ -702,9 +702,9 @@ class ManagementType(Model):
 
 
 class Management(Model):
-    survey = OneToOneField('surveys.Survey', related_name='managements'
+    survey = OneToOneField('surveys18.Survey', related_name='managements'
                            , verbose_name=_('Survey'))
-    types = ManyToManyField('surveys.ManagementType',
+    types = ManyToManyField('surveys18.ManagementType',
                             related_name='managements',
                             verbose_name=_('Types'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -745,10 +745,10 @@ class FarmRelatedBusiness(Model):
 
 
 class Business(Model):
-    survey = OneToOneField('surveys.Survey', related_name='businesses',
+    survey = OneToOneField('surveys18.Survey', related_name='businesses',
                            verbose_name=_('Survey'))
     farm_related_businesses = \
-        ManyToManyField('surveys.FarmRelatedBusiness',
+        ManyToManyField('surveys18.FarmRelatedBusiness',
                         related_name='businesses',
                         verbose_name=_('Farm Related Business'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -789,10 +789,10 @@ class FarmerLandType(Model):
 
 
 class FarmerLandArea(Model):
-    survey = ForeignKey('surveys.Survey',
+    survey = ForeignKey('surveys18.Survey',
                         related_name='farmer_land_areas', blank=True,
                         verbose_name=_('Survey'))
-    type = ForeignKey('surveys.FarmerLandType',
+    type = ForeignKey('surveys18.FarmerLandType',
                       related_name='farmer_land_areas', null=True,
                       blank=True, verbose_name=_('Type'))
     value = IntegerField(null=True, blank=True,
@@ -813,7 +813,7 @@ class FarmerLandArea(Model):
 
 
 class Phone(Model):
-    survey = ForeignKey('surveys.Survey', related_name='phones',
+    survey = ForeignKey('surveys18.Survey', related_name='phones',
                         verbose_name=_('Survey'))
     phone = CharField(max_length=100, null=True, blank=True,
                       verbose_name=_('Phone'))
@@ -852,7 +852,7 @@ class Lack(Model):
 
 
 class AddressMatch(Model):
-    survey = OneToOneField('surveys.Survey',
+    survey = OneToOneField('surveys18.Survey',
                            related_name='address_match',
                            verbose_name=_('Survey'))
     match = BooleanField(default=False, verbose_name=_('Address Match'))
@@ -912,11 +912,11 @@ class MarketType(Model):
 
 
 class AnnualIncome(Model):
-    survey = ForeignKey('surveys.Survey', related_name='annual_incomes'
+    survey = ForeignKey('surveys18.Survey', related_name='annual_incomes'
                         , blank=True, verbose_name=_('Survey'))
-    market_type = ForeignKey('surveys.MarketType',
+    market_type = ForeignKey('surveys18.MarketType',
                              verbose_name=_('Market Type'))
-    income_range = ForeignKey('surveys.IncomeRange',
+    income_range = ForeignKey('surveys18.IncomeRange',
                               verbose_name=_('Income Range'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,

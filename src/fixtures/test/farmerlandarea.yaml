@@ -1,11 +1,11 @@
-- model: surveys.FarmerLandArea
+- model: surveys18.FarmerLandArea
   pk: 1
   fields:
     survey: 1
     farmer_land_type: 2
     value: 100
 
-- model: surveys.FarmerLandArea
+- model: surveys18.FarmerLandArea
   pk: 2
   fields:
     survey: 2

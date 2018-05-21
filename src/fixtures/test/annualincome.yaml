@@ -1,11 +1,11 @@
-- model: surveys.AnnualIncome
+- model: surveys18.AnnualIncome
   pk: 1
   fields:
     survey: 1
     market_type: 1
     income_range_code: 7
 
-- model: surveys.AnnualIncome
+- model: surveys18.AnnualIncome
   pk: 2
   fields:
     survey: 1
