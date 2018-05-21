@@ -51,6 +51,7 @@ class Survey(Model):
                             related_name='surveys',
                             verbose_name=_('Lack'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))
+    is_updated = BooleanField(default=False, verbose_name=_('Is Updated'))
     read_only = BooleanField(default=True, verbose_name=_('Read Only'))
 
     investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True,

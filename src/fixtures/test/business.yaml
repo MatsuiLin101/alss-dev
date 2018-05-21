@@ -2,11 +2,11 @@
   pk: 1
   fields:
     survey: 1
-    farm_related_business: [11, 12]
+    farm_related_businesses: [1, 2]
 
 - model: surveys.Business
   pk: 2
   fields:
     survey: 2
-    farm_related_business: [13]
+    farm_related_businesses: [3]
 
