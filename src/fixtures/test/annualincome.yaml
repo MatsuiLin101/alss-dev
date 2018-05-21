@@ -3,12 +3,12 @@
   fields:
     survey: 1
     market_type: 1
-    income_range_code: 7
+    income_range: 7
 
 - model: surveys18.AnnualIncome
   pk: 2
   fields:
     survey: 1
     market_type: 5
-    income_range_code: 7
+    income_range: 7
 

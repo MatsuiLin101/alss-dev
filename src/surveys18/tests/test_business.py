@@ -14,8 +14,8 @@ class ModelTestCase(TestCase):
     def setUp(self):
         # load fixtures
         call_command('loaddata', 'test/survey.yaml', verbosity=0)
-        call_command('loaddata', 'test/business.yaml', verbosity=0)
         call_command('loaddata', 'farm-related-business.yaml', verbosity=0)
+        call_command('loaddata', 'test/business.yaml', verbosity=0)
 
     def test_loaddata(self):
         survey_list = Survey.objects.all()

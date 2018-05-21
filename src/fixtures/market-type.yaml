@@ -1,4 +1,4 @@
-- model: surveys1818.MarketType
+- model: surveys18.MarketType
   pk: 1
   fields:
     name: 農作物及其製品(含生產及加工)
