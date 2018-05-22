@@ -11,16 +11,13 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9b%l@i8w_299u8xd&ks3=e2xl*o%!630z!har9oa*cw3f6*)z^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,8 +34,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.sites',
+
+    # third part
+    'crispy_forms',
 
     # local
+    'accounts',
     'surveys18',
 ]
 
@@ -58,7 +61,7 @@ ROOT_URLCONF = 'alss.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,23 +110,61 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hant'
 
-TIME_ZONE = 'UTC'
+# Local time zone for this installation. All choices can be found here:
+# https://en.wikipedia.org/wiki/List_of_tz_zones_by_name (although not all
+# systems may support all possibilities). When USE_TZ is True, this is
+# interpreted as the default user time zone.
+TIME_ZONE = 'Asia/Taipei'
 
-USE_I18N = True
-
-USE_L10N = True
-
+# If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
+
+# Languages we provide translations for, out of the box.
+LANGUAGES = [
+    ('zh-hant', _('Traditional Chinese')),
+    ('en', _('English')),
+]
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = True
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+
+
+# Settings for language cookie
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_COOKIE_AGE = None
+LANGUAGE_COOKIE_DOMAIN = None
+LANGUAGE_COOKIE_PATH = '/'
+
+
+# If you set this to True, Django will format dates, numbers and calendars
+# according to user current locale.
+USE_L10N = False
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 STATIC_URL = '/static/'
+
+# WhiteNoise
+
+STATIC_ROOT = os.path.join(BASE_DIR, "live-static-files", "static-root")
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "live-static-files", "media-root")
 
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'fixtures'),
     os.path.join(BASE_DIR, 'fixtures/test'),
 ]
+
+# Crispy
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
