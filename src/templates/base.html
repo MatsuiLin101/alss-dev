@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>
+        {% block head_title %}
+        {% endblock head_title %}
+    </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <!-- Custom CSS-->
+    <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css">
+    {% block external_css %}
+    {% endblock external_css %}
+</head>
+
+<body>
+    {% block content %}
+    {% endblock content %}
+    <!-- jQuery -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- Custom Theme JavaScript -->
+</body>
+</html>
