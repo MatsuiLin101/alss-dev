@@ -23,6 +23,7 @@
     <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <!-- Custom CSS-->
     <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css">
+
     {% block external_css %}
     {% endblock external_css %}
 </head>
@@ -34,6 +35,17 @@
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-    <!-- Custom Theme JavaScript -->
+    <!-- Custom scripts for this page-->
+    {% block external_js %}
+    {% endblock external_js %}
+
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                {% block internal_js %}
+                {% endblock internal_js %}
+            });
+        })(jQuery);
+    </script>
 </body>
 </html>
