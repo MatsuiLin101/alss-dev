@@ -38,24 +38,3 @@ class ModelTestCase(TestCase):
 
         numberworkers_list_after_size = len(NumberWorkers.objects.all())
         self.assertEquals(numberworkers_list_after_size, numberworkers_list_before_size+1)
-
-    def test_longtermhire_delete(self):
-        # LongTermHire.objects.filter(id=3).delete()
-        LongTermHire.objects.all().delete()
-        longtermhire_list_before_size = len(LongTermHire.objects.all())
-        print(longtermhire_list_before_size)
-        content_type = ContentType.objects.get(id=15)
-        numberworkers_list = NumberWorkers.objects.all()
-        # filter(content_type=content_type, object_id=3)
-        print(len(numberworkers_list))
-        self.assertEquals(numberworkers_list.count(), 1)
-
-    # def test_survey_delete_all(self):
-    #     shorttermhire_list_before_size = len(ShortTermHire.objects.all())
-    #     print(shorttermhire_list_before_size)
-    #     self.assertEquals(shorttermhire_list_before_size, 0)
-    #     ShortTermHire.objects.all().delete()
-    #     numberworkers_list = NumberWorkers.objects.all()
-    #     shorttermhire_list_after_size = len(ShortTermHire.objects.all())
-    #
-    #     # self.assertEquals(len(numberworkers_list), 0)

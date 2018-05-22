@@ -4,7 +4,7 @@
     survey: 1
     avg_work_day: 8
     month: 1
-    work_types: 1
+    work_types: [1, 2, 4]
 
 - model: surveys18.ShortTermHire
   pk: 2
@@ -12,7 +12,7 @@
     survey: 1
     avg_work_day: 12
     month: 2
-    work_types: 2
+    work_types: [2, 5]
 
 - model: surveys18.ShortTermHire
   pk: 3
@@ -20,7 +20,7 @@
     survey: 1
     avg_work_day: 12
     month: 3
-    work_types: 3
+    work_types: [3]
 
 - model: surveys18.ShortTermHire
   pk: 4
@@ -28,7 +28,7 @@
     survey: 1
     avg_work_day: 20
     month: 6
-    work_types: 2
+    work_types: [2, 6]
 
 - model: surveys18.ShortTermHire
   pk: 5
@@ -36,4 +36,4 @@
     survey: 1
     avg_work_day: 20
     month: 7
-    work_types: 5
+    work_types: [5]
