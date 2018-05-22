@@ -1,0 +1,29 @@
+- model: surveys18.CropMarketing
+  pk: 1
+  fields:
+    survey: 1
+    product: 3
+    loss: 4
+    unit: 1
+    land_number: 1
+    land_area: 100
+    plant_times: 1
+    total_yield: 500000
+    unit_price: 50
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 2
+  fields:
+    survey: 2
+    product: 17
+    loss:
+    unit:
+    land_number: 3
+    land_area: 450
+    plant_times:
+    total_yield: 500000
+    unit_price:
+    has_facility:
+
+

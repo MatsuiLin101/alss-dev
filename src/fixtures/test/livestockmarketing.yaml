@@ -1,0 +1,23 @@
+- model: surveys18.LivestockMarketing
+  pk: 1
+  fields:
+    survey: 1
+    product: 254
+    loss: 8
+    unit: 14
+    contract: 4
+    raising_number: 5000
+    total_yield: 100000
+    unit_price: 30
+
+- model: surveys18.LivestockMarketing
+  pk: 2
+  fields:
+    survey: 2
+    product: 263
+    loss: 5
+    unit: 13
+    contract: 1
+    raising_number:
+    total_yield:
+    unit_price:
