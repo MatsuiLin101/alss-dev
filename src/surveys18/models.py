@@ -186,6 +186,7 @@ class NumberWorkers(Model):
 class AgeScope(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
+    group = IntegerField(verbose_name=_('Group'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -480,7 +481,7 @@ class PopulationAge(Model):
     survey = ForeignKey('surveys18.Survey', related_name='population_ages'
                         , verbose_name=_('Survey'))
     gender = ForeignKey('surveys18.Gender', verbose_name=_('Gender'))
-    is_under_15 = BooleanField(default=False, verbose_name=_('Is Male'))
+    age_scope = ForeignKey('surveys18.AgeScope', verbose_name=_('Age Scope'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Count'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,

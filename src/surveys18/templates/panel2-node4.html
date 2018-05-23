@@ -1,0 +1,28 @@
+<h4>1.6 貴戶全年銷售額
+    <small class="text-muted">（不扣除各項成本）</small>
+</h4>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>全年收入（萬元）</th>
+            {% for range in income_ranges %}
+                <th data-min="{{ range.min }}" data-max="{{ range.max }}">{{ range.name }}</th>
+            {% endfor %}
+        </tr>
+
+    </thead>
+    <tbody>
+        {% for type in market_types %}
+        <tr>
+            <th scopt="row">{{ type.name }}</th>
+            {% for range in income_ranges %}
+                <td>
+                    <input type="checkbox" class="w-2 h-2" data-min="{{ range.min }}"
+                           data-max="{{ range.max }}" data-incomerange-id="{{ range.id }}"
+                           data-markettype-id="{{ type.id }}">
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
