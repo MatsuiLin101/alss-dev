@@ -1,8 +1,9 @@
-#local
-src/dashboard/settings
-src/*.sqlite3
+# local
+local.py
+
 #server
 src/web.config
+
 #MAC
 .DS_Store
 

@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% load i18n %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block head_title %}
+{% trans 'Sing In' %}
+{% endblock head_title%}
+
+{% block external_css %}
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock external_css %}
+
+{% block external_js %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock external_js %}
+
+{% block content %}
+
+<div id="wrapper">
+    <!-- Navigation-->
+    {% include 'navbar.html' %}
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div data-spy="affix">
+                    <h4 class="my-3 bold">年份</h4>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">107年</a>
+                    </div>
+                    <h4 class="my-3 bold">查詢</h4>
+                    <div class="list-group">
+                        <input type="text" class="form-control input-lg" aria-label="" placeholder="請輸入農戶編號">
+                        <div class="btn-group special" role="group" aria-label="">
+                            <button type="button" class="btn btn-primary btn-lg" id="#">查詢</button>
+                            <button type="button" class="btn btn-success btn-lg" id="#">查詢原始資料</button>
+                        </div>
+                    </div>
+                    <h4 class="my-3 bold">調查表</h4>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">第一頁</a>
+                        <a href="#" class="list-group-item">第二頁</a>
+                        <a href="#" class="list-group-item">第三頁</a>
+                        <a href="#" class="list-group-item">第四頁</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                {% include 'p1-panel1.html' %}
+                {% include 'p1-panel2.html' %}
+            </div>
+            <!-- /.col-lg-9 -->
+        </div>
+    </div>
+    <!-- /.container -->
+</div>
+<!-- /#wrapper -->
+{% endblock content %}
