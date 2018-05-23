@@ -1,0 +1,71 @@
+<table class="table table-bordered table-hover ">
+    <tbody>
+        <tr>
+            <th>
+                <div>
+                    <h4>1.1 貴戶年底耕作地面積</h4>
+                </div>
+                <small class="form-text text-muted">註：所經營相關事業之原材物料須運用自家初級農業產品或運用自有農業生產設施備者</small>
+            </th>
+            <td>
+                {% for type in land_types %}
+                <div class="col-md-3">
+                    <label>
+                        <input type="checkbox"  data-id="{{ type.id }}">
+                        ({{ type.id }}) {{ type.name }}
+                    </label>
+                </div>
+                <div class="col-md-9">
+                    {% for status in type.statuses.all %}
+                    <div class="form-inline">
+                        <label class="fw-400">{{ status.name }}</label>
+                        <input type="text" class="small form-control" data-id="{{ status.id }}" />
+                        公畝
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <div>
+                    <h4>1.2 貴戶是否兼營農業相關事業</h4>
+                </div>
+                <small class="form-text text-muted">註：所經營相關事業之原材物料須運用自家初級農業產品或運用自有農業生產設施備者</small>
+            </th>
+            <td>
+                <div class="form-horizontal">
+                    {% for business in farm_related_businesses %}
+                    <div class="checkbox col-md-6">
+                        <label>
+                            <input type="checkbox"  data-id="{{ business.id }}">
+                            {{ business.id }}.{{ business.name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <div>
+                    <h4>1.3 全年主要經營型態為何</h4>
+                </div>
+                <small class="form-text text-muted">(請按全年生產價值最多者註記一項)</small>
+            </th>
+            <td>
+                <div class="form-horizontal">
+                    {% for type in management_types %}
+                    <div class="checkbox col-md-4">
+                        <label>
+                            <input type="checkbox" data-id="{{ type.id }}">
+                            {{ type.id }}.{{ type.name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

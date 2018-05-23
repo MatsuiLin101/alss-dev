@@ -1,6 +1,5 @@
 /* fixed-top */
 body {
-  min-height: 2000px;
   padding-top: 70px;
 }
 
@@ -24,15 +23,15 @@ body {
     padding: 15px;
 }
 
-.btn-group.special {
+.btn-group.flex {
   display: flex;
 }
 
-.special .btn {
+.flex .btn {
   flex: 1
 }
 
-.panel .form-group {
+.panel .form-group, .panel .form-inline {
     margin-bottom: 0.5rem;
 }
 
@@ -40,3 +39,13 @@ body {
     padding-right: 0.5rem;
     padding-left: 0.5rem;
 }
+
+label.fw-400 {
+    font-weight: 400;
+}
+
+.panel input.small {
+    max-width: 80px;
+}
+
+

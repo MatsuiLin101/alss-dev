@@ -1,0 +1,23 @@
+- model: surveys18.LandType
+  pk: 1
+  fields:
+    name: 可耕作地
+    statuses: [1, 2, 3]
+
+
+- model: surveys18.LandType
+  pk: 2
+  fields:
+    name: 人工鋪面
+    statuses: [1, 2]
+
+
+- model: surveys18.LandType
+  pk: 3
+  fields:
+    name: 無
+
+
+
+
+

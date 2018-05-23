@@ -1,0 +1,23 @@
+- model: surveys18.LongTermLack
+  pk: 1
+  fields:
+    survey: 1
+    work_type: 4
+    count: 5
+    months: [5, 6, 7]
+
+- model: surveys18.LongTermLack
+  pk: 2
+  fields:
+    survey: 1
+    work_type: 4
+    count: 8
+    months: [6, 7, 9]
+
+- model: surveys18.LongTermLack
+  pk: 3
+  fields:
+    survey: 1
+    work_type: 6
+    count: 10
+    months: [11, 12, 1]

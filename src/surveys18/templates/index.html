@@ -1,8 +1,9 @@
 {% extends 'base.html' %} {% load i18n %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+
 {% block head_title %}
-{% trans 'Sing In' %}
+{% trans 'Index' %}
 {% endblock head_title%}
 
 {% block external_css %}
@@ -14,6 +15,9 @@
 {% endblock external_js %}
 
 {% block content %}
+
+<!-- Hidden Value For UI Elements -->
+<input type="hidden" id="ui" value="{{ ui }}"/>
 
 <div id="wrapper">
     <!-- Navigation-->
@@ -30,23 +34,26 @@
                     <h4 class="my-3 bold">查詢</h4>
                     <div class="list-group">
                         <input type="text" class="form-control input-lg" aria-label="" placeholder="請輸入農戶編號">
-                        <div class="btn-group special" role="group" aria-label="">
-                            <button type="button" class="btn btn-primary btn-lg" id="#">查詢</button>
+                        <div class="btn-group flex mt-1" role="group" aria-label="">
+                            <button type="button" class="btn btn-success btn-lg" id="#">查詢</button>
                             <button type="button" class="btn btn-success btn-lg" id="#">查詢原始資料</button>
                         </div>
                     </div>
                     <h4 class="my-3 bold">調查表</h4>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item active">第一頁</a>
-                        <a href="#" class="list-group-item">第二頁</a>
-                        <a href="#" class="list-group-item">第三頁</a>
-                        <a href="#" class="list-group-item">第四頁</a>
+                    <div class="list-group js-panel-tabs">
+                        <a href="#" class="list-group-item" data-target="#panel1">基本資料</a>
+                        <a href="#" class="list-group-item" data-target="#panel2">農業經營型態</a>
+                        <a href="#" class="list-group-item" data-target="#panel3">戶內人口組成狀況</a>
+                        <a href="#" class="list-group-item" data-target="#panel4">農業外僱人力</a>
+                        <button type="button" class="btn btn-info btn-lg btn-block mt-1" id="#">更新</button>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9">
-                {% include 'p1-panel1.html' %}
-                {% include 'p1-panel2.html' %}
+            <div class="col-lg-9 js-panel-contents">
+                {% include 'panel1.html' %}
+                {% include 'panel2.html' %}
+                {% include 'panel3.html' %}
+                {% include 'panel4.html' %}
             </div>
             <!-- /.col-lg-9 -->
         </div>

@@ -43,8 +43,6 @@ class Survey(Model):
     page = IntegerField(verbose_name=_('Page'))
     origin_class = IntegerField(null=True, blank=True,
                                 verbose_name=_('Origin Class'))
-    address = CharField(max_length=100, null=True, blank=True,
-                        verbose_name=_('Address'))
     is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
                            blank=True, verbose_name=_('Hire'))
     lacks = ManyToManyField('surveys18.Lack', blank=True,
@@ -167,7 +165,7 @@ class NumberWorkers(Model):
     age_scope = ForeignKey('surveys18.AgeScope',
                            related_name='number_workers', null=True,
                            blank=True, verbose_name=_('Age Scope'))
-    value = IntegerField(null=True, blank=True, verbose_name=_('Value'))
+    count = IntegerField(null=True, blank=True, verbose_name=_('C'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -186,6 +184,7 @@ class NumberWorkers(Model):
 class AgeScope(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
+    group = IntegerField(verbose_name=_('Group'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -254,6 +253,9 @@ class LongTermHire(Model):
     work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
+    months = ManyToManyField('surveys18.Month',
+                             related_name='long_term_hires',
+                             verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -480,7 +482,7 @@ class PopulationAge(Model):
     survey = ForeignKey('surveys18.Survey', related_name='population_ages'
                         , verbose_name=_('Survey'))
     gender = ForeignKey('surveys18.Gender', verbose_name=_('Gender'))
-    is_under_15 = BooleanField(default=False, verbose_name=_('Is Male'))
+    age_scope = ForeignKey('surveys18.AgeScope', verbose_name=_('Age Scope'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Count'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
@@ -766,35 +768,55 @@ class Business(Model):
         return str(self.survey)
 
 
-class FarmerLandType(Model):
-    land_type_name = CharField(max_length=20, null=True, blank=True,
-                               verbose_name=_('Land Type Name'))
-    production_type_name = CharField(max_length=20, null=True,
-                                     blank=True, verbose_name=_('Production Type Name'))
+class LandStatus(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('FarmerLandType')
-        verbose_name_plural = _('FarmerLandType')
+        verbose_name = _('LandStatus')
+        verbose_name_plural = _('LandStatus')
 
     def __str__(self):
-        return '%s(%s)' % (self.land_type_name,
-                           self.production_type_name)
+        return self.name
 
     def __unicode__(self):
-        return '%s(%s)' % (self.land_type_name,
-                           self.production_type_name)
+        return self.name
 
 
-class FarmerLandArea(Model):
+class LandType(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    statuses = ManyToManyField('surveys18.LandStatus',
+                               related_name='land_type',
+                               verbose_name=_('Land Statuses'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LandType')
+        verbose_name_plural = _('LandType')
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
+class LandArea(Model):
     survey = ForeignKey('surveys18.Survey',
-                        related_name='farmer_land_areas', blank=True,
+                        related_name='land_areas', blank=True,
                         verbose_name=_('Survey'))
-    type = ForeignKey('surveys18.FarmerLandType',
-                      related_name='farmer_land_areas', null=True,
+    type = ForeignKey('surveys18.LandType',
+                      related_name='land_areas', null=True,
                       blank=True, verbose_name=_('Type'))
+    status = ForeignKey('surveys18.LandStatus',
+                        related_name='land_areas', null=True,
+                        blank=True, verbose_name=_('Status'))
     value = IntegerField(null=True, blank=True,
                          verbose_name=_('Area Value'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -802,8 +824,8 @@ class FarmerLandArea(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('FarmerLandArea')
-        verbose_name_plural = _('FarmerLandArea')
+        verbose_name = _('LandArea')
+        verbose_name_plural = _('LandArea')
 
     def __str__(self):
         return str(self.survey)
@@ -936,6 +958,3 @@ class AnnualIncome(Model):
 class Month(Model):
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     value = IntegerField(choices=MONTHS.items())
-
-
-

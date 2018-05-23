@@ -1,0 +1,30 @@
+<h4>2.1 貴戶106年底戶內人口數
+    <small class="text-muted">（指在本戶共同居住並營共同生活之人口）</small>
+</h4>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="col-md-3">#</th>
+            <th class="col-md-3">合計（人）</th>
+            {% for gender in genders %}
+                <th class="col-md-3">{{ gender.name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for scope in population_age_scopes %}
+            <tr>
+                <th class="col-md-3" scopt="row">{{ scope.name }}</th>
+                <td class="col-md-3">
+                    <input type="text" class="form-control">
+                </td>
+                {% for gender in genders %}
+                    <td class="col-md-3">
+                        <input type="text" class="form-control" data-gender="{{ gender.name }}" data-scope="{{ scope.name }}">
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

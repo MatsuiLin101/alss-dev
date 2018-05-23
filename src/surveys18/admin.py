@@ -7,8 +7,9 @@ from .models import (
     AddressMatch,
     Lack,
     Phone,
-    FarmerLandArea,
-    FarmerLandType,
+    LandArea,
+    LandType,
+    LandStatus,
     FarmRelatedBusiness,
     Business,
     Management,
@@ -47,8 +48,9 @@ admin.site.register(Survey)
 admin.site.register(AddressMatch)
 admin.site.register(Lack)
 admin.site.register(Phone)
-admin.site.register(FarmerLandArea)
-admin.site.register(FarmerLandType)
+admin.site.register(LandArea)
+admin.site.register(LandType)
+admin.site.register(LandStatus)
 admin.site.register(FarmRelatedBusiness)
 admin.site.register(Business)
 admin.site.register(ManagementType)

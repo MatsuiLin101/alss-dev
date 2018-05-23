@@ -1,0 +1,26 @@
+- model: surveys18.ShortTermLack
+  pk: 1
+  fields:
+    survey: 1
+    product: 4
+    work_types: [3, 4]
+    count: 5
+    months: [5, 6, 7]
+
+- model: surveys18.ShortTermLack
+  pk: 2
+  fields:
+    survey: 1
+    product: 100
+    work_types: [4]
+    count: 8
+    months: [6, 7, 9]
+
+- model: surveys18.ShortTermLack
+  pk: 3
+  fields:
+    survey: 1
+    product: 250
+    work_types: [6,7]
+    count: 10
+    months: [11, 12, 1]

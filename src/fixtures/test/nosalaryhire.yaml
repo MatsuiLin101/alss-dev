@@ -1,0 +1,34 @@
+- model: surveys18.NoSalaryHire
+  pk: 1
+  fields:
+    survey: 1
+    count: 5
+    month: 1
+
+- model: surveys18.NoSalaryHire
+  pk: 2
+  fields:
+    survey: 1
+    count: 5
+    month: 2
+
+- model: surveys18.NoSalaryHire
+  pk: 3
+  fields:
+    survey: 1
+    count: 10
+    month: 3
+
+- model: surveys18.NoSalaryHire
+  pk: 4
+  fields:
+    survey: 2
+    count: 20
+    month: 7
+
+- model: surveys18.NoSalaryHire
+  pk: 5
+  fields:
+    survey: 2
+    count: 25
+    month: 8      

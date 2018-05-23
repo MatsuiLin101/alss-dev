@@ -1,0 +1,26 @@
+- model: surveys18.Lack
+  pk: 1
+  fields:
+    name: 106年人力已足
+    is_lack: false
+
+
+- model: surveys18.Lack
+  pk: 2
+  fields:
+    name: 106年有人力但不穩定或未來有缺工可能
+    is_lack: false
+
+
+- model: surveys18.Lack
+  pk: 3
+  fields:
+    name: 106年有人力但若增加人力可縮短工作日數或擴充產能
+    is_lack: false
+
+- model: surveys18.Lack
+  pk: 4
+  fields:
+    name: 有（請續填）
+    is_lack: true
+
