@@ -766,24 +766,6 @@ class Business(Model):
         return str(self.survey)
 
 
-class LandType(Model):
-    name = CharField(max_length=20, null=True, blank=True,
-                     verbose_name=_('Name'))
-    update_time = DateTimeField(auto_now=True, auto_now_add=False,
-                                null=True, blank=True,
-                                verbose_name=_('Updated'))
-
-    class Meta:
-        verbose_name = _('LandType')
-        verbose_name_plural = _('LandType')
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
-
-
 class LandStatus(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
@@ -794,6 +776,27 @@ class LandStatus(Model):
     class Meta:
         verbose_name = _('LandStatus')
         verbose_name_plural = _('LandStatus')
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
+class LandType(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    statuses = ManyToManyField('surveys18.LandStatus',
+                               related_name='land_type',
+                               verbose_name=_('Land Statuses'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LandType')
+        verbose_name_plural = _('LandType')
 
     def __str__(self):
         return self.name
