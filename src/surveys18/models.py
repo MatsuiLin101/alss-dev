@@ -766,35 +766,52 @@ class Business(Model):
         return str(self.survey)
 
 
-class FarmerLandType(Model):
-    land_type_name = CharField(max_length=20, null=True, blank=True,
-                               verbose_name=_('Land Type Name'))
-    production_type_name = CharField(max_length=20, null=True,
-                                     blank=True, verbose_name=_('Production Type Name'))
+class LandType(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('FarmerLandType')
-        verbose_name_plural = _('FarmerLandType')
+        verbose_name = _('LandType')
+        verbose_name_plural = _('LandType')
 
     def __str__(self):
-        return '%s(%s)' % (self.land_type_name,
-                           self.production_type_name)
+        return self.name
 
     def __unicode__(self):
-        return '%s(%s)' % (self.land_type_name,
-                           self.production_type_name)
+        return self.name
 
 
-class FarmerLandArea(Model):
+class LandStatus(Model):
+    name = CharField(max_length=20, null=True, blank=True,
+                     verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('LandStatus')
+        verbose_name_plural = _('LandStatus')
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
+class LandArea(Model):
     survey = ForeignKey('surveys18.Survey',
-                        related_name='farmer_land_areas', blank=True,
+                        related_name='land_areas', blank=True,
                         verbose_name=_('Survey'))
-    type = ForeignKey('surveys18.FarmerLandType',
-                      related_name='farmer_land_areas', null=True,
+    type = ForeignKey('surveys18.LandType',
+                      related_name='land_areas', null=True,
                       blank=True, verbose_name=_('Type'))
+    status = ForeignKey('surveys18.LandStatus',
+                        related_name='land_areas', null=True,
+                        blank=True, verbose_name=_('Status'))
     value = IntegerField(null=True, blank=True,
                          verbose_name=_('Area Value'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -802,8 +819,8 @@ class FarmerLandArea(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('FarmerLandArea')
-        verbose_name_plural = _('FarmerLandArea')
+        verbose_name = _('LandArea')
+        verbose_name_plural = _('LandArea')
 
     def __str__(self):
         return str(self.survey)
