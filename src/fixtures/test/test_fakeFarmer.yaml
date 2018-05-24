@@ -1,0 +1,93 @@
+- model: surveys18.Survey
+  pk: 1
+  fields:
+    farmer_id: 670050010001
+    total_pages: 1
+    page: 1
+    farmer_name: '林阿忠'
+    origin_class: 37
+    address: '屏東縣屏東市屏南路屏西巷2號'
+
+- model: surveys18.CropMarketing
+  pk: 1
+  fields:
+    survey: 670050010001
+    product: 1
+    loss: 1
+    unit: 1
+    land_number: 1
+    land_area: 420
+    plant_times: 1
+    total_yield: 21000
+    unit_price: 23
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 2
+  fields:
+    survey: 670050010001
+    product: 146
+    loss: 0
+    unit: 1
+    land_number: 1
+    land_area: 300
+    plant_times: 1
+    total_yield: 7200
+    unit_price: 75
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 3
+  fields:
+    survey: 670050010001
+    product: 143
+    loss: 3
+    unit: 1
+    land_number: 1
+    land_area: 220
+    plant_times: 1
+    total_yield: 2200
+    unit_price: 70
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 4
+  fields:
+    survey: 670050010001
+    product: 104
+    loss: 0
+    unit: 1
+    land_number: 2
+    land_area: 150
+    plant_times: 1
+    total_yield: 2000
+    unit_price: 22
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 5
+  fields:
+    survey: 670050010001
+    product: 104
+    loss: 2
+    unit: 1
+    land_number: 2
+    land_area: 100
+    plant_times: 1
+    total_yield: 0
+    unit_price: 0
+    has_facility: 2
+
+- model: surveys18.CropMarketing
+  pk: 6
+  fields:
+    survey: 670050010001
+    product: 46
+    loss: 0
+    unit: 1
+    land_number: 3
+    land_area: 30
+    plant_times: 1
+    total_yield: 8000
+    unit_price: 50
+    has_facility: 1                
