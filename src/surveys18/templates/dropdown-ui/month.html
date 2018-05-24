@@ -1,6 +1,6 @@
 <select class="form-control">
     <option value="-1">--請選擇--</option>
     {% for month in months %}
-    <option value="-1" data-month-id="{{ month.id }}">{{ month.name }}</option>
+    <option value="{{ month.id }}">{{ month.name }}</option>
     {% endfor %}
 </select>

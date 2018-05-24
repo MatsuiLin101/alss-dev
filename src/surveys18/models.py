@@ -43,8 +43,6 @@ class Survey(Model):
     page = IntegerField(verbose_name=_('Page'))
     origin_class = IntegerField(null=True, blank=True,
                                 verbose_name=_('Origin Class'))
-    address = CharField(max_length=100, null=True, blank=True,
-                        verbose_name=_('Address'))
     is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
                            blank=True, verbose_name=_('Hire'))
     lacks = ManyToManyField('surveys18.Lack', blank=True,
@@ -261,7 +259,6 @@ class LongTermHire(Model):
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
-
 
     class Meta:
         verbose_name = _('LongTermHire')

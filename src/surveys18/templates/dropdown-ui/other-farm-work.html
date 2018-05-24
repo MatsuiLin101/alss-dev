@@ -1,6 +1,6 @@
 <select class="form-control">
     <option value="-1">--請選擇--</option>
     {% for other_farm_work in other_farm_works %}
-    <option value="-1" data-otherfarmwork-id="{{ other_farm_work.id }}">{{ other_farm_work.name }}</option>
+    <option value="{{ other_farm_work.id }}">{{ other_farm_work.name }}</option>
     {% endfor %}
 </select>

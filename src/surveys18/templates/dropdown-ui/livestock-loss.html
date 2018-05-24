@@ -1,6 +1,6 @@
 <select class="form-control" name="loss">
     <option value="-1">--請選擇--</option>
     {% for loss in livestock_losses %}
-    <option value="-1" data-loss-id="{{ loss.id }}">{{ loss.name }}</option>
+    <option value="{{ loss.id }}">{{ loss.name }}</option>
     {% endfor %}
 </select>

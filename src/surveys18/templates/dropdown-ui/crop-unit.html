@@ -1,6 +1,6 @@
 <select class="form-control" name="unit">
     <option value="-1">--請選擇--</option>
     {% for unit in crop_units %}
-    <option value="-1" data-unit-id="{{ unit.id }}">{{ unit.name }}</option>
+    <option value="{{ unit.id }}">{{ unit.name }}</option>
     {% endfor %}
 </select>
