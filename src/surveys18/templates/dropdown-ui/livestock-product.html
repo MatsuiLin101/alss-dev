@@ -1,0 +1,6 @@
+<select class="form-control">
+    <option value="-1">--請選擇--</option>
+    {% for product in livestock_products %}
+    <option value="-1" data-product-id="{{ product.id }}">{{ product.code }}.{{ product.name }}</option>
+    {% endfor %}
+</select>

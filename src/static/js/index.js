@@ -1,6 +1,9 @@
+/* rendered ui */
+var GlobalUI = $.parseJSON($('#ui').val());
+
 $(document).ready(function() {
 
-    /**/
+    /* panel control */
     $('.js-panel-tabs > .list-group-item').on('click', function() {
 
         $(this).siblings().removeClass('active');
@@ -10,5 +13,7 @@ $(document).ready(function() {
         $('.js-panel-contents .panel').hide();
         $panel.show();
     })
+
+
 
 });

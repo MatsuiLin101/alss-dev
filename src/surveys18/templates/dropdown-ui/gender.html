@@ -1,0 +1,6 @@
+<select class="form-control">
+    <option value="-1">--請選擇--</option>
+    {% for gender in genders %}
+    <option value="-1" data-gender-id="{{ gender.id }}">{{ gender.name }}</option>
+    {% endfor %}
+</select>

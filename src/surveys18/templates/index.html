@@ -15,6 +15,9 @@
 
 {% block content %}
 
+<!-- Hidden Value For UI Elements -->
+<input type="hidden" id="ui" value="{{ ui }}"/>
+
 <div id="wrapper">
     <!-- Navigation-->
     {% include 'navbar.html' %}
@@ -41,7 +44,7 @@
                         <a href="#" class="list-group-item" data-target="#panel2">農業經營型態</a>
                         <a href="#" class="list-group-item" data-target="#panel3">戶內人口組成狀況</a>
                         <a href="#" class="list-group-item" data-target="#panel4">農業外僱人力</a>
-                        <button type="button" class="btn btn-success btn-lg btn-block mt-1" id="#">更新</button>
+                        <button type="button" class="btn btn-info btn-lg btn-block mt-1" id="#">更新</button>
                     </div>
                 </div>
             </div>

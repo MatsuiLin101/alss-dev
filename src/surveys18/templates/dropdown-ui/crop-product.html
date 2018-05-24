@@ -1,0 +1,6 @@
+<select class="form-control" name="product">
+    <option value="-1">--請選擇--</option>
+    {% for product in crop_products %}
+    <option value="-1" data-product-id="{{ product.id }}">{{ product.code }}.{{ product.name }}</option>
+    {% endfor %}
+</select>

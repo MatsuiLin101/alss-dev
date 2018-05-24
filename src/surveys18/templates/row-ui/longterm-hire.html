@@ -1,0 +1,24 @@
+<tr>
+    <td>
+        {% include 'dropdown-ui/work-type.html' %}
+    </td>
+    <td>
+        <input name="sumcount" type="text">
+    </td>
+    {% for scope in hire_age_scopes %}
+        <td>
+            <input name="count" data-agescope-id="{{ scope.id }}" type="text">
+        </td>
+    {% endfor %}
+    <td>
+        {% include 'dropdown-ui/month.html' %}
+    </td>
+    <td>
+        {% include 'dropdown-ui/farmer-work-day.html' %}
+    </td>
+    <td>
+        <button type="button" class="btn btn-default btn-sm">
+            <span class="fa fa-remove" aria-hidden="true"></span>
+        </button>
+    </td>
+</tr>

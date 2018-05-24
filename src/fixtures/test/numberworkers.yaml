@@ -4,7 +4,7 @@
     content_type: 14
     object_id: 1
     age_scope: 2
-    value: 5
+    count: 5
 
 - model: surveys18.NumberWorkers
   pk: 2
@@ -12,4 +12,4 @@
     content_type: 15
     object_id: 3
     age_scope: 3
-    value: 8
+    count: 8

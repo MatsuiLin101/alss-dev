@@ -167,7 +167,7 @@ class NumberWorkers(Model):
     age_scope = ForeignKey('surveys18.AgeScope',
                            related_name='number_workers', null=True,
                            blank=True, verbose_name=_('Age Scope'))
-    value = IntegerField(null=True, blank=True, verbose_name=_('Value'))
+    count = IntegerField(null=True, blank=True, verbose_name=_('C'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -255,6 +255,8 @@ class LongTermHire(Model):
     work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
+    month = ForeignKey('surveys18.Month', null=True, blank=True,
+                       verbose_name=_('Month'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
