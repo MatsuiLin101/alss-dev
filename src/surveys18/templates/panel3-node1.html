@@ -16,9 +16,13 @@
         {% for scope in population_age_scopes %}
             <tr>
                 <th class="col-md-3" scopt="row">{{ scope.name }}</th>
-                <td class="col-md-3"></td>
+                <td class="col-md-3">
+                    <input type="text" class="form-control">
+                </td>
                 {% for gender in genders %}
-                    <td class="col-md-3" data-gender="{{ gender.name }}" data-scope="{{ scope.name }}"></td>
+                    <td class="col-md-3">
+                        <input type="text" class="form-control" data-gender="{{ gender.name }}" data-scope="{{ scope.name }}">
+                    </td>
                 {% endfor %}
             </tr>
         {% endfor %}
