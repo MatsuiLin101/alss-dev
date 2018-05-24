@@ -4,6 +4,7 @@
     survey: 1
     avg_work_day: 5
     work_type: 1
+    months: [5, 6, 7]
 
 - model: surveys18.LongTermHire
   pk: 2
@@ -11,6 +12,7 @@
     survey: 1
     avg_work_day: 10
     work_type: 2
+    months: [11, 12, 1]
 
 - model: surveys18.LongTermHire
   pk: 3
@@ -18,3 +20,4 @@
     survey: 2
     avg_work_day: 3
     work_type: 3
+    months: [5]

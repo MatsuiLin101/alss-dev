@@ -255,9 +255,13 @@ class LongTermHire(Model):
     work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
+    months = ManyToManyField('surveys18.Month',
+                             related_name='long_term_hires',
+                             verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
+
 
     class Meta:
         verbose_name = _('LongTermHire')
@@ -957,6 +961,3 @@ class AnnualIncome(Model):
 class Month(Model):
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     value = IntegerField(choices=MONTHS.items())
-
-
-
