@@ -7,6 +7,68 @@
     farmer_name: '林阿忠'
     origin_class: 37
     address: '屏東縣屏東市屏南路屏西巷2號'
+    is_hire: 1
+    lacks: [4]
+    note: '近年來極端天氣頻仍發生導致作物嚴重減產，其中秋冬季旱作小麥也深受雨害（濕害）影響。行政院農業委員會臺中區農業改良場研究指出，農民於11月中旬播種小麥，輔以田區開溝排水，可降低生育初期及成熟期的濕害影響，將有助於穩定小麥產量，確保農民收益。
+臺中場表示，小麥為喜濕忌浸的雜糧作物，栽培期間最忌浸水，其中又以播種至幼苗期最為敏感，播種初期若遇浸水，種子發芽率下降；成熟期倘遇連續降雨，則導致穗上發芽，榖粒澱粉特性被破壞，而無法供作烘焙使用。'
+    investigator: '宋中基'
+    date: 1/15/2018
+    distance: 35
+    period: 60
+
+- model: surveys18.Phone
+  pk: 1
+  fields:
+    survey: 670050010001
+    phone: 087338888/0912345678
+
+- model: surveys18.LandArea
+  pk: 1
+  fields:
+    survey: 670050010001
+    type: 1
+    status: 1
+    value: 250
+
+- model: surveys18.LandArea
+  pk: 1
+  fields:
+    survey: 670050010001
+    type: 1
+    status: 2
+    value: 420
+
+- model: surveys18.LandArea
+  pk: 1
+  fields:
+    survey: 670050010001
+    type: 1
+    status: 3
+    value: 30
+
+- model: surveys18.Business
+  pk: 1
+  fields:
+    survey: 670050010001
+    farm_related_businesses: [5]
+
+- model: surveys18.Management
+  pk: 1
+  fields:
+    survey: 670050010001
+    types: [11]
+
+- model: surveys18.Subsidy
+  pk: 1
+  fields:
+    survey: 670050010001
+    is_subsidy: 1
+    count: 2
+    month_delta: 2
+    day_delta: 0
+    hour_delta: 0
+    remark:
+    reasons: []
 
 - model: surveys18.CropMarketing
   pk: 1
@@ -90,4 +152,422 @@
     plant_times: 1
     total_yield: 8000
     unit_price: 50
-    has_facility: 1                
+    has_facility: 1
+
+- model: surveys18.LivestockMarketing
+  pk: 1
+  fields:
+    survey: 670050010001
+    product: 248
+    loss: 0
+    unit: 3
+    contract: 0
+    raising_number: 90
+    total_yield: 15
+    unit_price: 5000
+
+- model: surveys18.LivestockMarketing
+  pk: 2
+  fields:
+    survey: 670050010001
+    product: 247
+    loss: 3
+    unit: 3
+    contract: 0
+    raising_number: 1000
+    total_yield: 1500
+    unit_price: 9750
+
+- model: surveys18.LivestockMarketing
+  pk: 3
+  fields:
+    survey: 670050010001
+    product: 253
+    loss: 0
+    unit: 4
+    contract: 1
+    raising_number: 20000
+    total_yield: 60000
+    unit_price: 8
+
+- model: surveys18.LivestockMarketing
+  pk: 4
+  fields:
+    survey: 670050010001
+    product: 254
+    loss: 0
+    unit: 4
+    contract: 2
+    raising_number: 15000
+    total_yield: 30000
+    unit_price: 160
+
+- model: surveys18.LivestockMarketing
+  pk: 5
+  fields:
+    survey: 670050010001
+    product: 289
+    loss: 0
+    unit: 3
+    contract: 2
+    raising_number: 130
+    total_yield: 5
+    unit_price: 60000
+
+- model: surveys18.LivestockMarketing
+  pk: 6
+  fields:
+    survey: 670050010001
+    product: 295
+    loss: 0
+    unit: 3
+    contract: 2
+    raising_number:
+    total_yield: 842000
+    unit_price: 28
+
+- model: surveys18.AnnualIncome
+  pk: 1
+  fields:
+    survey: 670050010001
+    market_type: 1
+    income_range: 6
+
+- model: surveys18.AnnualIncome
+  pk: 2
+  fields:
+    survey: 670050010001
+    market_type: 2
+    income_range: 10
+
+- model: surveys18.AnnualIncome
+  pk: 3
+  fields:
+    survey: 670050010001
+    market_type: 3
+    income_range: 1
+
+- model: surveys18.PopulationAge
+  pk: 1
+  fields:
+    survey: 670050010001
+    gender: 1
+    age_scope: 4
+    count: 1
+
+- model: surveys18.PopulationAge
+  pk: 2
+  fields:
+    survey: 670050010001
+    gender: 2
+    age_scope: 4
+    count: 1
+
+- model: surveys18.PopulationAge
+  pk: 3
+  fields:
+    survey: 670050010001
+    gender: 1
+    age_scope: 5
+    count: 4
+
+- model: surveys18.PopulationAge
+  pk: 4
+  fields:
+    survey: 670050010001
+    gender: 2
+    age_scope: 5
+    count: 4
+
+- model: surveys18.Population
+  pk: 1
+  fields:
+    survey: 670050010001
+    relationship: 1
+    gender: 1
+    birth_year: 30
+    education_level: 2
+    farmer_work_day: 7
+    life_style: 1
+    other_farm_work: 1
+
+- model: surveys18.Population
+  pk: 2
+  fields:
+    survey: 670050010001
+    relationship: 2
+    gender: 2
+    birth_year: 32
+    education_level: 2
+    farmer_work_day: 6
+    life_style: 1
+    other_farm_work: 1
+
+- model: surveys18.Population
+  pk: 3
+  fields:
+    survey: 670050010001
+    relationship: 3
+    gender: 2
+    birth_year: 9
+    education_level: 1
+    farmer_work_day: 1
+    life_style: 8
+    other_farm_work: 1
+
+- model: surveys18.Population
+  pk: 4
+  fields:
+    survey: 670050010001
+    relationship: 5
+    gender: 1
+    birth_year: 55
+    education_level: 5
+    farmer_work_day: 5
+    life_style: 1
+    other_farm_work: 3
+
+- model: surveys18.Population
+  pk: 5
+  fields:
+    survey: 670050010001
+    relationship: 5
+    gender: 2
+    birth_year: 59
+    education_level: 4
+    farmer_work_day: 4
+    life_style: 4
+    other_farm_work: 1
+
+- model: surveys18.Population
+  pk: 6
+  fields:
+    survey: 670050010001
+    relationship: 5
+    gender: 1
+    birth_year: 60
+    education_level: 5
+    farmer_work_day: 6
+    life_style: 4
+    other_farm_work: 1
+
+- model: surveys18.Population
+  pk: 7
+  fields:
+    survey: 670050010001
+    relationship: 5
+    gender: 2
+    birth_year: 62
+    education_level: 2
+    farmer_work_day: 6
+    life_style: 5
+    other_farm_work: 3
+
+- model: surveys18.Population
+  pk: 8
+  fields:
+    survey: 670050010001
+    relationship: 6
+    gender: 1
+    birth_year: 87
+    education_level: 4
+    farmer_work_day: 1
+    life_style: 6
+    other_farm_work: 1
+
+- model: surveys18.LongTermHire
+  pk: 1
+  fields:
+    survey: 670050010001
+    avg_work_day: 0.5
+    work_type: 2
+    months: [1, 3, 5, 7, 9, 11]
+
+- model: surveys18.LongTermHire
+  pk: 1
+  fields:
+    survey: 670050010001
+    avg_work_day: 0.5
+    work_type: 2
+    months: [1, 3, 5, 7, 9, 11]
+
+- model: surveys18.LongTermHire
+  pk: 2
+  fields:
+    survey: 670050010001
+    avg_work_day: 1
+    work_type: 3
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+- model: surveys18.LongTermHire
+  pk: 3
+  fields:
+    survey: 670050010001
+    avg_work_day: 1
+    work_type: 6
+    months: [2, 4, 6, 8, 10, 12]
+
+- model: surveys18.NumberWorkers
+  pk: 1
+  fields:
+    content_type: 15
+    object_id: 1
+    age_scope: 2
+    value: 1
+
+- model: surveys18.NumberWorkers
+  pk: 2
+  fields:
+    content_type: 15
+    object_id: 2
+    age_scope: 1
+    value: 1
+
+- model: surveys18.NumberWorkers
+  pk: 3
+  fields:
+    content_type: 15
+    object_id: 3
+    age_scope: 2
+    value: 1
+
+- model: surveys18.ShortTermHire
+  pk: 1
+  fields:
+    survey: 670050010001
+    avg_work_day: 8
+    month: 1
+    work_types: [2]
+
+- model: surveys18.ShortTermHire
+  pk: 2
+  fields:
+    survey: 670050010001
+    avg_work_day: 8
+    month: 10
+    work_types: [2]
+
+- model: surveys18.ShortTermHire
+  pk: 3
+  fields:
+    survey: 670050010001
+    avg_work_day: 8
+    month: 11
+    work_types: [2]
+
+- model: surveys18.ShortTermHire
+  pk: 4
+  fields:
+    survey: 670050010001
+    avg_work_day: 8
+    month: 12
+    work_types: [2]
+
+- model: surveys18.NumberWorkers
+  pk: 4
+  fields:
+    content_type: 14
+    object_id: 1
+    age_scope: 1
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 5
+  fields:
+    content_type: 14
+    object_id: 1
+    age_scope: 2
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 6
+  fields:
+    content_type: 14
+    object_id: 2
+    age_scope: 1
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 7
+  fields:
+    content_type: 14
+    object_id: 2
+    age_scope: 2
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 8
+  fields:
+    content_type: 14
+    object_id: 3
+    age_scope: 1
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 9
+  fields:
+    content_type: 14
+    object_id: 3
+    age_scope: 2
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 10
+  fields:
+    content_type: 14
+    object_id: 4
+    age_scope: 1
+    value: 2
+
+- model: surveys18.NumberWorkers
+  pk: 11
+  fields:
+    content_type: 14
+    object_id: 4
+    age_scope: 2
+    value: 2
+
+- model: surveys18.NoSalaryHire
+  pk: 1
+  fields:
+    survey: 670050010001
+    count: 1
+    month: 1
+
+- model: surveys18.NoSalaryHire
+  pk: 2
+  fields:
+    survey: 670050010001
+    count: 1
+    month: 10
+
+- model: surveys18.NoSalaryHire
+  pk: 3
+  fields:
+    survey: 670050010001
+    count: 1
+    month: 11
+
+- model: surveys18.NoSalaryHire
+  pk: 4
+  fields:
+    survey: 670050010001
+    count: 1
+    month: 12
+
+- model: surveys18.LongTermLack
+  pk: 1
+  fields:
+    survey: 670050010001
+    work_type: 6
+    count: 1
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+- model: surveys18.ShortTermLack
+  pk: 1
+  fields:
+    survey: 670050010001
+    product: 104
+    work_types: [3]
+    count: 1
+    months: [1, 10, 11, 12]
