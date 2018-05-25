@@ -1,6 +1,3 @@
-/* rendered ui */
-var GlobalUI = $.parseJSON($('#ui').val());
-
 $(document).ready(function() {
 
     /* panel control */
@@ -13,7 +10,5 @@ $(document).ready(function() {
         $('.js-panel-contents .panel').hide();
         $panel.show();
     })
-
-
 
 });

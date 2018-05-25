@@ -68,6 +68,11 @@ class Index(LoginRequiredMixin, TemplateView):
             'cropmarketing': render_to_string('row-ui/crop-marketing.html', context),
             'livestockmarketing': render_to_string('row-ui/livestock-marketing.html', context),
             'population': render_to_string('row-ui/population.html', context),
+            'longtermhire': render_to_string('row-ui/long-term-hire.html', context),
+            'longtermlack': render_to_string('row-ui/long-term-lack.html', context),
+            'shorttermhire': render_to_string('row-ui/short-term-hire.html', context),
+            'shorttermlack': render_to_string('row-ui/short-term-lack.html', context),
+            'nosalaryhire': render_to_string('row-ui/no-salary-hire.html', context),
         }
         context['ui'] = json.dumps(ui)
 

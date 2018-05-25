@@ -22,8 +22,9 @@ from .views import Index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^$', Index.as_view(), name='index'),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^surveys2018/', include('surveys18.urls', namespace='surveys18')),
 ]
 
 if settings.DEBUG:

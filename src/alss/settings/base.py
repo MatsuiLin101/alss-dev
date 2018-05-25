@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # third part
     'crispy_forms',
+    'rest_framework',
 
     # local
     'accounts',
