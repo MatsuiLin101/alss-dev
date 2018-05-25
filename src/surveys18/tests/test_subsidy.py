@@ -17,7 +17,6 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'refuse-reason.yaml', verbosity=0)
         call_command('loaddata', 'test/subsidy.yaml', verbosity=0)
 
-
     def test_loaddata(self):
         survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
@@ -35,7 +34,7 @@ class ModelTestCase(TestCase):
 
         subsidy_list_before_size = len(Subsidy.objects.all())
 
-        #new value
+        # new value
         Subsidy.objects.create(survey=survey_id)
         new_subsidy = Subsidy.objects.get(survey=survey_id)
         new_subsidy.reasons.add(refuse_reason_a, refuse_reason_b)
@@ -57,4 +56,6 @@ class ModelTestCase(TestCase):
 
         self.assertEquals(len(subsidy_list), 0)
         self.assertEquals(refuse_reason_list_after_size, refuse_reason_list_before_size)
+
+
 
