@@ -48,11 +48,11 @@ class Index(LoginRequiredMixin, TemplateView):
 
         # ui elements render objects
         context['contracts'] = Contract.objects.all()
-        context['crop-products'] = Product.objects.filter(type=1)
-        context['crop-losses'] = Product.objects.filter(type=1)
+        context['crop_products'] = Product.objects.filter(type=1)
+        context['crop_losses'] = Loss.objects.filter(type=1)
         context['crop_units'] = Unit.objects.filter(type=1)
-        context['livestock-products'] = Product.objects.filter(type=2)
-        context['livestock-losses'] = Product.objects.filter(type=2)
+        context['livestock_products'] = Product.objects.filter(type=2)
+        context['livestock_losses'] = Loss.objects.filter(type=2)
         context['livestock_units'] = Unit.objects.filter(type=2)
         context['education_levels'] = EducationLevel.objects.all()
         context['farmer_work_days'] = FarmerWorkDay.objects.all()

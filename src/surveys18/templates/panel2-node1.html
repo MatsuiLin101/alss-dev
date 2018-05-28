@@ -11,7 +11,7 @@
                 {% for type in land_types %}
                 <div class="col-md-3">
                     <label>
-                        <input type="checkbox"  data-id="{{ type.id }}">
+                        <input type="checkbox"  data-landtype-id="{{ type.id }}" name="landtype">
                         ({{ type.id }}) {{ type.name }}
                     </label>
                 </div>
@@ -19,7 +19,7 @@
                     {% for status in type.statuses.all %}
                     <div class="form-inline">
                         <label class="fw-400">{{ status.name }}</label>
-                        <input type="text" class="small form-control" data-id="{{ status.id }}" />
+                        <input type="text" class="small form-control" data-landtype-id="{{ type.id }}" data-landstatus-id="{{ status.id }}" name="landstatus"/>
                         公畝
                     </div>
                     {% endfor %}
@@ -39,7 +39,7 @@
                     {% for business in farm_related_businesses %}
                     <div class="checkbox col-md-6">
                         <label>
-                            <input type="checkbox"  data-id="{{ business.id }}">
+                            <input type="checkbox"  data-farmrelatedbusiness-id="{{ business.id }}" name="farmrelatedbusiness">
                             {{ business.id }}.{{ business.name }}
                         </label>
                     </div>
@@ -59,7 +59,7 @@
                     {% for type in management_types %}
                     <div class="checkbox col-md-4">
                         <label>
-                            <input type="checkbox" data-id="{{ type.id }}">
+                            <input type="checkbox" data-managementtype-id="{{ type.id }}" name="managementtype">
                             {{ type.id }}.{{ type.name }}
                         </label>
                     </div>

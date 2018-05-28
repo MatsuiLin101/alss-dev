@@ -11,8 +11,6 @@ from .models import (
     LandType,
     LandStatus,
     FarmRelatedBusiness,
-    Business,
-    Management,
     ManagementType,
     Loss,
     Unit,
@@ -52,9 +50,7 @@ admin.site.register(LandArea)
 admin.site.register(LandType)
 admin.site.register(LandStatus)
 admin.site.register(FarmRelatedBusiness)
-admin.site.register(Business)
 admin.site.register(ManagementType)
-admin.site.register(Management)
 admin.site.register(Loss)
 admin.site.register(Unit)
 admin.site.register(Product)

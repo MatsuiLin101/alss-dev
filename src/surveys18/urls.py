@@ -4,5 +4,5 @@ from .views import (
 )
 
 urlpatterns = [
-    url(r'^get-surveys/(?P<fid>\d+)/$', get_surveys, name='get_surveys'),
+    url(r'^get-surveys/$', get_surveys, name='get_surveys'),
 ]
