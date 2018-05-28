@@ -1,5 +1,5 @@
 <select class="form-control" name="farmerworkday">
-    <option value="-1">--請選擇--</option>
+    <option value="-1">請選擇</option>
     {% for farmer_work_day in farmer_work_days %}
     <option value="{{ farmer_work_day.id }}">{{ farmer_work_day.name }}</option>
     {% endfor %}

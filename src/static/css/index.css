@@ -48,4 +48,12 @@ label.fw-400 {
     max-width: 80px;
 }
 
+select.form-control{
+    min-width: 85px;
+}
+
+input.form-control{
+    min-width: 45px;
+}
+
 

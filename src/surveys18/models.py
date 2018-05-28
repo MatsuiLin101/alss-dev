@@ -48,9 +48,16 @@ class Survey(Model):
     lacks = ManyToManyField('surveys18.Lack', blank=True,
                             related_name='surveys18',
                             verbose_name=_('Lack'))
+    farm_related_businesses = \
+        ManyToManyField('surveys18.FarmRelatedBusiness',
+                        related_name='survey',
+                        verbose_name=_('Farm Related Business'))
+    management_types = ManyToManyField('surveys18.ManagementType',
+                                       related_name='survey',
+                                       verbose_name=_('Management Types'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))
     is_updated = BooleanField(default=False, verbose_name=_('Is Updated'))
-    read_only = BooleanField(default=True, verbose_name=_('Read Only'))
+    readonly = BooleanField(default=True, verbose_name=_('Read Only'))
 
     investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True,
                               blank=True, on_delete=CASCADE,
@@ -703,27 +710,6 @@ class ManagementType(Model):
         return str(self.name)
 
 
-class Management(Model):
-    survey = OneToOneField('surveys18.Survey', related_name='managements'
-                           , verbose_name=_('Survey'))
-    types = ManyToManyField('surveys18.ManagementType',
-                            related_name='managements',
-                            verbose_name=_('Types'))
-    update_time = DateTimeField(auto_now=True, auto_now_add=False,
-                                null=True, blank=True,
-                                verbose_name=_('Updated'))
-
-    class Meta:
-        verbose_name = _('Management')
-        verbose_name_plural = _('Management')
-
-    def __str__(self):
-        return str(self.survey)
-
-    def __unicode__(self):
-        return str(self.survey)
-
-
 class FarmRelatedBusiness(Model):
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True,
@@ -744,28 +730,6 @@ class FarmRelatedBusiness(Model):
 
     def __unicode__(self):
         return str(self.name)
-
-
-class Business(Model):
-    survey = OneToOneField('surveys18.Survey', related_name='businesses',
-                           verbose_name=_('Survey'))
-    farm_related_businesses = \
-        ManyToManyField('surveys18.FarmRelatedBusiness',
-                        related_name='businesses',
-                        verbose_name=_('Farm Related Business'))
-    update_time = DateTimeField(auto_now=True, auto_now_add=False,
-                                null=True, blank=True,
-                                verbose_name=_('Updated'))
-
-    class Meta:
-        verbose_name = _('Business')
-        verbose_name_plural = _('Business')
-
-    def __str__(self):
-        return str(self.survey)
-
-    def __unicode__(self):
-        return str(self.survey)
 
 
 class LandStatus(Model):
@@ -878,8 +842,6 @@ class AddressMatch(Model):
                            related_name='address_match',
                            verbose_name=_('Survey'))
     match = BooleanField(default=False, verbose_name=_('Address Match'))
-    different = BooleanField(default=False,
-                             verbose_name=_('Address Different'))
     address = CharField(max_length=100, null=True, blank=True,
                         verbose_name=_('Address'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,

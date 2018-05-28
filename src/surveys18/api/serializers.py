@@ -6,8 +6,7 @@ from surveys18.models import (
     Lack,
     Phone,
     LandArea,
-    Business,
-    Management,
+    ManagementType,
     CropMarketing,
     LivestockMarketing,
     PopulationAge,
@@ -18,6 +17,9 @@ from surveys18.models import (
     NoSalaryHire,
     ShortTermLack,
     LongTermLack,
+    LandStatus,
+    LandType,
+    FarmRelatedBusiness,
 )
 
 
@@ -45,21 +47,27 @@ class PhoneSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class LandStatusSerializer(ModelSerializer):
+    class Meta:
+        model = LandStatus
+        fields = '__all__'
+
+
+class LandTypeSerializer(ModelSerializer):
+    class Meta:
+        model = LandType
+        fields = '__all__'
+
+
 class LandAreaSerializer(ModelSerializer):
     class Meta:
         model = LandArea
         fields = '__all__'
 
 
-class BusinessSerializer(ModelSerializer):
+class ManagementTypeSerializer(ModelSerializer):
     class Meta:
-        model = Business
-        fields = '__all__'
-
-
-class ManagementSerializer(ModelSerializer):
-    class Meta:
-        model = Management
+        model = ManagementType
         fields = '__all__'
 
 
@@ -123,14 +131,20 @@ class LongTermLackSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class FarmRelatedBusinessSerializer(ModelSerializer):
+    class Meta:
+        model = FarmRelatedBusiness
+        fields = '__all__'
+
+
 class SurveySerializer(ModelSerializer):
     annual_incomes = AnnualIncomeSerializer(many=True)
     address_match = AddressMatchSerializer()
+    farm_related_businesses = FarmRelatedBusinessSerializer(many=True)
     lacks = LackSerializer(many=True)
     phones = PhoneSerializer(many=True)
     land_areas = LandAreaSerializer(many=True)
-    businesses = BusinessSerializer()
-    managements = ManagementSerializer()
+    management_types = ManagementTypeSerializer(many=True)
     crop_marketings = CropMarketingSerializer(many=True)
     livestock_marketings = LivestockMarketingSerializer(many=True)
     population_ages = PopulationAgeSerializer(many=True)

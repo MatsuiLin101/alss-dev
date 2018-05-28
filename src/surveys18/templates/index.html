@@ -34,10 +34,10 @@
                     </div>
                     <h4 class="my-3 bold">查詢</h4>
                     <div class="list-group">
-                        <input type="text" class="form-control input-lg" aria-label="" placeholder="請輸入農戶編號">
+                        <input type="text" class="form-control input-lg" id="farmerId" placeholder="請輸入農戶編號" value="670050010001">
                         <div class="btn-group flex mt-1" role="group" aria-label="">
-                            <button type="button" class="btn btn-success btn-lg" id="#">查詢</button>
-                            <button type="button" class="btn btn-success btn-lg" id="#">查詢原始資料</button>
+                            <button type="button" class="btn btn-success btn-lg js-get-survey" data-readonly="false" data-url="{% url 'surveys18:get_surveys' %}">查詢</button>
+                            <button type="button" class="btn btn-success btn-lg js-get-survey" data-readonly="true" data-url="{% url 'surveys18:get_surveys' %}">查詢原始資料</button>
                         </div>
                     </div>
                     <h4 class="my-3 bold">調查表</h4>

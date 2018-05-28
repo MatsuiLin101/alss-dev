@@ -13,6 +13,8 @@
     date: 2018-03-16T17:41:28+00:00
     distance: 35
     period: 60
+    farm_related_businesses: [5]
+    management_types: [11]
 
 - model: surveys18.Phone
   pk: 1
@@ -26,6 +28,13 @@
     survey: 1
     phone: 0223442345
 
+- model: surveys18.AddressMatch
+  pk: 1
+  fields:
+    survey: 1
+    match: False
+    address: 屏東市屏南路西巷2號
+
 - model: surveys18.LandArea
   pk: 1
   fields:
@@ -35,7 +44,7 @@
     value: 250
 
 - model: surveys18.LandArea
-  pk: 1
+  pk: 2
   fields:
     survey: 1
     type: 1
@@ -43,24 +52,12 @@
     value: 420
 
 - model: surveys18.LandArea
-  pk: 1
+  pk: 3
   fields:
     survey: 1
     type: 1
     status: 3
     value: 30
-
-- model: surveys18.Business
-  pk: 1
-  fields:
-    survey: 1
-    farm_related_businesses: [5]
-
-- model: surveys18.Management
-  pk: 1
-  fields:
-    survey: 1
-    types: [11]
 
 - model: surveys18.Subsidy
   pk: 1

@@ -63,7 +63,7 @@
         height     : '85px',
 
         //loading img/gif
-        imgPath    : 'img/ajax-loading.gif',
+        imgPath    : 'static/vendor/ajax-loading/img/ajax-loading.gif',
         imgWidth   : '45px',
         imgHeight  : '45px',
 
