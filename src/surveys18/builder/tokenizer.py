@@ -1,4 +1,4 @@
-from .exceptions import SignError
+from .exceptions import SignError, StringLengthError, CreateModelError
 from surveys18.models import (
     MarketType,
     IncomeRange,
@@ -43,22 +43,6 @@ from surveys18.models import (
 
 
 class Builder(object):
-    # slice var
-    BASE_SLICE = 48
-    TABLE_1_SLICE = [26, 9, 14, 24, 24, 10]
-    TABLE_2_SLICE = [12, 29]
-    TABLE_3_1_SLICE = [2, 29, 31, 5]
-    TABLE_3_2_SLICE = [4, 17, 21]
-    TABLE_3_3_SLICE = [11]
-    LAST_SLICE = [9]
-    PAGE_NUMBER = 0
-
-    # table
-    SURVEY_ID = [0, 11]
-    SURVEY_PAGE = [12, 13]
-    SURVEY_TOTAL_PAGES = [13, 14]
-
-    CROP_MARKETING_TOKEN = [55, 72]
 
     def __init__(self, string):
         self.check_string(string)
@@ -75,6 +59,9 @@ class Builder(object):
 
     def build(self):
         self.build_survey()
+        self.build_phone()
+        self.build_address()
+        self.build_land_area()
 
     @staticmethod
     def check_string(string):
@@ -92,6 +79,7 @@ class Builder(object):
             if (slices_pound[1].find("#") is -1) or (slices_pound[-1].find("#") is -1) \
                     or (slices_pound[-2].find("#") is -1):
                 raise SignError('#')
+        return True
 
 
 
@@ -117,7 +105,8 @@ class Builder(object):
             distance_km = int(string.split("#")[1][-4:])
 
         except ValueError:
-            raise NotImplementedError('Survey data size error')
+            raise StringLengthError('Survey')
+
         else:
             try:
                 survey = Survey.objects.create(
@@ -131,25 +120,28 @@ class Builder(object):
                     distance=distance_km
                 )
             except ValueError:
-                raise NotImplementedError('Survey create error')
-        self.survey = survey
+                raise CreateModelError('Survey')
+            else:
+                 self.survey = survey
 
     def build_phone(self):
         try:
             string = self.string[0]
             phones = string[23:44].replace("#", "").split("/")
         except ValueError:
-            raise NotImplementedError('Phone data size error')
+            raise StringLengthError('Phone')
         else:
             try:
+                self.phones = []
                 for number in phones:
                     if len(number) > 0:
-                        Phone.objects.create(
+                        phone =Phone.objects.create(
                             survey=self.survey,
                             phone=number
                         )
+                        self.phones.append(phone)
             except ValueError:
-                raise NotImplementedError('Phone create error')
+                raise CreateModelError('Phone')
 
     def build_address(self):
         match = False
@@ -164,17 +156,64 @@ class Builder(object):
             if different_str == "1":
                 different = True
         except ValueError:
-            raise NotImplementedError('Address Match data size error')
+            raise StringLengthError('Address Match')
         else:
             try:
-                AddressMatch.objects.create(
+                address = AddressMatch.objects.create(
                     survey=self.survey,
                     match=match,
                     different=different,
                     address=address
                 )
             except ValueError:
-                raise NotImplementedError('AddressMatch create error')
+                raise CreateModelError('Address Match')
+            else:
+                self.address = address
+
+    def build_land_area(self):
+        try:
+            string = self.string[1]
+            area_str = string[0:26]
+        except ValueError:
+            raise StringLengthError('Land Area')
+        else:
+            try:
+                self.land_area = []
+                cnt = 0
+                for i in range(5,len(area_str),5):
+                    if int(area_str[cnt*5:i])>0:
+                        if cnt < 3 :
+                            type = 1
+                        else:
+                            type = 2
+
+                        if i/5 > 3 :
+                            status = int((i / 5))-3
+                        else:
+                            status = int((i / 5))
+
+                        land_type = LandType.objects.get(id=type)
+                        land_status = LandStatus.objects.get(id=status)
+
+                        land_area = LandArea.objects.create(
+                            survey=self.survey,
+                            type=land_type,
+                            status=land_status,
+                            value=int(area_str[cnt*5:i])
+                        )
+                        self.land_area.append(land_area)
+                    cnt = cnt+1
+
+                if area_str[-1] == "1":
+                    land_type = LandType.objects.get(id=3)
+                    land_area = LandArea.objects.create(
+                        survey=self.survey,
+                        type=land_type,
+                    )
+                    self.land_area.append(land_area)
+
+            except ValueError:
+                raise CreateModelError('Land Area')
 
 
 
