@@ -60,7 +60,7 @@ class Index(LoginRequiredMixin, TemplateView):
         context['months'] = Month.objects.all()
         context['other_farm_works'] = OtherFarmWork.objects.all()
         context['relationships'] = Relationship.objects.all()
-        context['live_styles'] = LifeStyle.objects.all()
+        context['life_styles'] = LifeStyle.objects.all()
         context['work_types'] = WorkType.objects.all()
 
         # ui elements

@@ -32,7 +32,7 @@
   pk: 1
   fields:
     survey: 1
-    match: False
+    mismatch: True
     address: 屏東市屏南路西巷2號
 
 - model: surveys18.LandArea
@@ -158,8 +158,8 @@
   fields:
     survey: 1
     product: 248
-    loss: 1
-    unit: 3
+    loss: 8
+    unit: 13
     contract: 1
     raising_number: 90
     total_yield: 15
@@ -170,8 +170,8 @@
   fields:
     survey: 1
     product: 247
-    loss: 3
-    unit: 3
+    loss: 8
+    unit: 13
     contract: 1
     raising_number: 1000
     total_yield: 1500
@@ -182,8 +182,8 @@
   fields:
     survey: 1
     product: 253
-    loss: 1
-    unit: 4
+    loss: 8
+    unit: 14
     contract: 1
     raising_number: 20000
     total_yield: 60000
@@ -194,8 +194,8 @@
   fields:
     survey: 1
     product: 254
-    loss: 1
-    unit: 4
+    loss: 8
+    unit: 14
     contract: 2
     raising_number: 15000
     total_yield: 30000
@@ -206,8 +206,8 @@
   fields:
     survey: 1
     product: 289
-    loss: 1
-    unit: 3
+    loss: 8
+    unit: 13
     contract: 2
     raising_number: 130
     total_yield: 5
@@ -218,8 +218,8 @@
   fields:
     survey: 1
     product: 295
-    loss: 1
-    unit: 3
+    loss: 8
+    unit: 13
     contract: 2
     raising_number:
     total_yield: 842000
@@ -245,6 +245,13 @@
     survey: 1
     market_type: 3
     income_range: 1
+
+- model: surveys18.AnnualIncome
+  pk: 3
+  fields:
+    survey: 1
+    market_type: 5
+    income_range: 10
 
 - model: surveys18.PopulationAge
   pk: 1
