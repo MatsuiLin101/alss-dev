@@ -1,6 +1,6 @@
-<select class="form-control">
+<select class="form-control" name="lifestyle">
     <option value="-1">請選擇</option>
-    {% for live_style in live_styles %}
-    <option value="{{ live_style.id }}">{{ live_style.name }}</option>
+    {% for life_style in life_styles %}
+    <option value="{{ life_style.id }}">{{ life_style.name }}</option>
     {% endfor %}
 </select>

@@ -17,9 +17,9 @@
             <th scopt="row">{{ type.name }}</th>
             {% for range in income_ranges %}
                 <td>
-                    <input type="checkbox" class="w-2 h-2" data-min="{{ range.min }}"
-                           data-max="{{ range.max }}" data-incomerange-id="{{ range.id }}"
-                           data-markettype-id="{{ type.id }}">
+                    <input type="checkbox" class="w-2 h-2" data-min="{{ range.minimum }}"
+                           data-max="{{ range.maximum }}" data-incomerange-id="{{ range.id }}"
+                           data-markettype-id="{{ type.id }}" name="annualincome">
                 </td>
             {% endfor %}
         </tr>

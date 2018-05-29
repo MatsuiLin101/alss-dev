@@ -1,14 +1,4 @@
 <tr>
-    <th>畜禽名稱</th>
-    <th>計量單位</th>
-    <th>年底在養數量</th>
-    <th>全年銷售數量</th>
-    <th>銷售平均單價（元）</th>
-    <th>契約飼養</th>
-    <th>特殊情形</th>
-</tr>
-
-<tr>
     <td>
         {% include 'dropdown-ui/livestock-product.html' %}
     </td>
@@ -16,13 +6,13 @@
         {% include 'dropdown-ui/livestock-unit.html' %}
     </td>
     <td>
-        <input name="raisingnumber" type="text">
+        <input class="form-control" name="raisingnumber" type="text">
     </td>
     <td>
-        <input name="totalyield" type="text">
+        <input class="form-control" name="totalyield" type="text">
     </td>
     <td>
-        <input name="unitprice" type="text">
+        <input class="form-control" name="unitprice" type="text">
     </td>
     <td>
         {% include 'dropdown-ui/contract.html' %}
