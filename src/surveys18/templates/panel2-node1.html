@@ -37,11 +37,14 @@
             <td>
                 <div class="form-horizontal">
                     {% for business in farm_related_businesses %}
-                    <div class="checkbox col-md-6">
-                        <label>
+                    <div class="form-inline col-md-6">
+                        <label class="fw-400">
                             <input type="checkbox"  data-farmrelatedbusiness-id="{{ business.id }}" name="farmrelatedbusiness">
                             {{ business.id }}.{{ business.name }}
                         </label>
+                        {% if business.has_extra %}
+                        <input class="small form-control" type="text"  data-farmrelatedbusiness-id="{{ business.id }}" name="extra">
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>

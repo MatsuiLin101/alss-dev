@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.dates import MONTHS
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import (
     Model,
@@ -43,15 +43,11 @@ class Survey(Model):
     page = IntegerField(verbose_name=_('Page'))
     origin_class = IntegerField(null=True, blank=True,
                                 verbose_name=_('Origin Class'))
-    is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
-                           blank=True, verbose_name=_('Hire'))
+    hire = BooleanField(default=False, verbose_name=_('Hire'))
+    non_hire = BooleanField(default=False, verbose_name=_('Non Hire'))
     lacks = ManyToManyField('surveys18.Lack', blank=True,
                             related_name='surveys18',
                             verbose_name=_('Lack'))
-    farm_related_businesses = \
-        ManyToManyField('surveys18.FarmRelatedBusiness',
-                        related_name='survey',
-                        verbose_name=_('Farm Related Business'))
     management_types = ManyToManyField('surveys18.ManagementType',
                                        related_name='survey',
                                        verbose_name=_('Management Types'))
@@ -263,6 +259,8 @@ class LongTermHire(Model):
     months = ManyToManyField('surveys18.Month',
                              related_name='long_term_hires',
                              verbose_name=_('Months'))
+    number_workers = GenericRelation(NumberWorkers,
+                                     related_query_name='long_term_hires')
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -710,13 +708,26 @@ class ManagementType(Model):
         return str(self.name)
 
 
+class Business(Model):
+    survey = ForeignKey('surveys18.Survey', related_name='businesses',
+                        verbose_name=_('Survey'))
+    farm_related_business = \
+        OneToOneField('surveys18.FarmRelatedBusiness',
+                      related_name='business',
+                      verbose_name=_('Farm Related Business'))
+    extra = CharField(max_length=50, null=True, blank=True,
+                      verbose_name=_('Extra'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+
 class FarmRelatedBusiness(Model):
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True,
                      verbose_name=_('Name'))
-    has_business = IntegerField(null=True, blank=True,
-                                choices=YES_NO_CHOICES,
-                                verbose_name=_('Has Business'))
+    has_extra = BooleanField(default=False, verbose_name=_('Has Extra'))
+    has_business = BooleanField(default=True, verbose_name=_('Has Business'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
