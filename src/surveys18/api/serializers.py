@@ -20,6 +20,8 @@ from surveys18.models import (
     LandStatus,
     LandType,
     FarmRelatedBusiness,
+    NumberWorkers,
+    Business,
 )
 
 
@@ -101,7 +103,15 @@ class SubsidySerializer(ModelSerializer):
         fields = '__all__'
 
 
+class NumberWorkers(ModelSerializer):
+    class Meta:
+        model = NumberWorkers
+        fields = '__all__'
+
+
 class LongTermHireSerializer(ModelSerializer):
+    number_workers = NumberWorkers(many=True)
+
     class Meta:
         model = LongTermHire
         fields = '__all__'
@@ -137,10 +147,16 @@ class FarmRelatedBusinessSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class BusinessSerializer(ModelSerializer):
+    class Meta:
+        model = Business
+        fields = '__all__'
+
+
 class SurveySerializer(ModelSerializer):
     annual_incomes = AnnualIncomeSerializer(many=True)
     address_match = AddressMatchSerializer()
-    farm_related_businesses = FarmRelatedBusinessSerializer(many=True)
+    businesses = BusinessSerializer(many=True)
     lacks = LackSerializer(many=True)
     phones = PhoneSerializer(many=True)
     land_areas = LandAreaSerializer(many=True)

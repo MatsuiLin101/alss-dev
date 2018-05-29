@@ -13,7 +13,6 @@
     date: 2018-03-16T17:41:28+00:00
     distance: 35
     period: 60
-    farm_related_businesses: [5]
     management_types: [11]
 
 - model: surveys18.Phone
@@ -58,6 +57,19 @@
     type: 1
     status: 3
     value: 30
+
+- model: surveys18.Business
+  pk: 1
+  fields:
+    survey: 1
+    farm_related_business: 5
+
+- model: surveys18.Business
+  pk: 2
+  fields:
+    survey: 1
+    farm_related_business: 9
+    extra: 測試
 
 - model: surveys18.Subsidy
   pk: 1
@@ -380,14 +392,6 @@
     farmer_work_day: 1
     life_style: 6
     other_farm_work: 1
-
-- model: surveys18.LongTermHire
-  pk: 1
-  fields:
-    survey: 1
-    avg_work_day: 0.5
-    work_type: 2
-    months: [1, 3, 5, 7, 9, 11]
 
 - model: surveys18.LongTermHire
   pk: 1

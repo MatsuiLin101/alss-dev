@@ -68,7 +68,7 @@ var Set = function (data, index) {
         FirstPageIndex = index;
         SurveyHelper.Set(data);
         LandAreaHelper.Set(data.land_areas);
-        FarmRelatedBusinessHelper.Set(data.farm_related_businesses);
+        BusinessHelper.Set(data.businesses);
         ManagementTypeHelper.Set(data.management_types);
         AnnualIncomeHelper.Set(data.annual_incomes);
         PopulationAgeHelper.Set(data.population_ages);
@@ -80,8 +80,7 @@ var Set = function (data, index) {
     CropMarketingHelper.Set(data.crop_marketings, index);
     LivestockMarketingHelper.Set(data.livestock_marketings, index);
     PopulationHelper.Set(data.populations, index);
-
-//    LongTermHireHelper.Init(data.LongTermHire, index);
+    LongTermHireHelper.Set(data.long_term_hires, index);
 //    ShortTermLackHelper.Init(data.ShortTermForLack, index);
 }
 
@@ -360,7 +359,7 @@ var LandAreaHelper = {
     },
 
 }
-var FarmRelatedBusinessHelper = {
+var BusinessHelper = {
     Alert: null,
     Reset: function(){
          if (this.Alert) { this.Alert.reset(); }
@@ -368,13 +367,14 @@ var FarmRelatedBusinessHelper = {
     },
     Set: function(array){
         this.FarmRelatedBusiness.Set(array);
+        this.Extra.Set(array);
     },
     FarmRelatedBusiness: {
         Container: $('#panel2 input[name="farmrelatedbusiness"]'),
         Set: function(array){
-            array.forEach(function(farm_related_business, i){
-                FarmRelatedBusinessHelper.FarmRelatedBusiness.Container
-                .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farm_related_business.id))
+            array.forEach(function(business, i){
+                BusinessHelper.FarmRelatedBusiness.Container
+                .filter('[data-farmrelatedbusiness-id="{0}"]'.format(business.farm_related_business))
                 .prop('checked', true);
             })
         },
@@ -385,6 +385,22 @@ var FarmRelatedBusinessHelper = {
 
         },
     },
+    Extra: {
+        Container: $('#panel2 input[name="extra"]'),
+        Set: function(array){
+            array.forEach(function(business, i){
+                BusinessHelper.Extra.Container
+                .filter('[data-farmrelatedbusiness-id="{0}"]'.format(business.farm_related_business))
+                .val(business.extra);
+            })
+        },
+        Reset: function(){
+            this.Container.val('');
+        },
+        Bind: function(){
+
+        },
+    }
 }
 var ManagementTypeHelper = {
     Alert: null,
@@ -651,36 +667,28 @@ var LongTermHireHelper = {
         this.LongTermHire.Set(array, index);
     },
     LongTermHire: {
-        Container: $('#panel3 table[name="longtermhire"] > tbody'),
+        Container: $('#panel4 table[name="longtermhire"] > tbody'),
         Set: function (array, index) {
-            array.forEach(function(long_term_hires, i){
+            array.forEach(function(long_term_hire, i){
                 var $row = $(LongTermHireHelper.LongTermHire.Row);
 
                 $row.find('select[name="worktype"] option')
-                .filter('[value="{0}"]'.format(long_term_hires.work_type))
+                .filter('[value="{0}"]'.format(long_term_hire.work_type))
                 .prop('selected', true);
 
-                $row.find('select[name="gender"] option')
-                .filter('[value="{0}"]'.format(long_term_hires.gender))
-                .prop('selected', true);
+                long_term_hire.number_workers.forEach(function(number_worker, j){
+                    $row.find('input[name="numberworker"]')
+                    .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
+                    .val(number_worker.count);
+                })
 
-                $row.find('input[name="birthyear"]').val(LongTermHire.birth_year);
+                long_term_hire.months.forEach(function(month, j){
+                    $row.find('select[name="month"] option')
+                    .filter('[value="{0}"]'.format(month))
+                    .prop('selected', true);
+                })
 
-                $row.find('select[name="educationlevel"] option')
-                .filter('[value="{0}"]'.format(LongTermHire.education_level))
-                .prop('selected', true);
-
-                $row.find('select[name="farmerworkday"] option')
-                .filter('[value="{0}"]'.format(LongTermHire.farmer_work_day))
-                .prop('selected', true);
-
-                $row.find('select[name="lifestyle"] option')
-                .filter('[value="{0}"]'.format(LongTermHire.life_style))
-                .prop('selected', true);
-
-                $row.find('select[name="otherfarmwork"] option')
-                .filter('[value="{0}"]'.format(LongTermHire.other_farm_work))
-                .prop('selected', true);
+                $row.find('input[name="avgworkday"]').val(long_term_hire.avg_work_day);
 
                 LongTermHireHelper.LongTermHire.Container.append($row);
             })
@@ -691,6 +699,7 @@ var LongTermHireHelper = {
     },
     Alert: null,
 }
+
 var ShortTermHireHelper = {
     Alert09: null,
     Alert21: null,

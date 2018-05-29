@@ -37,6 +37,7 @@ from .models import (
     LongTermLack,
     Gender,
     ProductType,
+    Business,
 )
 
 admin.site.register(MarketType)
@@ -49,6 +50,7 @@ admin.site.register(Phone)
 admin.site.register(LandArea)
 admin.site.register(LandType)
 admin.site.register(LandStatus)
+admin.site.register(Business)
 admin.site.register(FarmRelatedBusiness)
 admin.site.register(ManagementType)
 admin.site.register(Loss)
