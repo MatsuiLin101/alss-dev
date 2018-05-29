@@ -842,6 +842,7 @@ class AddressMatch(Model):
                            related_name='address_match',
                            verbose_name=_('Survey'))
     match = BooleanField(default=False, verbose_name=_('Address Match'))
+    different = BooleanField(default=False, verbose_name=_('Address Different'))
     address = CharField(max_length=100, null=True, blank=True,
                         verbose_name=_('Address'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
