@@ -269,7 +269,8 @@ var SurveyHelper = {
 
         },
         Set: function (obj) {
-            this.Container.filter('[value="{0}"]'.format(obj.is_hire)).prop('checked', true);
+            this.Container.filter('[data-field="hire"]').prop('checked', obj.hire);
+            this.Container.filter('[data-field="nonhire"]').prop('checked', obj.non_hire);
         },
         Reset: function(){
             this.Container.prop('checked', false);
@@ -293,8 +294,8 @@ var SurveyHelper = {
     AddressMatch: {
         Container: $('#panel1 input[name="addressmatch"]'),
         Set: function(obj){
-            this.Container.filter('[data-name="match"]'.format(obj.address_match.match)).prop('checked', obj.address_match.match);
-            this.Container.filter('[data-name="mismatch"]'.format(obj.address_match.mismatch)).prop('checked', obj.address_match.mismatch);
+            this.Container.filter('[data-field="match"]').prop('checked', obj.address_match.match);
+            this.Container.filter('[data-field="mismatch"]').prop('checked', obj.address_match.mismatch);
         },
         Reset: function(){
             this.Container.prop('checked', false);
@@ -640,228 +641,55 @@ var PopulationHelper = {
 }
 var LongTermHireHelper = {
     Setup: function(row){
-        this.$Row = $(row);
-    },
-    Alert: null,
-    Init: function (obj, index) {
-        this.Alert = new Helper.Alert($('#Alert08'));
-        for (var i in obj) {
-            var tr = $('<tr class="LongTermHireObj">')
-                .attr('data-id', obj[i].id)
-                .attr('data-index', i)
-                .attr('data-surveyindex', index);
-
-            var rownum = $('#LongTermHire .LongTermHireObj').length + 1;
-
-            /*rownum*/
-            var td_rownum = $('<td>');
-            td_rownum
-                .addClass('rownum')
-                .html(rownum)
-            tr.append(td_rownum);
-            /* workerTypeCodeId */
-            var td_workertype = $('<td>');
-            var worktype = $.grep(Components.WorkerTypeCode, function (e) {
-                return (e.id == obj[i].workerTypeCodeId)
-            });
-            td_workertype
-                .attr('data-source', 'WorkerTypeCodeId')
-                .attr('data-id', obj[i].id)
-                .attr('data-index', i)
-                .attr('data-rownum', rownum)
-                .attr('data-name', '受僱農牧業工作類型')
-                .attr('data-surveyindex', index)
-                .html(WorkerTypeCodeUI.clone())
-                .find('option[value="' + obj[i].workerTypeCodeId + '"]').prop('selected', true);
-            this.CheckSelect(td_workertype.find('select'));
-            this.BindEvent.BindSelect(td_workertype.find('select'));
-            tr.append(td_workertype);
-
-            /* count */
-            var count = 0;
-            for (var j in obj[i].NumberWorkers) {
-                count += parseInt(obj[i].NumberWorkers[j].value);
-            }
-            var td_count = $('<td>');
-            td_count
-                .addClass('count')
-                .attr('data-source', 'LongTermHire')
-                .attr('data-id', obj[i].id)
-                .attr('data-index', i)
-                .attr('data-rownum', rownum)
-                .attr('data-surveyindex', index)
-                .html($(InputUI))
-                .find('input').attr('disabled', true).val(count);
-            tr.append(td_count);
-
-            /* avgSalary */
-            var td_salary = $('<td>');
-            td_salary.addClass('avgSalary')
-                .attr('data-source', 'LongTermHire')
-                .attr('data-id', obj[i].id)
-                .attr('data-index', i)
-                .attr('data-rownum', rownum)
-                .attr('data-surveyindex', index)
-                .html($(InputUI))
-                .find('input')
-                .attr('data-name', '平均月薪')
-                .val(obj[i].avgSalary);
-            LongTermHireHelper.CheckInput(td_salary.find('input'));
-            LongTermHireHelper.BindEvent.BindInput(td_salary.find('input'));
-            tr.append(td_salary);
-
-            /* ageScopeId */
-            for (var j in obj[i].NumberWorkers) {
-                var ageScope = $.grep(Components.AgeScope, function (e) {
-                    return e.id == obj[i].NumberWorkers[j].ageScopeId
-                });
-
-                var td_age = $('<td>');
-                td_age
-                    .addClass('ageScopeId')
-                    .attr('data-source', 'LongTermHire')
-                    .attr('data-id', obj[i].id)
-                    .attr('data-index', i)
-                    .attr('data-rownum', rownum)
-                    .attr('data-surveyindex', index)
-                    .html($(InputUI)).find('input')
-                        .attr('data-source', 'NumberWorkers')
-                        .attr('data-name', '平均年齡' + ageScope[0].name)
-                        .attr('data-numberworkersindex', j)
-                        .val(obj[i].NumberWorkers[j].value);
-                LongTermHireHelper.CheckInput(td_age.find('input'));
-                LongTermHireHelper.BindEvent.BindInput(td_age.find('input'));
-                tr.append(td_age);
-            }
-
-            /* delete */
-            var td_delete = $('<td>');
-            td_delete
-                .addClass('deleteLongTermHire')
-                .html($(DeleteButtonUI));
-            this.BindEvent.BindButton(td_delete.find('button'));
-            tr.append(td_delete);
-
-            $('#ShortTermForLack tbody').append(tr);
-
-            $('#LongTermHire tbody').append(tr);
-        }
+        this.LongTermHire.Row = row;
     },
     Reset: function () {
-        $('#LongTermHire .LongTermHireObj').remove();
         if (this.Alert) { this.Alert.reset(); }
+        this.LongTermHire.Reset();
     },
-    BindEvent: {
-        BindInput: function (input) {
-            input.change(function () {
+    Set: function(array, index){
+        this.LongTermHire.Set(array, index);
+    },
+    LongTermHire: {
+        Container: $('#panel3 table[name="longtermhire"] > tbody'),
+        Set: function (array, index) {
+            array.forEach(function(long_term_hires, i){
+                var $row = $(LongTermHireHelper.LongTermHire.Row);
 
-                if (LongTermHireHelper.CheckInput(input)) {
-                    var baseFarmer = DataCopy.FarmerList[FirstPageIndex].BaseFarmer;
-                    var index = input.closest('td').data('index');
-                    var td = input.closest('td');
-                    if (td.hasClass('ageScopeId')) {
-                        var numberWorkersIndex = input.data('numberworkersindex');
-                        baseFarmer.LongTermHire[index].NumberWorkers[numberWorkersIndex].value = parseInt(input.val());
-                    }
-                    if (td.hasClass('avgSalary')) {
-                        baseFarmer.LongTermHire[index].avgSalary = parseInt(input.val());
-                    }
-                }
-                if (input.data('source') == 'NumberWorkers') {
-                    LongTermHireHelper.GetAgeScopeSum(input);
-                    SurveyHelper.CheckIsHire();
-                }
-            });
-        },
-        BindSelect: function (select) {
-            select.change(function (event) {
-                //update...
-                var td = select.closest('td');
-                var index = td.data('index');
-                var value = select.val() == '-1' ? null : select.val();
-                var baseFarmerIndex = td.data('surveyindex');
-                var baseFarmer = DataCopy.FarmerList[baseFarmerIndex].BaseFarmer;
-                baseFarmer.LongTermHire[index].workerTypeCodeId = value;
+                $row.find('select[name="worktype"] option')
+                .filter('[value="{0}"]'.format(long_term_hires.work_type))
+                .prop('selected', true);
 
-                LongTermHireHelper.CheckSelect(select);
-            });
+                $row.find('select[name="gender"] option')
+                .filter('[value="{0}"]'.format(long_term_hires.gender))
+                .prop('selected', true);
+
+                $row.find('input[name="birthyear"]').val(LongTermHire.birth_year);
+
+                $row.find('select[name="educationlevel"] option')
+                .filter('[value="{0}"]'.format(LongTermHire.education_level))
+                .prop('selected', true);
+
+                $row.find('select[name="farmerworkday"] option')
+                .filter('[value="{0}"]'.format(LongTermHire.farmer_work_day))
+                .prop('selected', true);
+
+                $row.find('select[name="lifestyle"] option')
+                .filter('[value="{0}"]'.format(LongTermHire.life_style))
+                .prop('selected', true);
+
+                $row.find('select[name="otherfarmwork"] option')
+                .filter('[value="{0}"]'.format(LongTermHire.other_farm_work))
+                .prop('selected', true);
+
+                LongTermHireHelper.LongTermHire.Container.append($row);
+            })
         },
-        BindButton: function (button) {
-            button.click(function () {
-                var tr = button.closest('tr');
-                var index = tr.data('index');
-                var baseFarmerIndex = tr.data('surveyindex');
-                var baseFarmer = DataCopy.FarmerList[baseFarmerIndex].BaseFarmer;
-                baseFarmer.LongTermHire.splice(index, 1);
-                LongTermHireHelper.Reset();
-                for (var i in DataCopy.FarmerList) {
-                    LongTermHireHelper.Init(DataCopy.FarmerList[i].BaseFarmer.LongTermHire, i);
-                }
-            });
-        }
+        Reset: function() {
+            this.Container.html('');
+        },
     },
-    CheckInput: function (input) {
-        var target = input.closest('td');
-        var log = '第' + target.data('rownum') + '列：' + input.data('name') + '請輸入不小於0的整數。' + '<br>';
-        var con = !Helper.NumberValidate(input.val());
-        Helper.LogHandler(con, LongTermHireHelper.Alert, target, log, 'bg-danger');
-        return !con;
-    },
-    CheckSelect: function (select) {
-        var target = select.closest('td');
-        var log = '第' + target.data('rownum') + '列：' + target.data('name') + '請重新選擇。' + '<br>';
-        var con = select.val() == -1;
-        Helper.LogHandler(con, LongTermHireHelper.Alert, target, log, 'bg-danger');
-    },
-    GetAgeScopeSum: function (input) {
-        var tr = input.closest('.LongTermHireObj');
-        var count = 0;
-        var inputs = tr.find('.ageScopeId input');
-        for (var i = 0; i < inputs.length; i++) {
-            count += parseInt(inputs[i].value);
-        }
-        input.closest('tr').find('.count input').val(count);
-    },
-    ResetObject: function (obj) {
-        for (var i in obj) {
-            obj[i].avgSalary = 0;
-            for (var j in obj[i].NumberWorkers) {
-                obj[i].NumberWorkers[j].value = 0;
-            }
-        }
-    },
-    AdderUI: '\
-            <form>\
-                <div class="form-group">\
-                  <label class="col-form-label">受僱農牧業工作類型</label>\
-                  <div class="workerTypeCodeId"></div>\
-                </div>\
-                <div class="form-group">\
-                  <label class="col-form-label">平均月薪</label>\
-                  <div class="avgSalary">\
-                    <input class="form-control" type="text">\
-                  </div>\
-                </div>\
-                <div class="form-group">\
-                  <label class="col-form-label">44歲以下人數</label>\
-                  <div class="ageScopeId" data-id="1">\
-                    <input class="form-control" type="text">\
-                  </div>\
-                </div>\
-                <div class="form-group">\
-                  <label class="col-form-label">45~64歲人數</label>\
-                  <div class="ageScopeId" data-id="1">\
-                    <input class="form-control" type="text">\
-                  </div>\
-                </div>\
-                <div class="form-group">\
-                  <label class="col-form-label">65歲以上人數</label>\
-                  <div class="ageScopeId" data-id="2">\
-                    <input class="form-control" type="text">\
-                  </div>\
-                </div>\
-            </form>\
-        '
+    Alert: null,
 }
 var ShortTermHireHelper = {
     Alert09: null,

@@ -43,8 +43,8 @@ class Survey(Model):
     page = IntegerField(verbose_name=_('Page'))
     origin_class = IntegerField(null=True, blank=True,
                                 verbose_name=_('Origin Class'))
-    is_hire = IntegerField(choices=YES_NO_CHOICES, null=True,
-                           blank=True, verbose_name=_('Hire'))
+    hire = BooleanField(default=False, verbose_name=_('Hire'))
+    non_hire = BooleanField(default=False, verbose_name=_('Non Hire'))
     lacks = ManyToManyField('surveys18.Lack', blank=True,
                             related_name='surveys18',
                             verbose_name=_('Lack'))
