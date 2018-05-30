@@ -1,7 +1,7 @@
 <label class="control-label">3. 臨時或季節性員工
     <small class="text-muted">（僱用未達6個月，若該月份因農忙期或季節性因素致僱用人數不固定時，請以最多人數填寫）</small>
 </label>
-<table class="table table-bordered table-hover">
+<table class="table table-responsive table-bordered table-hover" name="shorttermhire">
     <thead>
         <tr>
             <th rowspan="2">月份
@@ -17,7 +17,7 @@
             <th rowspan="2">平均每月工作日數
                 <small class="text-muted">（日）</small>
             </th>
-            <th rowspan="2">刪除</th>
+            <th rowspan="2" class="w-50">刪除</th>
         </tr>
         <tr>
             {% for scope in hire_age_scopes %}

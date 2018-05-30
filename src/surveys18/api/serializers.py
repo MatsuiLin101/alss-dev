@@ -118,6 +118,8 @@ class LongTermHireSerializer(ModelSerializer):
 
 
 class ShortTermHireSerializer(ModelSerializer):
+    number_workers = NumberWorkers(many=True)
+
     class Meta:
         model = ShortTermHire
         fields = '__all__'

@@ -1,9 +1,19 @@
 <tr>
-    <th class="col-md-3">農畜產品名稱</th>
-    <th class="col-md-3">主要短缺工作類型</th>
-    <th class="col-md-2">人數（人）</th>
-    <th class="col-md-3">缺工月份
-        <small class="text-muted">（可複選）</small>
+    <th>
+        {% include 'dropdown-ui/product.html' %}
     </th>
-    <th class="col-md-1">刪除</th>
+    <th>
+        {% include 'dropdown-ui/work-type.html' %}
+    </th>
+    <th>
+        <input class="form-control" name="count" type="text" value="0">
+    </th>
+    <th>
+        {% include 'dropdown-ui/month.html' %}
+    </th>
+    <th>
+        <button type="button" class="btn btn-default btn-sm">
+            <span class="fa fa-remove" aria-hidden="true"></span>
+        </button>
+    </th>
 </tr>

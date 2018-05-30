@@ -233,6 +233,8 @@ class ShortTermHire(Model):
     work_types = ManyToManyField('surveys18.WorkType', blank=True,
                                  related_name='short_term_hires',
                                  verbose_name=_('Work Types'))
+    number_workers = GenericRelation(NumberWorkers,
+                                     related_query_name='short_term_hires')
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -290,9 +292,7 @@ class Subsidy(Model):
                              verbose_name=_('Day Delta'))
     hour_delta = IntegerField(null=True, blank=True,
                               verbose_name=_('Hour Delta'))
-    remark = CharField(max_length=100, null=True, blank=True,
-                       verbose_name=_('Remark'))
-    reasons = ManyToManyField('surveys18.RefuseReason',
+    refuses = ManyToManyField('surveys18.Refuse',
                               related_name='subsidy', blank=True,
                               verbose_name=_('subsidies'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -310,9 +310,30 @@ class Subsidy(Model):
         return str(self.survey)
 
 
+class Refuse(Model):
+    reason = OneToOneField('surveys18.RefuseReason', related_name='refuse',
+                           verbose_name=_('Refuse'))
+    extra = CharField(max_length=100, null=True, blank=True,
+                      verbose_name=_('Extra'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Refuse')
+        verbose_name_plural = _('Refuse')
+
+    def __str__(self):
+        return str(self.reason)
+
+    def __unicode__(self):
+        return str(self.reason)
+
+
 class RefuseReason(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
+    has_extra = BooleanField(default=False, verbose_name=_('Has Extra'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))

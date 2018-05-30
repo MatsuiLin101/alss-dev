@@ -25,6 +25,7 @@ from surveys18.models import (
     Unit,
     WorkType,
     LifeStyle,
+    RefuseReason,
 )
 
 
@@ -62,6 +63,7 @@ class Index(LoginRequiredMixin, TemplateView):
         context['relationships'] = Relationship.objects.all()
         context['life_styles'] = LifeStyle.objects.all()
         context['work_types'] = WorkType.objects.all()
+        context['refuse_reasons'] = RefuseReason.objects.all()
 
         # ui elements
         ui = {
