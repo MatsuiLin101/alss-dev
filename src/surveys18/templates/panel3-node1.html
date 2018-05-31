@@ -17,11 +17,11 @@
             <tr>
                 <th class="col-md-3" scopt="row">{{ scope.name }}</th>
                 <td class="col-md-3">
-                    <input class="form-control" type="text" name="sumcount" value="0" disabled>
+                    <input class="form-control" type="text" name="sumcount" placeholder="0" disabled>
                 </td>
                 {% for gender in genders %}
                     <td class="col-md-3">
-                        <input type="text" class="form-control" name="populationage"
+                        <input type="text" class="form-control" name="populationage" placeholder="0"
                                data-gender-id="{{ gender.id }}" data-agescope-id="{{ scope.id }}">
                     </td>
                 {% endfor %}
