@@ -1,8 +1,6 @@
-#local
-src/dashboard/settings
-src/*.sqlite3
 #server
 src/web.config
+
 #MAC
 .DS_Store
 
