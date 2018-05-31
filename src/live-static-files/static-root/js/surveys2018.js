@@ -74,6 +74,7 @@ var Set = function (data, index) {
         PopulationAgeHelper.Set(data.population_ages);
         ShortTermHireHelper.Set(data.short_term_hires);
         NoSalaryHireHelper.Set(data.no_salary_hires);
+        SubsidyHelper.Set(data.subsidy);
     }
     /* need setting survey index to locate which obj */
     CropMarketingHelper.Set(data.crop_marketings, index);
@@ -829,6 +830,41 @@ var ShortTermLackHelper = {
         },
     },
     Alert: null,
+}
+
+var SubsidyHelper = {
+    Container: {
+        HasSubsidy: $('#panel4 input[name="hassubsidy"]'),
+        Count: $('#panel4 input[name="count"]'),
+        Month: $('#panel4 input[name="monthdelta"]'),
+        Day: $('#panel4 input[name="daydelta"]'),
+        Hour: $('#panel4 input[name="hourdelta"]'),
+        RefuseReason: $('#panel4 input[name="refusereason"]'),
+        Extra: $('#panel4 input[name="extra"]'),
+    },
+    Set: function(obj){
+        this.Container.HasSubsidy.filter('[value="{0}"]'.format(obj.has_subsidy)).prop('checked', true);
+        this.Container.Count.val(obj.count);
+        this.Container.Month.val(obj.month_delta);
+        this.Container.Day.val(obj.day_delta);
+        this.Container.Hour.val(obj.hour_delta);
+        obj.refuses.forEach(function(refuse, i){
+            SubsidyHelper.Container.RefuseReason
+            .filter('[ data-refusereason-id="{0}"]'.format(refuse.reason))
+            .prop('checked', true);
+
+            SubsidyHelper.Container.Extra
+            .filter('[ data-refusereason-id="{0}"]'.format(refuse.reason))
+            .val(refuse.extra);
+        })
+    },
+    Reset: function(){
+        this.Container.HasSubsidy.prop('checked', false);
+        this.Container.Count.val('');
+        this.Container.Month.val('');
+        this.Container.Day.val('');
+        this.Container.Hour.val('');
+    },
 }
 
 

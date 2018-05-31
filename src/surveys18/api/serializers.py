@@ -22,6 +22,7 @@ from surveys18.models import (
     FarmRelatedBusiness,
     NumberWorkers,
     Business,
+    Refuse,
 )
 
 
@@ -97,7 +98,15 @@ class PopulationSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class RefuseSerializer(ModelSerializer):
+    class Meta:
+        model = Refuse
+        fields = '__all__'
+
+
 class SubsidySerializer(ModelSerializer):
+    refuses = RefuseSerializer(many=True)
+
     class Meta:
         model = Subsidy
         fields = '__all__'
