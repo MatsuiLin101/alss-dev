@@ -168,7 +168,7 @@ class NumberWorkers(Model):
     age_scope = ForeignKey('surveys18.AgeScope',
                            related_name='number_workers', null=True,
                            blank=True, verbose_name=_('Age Scope'))
-    count = IntegerField(null=True, blank=True, verbose_name=_('C'))
+    count = IntegerField(null=True, blank=True, verbose_name=_('Count'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -178,10 +178,10 @@ class NumberWorkers(Model):
         verbose_name_plural = _('NumberWorkers')
 
     def __str__(self):
-        return self.content_object
+        return str(self.content_object)
 
     def __unicode__(self):
-        return self.content_object
+        return str(self.content_object)
 
 
 class AgeScope(Model):
@@ -281,9 +281,9 @@ class LongTermHire(Model):
 class Subsidy(Model):
     survey = OneToOneField('surveys18.Survey', related_name='subsidy',
                            verbose_name=_('Survey'))
-    is_subsidy = IntegerField(null=True, blank=True,
-                              choices=YES_NO_CHOICES,
-                              verbose_name=_('Is Subsidy'))
+    has_subsidy = IntegerField(null=True, blank=True,
+                               choices=YES_NO_CHOICES,
+                               verbose_name=_('Is Subsidy'))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     month_delta = IntegerField(null=True, blank=True,

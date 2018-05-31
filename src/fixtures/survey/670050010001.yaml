@@ -75,7 +75,7 @@
   pk: 1
   fields:
     survey: 1
-    is_subsidy: 1
+    has_subsidy: 1
     count: 2
     month_delta: 2
     day_delta: 0
@@ -421,7 +421,7 @@
 - model: surveys18.NumberWorkers
   pk: 1
   fields:
-    content_type: 15
+    content_type: [surveys18, longtermhire]
     object_id: 1
     age_scope: 2
     count: 1
@@ -429,7 +429,7 @@
 - model: surveys18.NumberWorkers
   pk: 2
   fields:
-    content_type: 15
+    content_type: [surveys18, longtermhire]
     object_id: 2
     age_scope: 1
     count: 1
@@ -437,7 +437,7 @@
 - model: surveys18.NumberWorkers
   pk: 3
   fields:
-    content_type: 15
+    content_type: [surveys18, longtermhire]
     object_id: 3
     age_scope: 2
     count: 1
@@ -477,7 +477,7 @@
 - model: surveys18.NumberWorkers
   pk: 4
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 1
     age_scope: 1
     count: 2
@@ -485,7 +485,7 @@
 - model: surveys18.NumberWorkers
   pk: 5
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 1
     age_scope: 2
     count: 2
@@ -493,7 +493,7 @@
 - model: surveys18.NumberWorkers
   pk: 6
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 2
     age_scope: 1
     count: 2
@@ -501,7 +501,7 @@
 - model: surveys18.NumberWorkers
   pk: 7
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 2
     age_scope: 2
     count: 2
@@ -509,7 +509,7 @@
 - model: surveys18.NumberWorkers
   pk: 8
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 3
     age_scope: 1
     count: 2
@@ -517,7 +517,7 @@
 - model: surveys18.NumberWorkers
   pk: 9
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 3
     age_scope: 2
     count: 2
@@ -525,7 +525,7 @@
 - model: surveys18.NumberWorkers
   pk: 10
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 4
     age_scope: 1
     count: 2
@@ -533,7 +533,7 @@
 - model: surveys18.NumberWorkers
   pk: 11
   fields:
-    content_type: 14
+    content_type: [surveys18, shorttermhire]
     object_id: 4
     age_scope: 2
     count: 2
