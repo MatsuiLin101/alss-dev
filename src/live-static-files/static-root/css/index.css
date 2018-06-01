@@ -12,13 +12,6 @@ body {
     }
 }
 
-@media(min-width: 992px) {
-    .affix {
-      width: 274.6px;
-    }
-}
-
-
 .form-area {
     padding: 15px;
 }

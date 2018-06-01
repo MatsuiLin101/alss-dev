@@ -34,8 +34,8 @@ body {
 }
 
 #login h1 > a {
-    background-image: url(../img/coa.png?ver=20180502);
-    background-image: none,url(../img/coa.svg?ver=20180502);
+    background-image: url("../img/coa.39c1ef93df75.png?ver=20180502");
+    background-image: none,url("../img/coa.6aaf4880ea6f.svg?ver=20180502");
     background-size: 120px;
     background-position: center top;
     background-repeat: no-repeat;
