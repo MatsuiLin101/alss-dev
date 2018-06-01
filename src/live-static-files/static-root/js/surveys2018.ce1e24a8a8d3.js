@@ -3,8 +3,8 @@ var GlobalUI = $.parseJSON($('#ui').val());
 
 /* data */
 var Data = null;
-var DataCopy = null;
-var FirstPageIndex = 0;
+var CloneData = null;
+var MainSurveyId = 0;
 var ExaminLogger = {
     ReadErrorArray: [],
     WriteErrorArray: []
@@ -65,7 +65,7 @@ var Reset = function () {
 }
 var Set = function (data, index) {
     if (data.page == 1) {
-        FirstPageIndex = index;
+        MainSurveyId = index;
         SurveyHelper.Set(data);
         LandAreaHelper.Set(data.land_areas);
         BusinessHelper.Set(data.businesses);
@@ -796,7 +796,7 @@ var ShortTermHireHelper = {
         BindInput: function (input) {
             input.change(function () {
                 if (ShortTermHireHelper.CheckInput(input)) {
-                    var baseFarmer = DataCopy.FarmerList[FirstPageIndex].BaseFarmer;
+                    var baseFarmer = CloneData.FarmerList[MainSurveyId].BaseFarmer;
                     var td = input.closest('td');
                     var index = td.data('index');
                     if (td.hasClass('ageScopeId')) {
@@ -820,7 +820,7 @@ var ShortTermHireHelper = {
                 ShortTermHireHelper.CheckWorkType_NumberWorker(select);
                 ShortTermHireHelper.CheckMoreThan6Months();
                 //update WorkType
-                var baseFarmer = DataCopy.FarmerList[FirstPageIndex].BaseFarmer;
+                var baseFarmer = CloneData.FarmerList[MainSurveyId].BaseFarmer;
                 var index = select.closest('td').data('index');
                 var selected = select.find('option:selected');
                 if (selected.length > 0) {
@@ -916,7 +916,7 @@ var NoSalaryHireHelper = {
         input.change(function () {
             if (NoSalaryHireHelper.CheckInput(input)) {
                 var index = input.closest('td').data('index');
-                var baseFarmer = DataCopy.FarmerList[FirstPageIndex].BaseFarmer;
+                var baseFarmer = CloneData.FarmerList[MainSurveyId].BaseFarmer;
                 baseFarmer.NoSalaryForHire[index].numberOfPeople = parseInt(input.val());
             }
             SurveyHelper.CheckIsHire();
@@ -979,7 +979,7 @@ var LongTermLackHelper = {
         input.change(function () {
             if (LongTermLackHelper.CheckInput(input)) {
                 var index = input.closest('td').data('index');
-                var baseFarmer = DataCopy.FarmerList[FirstPageIndex].BaseFarmer;
+                var baseFarmer = CloneData.FarmerList[MainSurveyId].BaseFarmer;
                 baseFarmer.LongTermForLack[index].numberOfPeople = parseInt(input.val());
             }
             SurveyHelper.CheckLack();
@@ -1108,7 +1108,7 @@ var ShortTermLackHelper = {
                 if (ShortTermLackHelper.CheckInput(input)) {
                     var index = input.closest('td').data('index');
                     var baseFarmerIndex = input.closest('td').data('surveyindex');
-                    var baseFarmer = DataCopy.FarmerList[baseFarmerIndex].BaseFarmer;
+                    var baseFarmer = CloneData.FarmerList[baseFarmerIndex].BaseFarmer;
                     baseFarmer.ShortTermForLack[index].numberOfPeople = parseInt(input.val());
                 }
                 SurveyHelper.CheckLack();
@@ -1124,7 +1124,7 @@ var ShortTermLackHelper = {
                     var td = select.closest('td');
                     var index = td.data('index');
                     var baseFarmerIndex = td.data('surveyindex');
-                    var baseFarmer = DataCopy.FarmerList[baseFarmerIndex].BaseFarmer;
+                    var baseFarmer = CloneData.FarmerList[baseFarmerIndex].BaseFarmer;
                     if (td.hasClass('productCodeId')) {
                         baseFarmer.ShortTermForLack[index].productCodeId = select.val();
                     }
@@ -1150,11 +1150,11 @@ var ShortTermLackHelper = {
                 var tr = button.closest('tr');
                 var index = tr.data('index');
                 var baseFarmerIndex = tr.data('surveyindex');
-                var baseFarmer = DataCopy.FarmerList[baseFarmerIndex].BaseFarmer;
+                var baseFarmer = CloneData.FarmerList[baseFarmerIndex].BaseFarmer;
                 baseFarmer.ShortTermForLack.splice(index, 1);
                 ShortTermLackHelper.Reset();
-                for (var i in DataCopy.FarmerList) {
-                    ShortTermLackHelper.Init(DataCopy.FarmerList[i].BaseFarmer.ShortTermForLack, i);
+                for (var i in CloneData.FarmerList) {
+                    ShortTermLackHelper.Init(CloneData.FarmerList[i].BaseFarmer.ShortTermForLack, i);
                 }
             });
         }
