@@ -3,10 +3,11 @@
 {% load crispy_forms_tags %}
 
 {% block head_title %}
-{% trans 'Index' %}
+{% trans '勞動力調查平台' %}
 {% endblock head_title%}
 
 {% block external_css %}
+<link href="{% static 'vendor/pace/pace-theme-loading-bar.css' %}" rel="stylesheet">
 <link href="{% static 'css/index.css' %}" rel="stylesheet">
 {% endblock external_css %}
 

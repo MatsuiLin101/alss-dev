@@ -28,3 +28,28 @@ body {
     width: 100%;
     max-width: 100%;
 }
+
+#login {
+  margin-top: 5rem;
+}
+
+#login h1 > a {
+    background-image: url(../img/coa.png?ver=20180502);
+    background-image: none,url(../img/coa.svg?ver=20180502);
+    background-size: 120px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    color: #444;
+    height: 120px;
+    font-size: 16px;
+    line-height: 1.3em;
+    margin: 0 auto 25px;
+    padding: 0;
+    width: 120px;
+    text-indent: -9999px;
+    outline: 0;
+    display: block;
+    overflow: hidden;
+    font-weight: 200;
+    text-decoration: none;
+}
