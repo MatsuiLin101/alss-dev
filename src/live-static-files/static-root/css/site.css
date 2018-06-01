@@ -10,6 +10,10 @@ body {
     margin-top: 1rem;
 }
 
+.p-1 {
+    padding: 1rem;
+}
+
 @media(min-width: 992px) {
     .w-2 {
         width: 1.5rem;
@@ -18,4 +22,9 @@ body {
     .h-2 {
         height: 1.5rem;
     }
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
 }

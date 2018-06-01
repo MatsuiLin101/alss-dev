@@ -1,39 +1,47 @@
 <div class="panel panel-primary" id="panel1">
     <div class="panel-heading">農戶基本資料</div>
     <div class="panel-body">
-        <div class="form-group">
-            <div class="col-xs-6">
-                <label class="control-label">農戶編號</label>
-                <input type="text" class="form-control" name="farmerid" disabled />
-            </div>
-
-            <div class="col-xs-6">
-                <label class="control-label">受訪人姓名</label>
-                <input type="text" class="form-control" name="farmername" />
-            </div>
-        </div>
-        <div class="form-group">
+        <form class="form-horizontal p-1">
+            <div class="form-group">
                 <div class="col-xs-6">
-                    <label class="control-label">連絡電話1</label>
-                    <input type="text" class="form-control" name="phone" />
+                    <label class="control-label">農戶編號</label>
+                    <input type="text" class="form-control" name="farmerid" disabled />
                 </div>
 
                 <div class="col-xs-6">
-                    <label class="control-label">連絡電話2</label>
-                    <input type="text" class="form-control" name="phone" />
+                    <label class="control-label">受訪人姓名</label>
+                    <input type="text" class="form-control" name="farmername" />
                 </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-12">
-                <label class="control-label">地址</label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" name="addressmatch" data-field="match" /> 與調查名冊相同
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" name="addressmatch" data-field="mismatch" /> 不同
-                </label>
-                <input type="text" class="form-control" name="address" />
             </div>
-        </div>
+            <div class="form-group">
+                    <div class="col-xs-6">
+                        <label class="control-label">連絡電話1</label>
+                        <input type="text" class="form-control" name="phone" />
+                    </div>
+
+                    <div class="col-xs-6">
+                        <label class="control-label">連絡電話2</label>
+                        <input type="text" class="form-control" name="phone" />
+                    </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="control-label">地址</label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="addressmatch" data-field="match" /> 與調查名冊相同
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="addressmatch" data-field="mismatch" /> 不同
+                    </label>
+                    <input type="text" class="form-control" name="address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="control-label">備註</label>
+                    <textarea rows="5" class="form-control" name="note"></textarea>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

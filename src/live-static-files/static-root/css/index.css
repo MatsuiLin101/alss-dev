@@ -14,7 +14,7 @@ body {
 
 @media(min-width: 992px) {
     .affix {
-      max-width: 265px;
+      width: 252px;
     }
 }
 
@@ -50,16 +50,25 @@ label.fw-400 {
 
 table[name=longtermhire] div.bootstrap-select.form-control,
 table[name=shorttermhire] div.bootstrap-select.form-control{
-    max-width: 165px;
+    max-width: 15rem;
 }
 
 
 table[name=population] div.bootstrap-select.form-control {
-    max-width: 105px;
+    max-width: 15rem;
 }
 
 .w-50 {
     width: 50px;
 }
 
+
+.affix-top
+{
+    position: fixed;
+}
+
+#wrapper {
+    display: none;
+}
 

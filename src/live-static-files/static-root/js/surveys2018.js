@@ -18,7 +18,6 @@ var Loading = $.loading();
 $(document).ready(function () {
     /* setup*/
     Setup(GlobalUI);
-    Init();
 
     /*set alert dialog*/
     Alert = new BootstrapDialog({
@@ -44,10 +43,6 @@ $(document).ready(function () {
     });
 
 })
-
-var Init = function() {
-    PopulationAgeHelper.Init();
-}
 
 var Reset = function () {
     SurveyHelper.Reset();
@@ -86,6 +81,9 @@ var Set = function (data, index) {
 }
 
 var Setup = function(globalUI){
+    SurveyHelper.Setup();
+    PopulationAgeHelper.Setup();
+
     if('cropmarketing' in globalUI) CropMarketingHelper.Setup(globalUI.cropmarketing);
     if('livestockmarketing' in globalUI) LivestockMarketingHelper.Setup(globalUI.livestockmarketing);
     if('population' in globalUI) PopulationHelper.Setup(globalUI.population);
@@ -196,6 +194,16 @@ var Helper = {
 
 var SurveyHelper = {
     Alert: null,
+    Setup: function() {
+        this.Alert = new Helper.Alert($('#Alert'));
+        this.FarmerName.Bind();
+        this.Phone.Bind();
+        this.AddressMatch.Bind();
+        this.Address.Bind();
+        this.Hire.Bind();
+        this.Lack.Bind();
+        this.Note.Bind();
+    },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
 
@@ -207,16 +215,6 @@ var SurveyHelper = {
         this.Hire.Reset();
         this.Lack.Reset();
         this.Note.Reset();
-    },
-    Init: function() {
-        this.Alert = new Helper.Alert($('#Alert'));
-        this.FarmerName.Bind();
-        this.Phones.Bind();
-        this.AddressMatch.Bind(obj);
-        this.Address.Bind(obj);
-        this.Hire.Bind();
-        this.Lack.Bind();
-        this.Note.Bind();
     },
     Set: function (obj) {
         this.FarmerId.Set(obj);
@@ -240,7 +238,11 @@ var SurveyHelper = {
     FarmerName: {
         Container: $('#panel1 input[name="farmername"]'),
         Bind: function(){
-
+            this.Container.change(function(){
+                if(DataCopy) {
+                    DataCopy[FirstPageIndex].farmer_name = $(this).val();
+                }
+            })
         },
         Set: function(obj){
             this.Container.val(obj.farmer_name);
@@ -252,7 +254,12 @@ var SurveyHelper = {
     Phone: {
         Container: $('#panel1 input[name="phone"]'),
         Bind: function(){
-
+            this.Container.change(function(){
+                if(DataCopy) {
+                    var index = SurveyHelper.Phone.Container.index($(this));
+                    DataCopy[FirstPageIndex].phones[index].phone = $(this).val();
+                }
+            })
         },
         Set: function(obj){
             obj.phones.forEach(function(phone, i){
@@ -269,7 +276,15 @@ var SurveyHelper = {
     Hire: {
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
-
+            this.Container.change(function(){
+                if(DataCopy) {
+                    var field = $(this).data('field');
+                    if(field == 'hire')
+                        DataCopy[FirstPageIndex].hire = this.checked;
+                    else if(field == 'nonhire')
+                        DataCopy[FirstPageIndex].non_hire = this.checked;
+                }
+            })
         },
         Set: function (obj) {
             this.Container.filter('[data-field="hire"]').prop('checked', obj.hire);
@@ -284,6 +299,16 @@ var SurveyHelper = {
     },
     Lack: {
         Container: $('#panel4 input[name="lack"]'),
+        Bind: function(){
+            this.Container.change(function(){
+                if(DataCopy){
+                    var lacks = this.Container.map(function(i, lack){
+                        if($(lack).prop('checked')) return $(lack).data('lack-id');
+                    })
+                    DataCopy[FirstPageIndex].lacks = lacks;
+                }
+            })
+        },
         Set: function(obj) {
             obj.lacks.forEach(function(lack, i){
                 SurveyHelper.Lack.Container
@@ -296,19 +321,34 @@ var SurveyHelper = {
         },
     },
     Note: {
-        Container: $('#panel1 input[name="note"]'),
+        Container: $('#panel1 textarea[name="note"]'),
         Bind: function(){
-
+            this.Container.change(function(){
+                if(DataCopy){
+                    DataCopy[FirstPageIndex].note = $(this).val();
+                }
+            })
         },
         Set: function(obj){
-            this.Container.html(obj.note);
+            this.Container.val(obj.note);
         },
         Reset: function(){
-            this.Container.html('');
+            this.Container.val('');
         },
     },
     AddressMatch: {
         Container: $('#panel1 input[name="addressmatch"]'),
+        Bind: function(){
+            this.Container.change(function(){
+                if(DataCopy){
+                    var field = $(this).data('field');
+                    if(field == 'match')
+                        DataCopy[FirstPageIndex].address_match.match = this.checked;
+                    else if(field == 'mismatch')
+                        DataCopy[FirstPageIndex].address_match.mismatch = this.checked;
+                }
+            })
+        },
         Set: function(obj){
             this.Container.filter('[data-field="match"]').prop('checked', obj.address_match.match);
             this.Container.filter('[data-field="mismatch"]').prop('checked', obj.address_match.mismatch);
@@ -322,14 +362,18 @@ var SurveyHelper = {
     },
     Address: {
         Container: $('#panel1 input[name="address"]'),
+        Bind: function(){
+            this.Container.change(function(){
+                if(DataCopy){
+                    DataCopy[FirstPageIndex].address_match.address = $(this.val());
+                }
+            })
+        },
         Set: function(obj){
             this.Container.val(obj.address_match.address);
         },
         Reset: function(){
             this.Container.val('');
-        },
-        Bind: function(){
-
         },
     },
 }
@@ -461,7 +505,7 @@ var CropMarketingHelper = {
         Container: $('#panel2 table[name="cropmarketing"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(crop_marketing, i){
-                var $row = CropMarketingHelper.CropMarketing.$Row.clone();
+                var $row = CropMarketingHelper.CropMarketing.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', crop_marketing.product);
 
@@ -506,7 +550,7 @@ var LivestockMarketingHelper = {
         Container: $('#panel2 table[name="livestockmarketing"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(livestock_marketing, i){
-                var $row = LivestockMarketingHelper.LivestockMarketing.$Row.clone();
+                var $row = LivestockMarketingHelper.LivestockMarketing.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', livestock_marketing.product);
 
@@ -565,7 +609,7 @@ var PopulationAgeHelper = {
     Reset: function() {
         this.PopulationAge.Reset();
     },
-    Init: function(){
+    Setup: function(){
         this.PopulationAge.Bind();
     },
     PopulationAge: {
@@ -583,26 +627,16 @@ var PopulationAgeHelper = {
         },
         Bind: function(){
             this.Container.change(function(){
-                PopulationAgeHelper.SumCount.Set();
-            })
-        },
-    },
-    SumCount: {
-        Container: $('#panel3 input[name="sumcount"]'),
-        Set: function(){
-            this.Container.each(function(i, input){
-                var sum = 0;
-                $(input).closest('tr').find('input[name="populationage"]').map(function(){
+                var sumCount = 0;
+                $(this).closest('tr').find('input[name="populationage"]').map(function(){
                     parse = parseInt($(this).val());
-                    if(parse == $(this).val()) sum += parse;
+                    if(parse == $(this).val()) sumCount += parse;
                 })
-                $(input).val(sum);
+                $(this).closest('tr').find('input[name="sumcount"]').val(sumCount);
             })
         },
-        Reset: function(){
-            this.Container.val('0');
-        },
     },
+
 }
 var PopulationHelper = {
     Setup: function(row){
@@ -621,7 +655,7 @@ var PopulationHelper = {
         Container: $('#panel3 table[name="population"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(population, i){
-                var $row = PopulationHelper.Population.$Row.clone();
+                var $row = PopulationHelper.Population.$Row.clone(true, true);
 
                 $row.find('select[name="relationship"]').selectpicker('val', population.relationship);
 
@@ -650,6 +684,7 @@ var LongTermHireHelper = {
     Setup: function(row){
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
+        this.LongTermHire.Bind($row);
         this.LongTermHire.$Row = $row;
     },
     Reset: function () {
@@ -663,14 +698,14 @@ var LongTermHireHelper = {
         Container: $('#panel4 table[name="longtermhire"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(long_term_hire, i){
-                var $row = LongTermHireHelper.LongTermHire.$Row.clone();
+                var $row = LongTermHireHelper.LongTermHire.$Row.clone(true, true);
 
                 $row.find('select[name="worktype"]').selectpicker('val', long_term_hire.work_type);
 
                 long_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
-                    .val(number_worker.count);
+                    .val(number_worker.count).trigger('change');
                 })
 
                 $row.find('select[name="month"]').selectpicker('val', long_term_hire.months);
@@ -683,6 +718,17 @@ var LongTermHireHelper = {
         Reset: function() {
             this.Container.html('');
         },
+        Bind: function($row){
+            $row.find('input[name="numberworker"]').change(function(){
+                var sumCount = 0;
+                $(this).closest('tr').find('input[name="numberworker"]').map(function(){
+                    var parse = parseInt($(this).val());
+                    if(parse == $(this).val()) sumCount += parse;
+                })
+                $(this).closest('tr').find('input[name="sumcount"]').val(sumCount);
+            })
+            return $row;
+        },
     },
     Alert: null,
 }
@@ -690,6 +736,7 @@ var ShortTermHireHelper = {
     Setup: function(row){
         var $row = $(row);
         $row.find('select[name="worktype"]').attr('multiple', '');
+        this.ShortTermHire.Bind($row);
         this.ShortTermHire.$Row = $row;
     },
     Reset: function () {
@@ -703,14 +750,14 @@ var ShortTermHireHelper = {
         Container: $('#panel4 table[name="shorttermhire"] > tbody'),
         Set: function (array) {
             array.forEach(function(short_term_hire, i){
-                var $row = ShortTermHireHelper.ShortTermHire.$Row.clone();
+                var $row = ShortTermHireHelper.ShortTermHire.$Row.clone(true, true);
 
                 $row.find('select[name="month"]').selectpicker('val', short_term_hire.month)
 
                 short_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
-                    .val(number_worker.count);
+                    .val(number_worker.count).trigger('change');
                 })
 
                 $row.find('select[name="worktype"]').selectpicker('val', short_term_hire.work_types);
@@ -722,6 +769,17 @@ var ShortTermHireHelper = {
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('input[name="numberworker"]').change(function(){
+                var sumCount = 0;
+                $(this).closest('tr').find('input[name="numberworker"]').map(function(){
+                    var parse = parseInt($(this).val());
+                    if(parse == $(this).val()) sumCount += parse;
+                })
+                $(this).closest('tr').find('input[name="sumcount"]').val(sumCount);
+            })
+            return $row;
         },
     },
     Alert: null,
@@ -743,7 +801,7 @@ var NoSalaryHireHelper = {
         Container: $('#panel4 table[name="nosalaryhire"] > tbody'),
         Set: function (array) {
             array.forEach(function(no_salary_hire, i){
-                var $row = NoSalaryHireHelper.NoSalaryHire.$Row.clone();
+                var $row = NoSalaryHireHelper.NoSalaryHire.$Row.clone(true, true);
 
                 $row.find('select[name="month"]').selectpicker('val', no_salary_hire.month)
 
@@ -776,7 +834,7 @@ var LongTermLackHelper = {
         Container: $('#panel4 table[name="longtermlack"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(long_term_lack, i){
-                var $row = LongTermLackHelper.LongTermLack.$Row.clone();
+                var $row = LongTermLackHelper.LongTermLack.$Row.clone(true, true);
 
                 $row.find('select[name="worktype"]').selectpicker('val', long_term_lack.work_type);
 
@@ -812,7 +870,7 @@ var ShortTermLackHelper = {
         Container: $('#panel4 table[name="shorttermlack"] > tbody'),
         Set: function (array, index) {
             array.forEach(function(short_term_lack, i){
-                var $row = ShortTermLackHelper.ShortTermLack.$Row.clone();
+                var $row = ShortTermLackHelper.ShortTermLack.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', short_term_lack.product);
 
