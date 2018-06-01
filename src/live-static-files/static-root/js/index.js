@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+    /* Loading Animation */
+    Pace.on('done',function(){
+        $('#wrapper').fadeIn(300);
+    });
+
     /* panel control */
     $('.js-panel-tabs > .list-group-item').on('click', function() {
 
@@ -11,9 +16,6 @@ $(document).ready(function() {
         $panel.show();
     })
 
-});
-
-$(document).ready(function () {
 
     /* get farmer data*/
     $('.js-get-survey').click(function () {
