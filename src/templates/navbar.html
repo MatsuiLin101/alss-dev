@@ -10,26 +10,26 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">{% trans '勞動力調查平台' %}</a>
+            <a class="navbar-brand" id="nav-brand">{% trans '勞動力調查平台' %}</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav ">
-            <li><a href="#">關於</a></li>
+            <ul class="nav navbar-nav">
+            <li><a class="nav-link" id="nav-about">關於</a></li>
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">功能 <span class="caret"></span></a>
+            <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">功能 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">匯入</a></li>
-                <li><a href="#">新增</a></li>
+              <li><a >匯入</a></li>
+                <li><a >新增</a></li>
             </ul>
             </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-user"></i><span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a href="#">{% trans '個人資料' %}</a></li>
-                <li><a href="#">{% trans '檢視編輯歷史' %}</a></li>
+                <li><a >{% trans '個人資料' %}</a></li>
+                <li><a >{% trans '檢視編輯歷史' %}</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{% url 'accounts:logout' %}">{% trans '登出' %}</a></li>
             </ul>

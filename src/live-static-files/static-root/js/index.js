@@ -30,11 +30,19 @@ $(document).ready(function() {
         var url = $(this).data('url');
         var readonly = $(this).data('readonly');
         if (farmerId) {
-            GetFarmerData(url, farmerId, readonly);
+            $.when(GetFarmerData(url, farmerId, readonly)).then(function(){
+                $('[data-partial]').hide();
+                $('[data-partial="survey"]').show();
+            });
         } else {
             Alert.setMessage('請輸入農戶編號！').open();
         }
         $('#farmerId').val('');
+    });
+
+    $('#nav-about, #nav-brand').click(function(){
+        $('[data-partial]').hide();
+        $('[data-partial="about"]').show();
     });
 
 })
@@ -51,9 +59,10 @@ var FixAffixWidth = function(){
 }
 
 var GetFarmerData = function (url, fid, readonly) {
+    var deferred = $.Deferred();
     $.ajax({
         url: url,
-        async: true,
+        async: false,
         type: 'POST',
         data: {
             fid: fid,
@@ -85,15 +94,17 @@ var GetFarmerData = function (url, fid, readonly) {
                     Info.setMessage('查無農戶資料！').open();
                 }
             }
+            deferred.resolve();
             Loading.close();
         },
         error: function () {
             Loading.close();
             Alert.setMessage('很抱歉，當筆資料查詢錯誤，請稍後再試。').open();
+            return False;
         },
         beforeSend: function () {
-            Loading.open();
         }
     });
+    return deferred.promise();
 }
 
