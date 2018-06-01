@@ -65,3 +65,10 @@ table[name=population] div.bootstrap-select.form-control {
     display: none;
 }
 
+div[data-partial=survey] {
+    display: none;
+}
+
+.nav-link, .navbar-brand{
+    cursor: pointer;
+}
