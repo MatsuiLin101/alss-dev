@@ -1,15 +1,15 @@
 $(document).ready(function() {
 
+    $(window).resize(function(){
+
+        FixAffixWidth();
+
+    });
+
     /* Loading Animation */
     Pace.on('done',function(){
         $('#wrapper').fadeIn(300);
-
-        /* Fix affix width in Firefox */
-        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
-        if($('.affix').outerWidth > affixMaxWidth){
-            $('.affix').css('width', affixWidth);
-        }
-
+        FixAffixWidth();
     });
 
     /* panel control */
@@ -38,6 +38,17 @@ $(document).ready(function() {
     });
 
 })
+
+var FixAffixWidth = function(){
+    if ($(window).width() > 992) {
+        /* Fix affix width in Firefox */
+        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
+        $('.affix').css('max-width', affixMaxWidth - 30);
+
+    }else{
+        $('.affix').css('max-width', 'none');
+    }
+}
 
 var GetFarmerData = function (url, fid, readonly) {
     $.ajax({
