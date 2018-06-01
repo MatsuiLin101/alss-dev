@@ -50,7 +50,7 @@ var GetFarmerData = function (url, fid, readonly) {
                     if (firstPageObj.length > 0) {
                         Reset();
                         /* deep copy */
-                        DataCopy = $.extend(true, {}, data);
+                        CloneData = $.extend(true, {}, data);
 
                         /* set surveys */
                         data.forEach(function(survey, i){

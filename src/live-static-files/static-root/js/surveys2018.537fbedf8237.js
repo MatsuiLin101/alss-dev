@@ -3,8 +3,8 @@ var GlobalUI = $.parseJSON($('#ui').val());
 
 /* data */
 var Data = null;
-var DataCopy = null;
-var FirstPageIndex = 0;
+var CloneData = null;
+var MainSurveyId = 0;
 var ExaminLogger = {
     ReadErrorArray: [],
     WriteErrorArray: []
@@ -60,7 +60,7 @@ var Reset = function () {
 }
 var Set = function (data, index) {
     if (data.page == 1) {
-        FirstPageIndex = index;
+        MainSurveyId = index;
         SurveyHelper.Set(data);
         LandAreaHelper.Set(data.land_areas);
         BusinessHelper.Set(data.businesses);
@@ -239,8 +239,8 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="farmername"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
-                    DataCopy[FirstPageIndex].farmer_name = $(this).val();
+                if(CloneData) {
+                    CloneData[MainSurveyId].farmer_name = $(this).val();
                 }
             })
         },
@@ -255,9 +255,9 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="phone"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
+                if(CloneData) {
                     var index = SurveyHelper.Phone.Container.index($(this));
-                    DataCopy[FirstPageIndex].phones[index].phone = $(this).val();
+                    CloneData[MainSurveyId].phones[index].phone = $(this).val();
                 }
             })
         },
@@ -277,12 +277,12 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
+                if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'hire')
-                        DataCopy[FirstPageIndex].hire = this.checked;
+                        CloneData[MainSurveyId].hire = this.checked;
                     else if(field == 'nonhire')
-                        DataCopy[FirstPageIndex].non_hire = this.checked;
+                        CloneData[MainSurveyId].non_hire = this.checked;
                 }
             })
         },
@@ -301,11 +301,11 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
+                if(CloneData){
                     var lacks = this.Container.map(function(i, lack){
                         if($(lack).prop('checked')) return $(lack).data('lack-id');
                     })
-                    DataCopy[FirstPageIndex].lacks = lacks;
+                    CloneData[MainSurveyId].lacks = lacks;
                 }
             })
         },
@@ -324,8 +324,8 @@ var SurveyHelper = {
         Container: $('#panel1 textarea[name="note"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
-                    DataCopy[FirstPageIndex].note = $(this).val();
+                if(CloneData){
+                    CloneData[MainSurveyId].note = $(this).val();
                 }
             })
         },
@@ -340,12 +340,12 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
+                if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
-                        DataCopy[FirstPageIndex].address_match.match = this.checked;
+                        CloneData[MainSurveyId].address_match.match = this.checked;
                     else if(field == 'mismatch')
-                        DataCopy[FirstPageIndex].address_match.mismatch = this.checked;
+                        CloneData[MainSurveyId].address_match.mismatch = this.checked;
                 }
             })
         },
@@ -364,8 +364,8 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="address"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
-                    DataCopy[FirstPageIndex].address_match.address = $(this.val());
+                if(CloneData){
+                    CloneData[MainSurveyId].address_match.address = $(this.val());
                 }
             })
         },

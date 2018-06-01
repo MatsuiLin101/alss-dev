@@ -3,8 +3,8 @@ var GlobalUI = $.parseJSON($('#ui').val());
 
 /* data */
 var Data = null;
-var DataCopy = null;
-var FirstPageIndex = 0;
+var CloneData = null;
+var MainSurveyId = 0;
 var ExaminLogger = {
     ReadErrorArray: [],
     WriteErrorArray: []
@@ -60,7 +60,7 @@ var Reset = function () {
 }
 var Set = function (data, index) {
     if (data.page == 1) {
-        FirstPageIndex = index;
+        MainSurveyId = index;
         SurveyHelper.Set(data);
         LandAreaHelper.Set(data.land_areas);
         BusinessHelper.Set(data.businesses);

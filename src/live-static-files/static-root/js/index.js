@@ -1,8 +1,15 @@
 $(document).ready(function() {
 
+    $(window).resize(function(){
+
+        FixAffixWidth();
+
+    });
+
     /* Loading Animation */
     Pace.on('done',function(){
         $('#wrapper').fadeIn(300);
+        FixAffixWidth();
     });
 
     /* panel control */
@@ -32,6 +39,17 @@ $(document).ready(function() {
 
 })
 
+var FixAffixWidth = function(){
+    if ($(window).width() > 992) {
+        /* Fix affix width in Firefox */
+        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
+        $('.affix').css('max-width', affixMaxWidth - 30);
+
+    }else{
+        $('.affix').css('max-width', 'none');
+    }
+}
+
 var GetFarmerData = function (url, fid, readonly) {
     $.ajax({
         url: url,
@@ -51,12 +69,13 @@ var GetFarmerData = function (url, fid, readonly) {
 
                     if (firstPageObj.length > 0) {
                         Reset();
-                        /* deep copy */
-                        DataCopy = $.extend(true, {}, data);
+
+                        CloneData = {};
 
                         /* set surveys */
                         data.forEach(function(survey, i){
-                            Set(survey, i);
+                            CloneData[survey.id] = survey;
+                            Set(survey, survey.id);
                         })
 
                     } else {

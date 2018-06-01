@@ -3,8 +3,8 @@ var GlobalUI = $.parseJSON($('#ui').val());
 
 /* data */
 var Data = null;
-var DataCopy = null;
-var FirstPageIndex = 0;
+var CloneData = null;
+var MainSurveyId = 0;
 var ExaminLogger = {
     ReadErrorArray: [],
     WriteErrorArray: []
@@ -14,6 +14,12 @@ var Alert = null;
 var Info = null;
 var CropMarketingAdder = null;
 var Loading = $.loading();
+
+
+/* BootstrapDialog settings */
+BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
+BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
+BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '確認';
 
 $(document).ready(function () {
     /* setup*/
@@ -58,9 +64,9 @@ var Reset = function () {
     LongTermLackHelper.Reset();
     ShortTermLackHelper.Reset();
 }
-var Set = function (data, index) {
+var Set = function (data, surveyId) {
     if (data.page == 1) {
-        FirstPageIndex = index;
+        MainSurveyId = surveyId;
         SurveyHelper.Set(data);
         LandAreaHelper.Set(data.land_areas);
         BusinessHelper.Set(data.businesses);
@@ -71,13 +77,13 @@ var Set = function (data, index) {
         NoSalaryHireHelper.Set(data.no_salary_hires);
         SubsidyHelper.Set(data.subsidy);
     }
-    /* need setting survey index to locate which obj */
-    CropMarketingHelper.Set(data.crop_marketings, index);
-    LivestockMarketingHelper.Set(data.livestock_marketings, index);
-    PopulationHelper.Set(data.populations, index);
-    LongTermHireHelper.Set(data.long_term_hires, index);
-    LongTermLackHelper.Set(data.long_term_lacks, index);
-    ShortTermLackHelper.Set(data.short_term_lacks, index);
+    /* need setting survey surveyId to locate which obj */
+    CropMarketingHelper.Set(data.crop_marketings, surveyId);
+    LivestockMarketingHelper.Set(data.livestock_marketings, surveyId);
+    PopulationHelper.Set(data.populations, surveyId);
+    LongTermHireHelper.Set(data.long_term_hires, surveyId);
+    LongTermLackHelper.Set(data.long_term_lacks, surveyId);
+    ShortTermLackHelper.Set(data.short_term_lacks, surveyId);
 }
 
 var Setup = function(globalUI){
@@ -95,22 +101,6 @@ var Setup = function(globalUI){
 }
 
 var Helper = {
-    GetFarmerLandTypeName: function (id) {
-        if (Components) {
-            var array = $.grep(Components.FarmerLandType, function (farmerLandType) {
-                return farmerLandType.id == id;
-            })
-            return array[0].name;
-        }
-    },
-    GetProductionTypeName: function (id) {
-        if (Components) {
-            var array = $.grep(Components.FarmerProductionType, function (farmerProductionType) {
-                return farmerProductionType.id == id;
-            })
-            return array[0].name;
-        }
-    },
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
@@ -146,50 +136,29 @@ var Helper = {
             this.object.html('').hide();
         }
     },
-    CountError: function () {
-        var array = [];
-        var alerts = [
-            SurveyHelper.Alert00,
-            SurveyHelper.Alert01,
-            SurveyHelper.Alert11,
-            SurveyHelper.Alert14,
-            LandAreaHelper.Alert02,
-            CropMarketingHelper.Alert03,
-            LivestockMarketingHelper.Alert04,
-            AnnualIncomeHelper.Alert05,
-            PopulationHelper.Alert07,
-            LongTermHireHelper.Alert,
-            ShortTermHireHelper.Alert09,
-            NoSalaryHireHelper.Alert,
-            LongTermLackHelper.Alert,
-            ShortTermLackHelper.Alert13]
-        for (var i in alerts) {
-            var logs = alerts[i].message.split('<br>');
-            for (var j in logs) {
-                if ($.inArray(logs[j], array) == -1 && logs[j]) {
-                    array.push(logs[j]);
-                }
-            }
+    Confirm: {
+        DeleteRow: function(deferred){
+            BootstrapDialog.confirm({
+                title: '刪除資料列',
+                message: '確定要刪除本筆資料？',
+                callback: function(result){
+                    if(result){
+                        deferred.resolve();
+                    };
+                },
+                type: BootstrapDialog.TYPE_WARNING,
+            });
+            return deferred.promise();
         }
-        return array;
     },
-    CheckIsHireAndIsLackToReset: function (farmerList, firstPageIndex) {
-        var isHire = farmerList[firstPageIndex].BaseFarmer.isHire == 'Y';
-        var isLack = $.inArray(farmerList[firstPageIndex].BaseFarmer.lackId, [1, 2]) == -1;
-
-        var baseFarmer = farmerList[firstPageIndex].BaseFarmer;
-        if (!isHire) {
-            LongTermHireHelper.ResetObject(baseFarmer.LongTermHire);
-            ShortTermHireHelper.ResetObject(baseFarmer.ShortTermHire);
-            NoSalaryHireHelper.ResetObject(baseFarmer.NoSalaryForHire);
+    CreateGuid: function(){
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
         }
-        if (!isLack) {
-            LongTermLackHelper.ResetObject(baseFarmer.LongTermForLack);
-            for (var i in farmerList) {
-                farmerList[i].BaseFarmer.ShortTermForLack = [];
-            }
-        }
-    }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    },
 }
 
 var SurveyHelper = {
@@ -239,8 +208,8 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="farmername"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
-                    DataCopy[FirstPageIndex].farmer_name = $(this).val();
+                if(CloneData) {
+                    CloneData[MainSurveyId].farmer_name = $(this).val();
                 }
             })
         },
@@ -255,9 +224,9 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="phone"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
-                    var index = SurveyHelper.Phone.Container.index($(this));
-                    DataCopy[FirstPageIndex].phones[index].phone = $(this).val();
+                if(CloneData) {
+                    var surveyId = SurveyHelper.Phone.Container.surveyId($(this));
+                    CloneData[MainSurveyId].phones[surveyId].phone = $(this).val();
                 }
             })
         },
@@ -277,12 +246,12 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy) {
+                if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'hire')
-                        DataCopy[FirstPageIndex].hire = this.checked;
+                        CloneData[MainSurveyId].hire = this.checked;
                     else if(field == 'nonhire')
-                        DataCopy[FirstPageIndex].non_hire = this.checked;
+                        CloneData[MainSurveyId].non_hire = this.checked;
                 }
             })
         },
@@ -301,11 +270,11 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
+                if(CloneData){
                     var lacks = this.Container.map(function(i, lack){
                         if($(lack).prop('checked')) return $(lack).data('lack-id');
                     })
-                    DataCopy[FirstPageIndex].lacks = lacks;
+                    CloneData[MainSurveyId].lacks = lacks;
                 }
             })
         },
@@ -324,8 +293,8 @@ var SurveyHelper = {
         Container: $('#panel1 textarea[name="note"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
-                    DataCopy[FirstPageIndex].note = $(this).val();
+                if(CloneData){
+                    CloneData[MainSurveyId].note = $(this).val();
                 }
             })
         },
@@ -340,12 +309,12 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
+                if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
-                        DataCopy[FirstPageIndex].address_match.match = this.checked;
+                        CloneData[MainSurveyId].address_match.match = this.checked;
                     else if(field == 'mismatch')
-                        DataCopy[FirstPageIndex].address_match.mismatch = this.checked;
+                        CloneData[MainSurveyId].address_match.mismatch = this.checked;
                 }
             })
         },
@@ -364,8 +333,8 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="address"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(DataCopy){
-                    DataCopy[FirstPageIndex].address_match.address = $(this.val());
+                if(CloneData){
+                    CloneData[MainSurveyId].address_match.address = $(this.val());
                 }
             })
         },
@@ -492,18 +461,29 @@ var ManagementTypeHelper = {
 var CropMarketingHelper = {
     Alert: null,
     Setup: function(row){
-        this.CropMarketing.$Row = $(row);
+        var $row = $(row);
+        this.CropMarketing.Bind($row);
+        this.CropMarketing.$Row = $row;
+        this.Adder.Bind();
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
         this.CropMarketing.Reset();
     },
-    Set: function(array, index){
-        this.CropMarketing.Set(array, index);
+    Set: function(array, surveyId){
+        this.CropMarketing.Set(array, surveyId);
     },
     CropMarketing: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel2 table[name="cropmarketing"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(crop_marketing, i){
                 var $row = CropMarketingHelper.CropMarketing.$Row.clone(true, true);
 
@@ -525,11 +505,48 @@ var CropMarketingHelper = {
 
                 $row.find('select[name="loss"]').selectpicker('val', crop_marketing.loss);
 
+                $row.attr('data-survey-id', surveyId);
+
+                crop_marketing.guid = Helper.CreateGuid();
+                $row.attr('data-guid', crop_marketing.guid);
+
                 CropMarketingHelper.CropMarketing.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId =$tr.data('survey-id');
+                        CloneData[surveyId].crop_marketings = CloneData[surveyId].crop_marketings.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="cropmarketing"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = CropMarketingHelper.CropMarketing.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].crop_marketings.push(obj);
+
+                    $row = CropMarketingHelper.CropMarketing.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    CropMarketingHelper.CropMarketing.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -537,18 +554,29 @@ var CropMarketingHelper = {
 var LivestockMarketingHelper = {
     Alert: null,
     Setup: function(row){
-        this.LivestockMarketing.$Row = $(row);
+        var $row = $(row);
+        this.LivestockMarketing.Bind($row);
+        this.LivestockMarketing.$Row = $row;
+        this.Adder.Bind();
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
         this.LivestockMarketing.Reset();
     },
-    Set: function(array, index){
-        this.LivestockMarketing.Set(array, index);
+    Set: function(array, surveyId){
+        this.LivestockMarketing.Set(array, surveyId);
     },
     LivestockMarketing: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel2 table[name="livestockmarketing"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(livestock_marketing, i){
                 var $row = LivestockMarketingHelper.LivestockMarketing.$Row.clone(true, true);
 
@@ -566,11 +594,48 @@ var LivestockMarketingHelper = {
 
                 $row.find('select[name="loss"]').selectpicker('val', livestock_marketing.loss);
 
+                $row.attr('data-survey-id', surveyId);
+
+                livestock_marketing.guid = Helper.CreateGuid();
+                $row.attr('data-guid', livestock_marketing.guid);
+
                 LivestockMarketingHelper.LivestockMarketing.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId =$tr.data('survey-id');
+                        CloneData[surveyId].livestock_marketings = CloneData[surveyId].livestock_marketings.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="livestockmarketing"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = LivestockMarketingHelper.LivestockMarketing.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].livestock_marketings.push(obj);
+
+                    $row = LivestockMarketingHelper.LivestockMarketing.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    LivestockMarketingHelper.LivestockMarketing.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -636,11 +701,12 @@ var PopulationAgeHelper = {
             })
         },
     },
-
 }
 var PopulationHelper = {
     Setup: function(row){
         var $row = $(row);
+        this.Population.Bind($row);
+        this.Adder.Bind();
         this.Population.$Row = $row;
 
     },
@@ -648,12 +714,20 @@ var PopulationHelper = {
         if (this.Alert) { this.Alert.reset(); }
         this.Population.Reset();
     },
-    Set: function(array, index){
-        this.Population.Set(array, index);
+    Set: function(array, surveyId){
+        this.Population.Set(array, surveyId);
     },
     Population: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel3 table[name="population"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(population, i){
                 var $row = PopulationHelper.Population.$Row.clone(true, true);
 
@@ -671,11 +745,48 @@ var PopulationHelper = {
 
                 $row.find('select[name="otherfarmwork"]').selectpicker('val', population.other_farm_work);
 
+                $row.attr('data-survey-id', surveyId);
+
+                population.guid = Helper.CreateGuid();
+                $row.attr('data-guid', population.guid);
+
                 PopulationHelper.Population.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId =$tr.data('survey-id');
+                        CloneData[surveyId].populations = CloneData[surveyId].populations.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="population"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = PopulationHelper.Population.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].populations.push(obj);
+
+                    $row = PopulationHelper.Population.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    PopulationHelper.Population.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -685,18 +796,27 @@ var LongTermHireHelper = {
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.LongTermHire.Bind($row);
+        this.Adder.Bind();
         this.LongTermHire.$Row = $row;
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
         this.LongTermHire.Reset();
     },
-    Set: function(array, index){
-        this.LongTermHire.Set(array, index);
+    Set: function(array, surveyId){
+        this.LongTermHire.Set(array, surveyId);
     },
     LongTermHire: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel4 table[name="longtermhire"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(long_term_hire, i){
                 var $row = LongTermHireHelper.LongTermHire.$Row.clone(true, true);
 
@@ -711,6 +831,11 @@ var LongTermHireHelper = {
                 $row.find('select[name="month"]').selectpicker('val', long_term_hire.months);
 
                 $row.find('input[name="avgworkday"]').val(long_term_hire.avg_work_day);
+
+                $row.attr('data-survey-id', surveyId);
+
+                long_term_hire.guid = Helper.CreateGuid();
+                $row.attr('data-guid', long_term_hire.guid);
 
                 LongTermHireHelper.LongTermHire.Container.append($row);
             })
@@ -727,7 +852,36 @@ var LongTermHireHelper = {
                 })
                 $(this).closest('tr').find('input[name="sumcount"]').val(sumCount);
             })
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId = $tr.data('survey-id');
+                        CloneData[surveyId].long_term_hires = CloneData[surveyId].long_term_hires.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
             return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="longtermhire"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = LongTermHireHelper.LongTermHire.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].long_term_hires.push(obj);
+
+                    $row = LongTermHireHelper.LongTermHire.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    LongTermHireHelper.LongTermHire.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -737,6 +891,7 @@ var ShortTermHireHelper = {
         var $row = $(row);
         $row.find('select[name="worktype"]').attr('multiple', '');
         this.ShortTermHire.Bind($row);
+        this.Adder.Bind();
         this.ShortTermHire.$Row = $row;
     },
     Reset: function () {
@@ -747,6 +902,14 @@ var ShortTermHireHelper = {
         this.ShortTermHire.Set(array);
     },
     ShortTermHire: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel4 table[name="shorttermhire"] > tbody'),
         Set: function (array) {
             array.forEach(function(short_term_hire, i){
@@ -764,6 +927,9 @@ var ShortTermHireHelper = {
 
                 $row.find('input[name="avgworkday"]').val(short_term_hire.avg_work_day);
 
+                short_term_hire.guid = Helper.CreateGuid();
+                $row.attr('data-guid', short_term_hire.guid);
+
                 ShortTermHireHelper.ShortTermHire.Container.append($row);
             })
         },
@@ -779,7 +945,35 @@ var ShortTermHireHelper = {
                 })
                 $(this).closest('tr').find('input[name="sumcount"]').val(sumCount);
             })
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        CloneData[MainSurveyId].short_term_hires = CloneData[MainSurveyId].short_term_hires.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
             return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="shorttermhire"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = ShortTermHireHelper.ShortTermHire.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].short_term_hires.push(obj);
+
+                    $row = ShortTermHireHelper.ShortTermHire.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    ShortTermHireHelper.ShortTermHire.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -788,6 +982,8 @@ var NoSalaryHireHelper = {
     Setup: function(row){
         var $row = $(row);
         $row.find('select[name="month"]');
+        this.NoSalaryHire.Bind($row);
+        this.Adder.Bind();
         this.NoSalaryHire.$Row = $row;
     },
     Reset: function () {
@@ -798,6 +994,14 @@ var NoSalaryHireHelper = {
         this.NoSalaryHire.Set(array);
     },
     NoSalaryHire: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel4 table[name="nosalaryhire"] > tbody'),
         Set: function (array) {
             array.forEach(function(no_salary_hire, i){
@@ -807,11 +1011,45 @@ var NoSalaryHireHelper = {
 
                 $row.find('input[name="count"]').val(no_salary_hire.count);
 
+                no_salary_hire.guid = Helper.CreateGuid();
+                $row.attr('data-guid', no_salary_hire.guid);
+
                 NoSalaryHireHelper.NoSalaryHire.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        CloneData[MainSurveyId].no_salary_hires = CloneData[MainSurveyId].no_salary_hires.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="nosalaryhire"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = NoSalaryHireHelper.NoSalaryHire.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].no_salary_hires.push(obj);
+
+                    $row = NoSalaryHireHelper.NoSalaryHire.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    NoSalaryHireHelper.NoSalaryHire.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -821,18 +1059,28 @@ var LongTermLackHelper = {
     Setup: function(row){
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
+        this.LongTermLack.Bind($row);
+        this.Adder.Bind();
         this.LongTermLack.$Row = $row;
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
         this.LongTermLack.Reset();
     },
-    Set: function(array, index){
-        this.LongTermLack.Set(array, index);
+    Set: function(array, surveyId){
+        this.LongTermLack.Set(array, surveyId);
     },
     LongTermLack: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel4 table[name="longtermlack"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(long_term_lack, i){
                 var $row = LongTermLackHelper.LongTermLack.$Row.clone(true, true);
 
@@ -842,11 +1090,48 @@ var LongTermLackHelper = {
 
                 $row.find('select[name="month"]').selectpicker('val', long_term_lack.months);
 
+                $row.attr('data-survey-id', surveyId);
+
+                long_term_lack.guid = Helper.CreateGuid();
+                $row.attr('data-guid', long_term_lack.guid);
+
                 LongTermLackHelper.LongTermLack.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId = $tr.data('survey-id');
+                        CloneData[surveyId].long_term_lacks = CloneData[surveyId].long_term_lacks.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="longtermlack"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = LongTermLackHelper.LongTermLack.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].long_term_lacks.push(obj);
+
+                    $row = LongTermLackHelper.LongTermLack.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    LongTermLackHelper.LongTermLack.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -857,18 +1142,28 @@ var ShortTermLackHelper = {
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         $row.find('select[name="worktype"]').attr('multiple', '');
+        this.ShortTermLack.Bind($row);
+        this.Adder.Bind();
         this.ShortTermLack.$Row = $row;
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
         this.ShortTermLack.Reset();
     },
-    Set: function(array, index){
-        this.ShortTermLack.Set(array, index);
+    Set: function(array, surveyId){
+        this.ShortTermLack.Set(array, surveyId);
     },
     ShortTermLack: {
+        Object: {
+            New: function(surveyId, guid=null){
+                return {
+                    surveyId: surveyId,
+                    guid: guid ? guid : Helper.CreateGuid(),
+                }
+            },
+        },
         Container: $('#panel4 table[name="shorttermlack"] > tbody'),
-        Set: function (array, index) {
+        Set: function (array, surveyId) {
             array.forEach(function(short_term_lack, i){
                 var $row = ShortTermLackHelper.ShortTermLack.$Row.clone(true, true);
 
@@ -880,11 +1175,48 @@ var ShortTermLackHelper = {
 
                 $row.find('select[name="month"]').selectpicker('val', short_term_lack.months);
 
+                $row.attr('data-survey-id', surveyId);
+
+                short_term_lack.guid = Helper.CreateGuid();
+                $row.attr('data-guid', short_term_lack.guid);
+
                 ShortTermLackHelper.ShortTermLack.Container.append($row);
             })
         },
         Reset: function() {
             this.Container.html('');
+        },
+        Bind: function($row){
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                if(CloneData){
+                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                        var surveyId = $tr.data('survey-id');
+                        CloneData[surveyId].short_term_lacks = CloneData[surveyId].short_term_lacks.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                    })
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="shorttermlack"]'),
+        Bind: function(){
+            this.Container.click(function(){
+                if(CloneData && MainSurveyId){
+                    obj = ShortTermLackHelper.ShortTermLack.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].short_term_lacks.push(obj);
+
+                    $row = ShortTermLackHelper.ShortTermLack.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    ShortTermLackHelper.ShortTermLack.Container.append($row);
+                }
+            })
         },
     },
     Alert: null,
@@ -901,7 +1233,7 @@ var SubsidyHelper = {
         Extra: $('#panel4 input[name="extra"]'),
     },
     Set: function(obj){
-        this.Container.HasSubsidy.filter('[value="{0}"]'.format(obj.has_subsidy)).prop('checked', true);
+        this.Container.HasSubsidy.filter('[data-hassubsidy-id="{0}"]'.format(obj.has_subsidy)).prop('checked', true);
         this.Container.Count.val(obj.count);
         this.Container.Month.val(obj.month_delta);
         this.Container.Day.val(obj.day_delta);
