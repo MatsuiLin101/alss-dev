@@ -103,6 +103,7 @@ var GetFarmerData = function (url, fid, readonly) {
             return False;
         },
         beforeSend: function () {
+            Loading.open();
         }
     });
     return deferred.promise();
