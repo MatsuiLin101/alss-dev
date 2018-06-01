@@ -4,19 +4,15 @@ from django.contrib.auth import (
     get_user_model
 )
 from django.utils.translation import ugettext as _
-from django.core.validators import RegexValidator
-
 
 User = get_user_model()
 
-chValidator = RegexValidator("[^0-9a-zA-Z]", _('Please Input Chinese Only'))
-
 
 class UserEditForm(forms.ModelForm):
-    username = forms.CharField(label=_('Account'))
-    first_name = forms.CharField(label=_('First Name'), validators=[chValidator])
-    last_name = forms.CharField(label=_('Last Name'), validators=[chValidator])
-    reset_email = forms.EmailField(label=_('Reset Email'), required=False)
+    username = forms.CharField(label=_('帳號'))
+    first_name = forms.CharField(label=_('姓'))
+    last_name = forms.CharField(label=_('名'))
+    reset_email = forms.EmailField(label=_('更改信箱'), required=False)
 
     def __init__(self, *args, **kwargs):
         super(UserEditForm, self).__init__(*args, **kwargs)
@@ -35,8 +31,8 @@ class UserEditForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(label=_('Account'))
-    password = forms.CharField(widget=forms.PasswordInput, label=_('Password'))
+    username = forms.CharField(label=_('帳號'))
+    password = forms.CharField(widget=forms.PasswordInput, label=_('密碼'))
     # This field just for identity validate inactive error in views.py
     is_active = forms.BooleanField(widget=forms.HiddenInput, required=False, initial=True)
 
@@ -47,21 +43,21 @@ class UserLoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if not user:
-                raise forms.ValidationError(_('Your account or password is incorrect'))
+                raise forms.ValidationError(_('您輸入的帳號或密碼不正確，請重試'))
             if not user.is_active:
                 self.cleaned_data['is_active'] = False
-                raise forms.ValidationError(_('Please activate your account'))
+                raise forms.ValidationError(_('請先啟用您的帳戶'))
 
         return super(UserLoginForm, self).clean(*args, **kwargs)
 
 
 class UserRegisterForm(forms.ModelForm):
-    username = forms.CharField(label=_('Account'))
-    email = forms.EmailField(label=_('Email'))
-    first_name = forms.CharField(label=_('First Name'), validators=[chValidator])
-    last_name = forms.CharField(label=_('Last Name'), validators=[chValidator])
-    password = forms.CharField(widget=forms.PasswordInput, label=_('Password'))
-    password2 = forms.CharField(widget=forms.PasswordInput, label=_('Confirm Password'))
+    username = forms.CharField(label=_('帳號'))
+    email = forms.EmailField(label=_('電子信箱'))
+    first_name = forms.CharField(label=_('姓'))
+    last_name = forms.CharField(label=_('名'))
+    password = forms.CharField(widget=forms.PasswordInput, label=_('密碼'))
+    password2 = forms.CharField(widget=forms.PasswordInput, label=_('確認密碼'))
 
     class Meta:
         model = User
@@ -78,7 +74,7 @@ class UserRegisterForm(forms.ModelForm):
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
         if password != password2:
-            raise forms.ValidationError(_('Password must match'))
+            raise forms.ValidationError(_('密碼不符'))
         return password
 
     def clean_email(self):
@@ -86,13 +82,13 @@ class UserRegisterForm(forms.ModelForm):
 
         email_qs = User.objects.filter(email=email)
         if email_qs.exists():
-            raise forms.ValidationError(_('This email has already been registered'))
+            raise forms.ValidationError(_('這個信箱已經被使用過了'))
         return email
 
 
 class UserResetPasswordForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput, required=True, label=_('Password'))
-    password2 = forms.CharField(widget=forms.PasswordInput, label=_('Confirm Password'), required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True, label=_('密碼'))
+    password2 = forms.CharField(widget=forms.PasswordInput, label=_('確認密碼'), required=True)
 
     class Meta:
         model = User
@@ -105,12 +101,12 @@ class UserResetPasswordForm(forms.Form):
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
         if password != password2:
-            raise forms.ValidationError(_('Password must match'))
+            raise forms.ValidationError(_('密碼不符'))
         return password
 
 
 class SendMailForm(forms.Form):
-    email = forms.EmailField(label=_('Email'))
+    email = forms.EmailField(label=_('電子信箱'))
 
     class Meta:
         model = User
@@ -122,5 +118,5 @@ class SendMailForm(forms.Form):
         email = self.cleaned_data.get('email')
         email_qs = User.objects.filter(email=email)
         if not email_qs.exists():
-            raise forms.ValidationError(_('This email is not exist'))
+            raise forms.ValidationError(_('這個信箱不存在'))
         return email
