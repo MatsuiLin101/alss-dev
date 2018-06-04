@@ -171,7 +171,6 @@ class SurveySerializer(ModelSerializer):
     lacks = LackSerializer(many=True)
     phones = PhoneSerializer(many=True)
     land_areas = LandAreaSerializer(many=True)
-    management_types = ManagementTypeSerializer(many=True)
     crop_marketings = CropMarketingSerializer(many=True)
     livestock_marketings = LivestockMarketingSerializer(many=True)
     population_ages = PopulationAgeSerializer(many=True)

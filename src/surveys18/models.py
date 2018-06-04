@@ -49,7 +49,7 @@ class Survey(Model):
                             related_name='surveys18',
                             verbose_name=_('Lack'))
     management_types = ManyToManyField('surveys18.ManagementType',
-                                       related_name='survey',
+                                       related_name='surveys',
                                        verbose_name=_('Management Types'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))
     is_updated = BooleanField(default=False, verbose_name=_('Is Updated'))
@@ -281,9 +281,8 @@ class LongTermHire(Model):
 class Subsidy(Model):
     survey = OneToOneField('surveys18.Survey', related_name='subsidy',
                            verbose_name=_('Survey'))
-    has_subsidy = IntegerField(null=True, blank=True,
-                               choices=YES_NO_CHOICES,
-                               verbose_name=_('Is Subsidy'))
+    has_subsidy = BooleanField(default=False, verbose_name=_('Has Subsidy'))
+    none_subsidy = BooleanField(default=False, verbose_name=_('None Subsidy'))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     month_delta = IntegerField(null=True, blank=True,
