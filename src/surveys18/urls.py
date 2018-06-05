@@ -1,10 +1,5 @@
-from django.conf.urls import url
-from .views import (
-    get_surveys,
-    set_surveys,
-)
+from django.conf.urls import url, include
 
 urlpatterns = [
-    url(r'^get-surveys/$', get_surveys, name='get_surveys'),
-    url(r'^set-surveys/$', set_surveys, name='set_surveys'),
+    url(r'^api/', include('surveys18.api.urls', namespace='api')),
 ]

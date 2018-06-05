@@ -33,11 +33,11 @@ $(document).ready(function() {
             $.when(GetFarmerData(url, farmerId, readonly)).then(function(){
                 $('[data-partial]').hide();
                 $('[data-partial="survey"]').show();
+                $('#farmerId').val('');
             });
         } else {
             Alert.setMessage('請輸入農戶編號！').open();
         }
-        $('#farmerId').val('');
     });
 
     /* set farmer data*/
@@ -74,7 +74,7 @@ var GetFarmerData = function (url, fid, readonly) {
     $.ajax({
         url: url,
         async: false,
-        type: 'POST',
+        type: 'GET',
         data: {
             fid: fid,
             readonly: readonly,
@@ -98,6 +98,9 @@ var GetFarmerData = function (url, fid, readonly) {
                             Set(survey, survey.id);
                         })
 
+                        deferred.resolve();
+
+
                     } else {
                         Info.setMessage('查無農戶資料！').open();
                     }
@@ -106,7 +109,7 @@ var GetFarmerData = function (url, fid, readonly) {
                     Info.setMessage('查無農戶資料！').open();
                 }
             }
-            deferred.resolve();
+
             Loading.close();
         },
         error: function () {
