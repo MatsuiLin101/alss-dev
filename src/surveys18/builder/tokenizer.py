@@ -241,30 +241,133 @@ class Builder(object):
         try:
             string = self.string[1]
             management_str = string[26:].split("#")[1]
-
+            if len(management_str) != 14:
+                raise StringLengthError('management')
         except ValueError:
             raise StringLengthError('management')
         else:
             try:
-                self.management=[]
-                survey = Survey.objects.get(farmer_id=self.survey)
                 for i in range(0,14):
                     if management_str[i] == "1":
                         num = i + 1
                         management_type = ManagementType.objects.get(id=num)
-                        print(dir(management_type))
-                        management_type.survey_set.add(survey)
-                        #self.management.append(ManagementType.objects.get(id=num))
-
-                # survey.save()
-                # print(self.management)
-                print(survey.farmer_id)
-                print(survey.management_types)
-
-
+                        self.survey.management_types.add(management_type)
 
             except ValueError:
                 raise CreateModelError('management')
+
+    def build_crop_marketing(self):
+
+        string = self.string[2]
+        if len(string)% 25 != 0 :
+            raise StringLengthError('CropMarketing')
+        else:
+            try:
+                self.crop_marketing = []
+                num = int(len(string)/ 25)
+                for i in range(0,num):
+                    crop_marketing = string[i*25:i*25+25]
+                    product_str = crop_marketing[0:4]
+
+                    try:
+                        product = Product.objects.get(code=product_str)
+                    except Product.DoesNotExist:
+                        product = None
+
+                    land_number = int(crop_marketing[4:5])
+                    land_area = int(crop_marketing[5:9])
+                    plant_times =  int(crop_marketing[9:10])
+                    unit_str = int(crop_marketing[10:11])
+                    try:
+                        unit = Unit.objects.get(code=unit_str , type = 1)
+                    except Unit.DoesNotExist:
+                        unit = None
+                    total_yield = int(crop_marketing[11:18])
+                    unit_price = int(crop_marketing[18:23])
+                    has_facility_str = int(crop_marketing[23:24])
+                    if has_facility_str == 0 :
+                        has_facility = None
+                    elif has_facility_str == 1 :
+                        has_facility = 1
+                    else:
+                        has_facility = 0
+
+                    loss_str = int(crop_marketing[24:25])
+                    try:
+                        loss = Loss.objects.get(code=loss_str, type = 1)
+                    except Unit.DoesNotExist:
+                        loss = None
+
+                    crop_marketing = CropMarketing.objects.create(
+                        survey=self.survey,
+                        product=product,
+                        land_number=land_number,
+                        land_area=land_area,
+                        plant_times=plant_times,
+                        unit=unit,
+                        total_yield=total_yield,
+                        unit_price=unit_price,
+                        has_facility=has_facility,
+                        loss=loss
+                    )
+                    self.crop_marketing.append(crop_marketing)
+            except ValueError:
+                raise CreateModelError('CropMarketing')
+
+    def build_livestock_marketing(self):
+
+        string = self.string[3]
+        livestock_str=string[:-22]
+        if len(string)% 24 != 0 :
+            raise StringLengthError('LivestockMarketing')
+        else:
+            try:
+                self.livestock_marketing = []
+                num = int(len(livestock_str)/ 24)
+                for i in range(0,num):
+                    livestock_marketing = livestock_str[i*24:i*24+24]
+                    product_str = livestock_marketing[0:4]
+
+                    try:
+                        product = Product.objects.get(code=product_str)
+                    except Product.DoesNotExist:
+                        product = None
+
+                    unit_str = int(livestock_marketing[4:5])
+                    try:
+                        unit = Unit.objects.get(code=unit_str , type = 2)
+                    except Unit.DoesNotExist:
+                        unit = None
+                    raising_number = int(livestock_marketing[5:11])
+                    total_yield = int(livestock_marketing[11:17])
+                    unit_price = int(livestock_marketing[17:22])
+
+                    contract_str = int(livestock_marketing[22:23])
+                    try:
+                        contract = Contract.objects.get(code=contract_str)
+                    except Contract.DoesNotExist:
+                        contract = None
+
+                    loss_str = int(livestock_marketing[23:24])
+                    try:
+                        loss = Loss.objects.get(code=loss_str, type = 2)
+                    except Unit.DoesNotExist:
+                        loss = None
+
+                    livestock_marketing = LivestockMarketing.objects.create(
+                        survey=self.survey,
+                        product=product,
+                        unit=unit,
+                        raising_number=raising_number,
+                        total_yield=total_yield,
+                        unit_price=unit_price,
+                        contract=contract,
+                        loss=loss
+
+                    )
+                    self.livestock_marketing.append(livestock_marketing)
+            except ValueError:
+                raise CreateModelError('LivestockMarketing')
 
 
 
