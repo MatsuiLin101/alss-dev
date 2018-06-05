@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.management import call_command
 from surveys18.models import Survey, LongTermHire, WorkType
 
+
 class ModelTestCase(TestCase):
     """
     models: LongTermHire, Survey
