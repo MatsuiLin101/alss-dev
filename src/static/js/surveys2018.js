@@ -93,6 +93,7 @@ var Setup = function(globalUI){
     ManagementTypeHelper.Setup();
     AnnualIncomeHelper.Setup();
     PopulationAgeHelper.Setup();
+    SubsidyHelper.Setup();
 
     if('cropmarketing' in globalUI) CropMarketingHelper.Setup(globalUI.cropmarketing);
     if('livestockmarketing' in globalUI) LivestockMarketingHelper.Setup(globalUI.livestockmarketing);
@@ -378,8 +379,9 @@ var SurveyHelper = {
     },
     NumberWorker : {
         Object: {
-            New: function(ageScopeId, count){
+            New: function(ageScopeId, count, id=null){
                 return {
+                    id: id,
                     age_scope: ageScopeId,
                     count: count,
                 }
@@ -389,9 +391,10 @@ var SurveyHelper = {
                 $objects.each(function(){
                     var count = parseInt($(this).val());
                     var ageScopeId = $(this).data('agescope-id');
+                    var id = $(this).data('numberworker-id');
                     if(parseInt(count) > 0 && Helper.NumberValidate(count)){
                         objects.push(
-                            SurveyHelper.NumberWorker.Object.New(ageScopeId, count)
+                            SurveyHelper.NumberWorker.Object.New(ageScopeId, count, id ? id : null)
                         );
                     }
                 })
@@ -722,7 +725,11 @@ var CropMarketingHelper = {
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId =$tr.data('survey-id');
-                    var guid = $tr.data('guid')
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!surveyId || !guid){
+                        return;
+                    }
                     var obj = CropMarketingHelper.CropMarketing.Object.Filter(surveyId, guid);
                     obj.product = parseInt($tr.find('[name="product"]').val());
                     obj.land_number = parseInt($tr.find('[name="landnumber"]').val());
@@ -837,7 +844,11 @@ var LivestockMarketingHelper = {
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId =$tr.data('survey-id');
-                    var guid = $tr.data('guid')
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!surveyId || !guid){
+                        return;
+                    }
                     var obj = LivestockMarketingHelper.LivestockMarketing.Object.Filter(surveyId, guid);
                     obj.product = parseInt($tr.find('[name="product"]').val());
                     obj.contract = parseInt($tr.find('[name="contract"]').val());
@@ -1069,6 +1080,10 @@ var PopulationHelper = {
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
                     var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!surveyId || !guid){
+                        return;
+                    }
                     var obj = PopulationHelper.Population.Object.Filter(surveyId, guid);
                     obj.relationship = parseInt($tr.find('[name="relationship"]').val());
                     obj.gender = parseInt($tr.find('[name="gender"]').val());
@@ -1143,6 +1158,7 @@ var LongTermHireHelper = {
                 long_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
+                    .attr('data-numberworker-id', number_worker.id)
                     .val(number_worker.count).trigger('change');
                 })
 
@@ -1195,7 +1211,6 @@ var LongTermHireHelper = {
                     }
                     var obj = LongTermHireHelper.LongTermHire.Object.Filter(surveyId, guid);
 
-
                     obj.work_type = parseInt($tr.find('[name="worktype"]').val());
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.months = $tr.find('[name="month"]').val();
@@ -1247,6 +1262,13 @@ var ShortTermHireHelper = {
                     guid: guid ? guid : Helper.CreateGuid(),
                 }
             },
+            Filter: function(guid){
+                var objects = CloneData[MainSurveyId].short_term_hires.filter(function(obj){
+                    return obj.guid === guid;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
         },
         Container: $('#panel4 table[name="shorttermhire"] > tbody'),
         Set: function (array) {
@@ -1258,6 +1280,7 @@ var ShortTermHireHelper = {
                 short_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
+                    .attr('data-numberworker-id', number_worker.id)
                     .val(number_worker.count).trigger('change');
                 })
 
@@ -1275,6 +1298,7 @@ var ShortTermHireHelper = {
             this.Container.html('');
         },
         Bind: function($row){
+            Helper.BindInterOnly($row.find('input'));
             $row.find('input[name="numberworker"]').change(function(){
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="numberworker"]').map(function(){
@@ -1292,6 +1316,22 @@ var ShortTermHireHelper = {
                         })
                         $tr.remove();
                     })
+                }
+            })
+            $row.find('select, input').change(function(){
+                if(CloneData){
+                    $tr = $(this).closest('tr');
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!guid){
+                        return;
+                    }
+                    var obj = ShortTermHireHelper.ShortTermHire.Object.Filter(guid);
+
+                    obj.work_type = $tr.find('[name="worktype"]').val();
+                    obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
+                    obj.month = parseInt($tr.find('[name="month"]').val());
+                    obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
                 }
             })
             return $row;
@@ -1339,6 +1379,13 @@ var NoSalaryHireHelper = {
                     guid: guid ? guid : Helper.CreateGuid(),
                 }
             },
+            Filter: function(guid){
+                var objects = CloneData[MainSurveyId].no_salary_hires.filter(function(obj){
+                    return obj.guid === guid;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
         },
         Container: $('#panel4 table[name="nosalaryhire"] > tbody'),
         Set: function (array) {
@@ -1359,6 +1406,7 @@ var NoSalaryHireHelper = {
             this.Container.html('');
         },
         Bind: function($row){
+            Helper.BindInterOnly($row.find('input'));
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
@@ -1368,6 +1416,20 @@ var NoSalaryHireHelper = {
                         })
                         $tr.remove();
                     })
+                }
+            })
+            $row.find('select, input').change(function(){
+                if(CloneData){
+                    $tr = $(this).closest('tr');
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!guid){
+                        return;
+                    }
+                    var obj = NoSalaryHireHelper.NoSalaryHire.Object.Filter(surveyId, guid);
+
+                    obj.month = parseInt($tr.find('[name="month"]').val());
+                    obj.count = parseInt($tr.find('[name="count"]').val());
                 }
             })
             return $row;
@@ -1416,6 +1478,13 @@ var LongTermLackHelper = {
                     guid: guid ? guid : Helper.CreateGuid(),
                 }
             },
+            Filter: function(surveyId, guid){
+                var objects = CloneData[surveyId].long_term_lacks.filter(function(obj){
+                    return obj.guid === guid;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
         },
         Container: $('#panel4 table[name="longtermlack"] > tbody'),
         Set: function (array, surveyId) {
@@ -1440,6 +1509,7 @@ var LongTermLackHelper = {
             this.Container.html('');
         },
         Bind: function($row){
+            Helper.BindInterOnly($row.find('input'));
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
@@ -1450,6 +1520,22 @@ var LongTermLackHelper = {
                         })
                         $tr.remove();
                     })
+                }
+            })
+            $row.find('select, input').change(function(){
+                if(CloneData){
+                    $tr = $(this).closest('tr');
+                    var surveyId = $tr.data('survey-id');
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!surveyId || !guid){
+                        return;
+                    }
+                    var obj = LongTermLackHelper.LongTermLack.Object.Filter(surveyId, guid);
+
+                    obj.work_type = parseInt($tr.find('[name="worktype"]').val());
+                    obj.months = $tr.find('[name="month"]').val();
+                    obj.count = parseInt($tr.find('[name="count"]').val());
                 }
             })
             return $row;
@@ -1499,6 +1585,13 @@ var ShortTermLackHelper = {
                     guid: guid ? guid : Helper.CreateGuid(),
                 }
             },
+            Filter: function(surveyId, guid){
+                var objects = CloneData[surveyId].short_term_lacks.filter(function(obj){
+                    return obj.guid === guid;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
         },
         Container: $('#panel4 table[name="shorttermlack"] > tbody'),
         Set: function (array, surveyId) {
@@ -1525,6 +1618,7 @@ var ShortTermLackHelper = {
             this.Container.html('');
         },
         Bind: function($row){
+            Helper.BindInterOnly($row.find('input'));
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
@@ -1535,6 +1629,23 @@ var ShortTermLackHelper = {
                         })
                         $tr.remove();
                     })
+                }
+            })
+            $row.find('select, input').change(function(){
+                if(CloneData){
+                    $tr = $(this).closest('tr');
+                    var surveyId = $tr.data('survey-id');
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!surveyId || !guid){
+                        return;
+                    }
+                    var obj = ShortTermLackHelper.ShortTermLack.Object.Filter(surveyId, guid);
+
+                    obj.product = parseInt($tr.find('[name="product"]').val());
+                    obj.work_types = $tr.find('[name="worktype"]').val();
+                    obj.months = $tr.find('[name="month"]').val();
+                    obj.count = parseInt($tr.find('[name="count"]').val());
                 }
             })
             return $row;
@@ -1561,8 +1672,12 @@ var ShortTermLackHelper = {
 }
 
 var SubsidyHelper = {
+    Setup: function(){
+        this.Bind();
+    },
     Container: {
         HasSubsidy: $('#panel4 input[name="hassubsidy"]'),
+        NoneSubsidy: $('#panel4 input[name="nonesubsidy"]'),
         Count: $('#panel4 input[name="count"]'),
         Month: $('#panel4 input[name="monthdelta"]'),
         Day: $('#panel4 input[name="daydelta"]'),
@@ -1571,7 +1686,8 @@ var SubsidyHelper = {
         Extra: $('#panel4 input[name="extra"]'),
     },
     Set: function(obj){
-        this.Container.HasSubsidy.filter('[data-hassubsidy-id="{0}"]'.format(obj.has_subsidy)).prop('checked', true);
+        this.Container.HasSubsidy.prop('checked', obj.has_subsidy);
+        this.Container.NoneSubsidy.prop('checked', obj.none_subsidy);
         this.Container.Count.val(obj.count);
         this.Container.Month.val(obj.month_delta);
         this.Container.Day.val(obj.day_delta);
@@ -1579,10 +1695,12 @@ var SubsidyHelper = {
         obj.refuses.forEach(function(refuse, i){
             SubsidyHelper.Container.RefuseReason
             .filter('[ data-refusereason-id="{0}"]'.format(refuse.reason))
+            .attr('data-refuse-id', refuse.id)
             .prop('checked', true);
 
             SubsidyHelper.Container.Extra
             .filter('[ data-refusereason-id="{0}"]'.format(refuse.reason))
+            .attr('data-refuse-id', refuse.id)
             .val(refuse.extra);
         })
     },
@@ -1593,6 +1711,86 @@ var SubsidyHelper = {
         this.Container.Day.val('');
         this.Container.Hour.val('');
     },
+    Bind: function(){
+        Helper.BindInterOnly(this.Container.Count);
+        Helper.BindInterOnly(this.Container.Month);
+        Helper.BindInterOnly(this.Container.Day);
+        Helper.BindInterOnly(this.Container.Hour);
+        this.Container.HasSubsidy.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.has_subsidy = $(this).prop('checked');
+            }
+        })
+        this.Container.NoneSubsidy.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.none_subsidy = $(this).prop('checked');
+            }
+        })
+        this.Container.Count.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.count = parseInt($(this).val());
+            }
+        })
+        this.Container.Month.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.month_delta = parseInt($(this).val());
+            }
+        })
+        this.Container.Day.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.day_delta = parseInt($(this).val());
+            }
+        })
+        this.Container.Hour.change(function(){
+            if(CloneData){
+                CloneData[MainSurveyId].subsidy.hour_delta = parseInt($(this).val());
+            }
+        })
+        this.Container.RefuseReason.change(function(){
+            SubsidyHelper.Object.Refuse.Collect();
+        })
+        this.Container.Extra.change(function(){
+            /* make sure checked before change textbox value */
+            var refuseReasonId = $(this).data('refusereason-id');
+            var checked = SubsidyHelper.Container.RefuseReason
+                          .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
+                          .prop('checked');
+            if(!checked){
+                Alert.setMessage('請先句選無申請之原因').open();
+                e.preventDefault();
+            }
+            SubsidyHelper.Object.Refuse.Collect();
+        })
+    },
+    Object: {
+        Refuse: {
+            New: function(refuseReasonId, extra, id=null){
+                return {
+                    id: id,
+                    reason: refuseReasonId,
+                    extra: extra,
+                }
+            },
+            Collect: function(){
+                if(CloneData){
+                    var refuses = [];
+                    SubsidyHelper.Container.RefuseReason
+                    .filter(':checked')
+                    .each(function(){
+                        var id = $(this).data('refuse-id');
+                        var refuseReasonId = $(this).data('refusereason-id');
+                        var extra = SubsidyHelper.Container.Extra
+                                    .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
+                                    .val();
+                        refuses.push(
+                            SubsidyHelper.Object.Refuse.New(refuseReasonId, extra, id ? id : null)
+                        )
+                    })
+                    CloneData[MainSurveyId].subsidy.refuses = refuses;
+                }
+            },
+        }
+    }
 }
 
 
