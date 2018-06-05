@@ -5,15 +5,14 @@ from surveys18.models import (
     AnnualIncome,
     Survey,
     AddressMatch,
+    FarmRelatedBusiness,
+    Business,
+    ManagementType,
     Lack,
     Phone,
     LandArea,
     LandType,
     LandStatus,
-    FarmRelatedBusiness,
-    Business,
-    Management,
-    ManagementType,
     Loss,
     Unit,
     Product,
@@ -145,16 +144,16 @@ class Builder(object):
 
     def build_address(self):
         match = False
-        different = False
+        mismatch = False
         try:
             string = self.string[0]
             match_str = string[46:47]
-            different_str = string[47:48]
+            mismatch_str = string[47:48]
             address = string[48:]
             if match_str == "1":
                 match = True
-            if different_str == "1":
-                different = True
+            if mismatch_str == "1":
+                mismatch = True
         except ValueError:
             raise StringLengthError('Address Match')
         else:
@@ -162,7 +161,7 @@ class Builder(object):
                 address = AddressMatch.objects.create(
                     survey=self.survey,
                     match=match,
-                    different=different,
+                    mismatch=mismatch,
                     address=address
                 )
             except ValueError:
@@ -182,15 +181,9 @@ class Builder(object):
                 cnt = 0
                 for i in range(5,len(area_str),5):
                     if int(area_str[cnt*5:i])>0:
-                        if cnt < 3 :
-                            type = 1
-                        else:
-                            type = 2
 
-                        if i/5 > 3 :
-                            status = int((i / 5))-3
-                        else:
-                            status = int((i / 5))
+                        type=1 if cnt<3 else 2
+                        status=int((i/5))-3 if i/5>3 else int((i/5))
 
                         land_type = LandType.objects.get(id=type)
                         land_status = LandStatus.objects.get(id=status)
@@ -214,6 +207,74 @@ class Builder(object):
 
             except ValueError:
                 raise CreateModelError('Land Area')
+
+    def build_business(self):
+        try:
+            string = self.string[1]
+            business_str = string[26:].split("#")[0]
+
+        except ValueError:
+            raise StringLengthError('Business')
+        else:
+            try:
+                self.business = []
+                for i in range(0,8):
+                    if business_str[i] == "1":
+                        num = i+1
+                        business = Business.objects.create(
+                            survey=self.survey,
+                            farm_related_business=FarmRelatedBusiness.objects.get(code=num)
+
+                        )
+                        self.business.append(business)
+                if business_str[8] == "1":
+                    business = Business.objects.create(
+                        survey=self.survey,
+                        farm_related_business=FarmRelatedBusiness.objects.get(code=9),
+                        extra=business_str[9:]
+                    )
+                self.business.append(business)
+            except ValueError:
+                raise CreateModelError('Business')
+
+    def build_management(self):
+        try:
+            string = self.string[1]
+            management_str = string[26:].split("#")[1]
+
+        except ValueError:
+            raise StringLengthError('management')
+        else:
+            try:
+                self.management=[]
+                survey = Survey.objects.get(farmer_id=self.survey)
+                for i in range(0,14):
+                    if management_str[i] == "1":
+                        num = i + 1
+                        management_type = ManagementType.objects.get(id=num)
+                        print(dir(management_type))
+                        management_type.survey_set.add(survey)
+                        #self.management.append(ManagementType.objects.get(id=num))
+
+                # survey.save()
+                # print(self.management)
+                print(survey.farmer_id)
+                print(survey.management_types)
+
+
+
+            except ValueError:
+                raise CreateModelError('management')
+
+
+
+
+
+
+
+
+
+
 
 
 

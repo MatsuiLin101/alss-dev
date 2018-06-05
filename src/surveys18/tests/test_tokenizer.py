@@ -9,14 +9,12 @@ from surveys18.models import (
     Survey,
     AddressMatch,
     Lack,
+    FarmRelatedBusiness,
+    Business,
     Phone,
     LandArea,
     LandType,
     LandStatus,
-    FarmRelatedBusiness,
-    Business,
-    Management,
-    ManagementType,
     Loss,
     Unit,
     Product,
@@ -49,14 +47,16 @@ class ModelTestCase(TestCase):
     def setUp(self):
         call_command('loaddata', 'land-type.yaml', verbosity=0)
         call_command('loaddata', 'land-status.yaml', verbosity=0)
+        call_command('loaddata', 'farm-related-business.yaml', verbosity=0)
+        call_command('loaddata', 'management-type.yaml', verbosity=0)
         self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+1200400200100110100000000000522004002001001111111111111010+01009000005004121300000000000000401000100500414210000000000080+01002070050001+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
         self.builder = Builder(self.string)
         self.builder.build_survey()
 
-    def test_check_string(self):
-        check_string = Builder.check_string(self.string)
-        self.assertTrue(check_string)
-        print(check_string)
+    # def test_check_string(self):
+    #     check_string = Builder.check_string(self.string)
+    #     self.assertTrue(check_string)
+    #     print(check_string)
 
     def test_build_survey(self):
         self.assertEquals(self.builder.survey.farmer_id, "670050010002")
@@ -83,7 +83,7 @@ class ModelTestCase(TestCase):
     def test_build_address(self):
         self.builder.build_address()
         self.assertEquals(self.builder.address.match, False)
-        self.assertEquals(self.builder.address.different, True)
+        self.assertEquals(self.builder.address.mismatch, True)
         self.assertEquals(self.builder.address.address, "屏東縣屏東市屏東路2號")
 
     def test_build_land_area(self):
@@ -107,6 +107,19 @@ class ModelTestCase(TestCase):
         self.assertEquals(self.builder.land_area[2].value, 1000 )
         self.assertEquals(self.builder.land_area[2].type, land_type_c)
         self.assertEquals(self.builder.land_area[2].status, land_status_c)
+
+    def test_build_business(self):
+        self.builder.build_business()
+        self.assertEquals(len(self.builder.business), 2)
+        self.assertEquals(self.builder.business[0].farm_related_business.name, "無兼營農業相關事業")
+        self.assertEquals(self.builder.business[1].farm_related_business.name, "其他")
+        self.assertEquals(self.builder.business[1].extra, "農所實驗")
+
+    def test_build_management(self):
+        self.builder.build_management()
+
+
+
 
 
 
