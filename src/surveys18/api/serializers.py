@@ -36,6 +36,9 @@ class AddressMatchSerializer(ModelSerializer):
     class Meta:
         model = AddressMatch
         fields = '__all__'
+        extra_kwargs = {
+            'survey': {'validators': []},
+        }
 
 
 class LackSerializer(ModelSerializer):
@@ -102,6 +105,9 @@ class RefuseSerializer(ModelSerializer):
     class Meta:
         model = Refuse
         fields = '__all__'
+        extra_kwargs = {
+            'reason': {'validators': []},
+        }
 
 
 class SubsidySerializer(ModelSerializer):
@@ -110,6 +116,9 @@ class SubsidySerializer(ModelSerializer):
     class Meta:
         model = Subsidy
         fields = '__all__'
+        extra_kwargs = {
+            'survey': {'validators': []},
+        }
 
 
 class NumberWorkers(ModelSerializer):
@@ -162,6 +171,9 @@ class BusinessSerializer(ModelSerializer):
     class Meta:
         model = Business
         fields = '__all__'
+        extra_kwargs = {
+            'farm_related_business': {'validators': []},
+        }
 
 
 class SurveySerializer(ModelSerializer):
