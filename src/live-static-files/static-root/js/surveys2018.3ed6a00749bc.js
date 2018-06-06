@@ -520,7 +520,7 @@ var CropMarketingHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].crop_marketings = CloneData[surveyId].crop_marketings.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -609,7 +609,7 @@ var LivestockMarketingHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].livestock_marketings = CloneData[surveyId].livestock_marketings.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -760,7 +760,7 @@ var PopulationHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].populations = CloneData[surveyId].populations.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -855,7 +855,7 @@ var LongTermHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].long_term_hires = CloneData[surveyId].long_term_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -948,7 +948,7 @@ var ShortTermHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         CloneData[MainSurveyId].short_term_hires = CloneData[MainSurveyId].short_term_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
                         })
@@ -1024,7 +1024,7 @@ var NoSalaryHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         CloneData[MainSurveyId].no_salary_hires = CloneData[MainSurveyId].no_salary_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
                         })
@@ -1105,7 +1105,7 @@ var LongTermLackHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].long_term_lacks = CloneData[surveyId].long_term_lacks.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -1190,7 +1190,7 @@ var ShortTermLackHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].short_term_lacks = CloneData[surveyId].short_term_lacks.filter(function(obj){
                             return obj.guid != $tr.data('guid');

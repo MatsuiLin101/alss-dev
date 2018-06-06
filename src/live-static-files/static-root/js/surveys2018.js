@@ -25,29 +25,6 @@ $(document).ready(function () {
     /* setup*/
     Setup(GlobalUI);
 
-    /*set alert dialog*/
-    Alert = new BootstrapDialog({
-        title: '錯誤訊息',
-        type: BootstrapDialog.TYPE_DANGER,
-        buttons: [{
-            label: '確定',
-            action: function (dialogRef) {
-                dialogRef.close();
-            }
-        }]
-    });
-    /*set info dialog*/
-    Info = new BootstrapDialog({
-        title: '訊息',
-        type: BootstrapDialog.TYPE_INFO,
-        buttons: [{
-            label: '確定',
-            action: function (dialogRef) {
-                dialogRef.close();
-            }
-        }]
-    });
-
 })
 
 var Reset = function () {
@@ -141,7 +118,35 @@ var Helper = {
             this.object.html('').hide();
         }
     },
-    Confirm: {
+    Dialog: {
+        ShowAlert: function(message){
+            BootstrapDialog.closeAll();
+            BootstrapDialog.show({
+                title: '錯誤訊息',
+                message: message,
+                type: BootstrapDialog.TYPE_DANGER,
+                buttons: [{
+                    label: '確定',
+                    action: function (dialogRef) {
+                       dialogRef.close();
+                    }
+                }]
+            });
+        },
+        ShowInfo: function(message){
+            BootstrapDialog.closeAll();
+            BootstrapDialog.show({
+                title: '訊息',
+                message: message,
+                type: BootstrapDialog.TYPE_INFO,
+                buttons: [{
+                    label: '確定',
+                    action: function (dialogRef) {
+                        dialogRef.close();
+                    }
+                }]
+            });
+        },
         DeleteRow: function(deferred){
             BootstrapDialog.confirm({
                 title: '刪除資料列',
@@ -243,18 +248,29 @@ var SurveyHelper = {
         },
     },
     Phone: {
+        Object: {
+            Filter: function(id){
+                var objects = CloneData[MainSurveyId].phones.filter(function(obj){
+                    return obj.id == id;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
+        },
         Container: $('#panel1 input[name="phone"]'),
         Bind: function(){
             this.Container.change(function(){
                 if(CloneData) {
-                    var surveyId = SurveyHelper.Phone.Container.surveyId($(this));
-                    CloneData[MainSurveyId].phones[surveyId].phone = $(this).val();
+                    var id = $(this).data('phone-id');
+                    SurveyHelper.Phone.Object.Filter(id).phone = $(this).val();
                 }
             })
         },
         Set: function(obj){
             obj.phones.forEach(function(phone, i){
-                SurveyHelper.Phone.Container.eq(i).val(phone.phone);
+                SurveyHelper.Phone.Container.eq(i)
+                .attr('data-phone-id', phone.id)
+                .val(phone.phone);
             })
         },
         Reset: function(){
@@ -344,9 +360,9 @@ var SurveyHelper = {
                 if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
-                        CloneData[MainSurveyId].address_match.match = this.checked;
+                        CloneData[MainSurveyId].address_match.match = $(this).prop('checked');
                     else if(field == 'mismatch')
-                        CloneData[MainSurveyId].address_match.mismatch = this.checked;
+                        CloneData[MainSurveyId].address_match.mismatch = $(this).prop('checked');
                 }
             })
         },
@@ -357,16 +373,13 @@ var SurveyHelper = {
         Reset: function(){
             this.Container.prop('checked', false);
         },
-        Bind: function(){
-
-        },
     },
     Address: {
         Container: $('#panel1 input[name="address"]'),
         Bind: function(){
             this.Container.change(function(){
                 if(CloneData){
-                    CloneData[MainSurveyId].address_match.address = $(this.val());
+                    CloneData[MainSurveyId].address_match.address = $(this).val();
                 }
             })
         },
@@ -379,7 +392,8 @@ var SurveyHelper = {
     },
     NumberWorker : {
         Object: {
-            New: function(ageScopeId, count, id=null){
+            New: function(ageScopeId, count, id){
+                id = id || null;
                 return {
                     id: id,
                     age_scope: ageScopeId,
@@ -468,7 +482,9 @@ var LandAreaHelper = {
         }
     },
     Object: {
-        New: function(surveyId, typeId, statusId=null, value=null){
+        New: function(surveyId, typeId, statusId, value){
+            statusId = statusId || null;
+            value = value || null;
             return {
                 survey: surveyId,
                 type: typeId,
@@ -574,7 +590,8 @@ var BusinessHelper = {
         },
     },
     Object: {
-        New: function(surveyId, farmRelatedBusinessId, extra=null){
+        New: function(surveyId, farmRelatedBusinessId, extra){
+            extra = extra || null;
             return {
                 survey: surveyId,
                 farm_related_business: farmRelatedBusinessId,
@@ -658,7 +675,8 @@ var CropMarketingHelper = {
     },
     CropMarketing: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -712,7 +730,7 @@ var CropMarketingHelper = {
             $row.find('button[name="remove"]').click(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].crop_marketings = CloneData[surveyId].crop_marketings.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -782,7 +800,8 @@ var LivestockMarketingHelper = {
     },
     LivestockMarketing: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -831,7 +850,7 @@ var LivestockMarketingHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].livestock_marketings = CloneData[surveyId].livestock_marketings.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -908,6 +927,7 @@ var AnnualIncomeHelper = {
                 AnnualIncomeHelper.AnnualIncome.Container
                 .filter('[data-incomerange-id="{0}"]'.format(annual_income.income_range))
                 .filter('[data-markettype-id="{0}"]'.format(annual_income.market_type))
+                .attr('data-annualincome-id', annual_income.id)
                 .prop('checked', true);
             })
         },
@@ -932,9 +952,10 @@ var AnnualIncomeHelper = {
                         .each(function(){
                             var marketTypeId = $(this).data('markettype-id');
                             var incomeRangeId = $(this).data('incomerange-id');
-                            annualIncomes.push(
-                                AnnualIncomeHelper.AnnualIncome.Object.New(MainSurveyId, marketTypeId, incomeRangeId)
-                            )
+                            var id = $(this).data('annualincome-id');
+                            var obj = AnnualIncomeHelper.AnnualIncome.Object.New(MainSurveyId, marketTypeId, incomeRangeId);
+                            if(id) obj.id = id;
+                            annualIncomes.push(obj);
                         })
                         CloneData[MainSurveyId].annual_incomes = annualIncomes;
                     })
@@ -1017,7 +1038,8 @@ var PopulationHelper = {
     },
     Population: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1066,7 +1088,7 @@ var PopulationHelper = {
             $row.find('button[name="remove"]').click(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId =$tr.data('survey-id');
                         CloneData[surveyId].populations = CloneData[surveyId].populations.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -1134,7 +1156,8 @@ var LongTermHireHelper = {
     },
     LongTermHire: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1191,7 +1214,7 @@ var LongTermHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].long_term_hires = CloneData[surveyId].long_term_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -1256,7 +1279,8 @@ var ShortTermHireHelper = {
     },
     ShortTermHire: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1310,7 +1334,7 @@ var ShortTermHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         CloneData[MainSurveyId].short_term_hires = CloneData[MainSurveyId].short_term_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
                         })
@@ -1373,7 +1397,8 @@ var NoSalaryHireHelper = {
     },
     NoSalaryHire: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1410,7 +1435,7 @@ var NoSalaryHireHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         CloneData[MainSurveyId].no_salary_hires = CloneData[MainSurveyId].no_salary_hires.filter(function(obj){
                             return obj.guid != $tr.data('guid');
                         })
@@ -1472,7 +1497,8 @@ var LongTermLackHelper = {
     },
     LongTermLack: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1513,7 +1539,7 @@ var LongTermLackHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].long_term_lacks = CloneData[surveyId].long_term_lacks.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -1579,7 +1605,8 @@ var ShortTermLackHelper = {
     },
     ShortTermLack: {
         Object: {
-            New: function(surveyId, guid=null){
+            New: function(surveyId, guid){
+                guid = guid || null;
                 return {
                     survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
@@ -1622,7 +1649,7 @@ var ShortTermLackHelper = {
             $row.find('button[name="remove"]').click(function(){
                 $tr = $(this).closest('tr');
                 if(CloneData){
-                    $.when($.Deferred(Helper.Confirm.DeleteRow)).then(function(){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
                         var surveyId = $tr.data('survey-id');
                         CloneData[surveyId].short_term_lacks = CloneData[surveyId].short_term_lacks.filter(function(obj){
                             return obj.guid != $tr.data('guid');
@@ -1764,7 +1791,8 @@ var SubsidyHelper = {
     },
     Object: {
         Refuse: {
-            New: function(refuseReasonId, extra, id=null){
+            New: function(refuseReasonId, extra, id){
+                id = id || null;
                 return {
                     id: id,
                     reason: refuseReasonId,
