@@ -1,8 +1,9 @@
 import json
+from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework.generics import (
     ListAPIView,
-    RetrieveAPIView,
+    UpdateAPIView,
 )
 
 from rest_framework.filters import (
@@ -15,13 +16,6 @@ from rest_framework.permissions import (
 
 from .serializers import SurveySerializer
 from surveys18.models import Survey
-
-
-class SurveyDetailAPIView(RetrieveAPIView):
-    queryset = Survey.objects.all()
-    serializer_class = SurveySerializer
-    lookup_field = 'farmer_id'
-    permission_classes = [IsAuthenticated]
 
 
 class SurveyListAPIView(ListAPIView):
@@ -39,3 +33,26 @@ class SurveyListAPIView(ListAPIView):
                     Q(farmer_id=fid) & Q(readonly=readonly)
                     ).distinct()
         return queryset_list
+
+
+class SurveyUpdateAPIView(UpdateAPIView):
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        return Survey.objects.get(id=pk)
+
+    def patch(self, request):
+        data = json.loads(request.data.get('data'))
+        pk = data.get('id')
+        survey = self.get_object(pk)
+        serializer = SurveySerializer(survey,
+                                      data=data,
+                                      partial=True)  # set partial=True to update a data partially
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(data=serializer.data)
+
+        return JsonResponse(data=serializer.errors, safe=False)
+

@@ -1,3 +1,10 @@
+var csrftoken = $.cookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 $(document).ready(function() {
 
     $(window).resize(function(){
@@ -30,13 +37,17 @@ $(document).ready(function() {
         var url = $(this).data('url');
         var readonly = $(this).data('readonly');
         if (farmerId) {
-            $.when(GetFarmerData(url, farmerId, readonly)).then(function(){
+            $.when(
+                Loading.open(),
+                GetFarmerData(url, farmerId, readonly)
+            ).then(function(){
                 $('[data-partial]').hide();
                 $('[data-partial="survey"]').show();
                 $('#farmerId').val('');
             });
+            Loading.close();
         } else {
-            Alert.setMessage('請輸入農戶編號！').open();
+            Helper.Dialog.ShowAlert('請輸入農戶編號！');
         }
     });
 
@@ -45,8 +56,26 @@ $(document).ready(function() {
         if(CloneData){
             if(!CloneData[MainSurveyId].readonly){
                 var url = $(this).data('url');
-                var surveys = JSON.stringify(Object.values(CloneData));
-                SetFarmerData(url, surveys);
+                var sendRequests = function(){
+                    Object.keys(CloneData).forEach(function(pk, i){
+                        var data = JSON.stringify(CloneData[pk]);
+                        SetFarmerData(url, data);
+                    })
+                }
+
+                $.when(
+                    Loading.open(),
+                    sendRequests()
+                ).then(function(){
+                    Reset();
+                    Object.values(CloneData).forEach(function(survey, i){
+                        Set(survey, survey.id);
+                    })
+                    Helper.Dialog.ShowInfo('成功更新調查表！');
+                }).fail(function(){
+                    Helper.Dialog.ShowInfo('很抱歉，當筆資料更新錯誤，請稍後再試。');
+                })
+                Loading.close();
             }
         }
     });
@@ -80,60 +109,6 @@ var GetFarmerData = function (url, fid, readonly) {
             readonly: readonly,
         },
         success: function (data) {
-            if (data) {
-                if (data.length > 0) {
-
-                    var firstPageObj = $.grep(data, function (survey) {
-                        return survey.page == 1
-                    });
-
-                    if (firstPageObj.length > 0) {
-                        Reset();
-
-                        CloneData = {};
-
-                        /* set surveys */
-                        data.forEach(function(survey, i){
-                            CloneData[survey.id] = survey;
-                            Set(survey, survey.id);
-                        })
-
-                        deferred.resolve();
-
-
-                    } else {
-                        Info.setMessage('查無農戶資料！').open();
-                    }
-                }
-                else {
-                    Info.setMessage('查無農戶資料！').open();
-                }
-            }
-
-            Loading.close();
-        },
-        error: function () {
-            Loading.close();
-            Alert.setMessage('很抱歉，當筆資料查詢錯誤，請稍後再試。').open();
-            return false;
-        },
-        beforeSend: function () {
-            Loading.open();
-        }
-    });
-    return deferred.promise();
-}
-
-var SetFarmerData = function (url, data) {
-    var deferred = $.Deferred();
-    $.ajax({
-        url: url,
-        async: false,
-        type: 'POST',
-        data: {
-            data: data
-        },
-        success: function (data) {
             if (data.length > 0) {
 
                 var firstPageObj = $.grep(data, function (survey) {
@@ -150,25 +125,47 @@ var SetFarmerData = function (url, data) {
                         CloneData[survey.id] = survey;
                         Set(survey, survey.id);
                     })
-                    Info.setMessage('成功更新調查表！')
-
                 } else {
-                    Info.setMessage('很抱歉，當筆資料更新錯誤，請稍後再試。').open();
+                    Helper.Dialog.ShowInfo('查無農戶資料！');
                 }
             }
             else {
-                Info.setMessage('很抱歉，當筆資料更新錯誤，請稍後再試。').open();
+                Helper.Dialog.ShowInfo('查無農戶資料！');
             }
             deferred.resolve();
-            Loading.close();
         },
         error: function () {
-            Loading.close();
-            Alert.setMessage('很抱歉，當筆資料更新錯誤，請稍後再試。').open();
+            Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
+            deferred.fail();
             return false;
         },
-        beforeSend: function () {
-            Loading.open();
+    });
+    return deferred.promise();
+}
+
+var SetFarmerData = function (url, data) {
+    var deferred = $.Deferred();
+    $.ajax({
+        url: url,
+        async: false,
+        type: 'PATCH',
+        data: {
+            data: data
+        },
+        success: function (data) {
+            if ('id' in data) {
+                CloneData[data.id] = data;
+                deferred.resolve();
+            }
+            else deferred.fail();
+        },
+        error: function () {
+            deferred.fail();
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
         }
     });
     return deferred.promise();
