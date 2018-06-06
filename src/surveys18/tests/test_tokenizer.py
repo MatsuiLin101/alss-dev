@@ -49,6 +49,11 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'land-status.yaml', verbosity=0)
         call_command('loaddata', 'farm-related-business.yaml', verbosity=0)
         call_command('loaddata', 'management-type.yaml', verbosity=0)
+        call_command('loaddata', 'product-type.yaml', verbosity=0)
+        call_command('loaddata', 'product.yaml', verbosity=0)
+        call_command('loaddata', 'loss.yaml', verbosity=0)
+        call_command('loaddata', 'unit.yaml', verbosity=0)
+        call_command('loaddata', 'contract.yaml', verbosity=0)
         self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+1200400200100110100000000000522004002001001111111111111010+01009000005004121300000000000000401000100500414210000000000080+01002070050001+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
         self.builder = Builder(self.string)
         self.builder.build_survey()
@@ -77,7 +82,7 @@ class ModelTestCase(TestCase):
 
     def test_build_phone(self):
         self.builder.build_phone()
-        self.assertEquals( self.builder.phones[0].phone, "0912345678")
+        self.assertEquals(self.builder.phones[0].phone, "0912345678")
         self.assertEquals(self.builder.phones[1].phone, "2991111")
 
     def test_build_address(self):
@@ -117,6 +122,40 @@ class ModelTestCase(TestCase):
 
     def test_build_management(self):
         self.builder.build_management()
+        self.assertEquals(len(self.builder.survey.management_types.all()), 1)
+        self.assertEquals(self.builder.survey.management_types.all()[0].name, "豬")
+
+    def test_build_crop_marketing(self):
+        self.builder.build_crop_marketing()
+        self.assertEquals(len(self.builder.crop_marketing), 2)
+        self.assertEquals(self.builder.crop_marketing[0].product.code,"A001")
+        self.assertEquals(self.builder.crop_marketing[0].land_number, 1)
+        self.assertEquals(self.builder.crop_marketing[0].land_area, 420)
+        self.assertEquals(self.builder.crop_marketing[0].plant_times, 1)
+        self.assertEquals(self.builder.crop_marketing[0].unit.code, 1)
+        self.assertEquals(self.builder.crop_marketing[0].total_yield, 21000)
+        self.assertEquals(self.builder.crop_marketing[0].unit_price, 23)
+        self.assertEquals(self.builder.crop_marketing[0].has_facility, 0)
+        self.assertEquals(self.builder.crop_marketing[0].loss.code, 1)
+
+        self.assertEquals(self.builder.crop_marketing[1].product.code,"D011")
+        self.assertEquals(self.builder.crop_marketing[1].land_number, 1)
+        self.assertEquals(self.builder.crop_marketing[1].land_area, 300)
+        self.assertEquals(self.builder.crop_marketing[1].plant_times, 1)
+        self.assertEquals(self.builder.crop_marketing[1].unit.code, 1)
+        self.assertEquals(self.builder.crop_marketing[1].total_yield, 7200)
+        self.assertEquals(self.builder.crop_marketing[1].unit_price, 75)
+        self.assertEquals(self.builder.crop_marketing[1].has_facility, 0)
+        self.assertEquals(self.builder.crop_marketing[1].loss.code, 0)
+
+    # def test_build_livestock_marketing(self):
+    #     self.builder.build_livestock_marketing()
+    #     self.assertEquals(len(self.builder.livestock_marketing), 2)
+
+
+
+
+
 
 
 
