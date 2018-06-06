@@ -40,6 +40,8 @@ from surveys18.models import (
     LongTermLack,
     Gender,
     ProductType,
+    Relationship,
+    Month
 )
 
 
@@ -54,6 +56,17 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'loss.yaml', verbosity=0)
         call_command('loaddata', 'unit.yaml', verbosity=0)
         call_command('loaddata', 'contract.yaml', verbosity=0)
+        call_command('loaddata', 'income-range.yaml', verbosity=0)
+        call_command('loaddata', 'market-type.yaml', verbosity=0)
+        call_command('loaddata', 'age-scope.yaml', verbosity=0)
+        call_command('loaddata', 'gender.yaml', verbosity=0)
+        call_command('loaddata', 'relationship.yaml', verbosity=0)
+        call_command('loaddata', 'education-level.yaml', verbosity=0)
+        call_command('loaddata', 'farmer-work-day.yaml', verbosity=0)
+        call_command('loaddata', 'life-style.yaml', verbosity=0)
+        call_command('loaddata', 'other-farm-work.yaml', verbosity=0)
+        call_command('loaddata', 'month.yaml', verbosity=0)
+        call_command('loaddata', 'work-type.yaml', verbosity=0)
         self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+1200400200100110100000000000522004002001001111111111111010+01009000005004121300000000000000401000100500414210000000000080+01002070050001+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
         self.builder = Builder(self.string)
         self.builder.build_survey()
@@ -148,9 +161,75 @@ class ModelTestCase(TestCase):
         self.assertEquals(self.builder.crop_marketing[1].has_facility, 0)
         self.assertEquals(self.builder.crop_marketing[1].loss.code, 0)
 
-    # def test_build_livestock_marketing(self):
-    #     self.builder.build_livestock_marketing()
-    #     self.assertEquals(len(self.builder.livestock_marketing), 2)
+    def test_build_livestock_marketing(self):
+        self.builder.build_livestock_marketing()
+        self.assertEquals(len(self.builder.livestock_marketing), 2)
+        self.assertEquals(self.builder.livestock_marketing[0].product.code,"F002")
+        self.assertEquals(self.builder.livestock_marketing[0].unit.code, 3)
+        self.assertEquals(self.builder.livestock_marketing[0].raising_number, 90)
+        self.assertEquals(self.builder.livestock_marketing[0].total_yield, 15)
+        self.assertEquals(self.builder.livestock_marketing[0].unit_price, 5000)
+        self.assertEquals(self.builder.livestock_marketing[0].contract.code, 0)
+        self.assertEquals(self.builder.livestock_marketing[0].loss.code, 0)
+
+        self.assertEquals(self.builder.livestock_marketing[1].product.code,"F001")
+        self.assertEquals(self.builder.livestock_marketing[1].unit.code, 3)
+        self.assertEquals(self.builder.livestock_marketing[1].raising_number, 1000)
+        self.assertEquals(self.builder.livestock_marketing[1].total_yield, 1500)
+        self.assertEquals(self.builder.livestock_marketing[1].unit_price, 9750)
+        self.assertEquals(self.builder.livestock_marketing[1].contract.code, 0)
+        self.assertEquals(self.builder.livestock_marketing[1].loss.code, 3)
+        #....種豬 頭 90 15 5000 無 無 /肉豬 頭 1000 1500 9750 無 疫病
+
+    def test_build_annual_income(self):
+        self.builder.build_annual_income()
+        self.assertEquals(len(self.builder.annual_income), 4)
+        self.assertEquals(self.builder.annual_income[0].market_type.name,"農作物及其製品(含生產及加工)")
+        self.assertEquals(self.builder.annual_income[0].income_range.name, "500以上")
+        self.assertEquals(self.builder.annual_income[1].market_type.name, "畜禽產品及其製品(含生產及加工)")
+        self.assertEquals(self.builder.annual_income[1].income_range.name, "500以上")
+        self.assertEquals(self.builder.annual_income[2].market_type.name, "休閒、餐飲及相關事業")
+        self.assertEquals(self.builder.annual_income[2].income_range.name, "75~未滿100")
+        self.assertEquals(self.builder.annual_income[3].market_type.name, "銷售額總計")
+        self.assertEquals(self.builder.annual_income[3].income_range.name, "500以上")
+
+    def test_build_population_age(self):
+        self.builder.build_population_age()
+        self.assertEquals(len(self.builder.population_age), 4)
+        self.assertEquals(self.builder.population_age[0].count,1)
+        self.assertEquals(self.builder.population_age[0].gender.name, "男")
+        self.assertEquals(self.builder.population_age[0].age_scope.name, "未滿15歲")
+        self.assertEquals(self.builder.population_age[1].count, 1)
+        self.assertEquals(self.builder.population_age[1].gender.name, "女")
+        self.assertEquals(self.builder.population_age[1].age_scope.name, "未滿15歲")
+        self.assertEquals(self.builder.population_age[2].count, 2)
+        self.assertEquals(self.builder.population_age[2].gender.name, "男")
+        self.assertEquals(self.builder.population_age[2].age_scope.name, "滿15歲以上")
+        self.assertEquals(self.builder.population_age[3].count, 1)
+        self.assertEquals(self.builder.population_age[3].gender.name, "女")
+        self.assertEquals(self.builder.population_age[3].age_scope.name, "滿15歲以上")
+
+    def test_build_population(self):
+        self.builder.build_population()
+        self.assertEquals(len(self.builder.population), 2)
+
+    def test_build_hire(self):
+        self.builder.build_hire()
+        self.assertEquals(self.builder.survey.non_hire,False)
+        self.assertEquals(self.builder.survey.hire, True)
+
+    def test_build_long_term_hire(self):
+        self.builder.build_long_term_hire()
+        self.assertEquals(len(self.builder.long_term_hire), 2)
+        self.assertEquals(len(self.builder.long_term_hire[0].number_workers.all()), 3)
+        self.assertEquals(len(self.builder.long_term_hire[0].months.all()), 2)
+        self.assertEquals(self.builder.long_term_hire[0].avg_work_day, 5)
+
+
+
+
+
+
 
 
 
