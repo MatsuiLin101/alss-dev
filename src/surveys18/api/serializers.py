@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.serializers import ModelSerializer, IntegerField
 from surveys18.models import (
     AnnualIncome,
@@ -24,6 +25,7 @@ from surveys18.models import (
     Business,
     Refuse,
     Product,
+    Month,
 )
 
 
@@ -157,6 +159,12 @@ class NumberWorkers(ModelSerializer):
         fields = '__all__'
 
 
+class MonthSerializer(ModelSerializer):
+    class Meta:
+        model = Month
+        fields = '__all__'
+
+
 class LongTermHireSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
     number_workers = NumberWorkers(many=True)
@@ -243,6 +251,11 @@ class SurveySerializer(ModelSerializer):
     def update(self, instance, validated_data):
         # Update the instance
         instance.farmer_name = validated_data['farmer_name']
+        instance.note = validated_data['note']
+        instance.hire = validated_data['hire']
+        instance.non_hire = validated_data['non_hire']
+
+        instance.save()
 
         '''Phone'''
         for item in validated_data['phones']:
@@ -360,7 +373,96 @@ class SurveySerializer(ModelSerializer):
                     count=item['count'] if 'count' in item else None,
                 )
 
-        instance.save()
+        '''Population'''
+        population_ids = [item['id'] for item in validated_data['populations'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.populations.all():
+            if obj.id not in population_ids:
+                obj.delete()
+        for item in validated_data['populations']:
+            if 'id' in item.keys():
+                # Update included in the request
+                population_qs = instance.populations.filter(id=item['id'])
+                if population_qs:
+                    population_qs.update(
+                        relationship=item['relationship'] if 'relationship' in item else None,
+                        gender=item['gender'] if 'gender' in item else None,
+                        birth_year=item['birth_year'] if 'birth_year' in item else None,
+                        education_level=item['education_level'] if 'education_level' in item else None,
+                        farmer_work_day=item['farmer_work_day'] if 'farmer_work_day' in item else None,
+                        life_style=item['life_style'] if 'life_style' in item else None,
+                        other_farm_work=item['other_farm_work'] if 'other_farm_work' in item else None
+                    )
+            else:
+                # Create
+                Population.objects.create(
+                    survey=instance,
+                    relationship=item['relationship'] if 'relationship' in item else None,
+                    gender=item['gender'] if 'gender' in item else None,
+                    birth_year=item['birth_year'] if 'birth_year' in item else None,
+                    education_level=item['education_level'] if 'education_level' in item else None,
+                    farmer_work_day=item['farmer_work_day'] if 'farmer_work_day' in item else None,
+                    life_style=item['life_style'] if 'life_style' in item else None,
+                    other_farm_work=item['other_farm_work'] if 'other_farm_work' in item else None
+                )
+
+        '''LongTermHire'''
+        long_term_hire_ids = [item['id'] for item in validated_data['long_term_hires'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.long_term_hires.all():
+            if obj.id not in long_term_hire_ids:
+                obj.delete()
+        for item in validated_data['long_term_hires']:
+            if 'id' in item.keys():
+                pass
+                # Update included in the request
+                long_term_hire_qs = instance.long_term_hires.filter(id=item['id'])
+                if long_term_hire_qs:
+                    long_term_hire_qs.update(
+                        work_type=item['work_type'] if 'work_type' in item else None,
+                        avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
+                    )
+                    long_term_hire_qs.first().months.clear()
+                    for month in item['months']:
+                        long_term_hire_qs.first().months.add(month)
+
+                    '''NumberWorker'''
+                    number_worker_ids = [item['id'] for item in item['number_workers'] if 'id' in item]
+                    # Delete not included in the request
+                    for obj in long_term_hire_qs.first().number_workers.all():
+                        if obj.id not in number_worker_ids:
+                            obj.delete()
+                    for obj in item['number_workers']:
+                        if 'id' in obj.keys():
+                            # Update included in the request
+                            number_worker_qs = long_term_hire_qs.first().number_workers.filter(id=obj['id'])
+                            if number_worker_qs:
+                                number_worker_qs.update(
+                                    count=obj['count'] if 'count' in obj else None,
+                                )
+                        else:
+                            # Create
+                            NumberWorkers.objects.create(
+                                count=obj['count'] if 'count' in obj else None,
+                                content_type=ContentType.objects.get(app_label='surveys18', model="longtermhire"),
+                                object_id=item['id']
+                            )
+            else:
+                # Create
+                content_object = LongTermHire.objects.create(
+                    survey=instance,
+                    work_type=item['work_type'] if 'work_type' in item else None,
+                    avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
+                )
+                for month in item['months']:
+                    content_object.months.add(month)
+                for obj in item['number_workers']:
+                    NumberWorkers.objects.create(
+                        count=obj['count'] if 'count' in obj else None,
+                        content_type=ContentType.objects.get(app_label='surveys18', model="longtermhire"),
+                        object_id=content_object.id,
+                    )
+
         return instance
 
 

@@ -53,6 +53,8 @@ class SurveyUpdateAPIView(UpdateAPIView):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(data=serializer.data)
+        else:
+            print(serializer.errors)
 
         return JsonResponse(data=serializer.errors, safe=False)
 
