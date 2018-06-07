@@ -313,18 +313,29 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
             this.Container.change(function(){
+                var id = $(this).data('lack-id');
                 if(CloneData){
-                    var lacks = this.Container.map(function(i, lack){
-                        if($(lack).prop('checked')) return $(lack).data('lack-id');
+                    /* make it radio */
+                    var deChecked = function(){
+                        var deferred = $.Deferred();
+                        SurveyHelper.Lack.Container.not('[data-lack-id="{0}"]'.format(id)).prop('checked', false)
+                        deferred.resolve();
+                    }
+                    $.when(deChecked()).then(function(){
+                        var lacks = []
+                        SurveyHelper.Lack.Container.each(function(){
+                            var id = $(this).data('lack-id');
+                            if($(this).prop('checked')) lacks.push(id);
+                        })
+                        CloneData[MainSurveyId].lacks = lacks;
                     })
-                    CloneData[MainSurveyId].lacks = lacks;
                 }
             })
         },
         Set: function(obj) {
             obj.lacks.forEach(function(lack, i){
                 SurveyHelper.Lack.Container
-                .filter('[data-lack-id="{0}"]'.format(lack.id))
+                .filter('[data-lack-id="{0}"]'.format(lack))
                 .prop('checked', true);
             })
         },
@@ -467,7 +478,7 @@ var LandAreaHelper = {
                                   .filter('[data-landtype-id="{0}"]'.format(typeId))
                                   .prop('checked');
                 if(!typeChecked){
-                    Alert.setMessage('請先句選耕作地類型選項').open();
+                    Helper.Dialog.ShowAlert('請先句選耕作地類型選項');
                     e.preventDefault();
                 }
             })
@@ -482,7 +493,7 @@ var LandAreaHelper = {
                 survey: surveyId,
                 type: typeId,
             }
-            if(statusId) obj.statusId = statusId;
+            if(statusId) obj.status = statusId;
             if(value) obj.value = value;
             return obj;
         },
@@ -514,9 +525,8 @@ var LandAreaHelper = {
                             LandAreaHelper.Object.New(MainSurveyId, typeId)
                         )
                     }
-
-                    CloneData[MainSurveyId].land_areas = landAreas;
                 })
+                CloneData[MainSurveyId].land_areas = landAreas;
             }
         }
     }
@@ -575,7 +585,7 @@ var BusinessHelper = {
                               .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmRelatedBusinessId))
                               .prop('checked');
                 if(!checked){
-                    Alert.setMessage('請先句選農業相關事業選項').open();
+                    Helper.Dialog.ShowAlert('請先句選農業相關事業選項');
                     e.preventDefault();
                 }
             })
@@ -1781,7 +1791,7 @@ var SubsidyHelper = {
                           .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
                           .prop('checked');
             if(!checked){
-                Alert.setMessage('請先句選無申請之原因').open();
+                Helper.Dialog.ShowAlert('請先句選無申請之原因');
                 e.preventDefault();
             }
             SubsidyHelper.Object.Refuse.Collect();

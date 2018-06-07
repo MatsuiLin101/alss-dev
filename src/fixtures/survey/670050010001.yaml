@@ -82,7 +82,6 @@
     month_delta: 2
     day_delta: 0
     hour_delta: 0
-    refuses: [1, 2]
 
 - model: surveys18.CropMarketing
   pk: 1
@@ -588,11 +587,13 @@
 - model: surveys18.Refuse
   pk: 1
   fields:
+    subsidy: 1
     reason: 2
     extra: 測試
 
 - model: surveys18.Refuse
   pk: 2
   fields:
+    subsidy: 1
     reason: 3
     extra: 測試2
