@@ -16,6 +16,7 @@ from django.db.models import (
     TextField,
     DateField,
     PositiveIntegerField,
+    FloatField,
     Q
 )
 
@@ -226,7 +227,7 @@ class ShortTermHire(Model):
     survey = ForeignKey('surveys18.Survey',
                         related_name='short_term_hires', blank=True,
                         verbose_name=_('Survey'))
-    avg_work_day = IntegerField(null=True, blank=True,
+    avg_work_day = FloatField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
     month = ForeignKey('surveys18.Month', null=True, blank=True,
                        verbose_name=_('Month'))
@@ -253,7 +254,7 @@ class ShortTermHire(Model):
 class LongTermHire(Model):
     survey = ForeignKey('surveys18.Survey', related_name='long_term_hires'
                         , blank=True, verbose_name=_('Survey'))
-    avg_work_day = IntegerField(null=True, blank=True,
+    avg_work_day = FloatField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
     work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
