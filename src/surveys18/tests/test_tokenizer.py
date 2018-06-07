@@ -67,7 +67,9 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'other-farm-work.yaml', verbosity=0)
         call_command('loaddata', 'month.yaml', verbosity=0)
         call_command('loaddata', 'work-type.yaml', verbosity=0)
-        self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+1200400200100110100000000000522004002001001111111111111010+01009000005004121300000000000000401000100500414210000000000080+01002070050001+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
+        call_command('loaddata', 'age-scope.yaml', verbosity=0)
+        call_command('loaddata', 'lack.yaml', verbosity=0)
+        self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+120040020010011010000000000005220040020010011111111111111113+0100900000500412130000000000001004010001005004142100000000000285+01002070050011+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
         self.builder = Builder(self.string)
         self.builder.build_survey()
 
@@ -223,7 +225,34 @@ class ModelTestCase(TestCase):
         self.assertEquals(len(self.builder.long_term_hire), 2)
         self.assertEquals(len(self.builder.long_term_hire[0].number_workers.all()), 3)
         self.assertEquals(len(self.builder.long_term_hire[0].months.all()), 2)
-        self.assertEquals(self.builder.long_term_hire[0].avg_work_day, 5)
+        self.assertEquals(self.builder.long_term_hire[0].avg_work_day, 0.5)
+
+    def test_build_short_term_hire(self):
+        self.builder.build_short_term_hire()
+        self.assertEquals(len(self.builder.short_term_hire), 2)
+        self.assertEquals(len(self.builder.short_term_hire[0].number_workers.all()), 2)
+        self.assertEquals(self.builder.short_term_hire[0].month.value, 1)
+        self.assertEquals(self.builder.short_term_hire[0].avg_work_day,1)
+
+    def test_build_no_salary_hire(self):
+        self.builder.build_no_salary_hire()
+        self.assertEquals(len(self.builder.no_salary_hire), 2)
+        self.assertEquals(self.builder.no_salary_hire[0].month.value, 1)
+        self.assertEquals(self.builder.no_salary_hire[0].count, 2)
+        self.assertEquals(self.builder.no_salary_hire[1].month.value, 7)
+        self.assertEquals(self.builder.no_salary_hire[1].count, 5)
+
+    def test_build_lack(self):
+        self.builder.build_lack()
+        self.assertEquals(len(self.builder.survey.lacks.all()),2)
+
+    def test_build_long_term_lack(self):
+        self.builder.build_long_term_lack()
+        self.assertEquals(len(self.builder.long_term_lack),2)
+
+    def test_build_short_term_lack(self):
+        self.builder.build_short_term_lack()
+        self.assertEquals(len(self.builder.short_term_lack),2)
 
 
 
