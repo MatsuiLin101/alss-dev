@@ -677,6 +677,9 @@ class SurveySerializer(ModelSerializer):
         # Update
         instance.subsidy.has_subsidy = subsidy['has_subsidy']
         instance.subsidy.none_subsidy = subsidy['none_subsidy']
+        instance.subsidy.month_delta = subsidy['month_delta']
+        instance.subsidy.day_delta = subsidy['day_delta']
+        instance.subsidy.hour_delta = subsidy['day_delta']
         instance.subsidy.count = subsidy['count']
         '''Refuse'''
         refuse_ids = [item['id'] for item in subsidy['refuses'] if 'id' in item]
