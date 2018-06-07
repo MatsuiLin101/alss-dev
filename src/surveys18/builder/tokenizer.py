@@ -41,7 +41,8 @@ from surveys18.models import (
     Gender,
     ProductType,
     Relationship,
-    Month
+    Month,
+    Refuse
 )
 
 
@@ -73,6 +74,10 @@ class Builder(object):
         self.build_population_age()
         self.build_population()
         self.build_hire()
+        self.build_long_term_hire()
+        self.build_short_term_hire()
+        self.build_no_salary_hire()
+        self.build_lack()
 
     @staticmethod
     def check_string(string):
@@ -538,20 +543,20 @@ class Builder(object):
 
     def build_long_term_hire(self):
         string = self.string[5]
-        if len(string) % 29 != 0 :
+        if len(string) % 30 != 0 :
             raise StringLengthError('LongTermHire')
         else:
             try:
                 self.long_term_hire=[]
-                for i in range(0, len(string), 29):
-                    long_term_hire_str=string[i:i+29]
+                for i in range(0, len(string), 30):
+                    long_term_hire_str=string[i:i+30]
                     work_type_str=int(long_term_hire_str[0:2])
                     try:
                         work_type = WorkType.objects.get(code=work_type_str)
                     except WorkType.DoesNotExist:
                         work_type = None
 
-                    avg_work_day_str = int(long_term_hire_str[26:29])
+                    avg_work_day_str = int(long_term_hire_str[26:])/10
                     long_term_hire = LongTermHire.objects.create(
                         survey=self.survey,
                         work_type=work_type,
@@ -584,6 +589,306 @@ class Builder(object):
             except ValueError:
                 raise CreateModelError('LongTermHire')
 
+    def build_short_term_hire(self):
+        string = self.string[6]
+        if len(string) % 32 != 0 :
+            raise StringLengthError('ShortTermHire')
+        else:
+            try:
+                self.short_term_hire = []
+                for i in range(0, len(string), 32):
+                    short_term_hire_str = string[i:i + 32]
+                    month_str=int(short_term_hire_str[0:2])
+                    try:
+                        month=Month.objects.get(value=month_str)
+                    except Month.DoesNotExist:
+                        # month=None
+                        raise CreateModelError('ShortTermHire Month')
+                    avg_work_day = int(short_term_hire_str[28:]) / 10
+
+                    short_term_hire=ShortTermHire.objects.create(
+                        survey=self.survey,
+                        month=month,
+                        avg_work_day=avg_work_day
+                    )
+
+                    work_types_str = short_term_hire_str[14:28]
+                    for j in range(0,len(work_types_str),2):
+                        code=int(work_types_str[j:j+2])
+                        try:
+                            work_types=WorkType.objects.get(code=code)
+                        except WorkType.DoesNotExist:
+                            work_types=None
+                        if work_types is not None:
+                            short_term_hire.work_types.add(work_types)
+
+                    number_workers_str = short_term_hire_str[5:14]
+                    for j in range(0,len(number_workers_str),3):
+                        num=j/3+1
+                        age_scope=AgeScope.objects.get(id=num)
+                        count=int(number_workers_str[j:j+3])
+
+                        if count > 0 :
+                            NumberWorkers.objects.create(
+                                content_type=ContentType.objects.get(app_label="surveys18", model="shorttermhire"),
+                                object_id=short_term_hire.id,
+                                age_scope=age_scope,
+                                count=count
+                            )
+                    self.short_term_hire.append(short_term_hire)
+
+            except ValueError:
+                raise CreateModelError('ShortTermHire')
+
+    def build_no_salary_hire(self):
+        string = self.string[7]
+
+        if ( len(string)-4 )% 5 != 0:
+            raise StringLengthError('NoSalaryHire')
+        else:
+            try:
+                self.no_salary_hire=[]
+                for i in range(0,(len(string)-4),5):
+                    no_salary_str=string[i:i+5]
+                    month_str=no_salary_str[0:2]
+                    try:
+                        month=Month.objects.get(value=month_str)
+                    except Month.DoesNotExist:
+                        # month=None
+                        raise CreateModelError('NoSalaryHire Month')
+
+                    count=int(no_salary_str[2:])
+
+                    no_salary_hire=NoSalaryHire.objects.create(
+                        survey=self.survey,
+                        month=month,
+                        count=count
+                    )
+                    self.no_salary_hire.append(no_salary_hire)
+
+            except ValueError:
+                raise CreateModelError('NoSalaryHire')
+
+    def build_lack(self):
+        string = self.string[7][-4:]
+        try:
+            lack_str=string
+            for i in range(0,len(string)):
+                if lack_str[i] == "1":
+                    try:
+                        lack=Lack.objects.get(id=i+1)
+                    except Lack.DoesNotExist:
+                        lack=None
+
+                    if lack is not None:
+                        self.survey.lacks.add(lack)
+
+        except ValueError:
+            raise CreateModelError('Lack')
+
+    def build_long_term_lack(self):
+        string = self.string[8]
+        if len(string) % 17 != 0:
+            raise StringLengthError('LongTermLack')
+        else:
+            try:
+                self.long_term_lack=[]
+                for i in range(0,len(string),17):
+                    long_term_lack_str=string[i:i+17]
+                    work_type_str=long_term_lack_str[0:2]
+                    try:
+                        work_type = WorkType.objects.get(code=work_type_str)
+                    except WorkType.DoesNotExist:
+                        work_type=None
+                    count=int(long_term_lack_str[0:5])
+                    long_term_lack=LongTermLack.objects.create(
+                        survey=self.survey,
+                        work_type=work_type,
+                        count=count
+                    )
+                    months_str=long_term_lack_str[5:]
+                    for j in range(0,12):
+                        if months_str[j] == "1":
+                            try:
+                                month=Month.objects.get(value=j + 1)
+                            except Month.DoesNotExist:
+                                month = None
+                            if month is not None:
+                                long_term_lack.months.add(month)
+                    self.long_term_lack.append(long_term_lack)
+
+            except ValueError:
+                raise CreateModelError('LongTermLack')
+
+    def build_short_term_lack(self):
+        string = self.string[9]
+        if len(string) % 21 != 0:
+            raise StringLengthError('ShortTermLack')
+        else:
+            try:
+                self.short_term_lack = []
+                for i in range(0,len(string),21):
+                    short_term_lack_str=string[i:i+21]
+
+                    product_str=short_term_lack_str[0:4]
+                    try:
+                        product = Product.objects.get(code=product_str)
+                    except Product.DoesNotExist:
+                        product=None
+
+                    work_type_str=short_term_lack_str[4:6]
+                    try:
+                        work_type = WorkType.objects.get(code=work_type_str)
+                    except WorkType.DoesNotExist:
+                        work_type=None
+
+                    count=int(short_term_lack_str[6:9])
+                    short_term_lack=ShortTermLack.objects.create(
+                        survey=self.survey,
+                        product=product,
+                        work_type=work_type,
+                        count=count
+                    )
+
+                    months_str = short_term_lack_str[9:]
+                    for j in range(0, 12):
+                        if months_str[j] == "1":
+                            try:
+                                month = Month.objects.get(value=j + 1)
+                            except Month.DoesNotExist:
+                                month = None
+                            if month is not None:
+                                short_term_lack.months.add(month)
+
+                    self.short_term_lack.append(short_term_lack)
+
+            except ValueError:
+                raise CreateModelError('ShortTermLack')
+
+    def build_subsidy(self):
+        string = self.string[10].split("#")
+
+        if len(string) != 2:
+            raise StringLengthError('Subsidy')
+        else:
+            try:
+                for i in range(0, 13):
+                    string_1=string[0]
+                    has_subsidy_str = string_1[0:1]
+                    if has_subsidy_str == "1":
+                        has_subsidy=True
+                    else:
+                        has_subsidy = False
+
+                    count=int(string_1[1:4])
+                    month_delta=int(string_1[4:6])
+                    day_delta=int(string_1[6:8])
+                    hour_delta=int(string_1[8:10])
+
+                    none_subsidy_str = string_1[10:11]
+                    if none_subsidy_str == "1":
+                        none_subsidy=True
+                    else:
+                        none_subsidy = False
+
+                subsidy = Subsidy.objects.create(
+                    survey=self.survey,
+                    has_subsidy=has_subsidy,
+                    count=count,
+                    month_delta=month_delta,
+                    day_delta=day_delta,
+                    hour_delta=hour_delta,
+                    none_subsidy=none_subsidy
+                )
+                self.subsidy = subsidy
+
+                self.refuse = []
+                reason_str = string[0][11:12]
+                if reason_str == "1" :
+                    try:
+                        reason = RefuseReason.objects.get(id=1)
+                    except RefuseReason.DoesNotExist:
+                        reason = None
+
+                    if reason is not None:
+                        refuse=Refuse.objects.create(
+                            subsidy=self.subsidy,
+                            reason=reason,
+                        )
+
+                    self.refuse.append(refuse)
+
+                reason_str=string[0][12:]
+                if len(reason_str) == 0:
+                    raise StringLengthError('Subsidy')
+                elif len(reason_str) == 1:
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=2)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                            )
+
+                        self.refuse.append(refuse)
+                else:
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=2)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                                extra=reason_str[1:]
+                            )
+                        self.refuse.append(refuse)
+
+                reason_str = string[1]
+                if len(reason_str) == 0:
+                    raise StringLengthError('Subsidy')
+                elif len(reason_str) == 1:
+                    if str.isdigit(reason_str[0]) is False:
+                        raise StringLengthError('Subsidy')
+
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=3)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                            )
+
+                        self.refuse.append(refuse)
+                else:
+                    if str.isdigit(reason_str[0]) is False:
+                        raise StringLengthError('Subsidy')
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=3)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                                extra=reason_str[1:]
+                            )
+                        self.refuse.append(refuse)
+
+            except ValueError:
+                raise CreateModelError('Subsidy')
 
 
 
@@ -605,6 +910,3 @@ class Builder(object):
 
 
 
-
-
-# builder.survey

@@ -4,7 +4,6 @@ from surveys18.models import (
     AnnualIncome,
     Survey,
     AddressMatch,
-    Lack,
     Phone,
     LandArea,
     ManagementType,
@@ -46,14 +45,6 @@ class AddressMatchSerializer(ModelSerializer):
         extra_kwargs = {
             'survey': {'validators': []},
         }
-
-
-class LackSerializer(ModelSerializer):
-    id = IntegerField(read_only=False)
-
-    class Meta:
-        model = Lack
-        fields = '__all__'
 
 
 class PhoneSerializer(ModelSerializer):
@@ -151,7 +142,7 @@ class SubsidySerializer(ModelSerializer):
         }
 
 
-class NumberWorkers(ModelSerializer):
+class NumberWorkersSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
 
     class Meta:
@@ -167,7 +158,7 @@ class MonthSerializer(ModelSerializer):
 
 class LongTermHireSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
-    number_workers = NumberWorkers(many=True)
+    number_workers = NumberWorkersSerializer(many=True)
 
     class Meta:
         model = LongTermHire
@@ -176,7 +167,7 @@ class LongTermHireSerializer(ModelSerializer):
 
 class ShortTermHireSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
-    number_workers = NumberWorkers(many=True)
+    number_workers = NumberWorkersSerializer(many=True)
 
     class Meta:
         model = ShortTermHire
@@ -230,7 +221,6 @@ class SurveySerializer(ModelSerializer):
     annual_incomes = AnnualIncomeSerializer(many=True)
     address_match = AddressMatchSerializer()
     businesses = BusinessSerializer(many=True)
-    lacks = LackSerializer(many=True)
     phones = PhoneSerializer(many=True)
     land_areas = LandAreaSerializer(many=True)
     crop_marketings = CropMarketingSerializer(many=True)
@@ -264,11 +254,78 @@ class SurveySerializer(ModelSerializer):
                 phone=item['phone']
             )
 
+        '''Lack'''
+        lack_ids = [item.id for item in validated_data['lacks']]
+        # Delete not included in the request
+        for obj in instance.lacks.all():
+            if obj.id not in lack_ids:
+                instance.lacks.remove(obj)
+        for obj in validated_data['lacks']:
+            if obj.id not in instance.lacks.values_list('id', flat=True):
+                instance.lacks.add(obj)
+
         '''AddressMatch'''
         instance.address_match.match = validated_data['address_match']['match']
         instance.address_match.mismatch = validated_data['address_match']['mismatch']
         instance.address_match.address = validated_data['address_match']['address']
         instance.address_match.save()
+
+        '''LandArea'''
+        land_area_ids = [item['id'] for item in validated_data['land_areas'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.land_areas.all():
+            if obj.id not in land_area_ids:
+                obj.delete()
+        for item in validated_data['land_areas']:
+            if 'id' in item.keys():
+                # Update included in the request
+                land_area_qs = instance.land_areas.filter(id=item['id'])
+                if land_area_qs:
+                    land_area_qs.update(
+                        value=item['value'] if 'value' in item else None,
+                        type=item['type'] if 'type' in item else None,
+                        status=item['status'] if 'status' in item else None,
+                    )
+            else:
+                # Create
+                LandArea.objects.create(
+                    survey=instance,
+                    value=item['value'] if 'value' in item else None,
+                    type=item['type'] if 'type' in item else None,
+                    status=item['status'] if 'status' in item else None,
+                )
+
+        '''Business'''
+        business_ids = [item['id'] for item in validated_data['businesses'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.businesses.all():
+            if obj.id not in business_ids:
+                obj.delete()
+        for item in validated_data['businesses']:
+            if 'id' in item.keys():
+                # Update included in the request
+                business_qs = instance.businesses.filter(id=item['id'])
+                if business_qs:
+                    business_qs.update(
+                        extra=item['extra'] if 'extra' in item else None,
+                    )
+            else:
+                # Create
+                Business.objects.create(
+                    survey=instance,
+                    extra=item['extra'] if 'extra' in item else None,
+                    farm_related_business=item['farm_related_business'] if 'farm_related_business' in item else None,
+                )
+
+        '''ManagementType'''
+        management_type_ids = [item.id for item in validated_data['management_types']]
+        # Delete not included in the request
+        for obj in instance.management_types.all():
+            if obj.id not in management_type_ids:
+                instance.management_types.remove(obj)
+        for obj in validated_data['management_types']:
+            if obj.id not in instance.management_types.values_list('id', flat=True):
+                instance.management_types.add(obj)
 
         '''CropMarketing'''
         crop_marketing_ids = [item['id'] for item in validated_data['crop_marketings'] if 'id' in item]
@@ -281,7 +338,6 @@ class SurveySerializer(ModelSerializer):
                 # Update included in the request
                 crop_marketing_qs = instance.crop_marketings.filter(id=item['id'])
                 if crop_marketing_qs:
-                    crop_marketing_ids.append(item['id'])
                     crop_marketing_qs.update(
                         product=item['product'] if 'product' in item else None,
                         loss=item['loss'] if 'loss' in item else None,
@@ -414,7 +470,6 @@ class SurveySerializer(ModelSerializer):
                 obj.delete()
         for item in validated_data['long_term_hires']:
             if 'id' in item.keys():
-                pass
                 # Update included in the request
                 long_term_hire_qs = instance.long_term_hires.filter(id=item['id'])
                 if long_term_hire_qs:
@@ -422,9 +477,10 @@ class SurveySerializer(ModelSerializer):
                         work_type=item['work_type'] if 'work_type' in item else None,
                         avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
                     )
-                    long_term_hire_qs.first().months.clear()
-                    for month in item['months']:
-                        long_term_hire_qs.first().months.add(month)
+                    if 'months' in item:
+                        long_term_hire_qs.first().months.clear()
+                        for month in item['months']:
+                            long_term_hire_qs.first().months.add(month)
 
                     '''NumberWorker'''
                     number_worker_ids = [item['id'] for item in item['number_workers'] if 'id' in item]
@@ -438,14 +494,16 @@ class SurveySerializer(ModelSerializer):
                             number_worker_qs = long_term_hire_qs.first().number_workers.filter(id=obj['id'])
                             if number_worker_qs:
                                 number_worker_qs.update(
+                                    age_scope=obj['age_scope'] if 'age_scope' in obj else None,
                                     count=obj['count'] if 'count' in obj else None,
                                 )
                         else:
                             # Create
                             NumberWorkers.objects.create(
+                                age_scope=obj['age_scope'] if 'age_scope' in obj else None,
                                 count=obj['count'] if 'count' in obj else None,
                                 content_type=ContentType.objects.get(app_label='surveys18', model="longtermhire"),
-                                object_id=item['id']
+                                object_id=item['id'],
                             )
             else:
                 # Create
@@ -454,15 +512,198 @@ class SurveySerializer(ModelSerializer):
                     work_type=item['work_type'] if 'work_type' in item else None,
                     avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
                 )
-                for month in item['months']:
-                    content_object.months.add(month)
-                for obj in item['number_workers']:
-                    NumberWorkers.objects.create(
-                        count=obj['count'] if 'count' in obj else None,
-                        content_type=ContentType.objects.get(app_label='surveys18', model="longtermhire"),
-                        object_id=content_object.id,
-                    )
+                if 'months' in item:
+                    for month in item['months']:
+                        content_object.months.add(month)
+                if 'number_workers' in item:
+                    for obj in item['number_workers']:
+                        NumberWorkers.objects.create(
+                            age_scope=obj['age_scope'] if 'age_scope' in obj else None,
+                            count=obj['count'] if 'count' in obj else None,
+                            content_type=ContentType.objects.get(app_label='surveys18', model="longtermhire"),
+                            object_id=content_object.id,
+                        )
 
+        '''ShortTermHire'''
+        short_term_hire_ids = [item['id'] for item in validated_data['short_term_hires'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.short_term_hires.all():
+            if obj.id not in short_term_hire_ids:
+                obj.delete()
+        for item in validated_data['short_term_hires']:
+            if 'id' in item.keys():
+                pass
+                # Update included in the request
+                short_term_hire_qs = instance.short_term_hires.filter(id=item['id'])
+                if short_term_hire_qs:
+                    short_term_hire_qs.update(
+                        month=item['month'] if 'month' in item else None,
+                        avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
+                    )
+                    if 'work_types' in item:
+                        short_term_hire_qs.first().work_types.clear()
+                        for work_type in item['work_types']:
+                            short_term_hire_qs.first().work_types.add(work_type)
+
+                    '''NumberWorker'''
+                    number_worker_ids = [item['id'] for item in item['number_workers'] if 'id' in item]
+                    # Delete not included in the request
+                    for obj in short_term_hire_qs.first().number_workers.all():
+                        if obj.id not in number_worker_ids:
+                            obj.delete()
+                    for obj in item['number_workers']:
+                        if 'id' in obj.keys():
+                            # Update included in the request
+                            number_worker_qs = short_term_hire_qs.first().number_workers.filter(id=obj['id'])
+                            if number_worker_qs:
+                                number_worker_qs.update(
+                                    age_scope=obj['age_scope'] if 'age_scope' in obj else None,
+                                    count=obj['count'] if 'count' in obj else None,
+                                )
+                        else:
+                            # Create
+                            NumberWorkers.objects.create(
+                                age_scope=obj['age_scope'] if 'age_scope' in obj else None,
+                                count=obj['count'] if 'count' in obj else None,
+                                content_type=ContentType.objects.get(app_label='surveys18', model="shorttermhire"),
+                                object_id=item['id'],
+                            )
+            else:
+                # Create
+                content_object = ShortTermHire.objects.create(
+                    survey=instance,
+                    month=item['month'] if 'month' in item else None,
+                    avg_work_day=item['avg_work_day'] if 'avg_work_day' in item else None,
+                )
+                if 'work_types' in item:
+                    for work_type in item['work_types']:
+                        content_object.work_types.add(work_type)
+                if 'number_workers' in item:
+                    for obj in item['number_workers']:
+                        NumberWorkers.objects.create(
+                            age_scope=obj['age_scope'] if 'age_scope' in obj else None,
+                            count=obj['count'] if 'count' in obj else None,
+                            content_type=ContentType.objects.get(app_label='surveys18', model="shorttermhire"),
+                            object_id=content_object.id,
+                        )
+
+        '''NoSalaryHire'''
+        no_salary_hire_ids = [item['id'] for item in validated_data['no_salary_hires'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.no_salary_hires.all():
+            if obj.id not in no_salary_hire_ids:
+                obj.delete()
+        for item in validated_data['no_salary_hires']:
+            if 'id' in item.keys():
+                # Update included in the request
+                no_salary_hire_qs = instance.no_salary_hires.filter(id=item['id'])
+                if no_salary_hire_qs:
+                    no_salary_hire_qs.update(
+                        month=item['month'] if 'month' in item else None,
+                        count=item['count'] if 'count' in item else None,
+                    )
+            else:
+                # Create
+                NoSalaryHire.objects.create(
+                    survey=instance,
+                    month=item['month'] if 'month' in item else None,
+                    count=item['count'] if 'count' in item else None,
+                )
+
+        '''LongTermLack'''
+        long_term_lack_ids = [item['id'] for item in validated_data['long_term_lacks'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.long_term_lacks.all():
+            if obj.id not in long_term_lack_ids:
+                obj.delete()
+        for item in validated_data['long_term_lacks']:
+            if 'id' in item.keys():
+                # Update included in the request
+                long_term_lack_qs = instance.long_term_lacks.filter(id=item['id'])
+                if long_term_lack_qs:
+                    long_term_lack_qs.update(
+                        work_type=item['work_type'] if 'work_type' in item else None,
+                        count=item['count'] if 'count' in item else None,
+                    )
+                    if 'months' in item:
+                        long_term_lack_qs.first().months.clear()
+                        for month in item['months']:
+                            long_term_lack_qs.first().months.add(month)
+            else:
+                # Create
+                obj = LongTermLack.objects.create(
+                    survey=instance,
+                    work_type=item['work_type'] if 'work_type' in item else None,
+                    count=item['count'] if 'count' in item else None,
+                )
+                if 'months' in item:
+                    for month in item['months']:
+                        obj.months.add(month)
+                        
+        '''ShortTermLack'''
+        short_term_lack_ids = [item['id'] for item in validated_data['short_term_lacks'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.short_term_lacks.all():
+            if obj.id not in short_term_lack_ids:
+                obj.delete()
+        for item in validated_data['short_term_lacks']:
+            if 'id' in item.keys():
+                # Update included in the request
+                short_term_lack_qs = instance.short_term_lacks.filter(id=item['id'])
+                if short_term_lack_qs:
+                    short_term_lack_qs.update(
+                        product=item['product'] if 'product' in item else None,
+                        work_type=item['work_type'] if 'work_type' in item else None,
+                        count=item['count'] if 'count' in item else None,
+                    )
+                    if 'months' in item:
+                        short_term_lack_qs.first().months.clear()
+                        for month in item['months']:
+                            short_term_lack_qs.first().months.add(month)
+            else:
+                # Create
+                obj = ShortTermLack.objects.create(
+                    survey=instance,
+                    product=item['product'] if 'product' in item else None,
+                    work_type=item['work_type'] if 'work_type' in item else None,
+                    count=item['count'] if 'count' in item else None,
+                )
+                if 'months' in item:
+                    for month in item['months']:
+                        obj.months.add(month)
+
+        '''Subsidy'''
+        subsidy = validated_data['subsidy']
+        # Update
+        instance.subsidy.has_subsidy = subsidy['has_subsidy']
+        instance.subsidy.none_subsidy = subsidy['none_subsidy']
+        instance.subsidy.month_delta = subsidy['month_delta']
+        instance.subsidy.day_delta = subsidy['day_delta']
+        instance.subsidy.hour_delta = subsidy['day_delta']
+        instance.subsidy.count = subsidy['count']
+        '''Refuse'''
+        refuse_ids = [item['id'] for item in subsidy['refuses'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.subsidy.refuses.all():
+            if obj.id not in refuse_ids:
+                obj.delete()
+        for item in subsidy['refuses']:
+            if 'id' in item.keys():
+                # Update included in the request
+                refuse_qs = instance.subsidy.refuses.filter(id=item['id'])
+                if refuse_qs:
+                    refuse_qs.update(
+                        reason=item['reason'] if 'reason' in item else None,
+                        extra=item['extra'] if 'extra' in item else None,
+                    )
+            else:
+                # Create
+                Refuse.objects.create(
+                    subsidy=instance.subsidy,
+                    reason=item['reason'] if 'reason' in item else None,
+                    extra=item['extra'] if 'extra' in item else None,
+                )
+        instance.subsidy.save()
         return instance
 
 

@@ -17,7 +17,8 @@ from django.db.models import (
     DateField,
     PositiveIntegerField,
     FloatField,
-    Q
+    Q,
+    FileField,
 )
 
 
@@ -30,6 +31,22 @@ NUMBER_WORKERS_CHOICES = (
     Q(app_label='surveys18', model='longtermhire') |
     Q(app_label='surveys18', model='shorttermhire')
 )
+
+
+class BuilderFile(Model):
+    create_time = DateTimeField(auto_now_add=True, verbose_name=_('Create Time'))
+    user = ForeignKey(settings.AUTH_USER_MODEL, related_name='files', verbose_name=_('User'))
+    datafile = FileField(verbose_name=_('DataFile'))
+
+    class Meta:
+        verbose_name = _('BuilderFile')
+        verbose_name_plural = _('BuilderFile')
+
+    def __str__(self):
+        return self.datafile.name
+
+    def __unicode__(self):
+        return self.datafile.name
 
 
 class Survey(Model):
@@ -150,8 +167,9 @@ class NoSalaryHire(Model):
                                 verbose_name=_('Updated'))
 
     class Meta:
-        verbose_name = _('NoSalaryForHire')
-        verbose_name_plural = _('NoSalaryForHire')
+        verbose_name = _('NoSalaryHire')
+        verbose_name_plural = _('NoSalaryHire')
+        ordering = ('month',)
 
     def __str__(self):
         return str(self.survey)
@@ -230,7 +248,8 @@ class ShortTermHire(Model):
                                 verbose_name=_('Average Work Day'))
     month = ForeignKey('surveys18.Month', null=True, blank=True,
                        verbose_name=_('Month'))
-    work_types = ManyToManyField('surveys18.WorkType', blank=True,
+    work_types = ManyToManyField('surveys18.WorkType',
+                                 blank=True,
                                  related_name='short_term_hires',
                                  verbose_name=_('Work Types'))
     number_workers = GenericRelation(NumberWorkers,
@@ -242,6 +261,7 @@ class ShortTermHire(Model):
     class Meta:
         verbose_name = _('ShortTermHire')
         verbose_name_plural = _('ShortTermHire')
+        ordering = ('month',)
 
     def __str__(self):
         return str(self.survey)
@@ -256,6 +276,7 @@ class LongTermHire(Model):
     avg_work_day = FloatField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
     work_type = ForeignKey('surveys18.WorkType',
+                           null=True, blank=True,
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
     months = ManyToManyField('surveys18.Month',
@@ -292,9 +313,6 @@ class Subsidy(Model):
                              verbose_name=_('Day Delta'))
     hour_delta = IntegerField(null=True, blank=True,
                               verbose_name=_('Hour Delta'))
-    refuses = ManyToManyField('surveys18.Refuse',
-                              related_name='subsidy', blank=True,
-                              verbose_name=_('subsidies'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
@@ -311,6 +329,8 @@ class Subsidy(Model):
 
 
 class Refuse(Model):
+    subsidy = ForeignKey('surveys18.Subsidy', related_name='refuses'
+                         , blank=True, verbose_name=_('Subsidy'))
     reason = OneToOneField('surveys18.RefuseReason', related_name='refuse',
                            verbose_name=_('Refuse'))
     extra = CharField(max_length=100, null=True, blank=True,
