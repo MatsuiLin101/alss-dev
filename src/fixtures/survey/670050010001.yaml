@@ -581,7 +581,7 @@
   fields:
     survey: 1
     product: 104
-    work_types: [3]
+    work_type: 3
     count: 1
     months: [1, 10, 11, 12]
 

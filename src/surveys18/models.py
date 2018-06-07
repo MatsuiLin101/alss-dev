@@ -16,6 +16,7 @@ from django.db.models import (
     TextField,
     DateField,
     PositiveIntegerField,
+    FloatField,
     Q
 )
 
@@ -88,10 +89,9 @@ class ShortTermLack(Model):
     product = ForeignKey('surveys18.Product',
                          related_name='short_term_lacks', null=True,
                          blank=True, verbose_name=_('Product'))
-    work_types = ManyToManyField('surveys18.WorkType',
-                                 related_name='short_term_lacks',
-                                 blank=True, verbose_name=_('Work Types'
-                                                            ))
+    work_type = ForeignKey('surveys18.WorkType', null=True,
+                           related_name='short_term_lacks', blank=True,
+                           verbose_name=_('Work Type'))
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys18.Month',
@@ -115,7 +115,7 @@ class ShortTermLack(Model):
 class LongTermLack(Model):
     survey = ForeignKey('surveys18.Survey', related_name='long_term_lacks'
                         , blank=True, verbose_name=_('Survey'))
-    work_type = ForeignKey('surveys18.WorkType',
+    work_type = ForeignKey('surveys18.WorkType', null=True,
                            related_name='long_term_lacks', blank=True,
                            verbose_name=_('Work Type'))
     count = IntegerField(null=True, blank=True,
@@ -226,7 +226,7 @@ class ShortTermHire(Model):
     survey = ForeignKey('surveys18.Survey',
                         related_name='short_term_hires', blank=True,
                         verbose_name=_('Survey'))
-    avg_work_day = IntegerField(null=True, blank=True,
+    avg_work_day = FloatField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
     month = ForeignKey('surveys18.Month', null=True, blank=True,
                        verbose_name=_('Month'))
@@ -253,12 +253,13 @@ class ShortTermHire(Model):
 class LongTermHire(Model):
     survey = ForeignKey('surveys18.Survey', related_name='long_term_hires'
                         , blank=True, verbose_name=_('Survey'))
-    avg_work_day = IntegerField(null=True, blank=True,
+    avg_work_day = FloatField(null=True, blank=True,
                                 verbose_name=_('Average Work Day'))
     work_type = ForeignKey('surveys18.WorkType',
                            related_name='long_term_hires',
                            verbose_name=_('Work Type'))
     months = ManyToManyField('surveys18.Month',
+                             blank=True,
                              related_name='long_term_hires',
                              verbose_name=_('Months'))
     number_workers = GenericRelation(NumberWorkers,

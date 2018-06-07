@@ -39,13 +39,23 @@ $(document).ready(function() {
         if (farmerId) {
             $.when(
                 Loading.open(),
-                GetFarmerData(url, farmerId, readonly)
             ).then(function(){
-                $('[data-partial]').hide();
-                $('[data-partial="survey"]').show();
-                $('#farmerId').val('');
-            });
-            Loading.close();
+                // a trivial timer, just for demo purposes -
+                // it resolves itself after 1 seconds
+                var timer = $.Deferred();
+                setTimeout(timer.resolve, 1000);
+                var ajax = GetFarmerData(url, farmerId, readonly).fail(function(){
+                    Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
+                });
+
+                $.when(timer, ajax).done(function(){
+                    $('[data-partial]').hide();
+                    $('[data-partial="survey"]').show();
+                    $('#farmerId').val('');
+                })
+            }).done(function(){
+                Loading.close();
+            })
         } else {
             Helper.Dialog.ShowAlert('請輸入農戶編號！');
         }
@@ -56,26 +66,35 @@ $(document).ready(function() {
         if(CloneData){
             if(!CloneData[MainSurveyId].readonly){
                 var url = $(this).data('url');
-                var sendRequests = function(){
-                    Object.keys(CloneData).forEach(function(pk, i){
-                        var data = JSON.stringify(CloneData[pk]);
-                        SetFarmerData(url, data);
-                    })
-                }
+                $.when(Loading.open()).then(function(){
 
-                $.when(
-                    Loading.open(),
-                    sendRequests()
-                ).then(function(){
-                    Reset();
-                    Object.values(CloneData).forEach(function(survey, i){
-                        Set(survey, survey.id);
+                    // a trivial timer, just for demo purposes -
+                    // it resolves itself after 1 seconds
+                    var timer = $.Deferred();
+                    setTimeout(timer.resolve, 1000);
+
+                    var jobs = [timer]
+                    Object.keys(CloneData).forEach(function(pk, i){
+                        var ajax = SetFarmerData(url, JSON.stringify(CloneData[pk])).fail(function(){
+                            Helper.Dialog.ShowInfo('很抱歉，更新時發生錯誤，請稍後重試或與我們聯繫！');
+                        });
+                        jobs.push(ajax);
                     })
-                    Helper.Dialog.ShowInfo('成功更新調查表！');
-                }).fail(function(){
-                    Helper.Dialog.ShowInfo('很抱歉，當筆資料更新錯誤，請稍後再試。');
+
+                    $.when.apply(
+                        undefined,
+                        jobs
+                    ).done(function(){
+                        // this won't be called until *all* the AJAX and the timer have finished
+                        Reset();
+                        Object.values(CloneData).forEach(function(survey, i){
+                            Set(survey, survey.id);
+                        })
+                        Helper.Dialog.ShowInfo('成功更新調查表！');
+                    })
+                }).done(function(){
+                    Loading.close();
                 })
-                Loading.close();
             }
         }
     });
@@ -84,7 +103,6 @@ $(document).ready(function() {
         $('[data-partial]').hide();
         $('[data-partial="about"]').show();
     });
-
 })
 
 var FixAffixWidth = function(){
@@ -99,8 +117,7 @@ var FixAffixWidth = function(){
 }
 
 var GetFarmerData = function (url, fid, readonly) {
-    var deferred = $.Deferred();
-    $.ajax({
+    return $.ajax({
         url: url,
         async: false,
         type: 'GET',
@@ -110,16 +127,12 @@ var GetFarmerData = function (url, fid, readonly) {
         },
         success: function (data) {
             if (data.length > 0) {
-
                 var firstPageObj = $.grep(data, function (survey) {
                     return survey.page == 1
                 });
-
                 if (firstPageObj.length > 0) {
                     Reset();
-
                     CloneData = {};
-
                     /* set surveys */
                     data.forEach(function(survey, i){
                         CloneData[survey.id] = survey;
@@ -127,25 +140,16 @@ var GetFarmerData = function (url, fid, readonly) {
                     })
                 } else {
                     Helper.Dialog.ShowInfo('查無農戶資料！');
-                }
-            }
+                }            }
             else {
                 Helper.Dialog.ShowInfo('查無農戶資料！');
             }
-            deferred.resolve();
-        },
-        error: function () {
-            Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
-            deferred.fail();
-            return false;
         },
     });
-    return deferred.promise();
 }
 
 var SetFarmerData = function (url, data) {
-    var deferred = $.Deferred();
-    $.ajax({
+    return $.ajax({
         url: url,
         async: false,
         type: 'PATCH',
@@ -155,19 +159,13 @@ var SetFarmerData = function (url, data) {
         success: function (data) {
             if ('id' in data) {
                 CloneData[data.id] = data;
-                deferred.resolve();
             }
-            else deferred.fail();
-        },
-        error: function () {
-            deferred.fail();
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
-    });
-    return deferred.promise();
+    })
 }
 

@@ -2,17 +2,10 @@
 var GlobalUI = $.parseJSON($('#ui').val());
 
 /* data */
-var Data = null;
 var CloneData = null;
 var MainSurveyId = 0;
-var ExaminLogger = {
-    ReadErrorArray: [],
-    WriteErrorArray: []
-}
-/* dialog */
-var Alert = null;
-var Info = null;
-var CropMarketingAdder = null;
+
+/* jQuery Spinner */
 var Loading = $.loading();
 
 
@@ -30,6 +23,8 @@ $(document).ready(function () {
 var Reset = function () {
     SurveyHelper.Reset();
     LandAreaHelper.Reset();
+    BusinessHelper.Reset();
+    ManagementTypeHelper.Reset();
     CropMarketingHelper.Reset();
     LivestockMarketingHelper.Reset();
     AnnualIncomeHelper.Reset();
@@ -40,6 +35,7 @@ var Reset = function () {
     NoSalaryHireHelper.Reset();
     LongTermLackHelper.Reset();
     ShortTermLackHelper.Reset();
+    SubsidyHelper.Reset();
 }
 var Set = function (data, surveyId) {
     if (data.page == 1) {
@@ -202,7 +198,6 @@ var SurveyHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
-
         this.FarmerId.Reset();
         this.FarmerName.Reset();
         this.Phone.Reset();
@@ -393,12 +388,12 @@ var SurveyHelper = {
     NumberWorker : {
         Object: {
             New: function(ageScopeId, count, id){
-                id = id || null;
-                return {
-                    id: id,
+                var obj = {
                     age_scope: ageScopeId,
                     count: count,
                 }
+                if(id) obj.id = id;
+                return obj;
             },
             Collect: function($objects){
                 var objects = []
@@ -483,14 +478,13 @@ var LandAreaHelper = {
     },
     Object: {
         New: function(surveyId, typeId, statusId, value){
-            statusId = statusId || null;
-            value = value || null;
-            return {
+            var obj = {
                 survey: surveyId,
                 type: typeId,
-                status: statusId,
-                value: value,
             }
+            if(statusId) obj.statusId = statusId;
+            if(value) obj.value = value;
+            return obj;
         },
         Collect: function(){
             if(CloneData){
@@ -537,6 +531,7 @@ var BusinessHelper = {
     Reset: function(){
          if (this.Alert) { this.Alert.reset(); }
          this.FarmRelatedBusiness.Reset();
+         this.Extra.Reset();
     },
     Set: function(array){
         this.FarmRelatedBusiness.Set(array);
@@ -591,12 +586,12 @@ var BusinessHelper = {
     },
     Object: {
         New: function(surveyId, farmRelatedBusinessId, extra){
-            extra = extra || null;
-            return {
+            var obj = {
                 survey: surveyId,
                 farm_related_business: farmRelatedBusinessId,
-                extra: extra,
             }
+            if(extra) obj.extra = extra;
+            return obj;
         },
         Collect: function(){
             if(CloneData){
@@ -997,6 +992,7 @@ var PopulationAgeHelper = {
         },
         Reset: function(){
             this.Container.val('');
+            $('#panel3 input[name="sumcount"]').val('');
         },
         Bind: function(){
             Helper.BindInterOnly(this.Container);
@@ -1591,7 +1587,6 @@ var ShortTermLackHelper = {
     Setup: function(row){
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
-        $row.find('select[name="worktype"]').attr('multiple', '');
         this.ShortTermLack.Bind($row);
         this.Adder.Bind();
         this.ShortTermLack.$Row = $row;
@@ -1627,7 +1622,7 @@ var ShortTermLackHelper = {
 
                 $row.find('select[name="product"]').selectpicker('val', short_term_lack.product);
 
-                $row.find('select[name="worktype"]').selectpicker('val', short_term_lack.work_types);
+                $row.find('select[name="worktype"]').selectpicker('val', short_term_lack.work_type);
 
                 $row.find('input[name="count"]').val(short_term_lack.count);
 
@@ -1670,7 +1665,7 @@ var ShortTermLackHelper = {
                     var obj = ShortTermLackHelper.ShortTermLack.Object.Filter(surveyId, guid);
 
                     obj.product = parseInt($tr.find('[name="product"]').val());
-                    obj.work_types = $tr.find('[name="worktype"]').val();
+                    obj.work_type = $tr.find('[name="worktype"]').val();
                     obj.months = $tr.find('[name="month"]').val();
                     obj.count = parseInt($tr.find('[name="count"]').val());
                 }
@@ -1733,10 +1728,13 @@ var SubsidyHelper = {
     },
     Reset: function(){
         this.Container.HasSubsidy.prop('checked', false);
+        this.Container.NoneSubsidy.prop('checked', false);
         this.Container.Count.val('');
         this.Container.Month.val('');
         this.Container.Day.val('');
         this.Container.Hour.val('');
+        this.Container.RefuseReason.prop('checked', false);
+        this.Container.Extra.val('');
     },
     Bind: function(){
         Helper.BindInterOnly(this.Container.Count);
@@ -1792,12 +1790,12 @@ var SubsidyHelper = {
     Object: {
         Refuse: {
             New: function(refuseReasonId, extra, id){
-                id = id || null;
-                return {
-                    id: id,
+                var obj = {
                     reason: refuseReasonId,
                     extra: extra,
                 }
+                if(id) obj.id = id;
+                return obj;
             },
             Collect: function(){
                 if(CloneData){
