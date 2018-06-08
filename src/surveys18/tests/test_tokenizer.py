@@ -41,7 +41,8 @@ from surveys18.models import (
     Gender,
     ProductType,
     Relationship,
-    Month
+    Month,
+    Refuse
 )
 
 
@@ -69,7 +70,8 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'work-type.yaml', verbosity=0)
         call_command('loaddata', 'age-scope.yaml', verbosity=0)
         call_command('loaddata', 'lack.yaml', verbosity=0)
-        self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+120040020010011010000000000005220040020010011111111111111113+0100900000500412130000000000001004010001005004142100000000000285+01002070050011+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+01212000000時間太忙#0#+稻受雨害影響#005260035"
+        call_command('loaddata', 'refuse-reason.yaml', verbosity=0)
+        self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+120040020010011010000000000005220040020010011111111111111113+0100900000500412130000000000001004010001005004142100000000000285+01002070050011+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+1012120000101時間太忙#1勞工不穩定#+稻受雨害影響#005260035"
         self.builder = Builder(self.string)
         self.builder.build_survey()
 
@@ -253,6 +255,21 @@ class ModelTestCase(TestCase):
     def test_build_short_term_lack(self):
         self.builder.build_short_term_lack()
         self.assertEquals(len(self.builder.short_term_lack),2)
+
+    def test_build_subsidy(self):
+        self.builder.build_subsidy()
+        self.assertEquals(self.builder.subsidy.survey.farmer_id,"670050010002")
+        self.assertEquals(self.builder.subsidy.count, 12)
+        self.assertEquals(self.builder.subsidy.month_delta, 12)
+        self.assertEquals(self.builder.subsidy.day_delta, 0)
+        self.assertEquals(self.builder.subsidy.hour_delta, 0)
+        self.assertEquals(len(self.builder.refuse), 2)
+        print(self.builder.refuse[0].reason)
+        print(self.builder.refuse[0].extra)
+        print(self.builder.refuse[1].reason)
+        print(self.builder.refuse[1].extra)
+
+
 
 
 

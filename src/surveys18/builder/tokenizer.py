@@ -41,7 +41,8 @@ from surveys18.models import (
     Gender,
     ProductType,
     Relationship,
-    Month
+    Month,
+    Refuse
 )
 
 
@@ -771,20 +772,120 @@ class Builder(object):
             raise StringLengthError('Subsidy')
         else:
             try:
-                for i in range(0, 9):
+                for i in range(0, 13):
                     string_1=string[0]
-                    count=int(string_1[0:3])
-                    month_delta=int(string_1[3:5])
-                    day_delta=int(string_1[5:7])
-                    hour_delta=int(string_1[7:9])
+                    has_subsidy_str = string_1[0:1]
+                    if has_subsidy_str == "1":
+                        has_subsidy=True
+                    else:
+                        has_subsidy = False
+
+                    count=int(string_1[1:4])
+                    month_delta=int(string_1[4:6])
+                    day_delta=int(string_1[6:8])
+                    hour_delta=int(string_1[8:10])
+
+                    none_subsidy_str = string_1[10:11]
+                    if none_subsidy_str == "1":
+                        none_subsidy=True
+                    else:
+                        none_subsidy = False
+
                 subsidy = Subsidy.objects.create(
                     survey=self.survey,
+                    has_subsidy=has_subsidy,
                     count=count,
                     month_delta=month_delta,
                     day_delta=day_delta,
-                    hour_delta=hour_delta
-
+                    hour_delta=hour_delta,
+                    none_subsidy=none_subsidy
                 )
+                self.subsidy = subsidy
+
+                self.refuse = []
+                reason_str = string[0][11:12]
+                if reason_str == "1" :
+                    try:
+                        reason = RefuseReason.objects.get(id=1)
+                    except RefuseReason.DoesNotExist:
+                        reason = None
+
+                    if reason is not None:
+                        refuse=Refuse.objects.create(
+                            subsidy=self.subsidy,
+                            reason=reason,
+                        )
+
+                    self.refuse.append(refuse)
+
+                reason_str=string[0][12:]
+                if len(reason_str) == 0:
+                    raise StringLengthError('Subsidy')
+                elif len(reason_str) == 1:
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=2)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                            )
+
+                        self.refuse.append(refuse)
+                else:
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=2)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                                extra=reason_str[1:]
+                            )
+                        self.refuse.append(refuse)
+
+                reason_str = string[1]
+                if len(reason_str) == 0:
+                    raise StringLengthError('Subsidy')
+                elif len(reason_str) == 1:
+                    if str.isdigit(reason_str[0]) is False:
+                        raise StringLengthError('Subsidy')
+
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=3)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                            )
+
+                        self.refuse.append(refuse)
+                else:
+                    if str.isdigit(reason_str[0]) is False:
+                        raise StringLengthError('Subsidy')
+                    if reason_str[0] == "1":
+                        try:
+                            reason = RefuseReason.objects.get(id=3)
+                        except RefuseReason.DoesNotExist:
+                            reason = None
+
+                        if reason is not None:
+                            refuse = Refuse.objects.create(
+                                subsidy=self.subsidy,
+                                reason=reason,
+                                extra=reason_str[1:]
+                            )
+                        self.refuse.append(refuse)
 
             except ValueError:
                 raise CreateModelError('Subsidy')
