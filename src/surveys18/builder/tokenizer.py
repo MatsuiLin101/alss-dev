@@ -88,13 +88,13 @@ class Builder(object):
 
         if len(slices) != 12 or len(slices_pound) != 3:
             if len(slices) != 12:
-                raise SignError('+')
+                raise SignError(sign='+')
             if len(slices_pound) != 3:
-                raise SignError('#+')
+                raise SignError(sign='#+')
         else:
             if (slices_pound[1].find("#") is -1) or (slices_pound[-1].find("#") is -1) \
                     or (slices_pound[-2].find("#") is -1):
-                raise SignError('#')
+                raise SignError(sign='#')
         return True
 
     @staticmethod
@@ -111,8 +111,8 @@ class Builder(object):
         try:
             string = self.string[0]
             id = string[0:12]
-            page = int(string[12:14])
-            total_pages = int(string[14:16])
+            total_pages = int(string[12:14])
+            page = int(string[14:16])
             name = string[16:23].replace("#", "")
             ori_class = int(string[44:46])
 
@@ -122,8 +122,13 @@ class Builder(object):
             period_m = int(string.split("#")[1][-6:-4])
             distance_km = int(string.split("#")[1][-4:])
 
-        except ValueError:
-            raise StringLengthError('Survey')
+        except ValueError as e:
+            raise StringLengthError(target='Survey', msg=e)
+
+        # dup
+        obj = Survey.objects.filter(page=page, farmer_id=id).first()
+        if obj:
+            obj.delete()
 
         else:
             try:
@@ -137,8 +142,8 @@ class Builder(object):
                     period=period_h*60+period_m,
                     distance=distance_km
                 )
-            except ValueError:
-                raise CreateModelError('Survey')
+            except ValueError as e:
+                raise CreateModelError(target='Survey', msg=e)
             else:
                  self.survey = survey
 
@@ -146,8 +151,8 @@ class Builder(object):
         try:
             string = self.string[0]
             phones = string[23:44].replace("#", "").split("/")
-        except ValueError:
-            raise StringLengthError('Phone')
+        except ValueError as e:
+            raise StringLengthError(target='Phone', msg=e)
         else:
             try:
                 self.phones = []
@@ -158,8 +163,8 @@ class Builder(object):
                             phone=number
                         )
                         self.phones.append(phone)
-            except ValueError:
-                raise CreateModelError('Phone')
+            except ValueError as e:
+                raise CreateModelError(target='Phone', msg=e)
 
     def build_address(self):
         match = False
@@ -173,8 +178,8 @@ class Builder(object):
                 match = True
             if mismatch_str == "1":
                 mismatch = True
-        except ValueError:
-            raise StringLengthError('Address Match')
+        except ValueError as e:
+            raise StringLengthError(target='Address Match', msg=e)
         else:
             try:
                 address = AddressMatch.objects.create(
@@ -183,8 +188,8 @@ class Builder(object):
                     mismatch=mismatch,
                     address=address
                 )
-            except ValueError:
-                raise CreateModelError('Address Match')
+            except ValueError as e:
+                raise CreateModelError(target='Address Match', msg=e)
             else:
                 self.address = address
 
@@ -192,8 +197,8 @@ class Builder(object):
         try:
             string = self.string[1]
             area_str = string[0:26]
-        except ValueError:
-            raise StringLengthError('Land Area')
+        except ValueError as e:
+            raise StringLengthError(target='Land Area', msg=e)
         else:
             try:
                 self.land_area = []
@@ -224,16 +229,16 @@ class Builder(object):
                     )
                     self.land_area.append(land_area)
 
-            except ValueError:
-                raise CreateModelError('Land Area')
+            except ValueError as e:
+                raise CreateModelError(target='Land Area', msg=e)
 
     def build_business(self):
         try:
             string = self.string[1]
             business_str = string[26:].split("#")[0]
 
-        except ValueError:
-            raise StringLengthError('Business')
+        except ValueError as e:
+            raise StringLengthError(target='Business', msg=e)
         else:
             try:
                 self.business = []
@@ -253,17 +258,17 @@ class Builder(object):
                         extra=business_str[9:]
                     )
                 self.business.append(business)
-            except ValueError:
-                raise CreateModelError('Business')
+            except ValueError as e:
+                raise CreateModelError(target='Business', msg=e)
 
     def build_management(self):
         try:
             string = self.string[1]
             management_str = string[26:].split("#")[1]
             if len(management_str) != 14:
-                raise StringLengthError('management')
-        except ValueError:
-            raise StringLengthError('management')
+                raise StringLengthError(target='management')
+        except ValueError as e:
+            raise StringLengthError(target='management', msg=e)
         else:
             try:
                 for i in range(0,14):
@@ -272,14 +277,14 @@ class Builder(object):
                         management_type = ManagementType.objects.get(id=num)
                         self.survey.management_types.add(management_type)
 
-            except ValueError:
-                raise CreateModelError('management')
+            except ValueError as e:
+                raise CreateModelError(target='management', msg=e)
 
     def build_crop_marketing(self):
 
         string = self.string[2]
         if len(string)% 25 != 0 :
-            raise StringLengthError('CropMarketing')
+            raise StringLengthError(target='CropMarketing')
         else:
             try:
                 self.crop_marketing = []
@@ -287,20 +292,12 @@ class Builder(object):
                 for i in range(0,num):
                     crop_marketing = string[i*25:i*25+25]
                     product_str = crop_marketing[0:4]
-
-                    try:
-                        product = Product.objects.get(code=product_str)
-                    except Product.DoesNotExist:
-                        product = None
-
+                    product = Product.objects.filter(code=product_str).first()
                     land_number = int(crop_marketing[4:5])
                     land_area = int(crop_marketing[5:9])
                     plant_times =  int(crop_marketing[9:10])
                     unit_str = int(crop_marketing[10:11])
-                    try:
-                        unit = Unit.objects.get(code=unit_str , type = 1)
-                    except Unit.DoesNotExist:
-                        unit = None
+                    unit = Unit.objects.filter(code=unit_str , type = 1).first()
                     total_yield = int(crop_marketing[11:18])
                     unit_price = int(crop_marketing[18:23])
                     has_facility_str = int(crop_marketing[23:24])
@@ -310,12 +307,8 @@ class Builder(object):
                         has_facility = 1
                     else:
                         has_facility = 0
-
                     loss_str = int(crop_marketing[24:25])
-                    try:
-                        loss = Loss.objects.get(code=loss_str, type = 1)
-                    except Unit.DoesNotExist:
-                        loss = None
+                    loss = Loss.objects.filter(code=loss_str, type = 1).first()
 
                     crop_marketing = CropMarketing.objects.create(
                         survey=self.survey,
@@ -330,14 +323,14 @@ class Builder(object):
                         loss=loss
                     )
                     self.crop_marketing.append(crop_marketing)
-            except ValueError:
-                raise CreateModelError('CropMarketing')
+            except ValueError as e:
+                raise CreateModelError(target='CropMarketing', msg=e)
 
     def build_livestock_marketing(self):
 
         string = self.string[3]
         if (len(string)-22)% 24 != 0 :
-            raise StringLengthError('LivestockMarketing')
+            raise StringLengthError(target='LivestockMarketing')
         else:
             try:
                 self.livestock_marketing = []
@@ -346,32 +339,16 @@ class Builder(object):
                 for i in range(0,num):
                     livestock = livestock_str[i*24:i*24+24]
                     product_str = livestock[0:4]
-
-                    try:
-                        product = Product.objects.get(code=product_str)
-                    except Product.DoesNotExist:
-                        product = None
-
+                    product = Product.objects.filter(code=product_str).first()
                     unit_str = int(livestock[4:5])
-                    try:
-                        unit = Unit.objects.get(code=unit_str , type = 2)
-                    except Unit.DoesNotExist:
-                        unit = None
+                    unit = Unit.objects.filter(code=unit_str , type = 2).first()
                     raising_number = int(livestock[5:11])
                     total_yield = int(livestock[11:17])
                     unit_price = int(livestock[17:22])
-
                     contract_str = int(livestock[22:23])
-                    try:
-                        contract = Contract.objects.get(code=contract_str)
-                    except Contract.DoesNotExist:
-                        contract = None
-
+                    contract = Contract.objects.filter(code=contract_str).first()
                     loss_str = int(livestock[23:24])
-                    try:
-                        loss = Loss.objects.get(code=loss_str, type = 2)
-                    except Loss.DoesNotExist:
-                        loss = None
+                    loss = Loss.objects.filter(code=loss_str, type = 2).first()
 
                     livestock_marketing = LivestockMarketing.objects.create(
                         survey=self.survey,
@@ -385,15 +362,15 @@ class Builder(object):
 
                     )
                     self.livestock_marketing.append(livestock_marketing)
-            except ValueError:
-                raise CreateModelError('LivestockMarketing')
+            except ValueError as e:
+                raise CreateModelError(target='LivestockMarketing', msg=e)
 
     def build_annual_income(self):
 
         string = self.string[3]
         annual_income_str = string[-22:]
         if len(annual_income_str) != 22:
-            raise StringLengthError('AnnualIncome')
+            raise StringLengthError(target='AnnualIncome')
         else:
             try:
                 self.annual_income=[]
@@ -410,15 +387,15 @@ class Builder(object):
                         )
                         self.annual_income.append(annual_income)
 
-            except ValueError:
-                raise CreateModelError('AnnualIncome')
+            except ValueError as e:
+                raise CreateModelError(target='AnnualIncome', msg=e)
 
     def build_population_age(self):
 
         string = self.string[3]
         population_age_str = string[-12:]
         if len(population_age_str) != 12:
-            raise StringLengthError('PopulationAge')
+            raise StringLengthError(target='PopulationAge')
         else:
             try:
                 self.population_age=[]
@@ -447,13 +424,13 @@ class Builder(object):
                             self.population_age.append(population_age)
 
 
-            except ValueError:
-                raise CreateModelError('PopulationAge')
+            except ValueError as e:
+                raise CreateModelError(target='PopulationAge', msg=e)
 
     def build_population(self):
         string = self.string[4]
         if (len(string)-2)%29 != 0:
-            raise StringLengthError('Population')
+            raise StringLengthError(target='Population')
         else:
             try:
                 self.population=[]
@@ -461,50 +438,36 @@ class Builder(object):
                 for i in range(0,len(string)-2,29):
                     population_str=string[i:i+29]
                     relationship_str=int(population_str[2:4])
-                    try:
-                        relationship=Relationship.objects.get(code=relationship_str)
-                    except Relationship.DoesNotExist:
-                        relationship=None
+
+                    relationship=Relationship.objects.filter(code=relationship_str).first()
                     gender_str=int(population_str[4:5])
-                    try:
-                        gender=Gender.objects.get(code=gender_str)
-                    except Gender.DoesNotExist:
-                        gender=None
+                    gender=Gender.objects.filter(code=gender_str).first()
+
                     birth_year=int(population_str[5:8])
                     education_level_str=int(population_str[8:10])
-                    try:
-                        education_level=EducationLevel.objects.get(code=education_level_str)
-                    except EducationLevel.DoesNotExist:
-                        education_level=None
+                    education_level=EducationLevel.objects.filter(code=education_level_str).first()
                     farmer_work_day_str=population_str[10:18]
                     farmer_work_day_cnt, farmer_work_day_id=self.id_and_value(farmer_work_day_str)
                     if farmer_work_day_cnt != 1 :
                         farmer_work_day=None
                     else:
-                        try:
-                            farmer_work_day=FarmerWorkDay.objects.get(code=farmer_work_day_id)
-                        except FarmerWorkDay.DoesNotExist:
-                            farmer_work_day=None
+                        farmer_work_day=FarmerWorkDay.objects.filter(code=farmer_work_day_id).first()
 
                     life_style_str=population_str[18:26]
                     life_style_cnt, life_style_id=self.id_and_value(life_style_str)
                     if farmer_work_day_cnt != 1 :
                         life_style=None
                     else:
-                        try:
-                            life_style=LifeStyle.objects.get(code=life_style_id)
-                        except LifeStyle.DoesNotExist:
-                            life_style=None
+                        life_style=LifeStyle.objects.filter(code=life_style_id).first()
 
                     other_farm_work_str = population_str[26:]
                     other_farm_work_cnt, other_farm_work_id = self.id_and_value(other_farm_work_str)
                     if other_farm_work_cnt != 1:
                         other_farm_work = None
                     else:
-                        try:
-                            other_farm_work = OtherFarmWork.objects.get(id=other_farm_work_id)
-                        except OtherFarmWork.DoesNotExist:
-                            other_farm_work = None
+
+                        other_farm_work = OtherFarmWork.objects.filter(id=other_farm_work_id).first()
+
                     # print(relationship_str, gender_str, birth_year, education_level_str, farmer_work_day_str, life_style_str,
                     #       other_farm_work_str)
                     # print(relationship,gender,birth_year,education_level,farmer_work_day,life_style,other_farm_work)
@@ -522,8 +485,8 @@ class Builder(object):
                     self.population.append(population)
 
 
-            except ValueError:
-                raise CreateModelError('Population')
+            except ValueError as e:
+                raise CreateModelError(target='Population', msg=e)
 
     def build_hire(self):
         string = self.string[4][-2:]
@@ -538,23 +501,20 @@ class Builder(object):
             else:
                 self.survey.hire=False
 
-        except ValueError:
-                raise CreateModelError('hire')
+        except ValueError as e:
+                raise CreateModelError(target='hire', msg=e)
 
     def build_long_term_hire(self):
         string = self.string[5]
         if len(string) % 30 != 0 :
-            raise StringLengthError('LongTermHire')
+            raise StringLengthError(target='LongTermHire')
         else:
             try:
                 self.long_term_hire=[]
                 for i in range(0, len(string), 30):
                     long_term_hire_str=string[i:i+30]
                     work_type_str=int(long_term_hire_str[0:2])
-                    try:
-                        work_type = WorkType.objects.get(code=work_type_str)
-                    except WorkType.DoesNotExist:
-                        work_type = None
+                    work_type = WorkType.objects.filter(code=work_type_str).first()
 
                     avg_work_day_str = int(long_term_hire_str[26:])/10
                     long_term_hire = LongTermHire.objects.create(
@@ -567,8 +527,6 @@ class Builder(object):
                     for j in range(0,12):
                         if months_str[j] == "1" :
                             long_term_hire.months.add( Month.objects.get(value=j+1))
-
-
 
                     age_str = long_term_hire_str[5:14]
 
@@ -586,88 +544,78 @@ class Builder(object):
                             )
                     self.long_term_hire.append(long_term_hire)
 
-            except ValueError:
-                raise CreateModelError('LongTermHire')
+            except ValueError as e:
+                raise CreateModelError(target='LongTermHire', msg=e)
 
     def build_short_term_hire(self):
         string = self.string[6]
         if len(string) % 32 != 0 :
-            raise StringLengthError('ShortTermHire')
+            raise StringLengthError(target='ShortTermHire')
         else:
             try:
                 self.short_term_hire = []
                 for i in range(0, len(string), 32):
                     short_term_hire_str = string[i:i + 32]
                     month_str=int(short_term_hire_str[0:2])
-                    try:
-                        month=Month.objects.get(value=month_str)
-                    except Month.DoesNotExist:
-                        # month=None
-                        raise CreateModelError('ShortTermHire Month')
+
+                    month=Month.objects.filter(value=month_str).first()
                     avg_work_day = int(short_term_hire_str[28:]) / 10
 
-                    short_term_hire=ShortTermHire.objects.create(
-                        survey=self.survey,
-                        month=month,
-                        avg_work_day=avg_work_day
-                    )
+                    if month:
+                        short_term_hire=ShortTermHire.objects.create(
+                            survey=self.survey,
+                            month=month,
+                            avg_work_day=avg_work_day
+                        )
 
-                    work_types_str = short_term_hire_str[14:28]
-                    for j in range(0,len(work_types_str),2):
-                        code=int(work_types_str[j:j+2])
-                        try:
-                            work_types=WorkType.objects.get(code=code)
-                        except WorkType.DoesNotExist:
-                            work_types=None
-                        if work_types is not None:
-                            short_term_hire.work_types.add(work_types)
+                        work_types_str = short_term_hire_str[14:28]
+                        for j in range(0,len(work_types_str),2):
+                            code=int(work_types_str[j:j+2])
+                            work_type = WorkType.objects.filter(code=code).first()
+                            if work_type:
+                                short_term_hire.work_types.add(work_type)
 
-                    number_workers_str = short_term_hire_str[5:14]
-                    for j in range(0,len(number_workers_str),3):
-                        num=j/3+1
-                        age_scope=AgeScope.objects.get(id=num)
-                        count=int(number_workers_str[j:j+3])
+                        number_workers_str = short_term_hire_str[5:14]
+                        for j in range(0,len(number_workers_str),3):
+                            num=j/3+1
+                            age_scope=AgeScope.objects.get(id=num)
+                            count=int(number_workers_str[j:j+3])
 
-                        if count > 0 :
-                            NumberWorkers.objects.create(
-                                content_type=ContentType.objects.get(app_label="surveys18", model="shorttermhire"),
-                                object_id=short_term_hire.id,
-                                age_scope=age_scope,
-                                count=count
-                            )
-                    self.short_term_hire.append(short_term_hire)
+                            if count > 0 :
+                                NumberWorkers.objects.create(
+                                    content_type=ContentType.objects.get(app_label="surveys18", model="shorttermhire"),
+                                    object_id=short_term_hire.id,
+                                    age_scope=age_scope,
+                                    count=count
+                                )
+                        self.short_term_hire.append(short_term_hire)
 
-            except ValueError:
-                raise CreateModelError('ShortTermHire')
+            except ValueError as e:
+                raise CreateModelError(target='ShortTermHire', msg=e)
 
     def build_no_salary_hire(self):
         string = self.string[7]
 
         if ( len(string)-4 )% 5 != 0:
-            raise StringLengthError('NoSalaryHire')
+            raise StringLengthError(target='NoSalaryHire')
         else:
             try:
                 self.no_salary_hire=[]
                 for i in range(0,(len(string)-4),5):
                     no_salary_str=string[i:i+5]
                     month_str=no_salary_str[0:2]
-                    try:
-                        month=Month.objects.get(value=month_str)
-                    except Month.DoesNotExist:
-                        # month=None
-                        raise CreateModelError('NoSalaryHire Month')
-
+                    month=Month.objects.filter(value=month_str).first()
                     count=int(no_salary_str[2:])
+                    if month :
+                        no_salary_hire=NoSalaryHire.objects.create(
+                            survey=self.survey,
+                            month=month,
+                            count=count
+                        )
+                        self.no_salary_hire.append(no_salary_hire)
 
-                    no_salary_hire=NoSalaryHire.objects.create(
-                        survey=self.survey,
-                        month=month,
-                        count=count
-                    )
-                    self.no_salary_hire.append(no_salary_hire)
-
-            except ValueError:
-                raise CreateModelError('NoSalaryHire')
+            except ValueError as e:
+                raise CreateModelError(target='NoSalaryHire', msg=e)
 
     def build_lack(self):
         string = self.string[7][-4:]
@@ -675,31 +623,24 @@ class Builder(object):
             lack_str=string
             for i in range(0,len(string)):
                 if lack_str[i] == "1":
-                    try:
-                        lack=Lack.objects.get(id=i+1)
-                    except Lack.DoesNotExist:
-                        lack=None
-
-                    if lack is not None:
+                    lack=Lack.objects.filter(id=i+1).first()
+                    if lack:
                         self.survey.lacks.add(lack)
 
-        except ValueError:
-            raise CreateModelError('Lack')
+        except ValueError as e:
+            raise CreateModelError(target='Lack', msg=e)
 
     def build_long_term_lack(self):
         string = self.string[8]
         if len(string) % 17 != 0:
-            raise StringLengthError('LongTermLack')
+            raise StringLengthError(target='LongTermLack')
         else:
             try:
                 self.long_term_lack=[]
                 for i in range(0,len(string),17):
                     long_term_lack_str=string[i:i+17]
                     work_type_str=long_term_lack_str[0:2]
-                    try:
-                        work_type = WorkType.objects.get(code=work_type_str)
-                    except WorkType.DoesNotExist:
-                        work_type=None
+                    work_type = WorkType.objects.filter(code=work_type_str).first()
                     count=int(long_term_lack_str[0:5])
                     long_term_lack=LongTermLack.objects.create(
                         survey=self.survey,
@@ -709,38 +650,27 @@ class Builder(object):
                     months_str=long_term_lack_str[5:]
                     for j in range(0,12):
                         if months_str[j] == "1":
-                            try:
-                                month=Month.objects.get(value=j + 1)
-                            except Month.DoesNotExist:
-                                month = None
-                            if month is not None:
+                            month=Month.objects.filter(value=j + 1).first()
+                            if month :
                                 long_term_lack.months.add(month)
                     self.long_term_lack.append(long_term_lack)
 
-            except ValueError:
-                raise CreateModelError('LongTermLack')
+            except ValueError as e:
+                raise CreateModelError(target='LongTermLack', msg=e)
 
     def build_short_term_lack(self):
         string = self.string[9]
         if len(string) % 21 != 0:
-            raise StringLengthError('ShortTermLack')
+            raise StringLengthError(target='ShortTermLack')
         else:
             try:
                 self.short_term_lack = []
                 for i in range(0,len(string),21):
                     short_term_lack_str=string[i:i+21]
-
                     product_str=short_term_lack_str[0:4]
-                    try:
-                        product = Product.objects.get(code=product_str)
-                    except Product.DoesNotExist:
-                        product=None
-
+                    product = Product.objects.filter(code=product_str).first()
                     work_type_str=short_term_lack_str[4:6]
-                    try:
-                        work_type = WorkType.objects.get(code=work_type_str)
-                    except WorkType.DoesNotExist:
-                        work_type=None
+                    work_type = WorkType.objects.filter(code=work_type_str).first()
 
                     count=int(short_term_lack_str[6:9])
                     short_term_lack=ShortTermLack.objects.create(
@@ -753,23 +683,20 @@ class Builder(object):
                     months_str = short_term_lack_str[9:]
                     for j in range(0, 12):
                         if months_str[j] == "1":
-                            try:
-                                month = Month.objects.get(value=j + 1)
-                            except Month.DoesNotExist:
-                                month = None
-                            if month is not None:
+                            month = Month.objects.filter(value=j + 1).first()
+                            if month:
                                 short_term_lack.months.add(month)
 
                     self.short_term_lack.append(short_term_lack)
 
-            except ValueError:
-                raise CreateModelError('ShortTermLack')
+            except ValueError as e:
+                raise CreateModelError(target='ShortTermLack', msg=e)
 
     def build_subsidy(self):
         string = self.string[10].split("#")
 
         if len(string) != 2:
-            raise StringLengthError('Subsidy')
+            raise StringLengthError(target='Subsidy')
         else:
             try:
                 for i in range(0, 13):
@@ -805,12 +732,9 @@ class Builder(object):
                 self.refuse = []
                 reason_str = string[0][11:12]
                 if reason_str == "1" :
-                    try:
-                        reason = RefuseReason.objects.get(id=1)
-                    except RefuseReason.DoesNotExist:
-                        reason = None
 
-                    if reason is not None:
+                    reason = RefuseReason.objects.filter(id=1).first()
+                    if reason:
                         refuse=Refuse.objects.create(
                             subsidy=self.subsidy,
                             reason=reason,
@@ -820,15 +744,11 @@ class Builder(object):
 
                 reason_str=string[0][12:]
                 if len(reason_str) == 0:
-                    raise StringLengthError('Subsidy')
+                    raise StringLengthError(target='Subsidy')
                 elif len(reason_str) == 1:
                     if reason_str[0] == "1":
-                        try:
-                            reason = RefuseReason.objects.get(id=2)
-                        except RefuseReason.DoesNotExist:
-                            reason = None
-
-                        if reason is not None:
+                        reason = RefuseReason.objects.filter(id=2).first()
+                        if reason :
                             refuse = Refuse.objects.create(
                                 subsidy=self.subsidy,
                                 reason=reason,
@@ -837,12 +757,8 @@ class Builder(object):
                         self.refuse.append(refuse)
                 else:
                     if reason_str[0] == "1":
-                        try:
-                            reason = RefuseReason.objects.get(id=2)
-                        except RefuseReason.DoesNotExist:
-                            reason = None
-
-                        if reason is not None:
+                        reason = RefuseReason.objects.filter(id=2).first()
+                        if reason :
                             refuse = Refuse.objects.create(
                                 subsidy=self.subsidy,
                                 reason=reason,
@@ -852,18 +768,14 @@ class Builder(object):
 
                 reason_str = string[1]
                 if len(reason_str) == 0:
-                    raise StringLengthError('Subsidy')
+                    raise StringLengthError(target='Subsidy')
                 elif len(reason_str) == 1:
                     if str.isdigit(reason_str[0]) is False:
-                        raise StringLengthError('Subsidy')
+                        raise StringLengthError(target='Subsidy')
 
                     if reason_str[0] == "1":
-                        try:
-                            reason = RefuseReason.objects.get(id=3)
-                        except RefuseReason.DoesNotExist:
-                            reason = None
-
-                        if reason is not None:
+                        reason = RefuseReason.objects.filter(id=3).first()
+                        if reason:
                             refuse = Refuse.objects.create(
                                 subsidy=self.subsidy,
                                 reason=reason,
@@ -872,14 +784,10 @@ class Builder(object):
                         self.refuse.append(refuse)
                 else:
                     if str.isdigit(reason_str[0]) is False:
-                        raise StringLengthError('Subsidy')
+                        raise StringLengthError(target='Subsidy')
                     if reason_str[0] == "1":
-                        try:
-                            reason = RefuseReason.objects.get(id=3)
-                        except RefuseReason.DoesNotExist:
-                            reason = None
-
-                        if reason is not None:
+                        reason = RefuseReason.objects.filter(id=3).first()
+                        if reason :
                             refuse = Refuse.objects.create(
                                 subsidy=self.subsidy,
                                 reason=reason,
@@ -887,8 +795,8 @@ class Builder(object):
                             )
                         self.refuse.append(refuse)
 
-            except ValueError:
-                raise CreateModelError('Subsidy')
+            except ValueError as e:
+                raise CreateModelError(target='Subsidy', msg=e)
 
 
 
