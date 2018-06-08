@@ -17,7 +17,8 @@ from django.db.models import (
     DateField,
     PositiveIntegerField,
     FloatField,
-    Q
+    Q,
+    FileField,
 )
 
 
@@ -30,6 +31,22 @@ NUMBER_WORKERS_CHOICES = (
     Q(app_label='surveys18', model='longtermhire') |
     Q(app_label='surveys18', model='shorttermhire')
 )
+
+
+class BuilderFile(Model):
+    create_time = DateTimeField(auto_now_add=True, verbose_name=_('Create Time'))
+    user = ForeignKey(settings.AUTH_USER_MODEL, related_name='files', verbose_name=_('User'))
+    datafile = FileField(verbose_name=_('DataFile'))
+
+    class Meta:
+        verbose_name = _('BuilderFile')
+        verbose_name_plural = _('BuilderFile')
+
+    def __str__(self):
+        return self.datafile.name
+
+    def __unicode__(self):
+        return self.datafile.name
 
 
 class Survey(Model):

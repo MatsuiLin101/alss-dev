@@ -51,6 +51,7 @@ $(document).ready(function() {
                 $.when(timer, ajax).done(function(){
                     $('[data-partial]').hide();
                     $('[data-partial="survey"]').show();
+                    if(readonly) $('.js-set-survey').hide();
                     $('#farmerId').val('');
                 })
             }).done(function(){
