@@ -1403,10 +1403,9 @@ var NoSalaryHireHelper = {
     },
     NoSalaryHire: {
         Object: {
-            New: function(surveyId, guid){
+            New: function(guid){
                 guid = guid || null;
                 return {
-                    survey: surveyId,
                     guid: guid ? guid : Helper.CreateGuid(),
                 }
             },
@@ -1457,7 +1456,7 @@ var NoSalaryHireHelper = {
                     if(!guid){
                         return;
                     }
-                    var obj = NoSalaryHireHelper.NoSalaryHire.Object.Filter(surveyId, guid);
+                    var obj = NoSalaryHireHelper.NoSalaryHire.Object.Filter(guid);
 
                     obj.month = parseInt($tr.find('[name="month"]').val());
                     obj.count = parseInt($tr.find('[name="count"]').val());

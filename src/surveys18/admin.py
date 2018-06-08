@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (
     BuilderFile,
+    BuilderFileType,
     MarketType,
     IncomeRange,
     AnnualIncome,
@@ -42,6 +43,7 @@ from .models import (
 )
 
 admin.site.register(BuilderFile)
+admin.site.register(BuilderFileType)
 admin.site.register(MarketType)
 admin.site.register(IncomeRange)
 admin.site.register(AnnualIncome)

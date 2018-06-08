@@ -33,10 +33,30 @@ NUMBER_WORKERS_CHOICES = (
 )
 
 
+class BuilderFileType(Model):
+    name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('BuilderFileType')
+        verbose_name_plural = _('BuilderFileType')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
 class BuilderFile(Model):
     create_time = DateTimeField(auto_now_add=True, verbose_name=_('Create Time'))
     user = ForeignKey(settings.AUTH_USER_MODEL, related_name='files', verbose_name=_('User'))
-    datafile = FileField(verbose_name=_('DataFile'))
+    datafile = FileField(upload_to='surveys18/builders/', verbose_name=_('DataFile'))
+    type = ForeignKey('surveys18.BuilderFileType', null=True,
+                      blank=True, on_delete=CASCADE,
+                      verbose_name=_('Investigator'))
 
     class Meta:
         verbose_name = _('BuilderFile')
@@ -112,6 +132,7 @@ class ShortTermLack(Model):
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys18.Month',
+                             blank=True,
                              related_name='short_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -138,6 +159,7 @@ class LongTermLack(Model):
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys18.Month',
+                             blank=True,
                              related_name='long_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -806,6 +828,7 @@ class LandType(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     statuses = ManyToManyField('surveys18.LandStatus',
+                               blank=True,
                                related_name='land_type',
                                verbose_name=_('Land Statuses'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -973,3 +996,16 @@ class AnnualIncome(Model):
 class Month(Model):
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     value = IntegerField(choices=MONTHS.items())
+    update_time = DateTimeField(auto_now=True, auto_now_add=False,
+                                null=True, blank=True,
+                                verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('Month')
+        verbose_name_plural = _('Month')
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)

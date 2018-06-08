@@ -1,0 +1,9 @@
+- model: surveys18.BuilderFileType
+  pk: 1
+  fields:
+    name: 勞動力調查
+
+- model: surveys18.BuilderFileType
+  pk: 2
+  fields:
+    name: 主力農家調查

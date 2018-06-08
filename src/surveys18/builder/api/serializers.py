@@ -1,13 +1,27 @@
-import csv
-from rest_framework import serializers
-from surveys18.models import BuilderFile
+from rest_framework.serializers import (
+    HyperlinkedModelSerializer,
+    ModelSerializer,
+    ChoiceField,
+)
+from surveys18.models import (
+    BuilderFile,
+    BuilderFileType,
+)
 from surveys18.builder.tokenizer import Builder
 
 
-class BuilderFieldSerializer(serializers.HyperlinkedModelSerializer):
+class BuilderFileTypeSerializer(ModelSerializer):
+    class Meta:
+        model = BuilderFileType
+        fields = '__all__'
+
+
+class BuilderFileSerializer(HyperlinkedModelSerializer):
+    type = ChoiceField(choices=BuilderFileType.objects.all())
+
     class Meta:
         model = BuilderFile
-        fields = ['datafile']
+        fields = ['datafile', 'type']
 
     def create(self, validated_data):
         return BuilderFile.objects.create(**validated_data)
@@ -16,10 +30,22 @@ class BuilderFieldSerializer(serializers.HyperlinkedModelSerializer):
         """
         Validate via build
         """
+        errors = list()
         data_list = str(data.get('datafile').read()).splitlines()
 
-        for string in data_list:
-            builder = Builder(string)
-            builder.build_survey()
+        for i, string in enumerate(data_list):
+            try:
+                builder = Builder(string)
+                builder.build_survey()
+            except Exception as e:
+                errors.append({
+                    'string': string,
+                    'index': i,
+                    'error': e,
+                })
+                pass
+
+        if errors:
+            raise serializers.ValidationError(errors)
 
         return data

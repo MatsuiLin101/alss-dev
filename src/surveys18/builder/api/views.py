@@ -4,13 +4,13 @@ from rest_framework.generics import (
 )
 
 from rest_framework.permissions import IsAuthenticated
-from .serializers import BuilderFieldSerializer
+from .serializers import BuilderFileSerializer
 from surveys18.models import BuilderFile
 
 
 class BuilderFileCreateAPIView(CreateAPIView):
     queryset = BuilderFile.objects.all()
-    serializer_class = BuilderFieldSerializer
+    serializer_class = BuilderFileSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
