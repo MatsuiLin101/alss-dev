@@ -112,6 +112,7 @@ class ShortTermLack(Model):
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys18.Month',
+                             blank=True,
                              related_name='short_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -138,6 +139,7 @@ class LongTermLack(Model):
     count = IntegerField(null=True, blank=True,
                          verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys18.Month',
+                             blank=True,
                              related_name='long_term_lacks',
                              verbose_name=_('Months'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -806,6 +808,7 @@ class LandType(Model):
     name = CharField(max_length=20, null=True, blank=True,
                      verbose_name=_('Name'))
     statuses = ManyToManyField('surveys18.LandStatus',
+                               blank=True,
                                related_name='land_type',
                                verbose_name=_('Land Statuses'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
