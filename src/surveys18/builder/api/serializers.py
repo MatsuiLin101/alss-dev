@@ -17,7 +17,7 @@ class BuilderFieldSerializer(serializers.HyperlinkedModelSerializer):
         Validate via build
         """
         errors = list()
-        data_list = str(data.get('datafile').read()).splitlines()
+        data_list = str(data.get('datafile').read().decode('utf-8-sig')).splitlines()
 
         for i, string in enumerate(data_list):
             try:
