@@ -1,13 +1,27 @@
-import csv
-from rest_framework import serializers
-from surveys18.models import BuilderFile
+from rest_framework.serializers import (
+    HyperlinkedModelSerializer,
+    ModelSerializer,
+    ChoiceField,
+)
+from surveys18.models import (
+    BuilderFile,
+    BuilderFileType,
+)
 from surveys18.builder.tokenizer import Builder
 
 
-class BuilderFieldSerializer(serializers.HyperlinkedModelSerializer):
+class BuilderFileTypeSerializer(ModelSerializer):
+    class Meta:
+        model = BuilderFileType
+        fields = '__all__'
+
+
+class BuilderFileSerializer(HyperlinkedModelSerializer):
+    type = ChoiceField(choices=BuilderFileType.objects.all())
+
     class Meta:
         model = BuilderFile
-        fields = ['datafile']
+        fields = ['datafile', 'type']
 
     def create(self, validated_data):
         return BuilderFile.objects.create(**validated_data)

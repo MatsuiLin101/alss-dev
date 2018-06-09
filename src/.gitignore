@@ -7,6 +7,9 @@ src/web.config
 # sqlite
 *.sqlite3
 
+# media-root
+live-static-files/media-root/
+
 #MAC
 .DS_Store
 
