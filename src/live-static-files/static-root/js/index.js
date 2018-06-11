@@ -48,11 +48,13 @@ $(document).ready(function() {
                     Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
                 });
 
-                $.when(timer, ajax).done(function(){
-                    $('[data-partial]').hide();
-                    $('[data-partial="survey"]').show();
-                    if(readonly) $('.js-set-survey').hide();
-                    $('#farmerId').val('');
+                $.when(timer, ajax).done(function(timer, ajax){
+                    if(ajax[0].length > 0){
+                        $('[data-partial]').hide();
+                        $('[data-partial="survey"]').show();
+                        if(readonly) $('.js-set-survey').hide();
+                        $('#farmerId').val('');
+                    }
                 })
             }).done(function(){
                 Loading.close();
@@ -141,7 +143,8 @@ var GetFarmerData = function (url, fid, readonly) {
                     })
                 } else {
                     Helper.Dialog.ShowInfo('查無農戶資料！');
-                }            }
+                }
+            }
             else {
                 Helper.Dialog.ShowInfo('查無農戶資料！');
             }
