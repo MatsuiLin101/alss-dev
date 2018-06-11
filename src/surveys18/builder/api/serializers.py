@@ -36,8 +36,9 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
 
         for i, string in enumerate(data_list):
             try:
-                builder = Builder(string)
+                builder = Builder(string=string)
                 builder.build()
+                builder.build(readonly=False)
             except Exception as e:
                 errors.append({
                     'string': string,
