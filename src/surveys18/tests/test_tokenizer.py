@@ -81,6 +81,9 @@ class ModelTestCase(TestCase):
     #     print(check_string)
 
     def test_build_survey(self):
+        test="6700500100020202++D0080100110008000005020+++++++++"
+        test=test.split("+")
+        print(test)
         self.assertEquals(self.builder.survey.farmer_id, "670050010002")
         self.assertEquals(self.builder.survey.page, 1)
         self.assertEquals(self.builder.survey.total_pages, 1)
@@ -92,10 +95,6 @@ class ModelTestCase(TestCase):
 
         # check survey query string
 
-
-    # def test_build_xxx(self):
-    #     builder = Builder(self.string)
-    #     self.assertRaisesMessage(NotImplementedError, self.builder.ERROR_MESSAGES['PlusSignError'])
 
     def test_build_phone(self):
         self.builder.build_phone()
@@ -250,6 +249,7 @@ class ModelTestCase(TestCase):
 
     def test_build_long_term_lack(self):
         self.builder.build_long_term_lack()
+
         self.assertEquals(len(self.builder.long_term_lack),2)
 
     def test_build_short_term_lack(self):
@@ -258,6 +258,11 @@ class ModelTestCase(TestCase):
 
     def test_build_subsidy(self):
         self.builder.build_subsidy()
+        obj = Subsidy.objects.get(survey=self.builder.survey)
+        print(obj.survey)
+        print(obj.has_subsidy)
+
+
         self.assertEquals(self.builder.subsidy.survey.farmer_id,"670050010002")
         self.assertEquals(self.builder.subsidy.count, 12)
         self.assertEquals(self.builder.subsidy.month_delta, 12)
