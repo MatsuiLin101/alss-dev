@@ -353,8 +353,8 @@ class Subsidy(Model):
 class Refuse(Model):
     subsidy = ForeignKey('surveys18.Subsidy', related_name='refuses'
                          , blank=True, verbose_name=_('Subsidy'))
-    reason = OneToOneField('surveys18.RefuseReason', related_name='refuse',
-                           verbose_name=_('Refuse'))
+    reason = ForeignKey('surveys18.RefuseReason', related_name='refuse',
+                        verbose_name=_('Refuse'))
     extra = CharField(max_length=100, null=True, blank=True,
                       verbose_name=_('Extra'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -426,10 +426,10 @@ class Population(Model):
         verbose_name_plural = _('Population')
 
     def __str__(self):
-        return str(self.name)
+        return str(self.survey)
 
     def __unicode__(self):
-        return str(self.name)
+        return str(self.survey)
 
 
 class FarmerWorkDay(Model):
@@ -775,7 +775,7 @@ class Business(Model):
     survey = ForeignKey('surveys18.Survey', related_name='businesses',
                         verbose_name=_('Survey'))
     farm_related_business = \
-        OneToOneField('surveys18.FarmRelatedBusiness',
+        ForeignKey('surveys18.FarmRelatedBusiness',
                       related_name='business',
                       verbose_name=_('Farm Related Business'))
     extra = CharField(max_length=50, null=True, blank=True,
