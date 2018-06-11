@@ -1,7 +1,8 @@
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     ModelSerializer,
-    ChoiceField,
+    PrimaryKeyRelatedField,
+    ValidationError,
 )
 from surveys18.models import (
     BuilderFile,
@@ -17,7 +18,7 @@ class BuilderFileTypeSerializer(ModelSerializer):
 
 
 class BuilderFileSerializer(HyperlinkedModelSerializer):
-    type = ChoiceField(choices=BuilderFileType.objects.all())
+    type = PrimaryKeyRelatedField(queryset=BuilderFileType.objects.all())
 
     class Meta:
         model = BuilderFile
@@ -36,7 +37,7 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         for i, string in enumerate(data_list):
             try:
                 builder = Builder(string)
-                builder.build_survey()
+                builder.build()
             except Exception as e:
                 errors.append({
                     'string': string,
@@ -46,6 +47,6 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
                 pass
 
         if errors:
-            raise serializers.ValidationError(errors)
+            raise ValidationError(errors)
 
         return data
