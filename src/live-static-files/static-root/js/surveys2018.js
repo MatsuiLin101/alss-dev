@@ -5,6 +5,9 @@ var GlobalUI = $.parseJSON($('#ui').val());
 var CloneData = null;
 var MainSurveyId = 0;
 
+/* Validate */
+var Validate = true;
+
 /* jQuery Spinner */
 var Loading = $.loading();
 
@@ -82,36 +85,29 @@ var Helper = {
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
-    LogHandler: function (condition, alert, target, log, classname) {
+    LogHandler: function (condition, alert, msg) {
         if (condition) {
-            if (!alert.message.includes(log)) {
-                alert.message += log;
+            if (!alert.message.includes(msg)) {
+                alert.message += msg;
             };
-            if (target) {
-                for (var i = 0; i < target.length; i++) { target[i].className += ' ' + classname; }
-            }
         } else {
-            alert.message = alert.message.replace(log, '');
-            if (target) {
-                var re = new RegExp(' ' + classname, "g");
-                for (var i = 0; i < target.length; i++) { target[i].className = target[i].className.replace(re, ''); }
-            }
+            alert.message = alert.message.replace(msg, '');
         }
         alert.alert();
     },
-    Alert: function (obj) {
-        this.object = obj;
+    Alert: function ($obj) {
+        this.$object = $obj;
         this.message = '';
         this.alert = function () {
             if (this.message) {
-                this.object.html(this.message).show();
+                this.$object.html(this.message).show();
             } else {
-                this.object.hide();
+                this.$object.hide();
             }
         };
         this.reset = function () {
             this.message = '';
-            this.object.html('').hide();
+            this.$object.html('').hide();
         }
     },
     Dialog: {
@@ -187,7 +183,7 @@ var Helper = {
 var SurveyHelper = {
     Alert: null,
     Setup: function() {
-        this.Alert = new Helper.Alert($('#Alert'));
+        this.Alert = new Helper.Alert($('.alert[name="survey"]'));
         this.FarmerName.Bind();
         this.Phone.Bind();
         this.AddressMatch.Bind();
@@ -232,14 +228,28 @@ var SurveyHelper = {
             this.Container.change(function(){
                 if(CloneData) {
                     CloneData[MainSurveyId].farmer_name = $(this).val();
+
+                    if(Validate){
+                        SurveyHelper.FarmerName.Validate.Empty();
+                    }
                 }
             })
         },
         Set: function(obj){
             this.Container.val(obj.farmer_name);
+            if(Validate){
+                SurveyHelper.FarmerName.Validate.Empty();
+            }
         },
         Reset: function(){
             this.Container.val('');
+        },
+        Validate: {
+            Empty: function(){
+                var empty = CloneData[MainSurveyId].farmer_name == '';
+                var msg = '受訪人不可漏填' + '</br>';
+                Helper.LogHandler(empty, SurveyHelper.Alert, msg);
+            },
         },
     },
     Phone: {
@@ -258,6 +268,10 @@ var SurveyHelper = {
                 if(CloneData) {
                     var id = $(this).data('phone-id');
                     SurveyHelper.Phone.Object.Filter(id).phone = $(this).val();
+
+                    if(Validate){
+                        SurveyHelper.Phone.Validate.Empty();
+                    }
                 }
             })
         },
@@ -267,12 +281,24 @@ var SurveyHelper = {
                 .attr('data-phone-id', phone.id)
                 .val(phone.phone);
             })
+            if(Validate){
+                SurveyHelper.Phone.Validate.Empty();
+            }
         },
         Reset: function(){
                 SurveyHelper.Phone.Container.val('');
         },
-        Validate: function(){
-
+        Validate: {
+            Empty: function(){
+                var empty = true;
+                CloneData[MainSurveyId].phones.forEach(function(obj, i){
+                    if(obj.phone){
+                        empty = false;
+                    }
+                });
+                var msg = '聯絡電話不可漏填' + '</br>';
+                Helper.LogHandler(empty, SurveyHelper.Alert, msg);
+            },
         },
     },
     Hire: {
@@ -363,6 +389,9 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
             this.Container.change(function(){
+                /* make it radio */
+                SurveyHelper.AddressMatch.Container.not($(this)).prop('checked', false);
+
                 if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
@@ -370,14 +399,33 @@ var SurveyHelper = {
                     else if(field == 'mismatch')
                         CloneData[MainSurveyId].address_match.mismatch = $(this).prop('checked');
                 }
+                if(Validate) {
+                    SurveyHelper.Address.Validate.AddressRequire();
+                    SurveyHelper.AddressMatch.Validate.AddressMatchRequire();
+                }
             })
         },
         Set: function(obj){
             this.Container.filter('[data-field="match"]').prop('checked', obj.address_match.match);
             this.Container.filter('[data-field="mismatch"]').prop('checked', obj.address_match.mismatch);
+            if(Validate){
+                SurveyHelper.Address.Validate.AddressRequire();
+                SurveyHelper.AddressMatch.Validate.AddressMatchRequire();
+            }
         },
         Reset: function(){
             this.Container.prop('checked', false);
+        },
+        Validate: {
+            AddressMatchRequire: function(){
+                var checked = SurveyHelper.AddressMatch.Container
+                             .filter('[data-field="mismatch"]')
+                             .prop('checked');
+                var empty = !SurveyHelper.Address.Container.val();
+                var con = !checked && !empty;
+                var msg = '填寫地址，請勾選地址與調查名冊不同</br>';
+                Helper.LogHandler(con, SurveyHelper.Alert, msg);
+            },
         },
     },
     Address: {
@@ -387,14 +435,33 @@ var SurveyHelper = {
                 if(CloneData){
                     CloneData[MainSurveyId].address_match.address = $(this).val();
                 }
+                if(Validate) {
+                    SurveyHelper.Address.Validate.AddressRequire();
+                    SurveyHelper.AddressMatch.Validate.AddressMatchRequire();
+                }
             })
         },
         Set: function(obj){
             this.Container.val(obj.address_match.address);
+            if(Validate) {
+                SurveyHelper.Address.Validate.AddressRequire();
+                SurveyHelper.AddressMatch.Validate.AddressMatchRequire();
+            }
         },
         Reset: function(){
             this.Container.val('');
         },
+        Validate: {
+            AddressRequire: function(){
+                var checked = SurveyHelper.AddressMatch.Container
+                             .filter('[data-field="mismatch"]')
+                             .prop('checked');
+                var empty = !SurveyHelper.Address.Container.val();
+                var con = checked && empty;
+                var msg = '勾選地址與調查名冊不同，地址不可為空白</br>';
+                Helper.LogHandler(con, SurveyHelper.Alert, msg);
+            },
+        }
     },
     NumberWorker : {
         Object: {
@@ -426,6 +493,7 @@ var SurveyHelper = {
 var LandAreaHelper = {
     Alert: null,
     Setup: function(){
+        this.Alert = new Helper.Alert($('.alert[name="landarea"]'));
         this.LandStatus.Bind();
         this.LandType.Bind();
     },
@@ -446,13 +514,32 @@ var LandAreaHelper = {
                 .filter('[data-landtype-id="{0}"]'.format(land_area.type))
                 .prop('checked', true);
             })
+
+            if(Validate){
+                LandAreaHelper.Validate.Empty();
+                LandAreaHelper.Validate.LandStatusEmpty();
+            }
         },
         Reset: function(){
             this.Container.prop('checked', false);
         },
         Bind: function(){
             this.Container.change(function(){
-                LandAreaHelper.Object.Collect();
+                var checked = $(this).prop('checked');
+                var type = $(this).data('landtype-id');
+                if(!checked){
+                    LandAreaHelper.LandStatus.Container
+                    .filter('[data-landtype-id="{0}"]'.format(type))
+                    .val('');
+                }
+
+                if(CloneData){
+                    LandAreaHelper.Object.Collect();
+                    if(Validate){
+                        LandAreaHelper.Validate.Empty();
+                        LandAreaHelper.Validate.LandStatusEmpty();
+                    }
+                }
             })
         },
     },
@@ -465,6 +552,11 @@ var LandAreaHelper = {
                 .filter('[data-landstatus-id="{0}"]'.format(land_area.status))
                 .val(land_area.value)
             })
+
+            if(Validate){
+                LandAreaHelper.Validate.Empty();
+                LandAreaHelper.Validate.LandStatusEmpty();
+            }
         },
         Reset: function(){
             this.Container.val('');
@@ -478,12 +570,18 @@ var LandAreaHelper = {
                                   .filter('[data-landtype-id="{0}"]'.format(typeId))
                                   .prop('checked');
                 if(!typeChecked){
-                    Helper.Dialog.ShowAlert('請先句選耕作地類型選項');
+                    Helper.Dialog.ShowAlert('請先勾選耕作地類型選項');
                     e.preventDefault();
                 }
             })
             this.Container.change(function(){
-                LandAreaHelper.Object.Collect();
+                if(CloneData){
+                    LandAreaHelper.Object.Collect();
+                    if(Validate){
+                        LandAreaHelper.Validate.Empty();
+                        LandAreaHelper.Validate.LandStatusEmpty();
+                    }
+                }
             })
         }
     },
@@ -498,43 +596,67 @@ var LandAreaHelper = {
             return obj;
         },
         Collect: function(){
-            if(CloneData){
-                var landAreas = [];
-                LandAreaHelper.LandType.Container
-                .filter(':checked')
-                .each(function(){
-                    var typeId = $(this).data('landtype-id');
+            var landAreas = [];
+            LandAreaHelper.LandType.Container
+            .filter(':checked')
+            .each(function(){
+                var typeId = $(this).data('landtype-id');
 
-                    var hasAnyValuedStatus = false;
-                    /* collect multiple object if has status */
-                    LandAreaHelper.LandStatus.Container
-                    .filter('[data-landtype-id="{0}"]'.format(typeId))
-                    .each(function(){
-                        var statusId = $(this).data('landstatus-id');
-                        var value = $(this).val();
-                        if(Helper.NumberValidate(value)){
-                            hasAnyValuedStatus = true;
-                            landAreas.push(
-                                LandAreaHelper.Object.New(MainSurveyId, typeId, statusId, value)
-                            )
-                        }
-                    })
-                    /* collect one object if none status */
-                    if(!hasAnyValuedStatus){
+                var hasAnyValuedStatus = false;
+                /* collect multiple object if has status */
+                LandAreaHelper.LandStatus.Container
+                .filter('[data-landtype-id="{0}"]'.format(typeId))
+                .each(function(){
+                    var statusId = $(this).data('landstatus-id');
+                    var value = $(this).val();
+                    if(Helper.NumberValidate(value)){
+                        hasAnyValuedStatus = true;
                         landAreas.push(
-                            LandAreaHelper.Object.New(MainSurveyId, typeId)
+                            LandAreaHelper.Object.New(MainSurveyId, typeId, statusId, value)
                         )
                     }
                 })
-                CloneData[MainSurveyId].land_areas = landAreas;
-            }
+                /* collect one object if none status */
+                if(!hasAnyValuedStatus){
+                    landAreas.push(
+                        LandAreaHelper.Object.New(MainSurveyId, typeId)
+                    )
+                }
+            })
+            CloneData[MainSurveyId].land_areas = landAreas;
         }
-    }
-
+    },
+    Validate: {
+        Empty: function(){
+            var empty = CloneData[MainSurveyId].land_areas.length == 0;
+            var msg = '不可漏填此問項</br>';
+            Helper.LogHandler(empty, LandAreaHelper.Alert, msg);
+        },
+        LandStatusEmpty: function(){
+            
+            LandAreaHelper.LandType.Container.each(function(){
+                var typeName = $(this).data('landtype-name');
+                var typeId = $(this).data('landtype-id');
+                var checked = $(this).prop('checked');
+                var statuses = LandAreaHelper.LandStatus.Container.filter('[data-landtype-id="{0}"]'.format(typeId));
+                var has_status = statuses.length > 0;
+                var empty = true;
+                statuses.each(function(){
+                    if($(this).val()){
+                        empty = false;
+                    }
+                })
+                var con = checked && (has_status && empty);
+                var msg = '有勾選{0}應填寫對應面積</br>'.format(typeName);
+                Helper.LogHandler(con, LandAreaHelper.Alert, msg);
+            })
+        },
+    },
 }
 var BusinessHelper = {
     Alert: null,
     Setup: function(){
+        this.Alert = new Helper.Alert($('.alert[name="business"]'));
         this.FarmRelatedBusiness.Bind();
         this.Extra.Bind();
     },
@@ -561,7 +683,21 @@ var BusinessHelper = {
         },
         Bind: function(){
             this.Container.change(function(){
-                BusinessHelper.Object.Collect();
+                var checked = $(this).prop('checked');
+                var farmerRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
+                if(!checked){
+                    BusinessHelper.Extra.Container
+                    .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmerRelatedBusinessId))
+                    .val('');
+                }
+
+                if(CloneData){
+                    BusinessHelper.Object.Collect();
+                    if(Validate){
+                        BusinessHelper.Validate.Empty();
+                        BusinessHelper.Validate.Duplicate();
+                    }
+                }
             })
         },
     },
@@ -585,12 +721,18 @@ var BusinessHelper = {
                               .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmRelatedBusinessId))
                               .prop('checked');
                 if(!checked){
-                    Helper.Dialog.ShowAlert('請先句選農業相關事業選項');
+                    Helper.Dialog.ShowAlert('請先勾選農業相關事業選項');
                     e.preventDefault();
                 }
             })
             this.Container.change(function(){
-                BusinessHelper.Object.Collect();
+                if(CloneData){
+                    BusinessHelper.Object.Collect();
+                    if(Validate){
+                        BusinessHelper.Validate.Empty();
+                        BusinessHelper.Validate.Duplicate();
+                    }
+                }
             })
         },
     },
@@ -604,27 +746,48 @@ var BusinessHelper = {
             return obj;
         },
         Collect: function(){
-            if(CloneData){
-                businesses = []
-                BusinessHelper.FarmRelatedBusiness.Container
-                .filter(':checked')
-                .each(function(){
-                    var farmRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
-                    var extra = BusinessHelper.Extra.Container
-                                .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmRelatedBusinessId)).val();
-                    businesses.push(
-                        BusinessHelper.Object.New(MainSurveyId, farmRelatedBusinessId, extra ? extra : null)
-                    )
-                })
+            businesses = []
+            BusinessHelper.FarmRelatedBusiness.Container
+            .filter(':checked')
+            .each(function(){
+                var farmRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
+                var extra = BusinessHelper.Extra.Container
+                            .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmRelatedBusinessId)).val();
+                businesses.push(
+                    BusinessHelper.Object.New(MainSurveyId, farmRelatedBusinessId, extra ? extra : null)
+                )
+            })
 
-                CloneData[MainSurveyId].businesses = businesses;
-            }
+            CloneData[MainSurveyId].businesses = businesses;
         },
+    },
+    Validate: {
+        Empty: function(){
+            var con = CloneData[MainSurveyId].businesses.length == 0;
+            var msg = '不可漏填此問項</br>';
+            Helper.LogHandler(con, BusinessHelper.Alert, msg);
+        },
+        Duplicate: function(){
+            var trueChecked = false;
+            var falseChecked = false;
+            BusinessHelper.FarmRelatedBusiness.Container
+            .filter(':checked')
+            .each(function(){
+                var hasBusiness = $(this).data('has-business');
+                if(hasBusiness) trueChecked = true;
+                else falseChecked = true;
+            })
+            var con = trueChecked && falseChecked;
+            var msg = '無兼營與有兼營不可重複勾選</br>';
+            Helper.LogHandler(con, BusinessHelper.Alert, msg);
+        },
+
     },
 }
 var ManagementTypeHelper = {
     Alert: null,
     Setup: function(){
+        this.Alert = new Helper.Alert($('.alert[name="managementtype"]'));
         this.ManagementType.Bind();
     },
     Reset: function(){
@@ -655,17 +818,34 @@ var ManagementTypeHelper = {
                     .each(function(){
                         var id = $(this).data('managementtype-id');
                         managementTypes.push(id);
-                    })
-
+                    });
                     CloneData[MainSurveyId].management_types = managementTypes;
+
+                    if(Validate){
+                        ManagementTypeHelper.Validate.Empty();
+                        ManagementTypeHelper.Validate.OneMaximum();
+                    }
                 }
             })
+        },
+    },
+    Validate: {
+        Empty: function(){
+            var con = CloneData[MainSurveyId].management_types.length == 0;
+            var msg = '不可漏填此問項</br>';
+            Helper.LogHandler(con, ManagementTypeHelper.Alert, msg);
+        },
+        OneMaximum: function(){
+            var con = CloneData[MainSurveyId].management_types.length > 1;
+            var msg = '限註記一個項目</br>';
+            Helper.LogHandler(con, ManagementTypeHelper.Alert, msg);
         },
     },
 }
 var CropMarketingHelper = {
     Alert: null,
     Setup: function(row){
+        this.Alert = new Helper.Alert($('.alert[name="cropmarketing"]'));
         var $row = $(row);
         this.CropMarketing.Bind($row);
         this.CropMarketing.$Row = $row;
@@ -724,6 +904,10 @@ var CropMarketingHelper = {
                 $row.attr('data-guid', crop_marketing.guid);
 
                 CropMarketingHelper.CropMarketing.Container.append($row);
+
+                if(Validate){
+                    CropMarketingHelper.Validate.RequiredField($row);
+                }
             })
         },
         Reset: function() {
@@ -766,6 +950,13 @@ var CropMarketingHelper = {
                 }
             })
 
+            if(Validate){
+                $row.find('select, input').change(function(){
+                    $tr = $(this).closest('tr');
+                    CropMarketingHelper.Validate.RequiredField($tr);
+                })
+            }
+
             return $row;
         },
     },
@@ -782,11 +973,27 @@ var CropMarketingHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     CropMarketingHelper.CropMarketing.Container.append($row);
+                    if(Validate){
+                        CropMarketingHelper.Validate.RequiredField($row);
+                    }
                 }
             })
         },
     },
-    Alert: null,
+    Validate: {
+        RequiredField: function($row){
+            var index = CropMarketingHelper.CropMarketing.Container.find('tr').index($row);
+            Helper.LogHandler(!$row.find('[name="product"]').val(), CropMarketingHelper.Alert, '第{0}列作物名稱不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="landnumber"]').val(), CropMarketingHelper.Alert, '第{0}列耕作地代號不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="landarea"]').val(), CropMarketingHelper.Alert, '第{0}列種植面積不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="planttimes"]').val(), CropMarketingHelper.Alert, '第{0}列種植次數不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="unit"]').val(), CropMarketingHelper.Alert, '第{0}列單位不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="totalyield"]').val(), CropMarketingHelper.Alert, '第{0}列全年產量不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="unitprice"]').val(), CropMarketingHelper.Alert, '第{0}列平均單價不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="hasfacility"]').val(), CropMarketingHelper.Alert, '第{0}列是否使用農業設施不可空白</br>'.format(index));
+            Helper.LogHandler(!$row.find('[name="loss"]').val(), CropMarketingHelper.Alert, '第{0}列特殊情形不可空白</br>'.format(index));
+        },
+    },
 }
 var LivestockMarketingHelper = {
     Alert: null,
@@ -1790,7 +1997,7 @@ var SubsidyHelper = {
                           .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
                           .prop('checked');
             if(!checked){
-                Helper.Dialog.ShowAlert('請先句選無申請之原因');
+                Helper.Dialog.ShowAlert('請先勾選無申請之原因');
                 e.preventDefault();
             }
             SubsidyHelper.Object.Refuse.Collect();

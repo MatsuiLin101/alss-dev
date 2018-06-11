@@ -7,10 +7,11 @@
                 </div>
             </th>
             <td>
+                <div name="landarea" class="alert alert-danger"></div>
                 {% for type in land_types %}
                 <div class="col-md-3">
                     <label>
-                        <input type="checkbox"  data-landtype-id="{{ type.id }}" name="landtype">
+                        <input type="checkbox"  data-landtype-name="{{ type.name }}" data-landtype-id="{{ type.id }}" name="landtype">
                         ({{ type.id }}) {{ type.name }}
                     </label>
                 </div>
@@ -34,15 +35,17 @@
                 <small class="form-text text-muted">註：所經營相關事業之原材物料須運用自家初級農產品或運用自有農業生產設施(備)者</small>
             </th>
             <td>
+                <div name="business" class="alert alert-danger"></div>
                 <div class="form-horizontal">
                     {% for business in farm_related_businesses %}
                     <div class="form-inline col-md-6">
                         <label class="fw-400">
-                            <input type="checkbox"  data-farmrelatedbusiness-id="{{ business.id }}" name="farmrelatedbusiness">
+                            <input type="checkbox"  data-farmrelatedbusiness-id="{{ business.id }}"
+                                   data-has-business="{{ business.has_business|yesno:'true,false' }}" name="farmrelatedbusiness">
                             {{ business.id }}.{{ business.name }}
                         </label>
                         {% if business.has_extra %}
-                        <input class="small form-control" type="text"  data-farmrelatedbusiness-id="{{ business.id }}" name="extra">
+                        <input class="form-control" type="text"  data-farmrelatedbusiness-id="{{ business.id }}" name="extra">
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -57,6 +60,7 @@
                 <small class="form-text text-muted">(請按全年生產價值最多者註記一項)</small>
             </th>
             <td>
+                <div name="managementtype" class="alert alert-danger"></div>
                 <div class="form-horizontal">
                     {% for type in management_types %}
                     <div class="checkbox col-md-4">
