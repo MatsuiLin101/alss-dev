@@ -63,21 +63,25 @@ class Builder(object):
 
     def build(self):
         self.build_survey()
-        self.build_phone()
-        self.build_address()
-        self.build_land_area()
-        self.build_business()
-        self.build_management()
-        self.build_crop_marketing()
-        self.build_livestock_marketing()
-        self.build_annual_income()
-        self.build_population_age()
-        self.build_population()
-        self.build_hire()
-        self.build_long_term_hire()
-        self.build_short_term_hire()
-        self.build_no_salary_hire()
-        self.build_lack()
+        try:
+            self.build_phone()
+            self.build_address()
+            self.build_land_area()
+            self.build_business()
+            self.build_management()
+            self.build_crop_marketing()
+            self.build_livestock_marketing()
+            self.build_annual_income()
+            self.build_population_age()
+            self.build_population()
+            self.build_hire()
+            self.build_long_term_hire()
+            self.build_short_term_hire()
+            self.build_no_salary_hire()
+            self.build_lack()
+        except Exception as e:
+            Survey.objects.filter(farmer_id=self.survey.farmer_id, page=self.survey.page).delete()
+            raise e
 
     @staticmethod
     def check_string(string):
