@@ -18,13 +18,13 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Index
+from .views import Surveys2018Index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', Index.as_view(), name='index'),
+    url(r'^2018/$', Surveys2018Index.as_view(), name='surveys18_index'),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
-    url(r'^surveys2018/', include('surveys18.urls', namespace='surveys18')),
+    url(r'^surveys18/', include('surveys18.urls', namespace='surveys18')),
 ]
 
 if settings.DEBUG:

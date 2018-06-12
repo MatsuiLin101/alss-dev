@@ -5,18 +5,33 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
+
+function FixAffixWidth() {
+    if ($(window).width() > 992) {
+        /* Fix affix width in Firefox */
+        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
+        $('#wrapper .affix').css('max-width', affixMaxWidth - 30);
+
+    }else{
+        $('#wrapper .affix').css('max-width', 'none');
+    }
+}
+
 $(document).ready(function() {
 
     $(window).resize(function(){
-
         FixAffixWidth();
-
     });
 
     /* Loading Animation */
     Pace.on('done',function(){
         $('#wrapper').fadeIn(300);
         FixAffixWidth();
+    });
+
+    /* autocomplete */
+    $( "#farmerId" ).autocomplete({
+        source: FarmerIds,
     });
 
     /* panel control */
@@ -107,17 +122,6 @@ $(document).ready(function() {
         $('[data-partial="about"]').show();
     });
 })
-
-var FixAffixWidth = function(){
-    if ($(window).width() > 992) {
-        /* Fix affix width in Firefox */
-        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
-        $('.affix').css('max-width', affixMaxWidth - 30);
-
-    }else{
-        $('.affix').css('max-width', 'none');
-    }
-}
 
 var GetFarmerData = function (url, fid, readonly) {
     return $.ajax({
