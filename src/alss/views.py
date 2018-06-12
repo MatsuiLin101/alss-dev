@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 
 from surveys18.models import (
+    Survey,
     FarmRelatedBusiness,
     ManagementType,
     LandType,
@@ -29,13 +30,13 @@ from surveys18.models import (
 )
 
 
-class Index(LoginRequiredMixin, TemplateView):
+class Surveys2018Index(LoginRequiredMixin, TemplateView):
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Index, self).get_context_data(**kwargs)
+        context = super(Surveys2018Index, self).get_context_data(**kwargs)
         # template render objects
         context['farm_related_businesses'] = FarmRelatedBusiness.objects.all()
         context['management_types'] = ManagementType.objects.all()
@@ -77,6 +78,7 @@ class Index(LoginRequiredMixin, TemplateView):
             'nosalaryhire': render_to_string('row-ui/no-salary-hire.html', context),
         }
         context['ui'] = json.dumps(ui)
+        context['fid'] = json.dumps(list(Survey.objects.values_list('farmer_id', flat=True).distinct()))
 
         return context
 

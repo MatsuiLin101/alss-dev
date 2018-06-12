@@ -1,6 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.db.models import Q
+
 from rest_framework.generics import (
     ListAPIView,
     UpdateAPIView,
