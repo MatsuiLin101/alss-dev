@@ -127,7 +127,7 @@ class Builder(object):
     def build_survey(self, readonly=True):
         try:
             string = self.string[0]
-            id = string[0:12]
+            farmer_id = string[0:12]
             total_pages = int(string[12:14])
             page = int(string[14:16])
             if len(self.string[0]) > 16:
@@ -144,23 +144,34 @@ class Builder(object):
             raise StringLengthError(target='Survey', msg=e)
 
         # dup
-        obj = Survey.objects.filter(page=page, farmer_id=id, readonly=readonly).all()
-        obj_2 = Survey.objects.filter(page=page, farmer_id=id, readonly=False).all()
+        obj = Survey.objects.filter(page=page, farmer_id=id, readonly=readonly, is_updated=False).all()
+        obj_2 = Survey.objects.filter(page=page, farmer_id=id, readonly=False, is_updated=False).all()
+        obj_3 = Survey.objects.filter(page=page, farmer_id=id, readonly=readonly, is_updated=True).all()
         if obj:
             obj.delete()
         if obj_2:
             obj_2.delete()
+        if obj_3:
+            self.survey=obj_3
         try:
-            if self.more_page:
+            if obj_3 :
+                self.survey.farmer_name = name
+                self.survey.total_pages = total_pages
+                self.survey.note = note
+                self.survey.period = period_h * 60 + period_m
+                self.survey.distance = distance_km
+                self.survey.save()
+
+            elif self.more_page:
                 survey = Survey.objects.create(
-                    farmer_id=id,
+                    farmer_id=farmer_id,
                     page=page,
                     total_pages=total_pages,
                     readonly=readonly
                 )
             else:
                 survey = Survey.objects.create(
-                    farmer_id=id,
+                    farmer_id=farmer_id,
                     page=page,
                     total_pages=total_pages,
                     farmer_name=name,
@@ -177,233 +188,240 @@ class Builder(object):
             self.survey = survey
 
     def build_phone(self):
-        if self.more_page is False:
-            try:
-                string = self.string[0]
-                phones = string[23:44].replace("#", "").split("/")
-            except ValueError as e:
-                raise StringLengthError(target='Phone', msg=e)
-            else:
+        if self.survey.is_updated is False:
+            if self.more_page is False:
                 try:
-                    self.phones = []
-                    for number in phones:
-                        if len(number) > 0:
-                            phone =Phone.objects.create(
-                                survey=self.survey,
-                                phone=number
-                            )
-                            self.phones.append(phone)
+                    string = self.string[0]
+                    phones = string[23:44].replace("#", "").split("/")
                 except ValueError as e:
-                    raise CreateModelError(target='Phone', msg=e)
+                    raise StringLengthError(target='Phone', msg=e)
+                else:
+                    try:
+                        self.phones = []
+                        for number in phones:
+                            if len(number) > 0:
+                                phone =Phone.objects.create(
+                                    survey=self.survey,
+                                    phone=number
+                                )
+                                self.phones.append(phone)
+                    except ValueError as e:
+                        raise CreateModelError(target='Phone', msg=e)
 
     def build_address(self):
-        match = False
-        mismatch = False
-        if self.more_page is False:
-            try:
-                string = self.string[0]
-                match_str = string[46:47]
-                mismatch_str = string[47:48]
-                address = string[48:]
-                if match_str == "1":
-                    match = True
-                if mismatch_str == "1":
-                    mismatch = True
-            except ValueError as e:
-                raise StringLengthError(target='Address Match', msg=e)
-            else:
+        if self.survey.is_updated is False:
+            match = False
+            mismatch = False
+            if self.more_page is False:
                 try:
-                    address = AddressMatch.objects.create(
-                        survey=self.survey,
-                        match=match,
-                        mismatch=mismatch,
-                        address=address
-                    )
+                    string = self.string[0]
+                    match_str = string[46:47]
+                    mismatch_str = string[47:48]
+                    address = string[48:]
+                    if match_str == "1":
+                        match = True
+                    if mismatch_str == "1":
+                        mismatch = True
                 except ValueError as e:
-                    raise CreateModelError(target='Address Match', msg=e)
+                    raise StringLengthError(target='Address Match', msg=e)
                 else:
-                    self.address = address
+                    try:
+                        address = AddressMatch.objects.create(
+                            survey=self.survey,
+                            match=match,
+                            mismatch=mismatch,
+                            address=address
+                        )
+                    except ValueError as e:
+                        raise CreateModelError(target='Address Match', msg=e)
+                    else:
+                        self.address = address
 
     def build_land_area(self):
-        if self.more_page is False:
-            try:
-                string = self.string[1]
-                area_str = string[0:26]
-            except ValueError as e:
-                raise StringLengthError(target='Land Area', msg=e)
-            else:
+        if self.survey.is_updated is False:
+            if self.more_page is False:
                 try:
-                    self.land_area = []
-                    cnt = 0
-                    for i in range(5,len(area_str),5):
-                        if int(area_str[cnt*5:i])>0:
+                    string = self.string[1]
+                    area_str = string[0:26]
+                except ValueError as e:
+                    raise StringLengthError(target='Land Area', msg=e)
+                else:
+                    try:
+                        self.land_area = []
+                        cnt = 0
+                        for i in range(5,len(area_str),5):
+                            if int(area_str[cnt*5:i])>0:
 
-                            type=1 if cnt<3 else 2
-                            status=int((i/5))-3 if i/5>3 else int((i/5))
+                                type=1 if cnt<3 else 2
+                                status=int((i/5))-3 if i/5>3 else int((i/5))
 
-                            land_type = LandType.objects.get(id=type)
-                            land_status = LandStatus.objects.get(id=status)
+                                land_type = LandType.objects.get(id=type)
+                                land_status = LandStatus.objects.get(id=status)
 
+                                land_area = LandArea.objects.create(
+                                    survey=self.survey,
+                                    type=land_type,
+                                    status=land_status,
+                                    value=int(area_str[cnt*5:i])
+                                )
+                                self.land_area.append(land_area)
+                            cnt = cnt+1
+
+                        if area_str[-1] == "1":
+                            land_type = LandType.objects.get(id=3)
                             land_area = LandArea.objects.create(
                                 survey=self.survey,
                                 type=land_type,
-                                status=land_status,
-                                value=int(area_str[cnt*5:i])
                             )
                             self.land_area.append(land_area)
-                        cnt = cnt+1
 
-                    if area_str[-1] == "1":
-                        land_type = LandType.objects.get(id=3)
-                        land_area = LandArea.objects.create(
-                            survey=self.survey,
-                            type=land_type,
-                        )
-                        self.land_area.append(land_area)
-
-                except ValueError as e:
-                    raise CreateModelError(target='Land Area', msg=e)
+                    except ValueError as e:
+                        raise CreateModelError(target='Land Area', msg=e)
 
     def build_business(self):
-        if self.more_page is False:
-            try:
-                string = self.string[1]
-                business_str = string[26:].split("#")[0]
-
-            except ValueError as e:
-                raise StringLengthError(target='Business', msg=e)
-            else:
+        if self.survey.is_updated is False:
+            if self.more_page is False:
                 try:
-                    self.business = []
-                    for i in range(0,8):
-                        if business_str[i] == "1":
-                            num = i+1
+                    string = self.string[1]
+                    business_str = string[26:].split("#")[0]
+
+                except ValueError as e:
+                    raise StringLengthError(target='Business', msg=e)
+                else:
+                    try:
+                        self.business = []
+                        for i in range(0,8):
+                            if business_str[i] == "1":
+                                num = i+1
+                                business = Business.objects.create(
+                                    survey=self.survey,
+                                    farm_related_business=FarmRelatedBusiness.objects.get(code=num)
+
+                                )
+                                self.business.append(business)
+                        if business_str[8] == "1":
                             business = Business.objects.create(
                                 survey=self.survey,
-                                farm_related_business=FarmRelatedBusiness.objects.get(code=num)
-
+                                farm_related_business=FarmRelatedBusiness.objects.get(code=9),
+                                extra=business_str[9:]
                             )
-                            self.business.append(business)
-                    if business_str[8] == "1":
-                        business = Business.objects.create(
-                            survey=self.survey,
-                            farm_related_business=FarmRelatedBusiness.objects.get(code=9),
-                            extra=business_str[9:]
-                        )
-                    print(business.farm_related_business)
-                    self.business.append(business)
-                except ValueError as e:
-                    raise CreateModelError(target='Business', msg=e)
+                        print(business.farm_related_business)
+                        self.business.append(business)
+                    except ValueError as e:
+                        raise CreateModelError(target='Business', msg=e)
 
     def build_management(self):
-        if self.more_page is False:
-            try:
-                string = self.string[1]
-                management_str = string[26:].split("#")[1]
-                if len(management_str) != 14:
-                    raise StringLengthError(target='management')
-            except ValueError as e:
-                raise StringLengthError(target='management', msg=e)
-            else:
+        if self.survey.is_updated is False:
+            if self.more_page is False:
                 try:
-                    for i in range(0,14):
-                        if management_str[i] == "1":
-                            num = i + 1
-                            management_type = ManagementType.objects.get(id=num)
-                            self.survey.management_types.add(management_type)
-
+                    string = self.string[1]
+                    management_str = string[26:].split("#")[1]
+                    if len(management_str) != 14:
+                        raise StringLengthError(target='management')
                 except ValueError as e:
-                    raise CreateModelError(target='management', msg=e)
+                    raise StringLengthError(target='management', msg=e)
+                else:
+                    try:
+                        for i in range(0,14):
+                            if management_str[i] == "1":
+                                num = i + 1
+                                management_type = ManagementType.objects.get(id=num)
+                                self.survey.management_types.add(management_type)
+
+                    except ValueError as e:
+                        raise CreateModelError(target='management', msg=e)
 
     def build_crop_marketing(self):
-        string = self.string[2]
-        if len(string)% 25 != 0 :
-            raise StringLengthError(target='CropMarketing')
-        else:
-            if len(string) > 0:
-                try:
-                    self.crop_marketing = []
-                    num = int(len(string)/ 25)
-                    for i in range(0,num):
-                        crop_marketing = string[i*25:i*25+25]
-                        product_str = crop_marketing[0:4]
-                        product = Product.objects.filter(code=product_str).first()
-                        land_number = int(crop_marketing[4:5])
-                        land_area = int(crop_marketing[5:9])
-                        plant_times =  int(crop_marketing[9:10])
-                        unit_str = int(crop_marketing[10:11])
-                        unit = Unit.objects.filter(code=unit_str , type = 1).first()
-                        total_yield = int(crop_marketing[11:18])
-                        unit_price = int(crop_marketing[18:23])
-                        has_facility_str = int(crop_marketing[23:24])
-                        if has_facility_str == 0 :
-                            has_facility = None
-                        elif has_facility_str == 1 :
-                            has_facility = 1
-                        else:
-                            has_facility = 0
-                        loss_str = int(crop_marketing[24:25])
-                        loss = Loss.objects.filter(code=loss_str, type = 1).first()
+        if self.survey.is_updated is False:
+            string = self.string[2]
+            if len(string)% 25 != 0 :
+                raise StringLengthError(target='CropMarketing')
+            else:
+                if len(string) > 0:
+                    try:
+                        self.crop_marketing = []
+                        num = int(len(string)/ 25)
+                        for i in range(0,num):
+                            crop_marketing = string[i*25:i*25+25]
+                            product_str = crop_marketing[0:4]
+                            product = Product.objects.filter(code=product_str).first()
+                            land_number = int(crop_marketing[4:5])
+                            land_area = int(crop_marketing[5:9])
+                            plant_times =  int(crop_marketing[9:10])
+                            unit_str = int(crop_marketing[10:11])
+                            unit = Unit.objects.filter(code=unit_str , type = 1).first()
+                            total_yield = int(crop_marketing[11:18])
+                            unit_price = int(crop_marketing[18:23])
+                            has_facility_str = int(crop_marketing[23:24])
+                            if has_facility_str == 0 :
+                                has_facility = None
+                            elif has_facility_str == 1 :
+                                has_facility = 1
+                            else:
+                                has_facility = 0
+                            loss_str = int(crop_marketing[24:25])
+                            loss = Loss.objects.filter(code=loss_str, type = 1).first()
 
-                        crop_marketing = CropMarketing.objects.create(
-                            survey=self.survey,
-                            product=product,
-                            land_number=land_number,
-                            land_area=land_area,
-                            plant_times=plant_times,
-                            unit=unit,
-                            total_yield=total_yield,
-                            unit_price=unit_price,
-                            has_facility=has_facility,
-                            loss=loss
-                        )
-                        self.crop_marketing.append(crop_marketing)
-                except ValueError as e:
-                    raise CreateModelError(target='CropMarketing', msg=e)
+                            crop_marketing = CropMarketing.objects.create(
+                                survey=self.survey,
+                                product=product,
+                                land_number=land_number,
+                                land_area=land_area,
+                                plant_times=plant_times,
+                                unit=unit,
+                                total_yield=total_yield,
+                                unit_price=unit_price,
+                                has_facility=has_facility,
+                                loss=loss
+                            )
+                            self.crop_marketing.append(crop_marketing)
+                    except ValueError as e:
+                        raise CreateModelError(target='CropMarketing', msg=e)
 
     def build_livestock_marketing(self):
-        string = self.string[3]
-        if self.more_page is False:
-            livestock_str = string[:-22]
-        else:
-            livestock_str = string
+        if self.survey.is_updated is False:
+            string = self.string[3]
+            if self.more_page is False:
+                livestock_str = string[:-22]
+            else:
+                livestock_str = string
 
 
-        if (len(livestock_str))% 24 != 0 :
-            raise StringLengthError(target='LivestockMarketing')
-        else:
-            if len(string) > 0:
-                try:
-                    self.livestock_marketing = []
-                    num = int(len(livestock_str)/ 24)
-                    for i in range(0,num):
-                        livestock = livestock_str[i*24:i*24+24]
-                        product_str = livestock[0:4]
-                        product = Product.objects.filter(code=product_str).first()
-                        unit_str = int(livestock[4:5])
-                        unit = Unit.objects.filter(code=unit_str , type = 2).first()
-                        raising_number = int(livestock[5:11])
-                        total_yield = int(livestock[11:17])
-                        unit_price = int(livestock[17:22])
-                        contract_str = int(livestock[22:23])
-                        contract = Contract.objects.filter(code=contract_str).first()
-                        loss_str = int(livestock[23:24])
-                        loss = Loss.objects.filter(code=loss_str, type = 2).first()
+            if (len(livestock_str))% 24 != 0 :
+                raise StringLengthError(target='LivestockMarketing')
+            else:
+                if len(string) > 0:
+                    try:
+                        self.livestock_marketing = []
+                        num = int(len(livestock_str)/ 24)
+                        for i in range(0,num):
+                            livestock = livestock_str[i*24:i*24+24]
+                            product_str = livestock[0:4]
+                            product = Product.objects.filter(code=product_str).first()
+                            unit_str = int(livestock[4:5])
+                            unit = Unit.objects.filter(code=unit_str , type = 2).first()
+                            raising_number = int(livestock[5:11])
+                            total_yield = int(livestock[11:17])
+                            unit_price = int(livestock[17:22])
+                            contract_str = int(livestock[22:23])
+                            contract = Contract.objects.filter(code=contract_str).first()
+                            loss_str = int(livestock[23:24])
+                            loss = Loss.objects.filter(code=loss_str, type = 2).first()
 
-                        livestock_marketing = LivestockMarketing.objects.create(
-                            survey=self.survey,
-                            product=product,
-                            unit=unit,
-                            raising_number=raising_number,
-                            total_yield=total_yield,
-                            unit_price=unit_price,
-                            contract=contract,
-                            loss=loss
+                            livestock_marketing = LivestockMarketing.objects.create(
+                                survey=self.survey,
+                                product=product,
+                                unit=unit,
+                                raising_number=raising_number,
+                                total_yield=total_yield,
+                                unit_price=unit_price,
+                                contract=contract,
+                                loss=loss
 
-                        )
-                        self.livestock_marketing.append(livestock_marketing)
-                except ValueError as e:
-                    raise CreateModelError(target='LivestockMarketing', msg=e)
+                            )
+                            self.livestock_marketing.append(livestock_marketing)
+                    except ValueError as e:
+                        raise CreateModelError(target='LivestockMarketing', msg=e)
 
     def build_annual_income(self):
         if self.more_page is False:
@@ -516,17 +534,26 @@ class Builder(object):
                         #       other_farm_work_str)
                         # print(relationship,gender,birth_year,education_level,farmer_work_day,life_style,other_farm_work)
 
-                        population = Population.objects.create(
-                            survey=self.survey,
-                            relationship=relationship,
-                            gender=gender,
-                            birth_year=birth_year,
-                            education_level=education_level,
-                            farmer_work_day=farmer_work_day,
-                            life_style=life_style,
-                            other_farm_work=other_farm_work
-                        )
-                        self.population.append(population)
+                        if self.survey.is_updated :
+                            obj = Population.objects.get(survey__id=self.survey.id , birth_year=birth_year,
+                                                         gender=gender, relationship=relationship)
+
+                            if obj:
+                                obj.life_style=life_style
+                                obj.other_farm_work=other_farm_work
+                                obj.save()
+                        else:
+                            population = Population.objects.create(
+                                survey=self.survey,
+                                relationship=relationship,
+                                gender=gender,
+                                birth_year=birth_year,
+                                education_level=education_level,
+                                farmer_work_day=farmer_work_day,
+                                life_style=life_style,
+                                other_farm_work=other_farm_work
+                            )
+                            self.population.append(population)
 
 
                 except ValueError as e:
