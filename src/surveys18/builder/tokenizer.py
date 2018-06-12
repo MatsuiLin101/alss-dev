@@ -155,7 +155,8 @@ class Builder(object):
                 survey = Survey.objects.create(
                     farmer_id=id,
                     page=page,
-                    total_pages=total_pages
+                    total_pages=total_pages,
+                    readonly=readonly
                 )
             else:
                 survey = Survey.objects.create(
