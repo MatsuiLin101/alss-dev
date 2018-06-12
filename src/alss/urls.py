@@ -22,6 +22,7 @@ from .views import Surveys2018Index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', Surveys2018Index.as_view(), name='index'),
     url(r'^2018/$', Surveys2018Index.as_view(), name='surveys18_index'),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^surveys18/', include('surveys18.urls', namespace='surveys18')),
