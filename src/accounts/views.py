@@ -54,6 +54,7 @@ def edit_info_view(request):
 
 def login_view(request):
     form = UserLoginForm(request.POST or None)
+    redirect_to = request.GET.get('redirect_to') or 'index'
     content = {
         'form': form
     }
@@ -65,7 +66,7 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         login(request, user)
         request.session['mail_sent'] = False
-        return redirect('index')
+        return redirect(redirect_to)
 
     if form.errors:
         is_active = form.cleaned_data.get('is_active')
