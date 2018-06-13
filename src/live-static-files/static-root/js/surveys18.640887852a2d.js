@@ -86,7 +86,6 @@ var Setup = function(globalUI){
         LivestockMarketingHelper.Validation.IncomeChecked.Validate();
         AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
         AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
-        SurveyHelper.Hire.Validation.HireExist.Validate();
     }
 }
 
@@ -198,7 +197,6 @@ var SurveyHelper = {
     Alert: null,
     Setup: function() {
         this.Alert = new Helper.Alert($('.alert[name="survey"]'));
-        this.Hire.Setup();
         this.FarmerName.Bind();
         this.Phone.Bind();
         this.AddressMatch.Bind();
@@ -323,10 +321,6 @@ var SurveyHelper = {
         },
     },
     Hire: {
-        Alert: null,
-        Setup: function(){
-            this.Alert = new Helper.Alert($('.alert[name="hire"]'));
-        },
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
             this.Container.change(function(){
@@ -345,11 +339,6 @@ var SurveyHelper = {
                             CloneData[MainSurveyId].hire = this.checked;
                         else if(field == 'nonhire')
                             CloneData[MainSurveyId].non_hire = this.checked;
-
-                        if(Validate){
-                            SurveyHelper.Hire.Validation.Empty.Validate();
-                            SurveyHelper.Hire.Validation.HireExist.Validate();
-                        }
                     })
                 }
             })
@@ -357,49 +346,9 @@ var SurveyHelper = {
         Set: function (obj) {
             this.Container.filter('[data-field="hire"]').prop('checked', obj.hire);
             this.Container.filter('[data-field="nonhire"]').prop('checked', obj.non_hire);
-
-            if(Validate){
-                SurveyHelper.Hire.Validation.Empty.Validate();
-                SurveyHelper.Hire.Validation.SingleSelection.Validate();
-            }
         },
         Reset: function(){
-            if (this.Alert) { this.Alert.reset(); }
             this.Container.prop('checked', false);
-        },
-        Validation: {
-            Empty: {
-                Guid: Helper.CreateGuid(),
-                Validate: function(){
-                    var con = SurveyHelper.Hire.Container.filter(':checked').length == 0;
-                    var msg = $('<p data-grid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
-                },
-            },
-            SingleSelection: {
-                Guid: Helper.CreateGuid(),
-                Validate: function(){
-                    var con = SurveyHelper.Hire.Container.filter(':checked').length > 1;
-                    var msg = $('<p data-grid="{0}">限註記一個項目</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
-                },
-            },
-            HireExist: {
-                Guid: Helper.CreateGuid(),
-                Validate: function(){
-                    var checked = SurveyHelper.Hire.Container.filter('[data-field="nonhire"]').prop('checked');
-                    var exists = LongTermHireHelper.LongTermHire.Container.find('tr').length +
-                                 ShortTermHireHelper.ShortTermHire.Container.find('tr').length +
-                                 NoSalaryHireHelper.NoSalaryHire.Container.find('tr').length > 0;
-                    var con = checked && exists;
-                    msg = $('<p data-guid="{0}">勾選無外僱人力，問項3.1.2, 3.1.3, 3.1.4應為空白</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
-
-                    var con = !checked && !exists;
-                    msg = $('<p data-guid="{0}">若全年無外僱人力，應勾選無</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
-                },
-            },
         },
     },
     Lack: {
@@ -909,7 +858,7 @@ var ManagementTypeHelper = {
 
             if(Validate){
                 ManagementTypeHelper.Validation.Empty.Validate();
-                ManagementTypeHelper.Validation.SingleSelection.Validate();
+                ManagementTypeHelper.Validation.OneMaximum.Validate();
             }
         },
         Reset: function(){
@@ -929,7 +878,7 @@ var ManagementTypeHelper = {
 
                     if(Validate){
                         ManagementTypeHelper.Validation.Empty.Validate();
-                        ManagementTypeHelper.Validation.SingleSelection.Validate();
+                        ManagementTypeHelper.Validation.OneMaximum.Validate();
                     }
                 }
             })
@@ -944,7 +893,7 @@ var ManagementTypeHelper = {
                 Helper.LogHandler(con, ManagementTypeHelper.Alert, msg);
             },
         },
-        SingleSelection: {
+        OneMaximum: {
             Guid: Helper.CreateGuid(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].management_types.length > 1;
@@ -969,11 +918,6 @@ var CropMarketingHelper = {
     },
     Set: function(array, surveyId){
         this.CropMarketing.Set(array, surveyId);
-        if(Validate){
-            CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
-                CropMarketingHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     CropMarketing: {
         Object: {
@@ -1014,6 +958,11 @@ var CropMarketingHelper = {
 
                 CropMarketingHelper.CropMarketing.Container.append($row);
             })
+            if(Validate){
+                CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
+                    CropMarketingHelper.Validation.RequiredField.Validate($(this));
+                })
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1060,14 +1009,15 @@ var CropMarketingHelper = {
                     obj.unit_price = parseInt($tr.find('[name="unitprice"]').val());
                     obj.land_area = parseInt($tr.find('[name="landarea"]').val());
                     obj.total_yield = parseInt($tr.find('[name="totalyield"]').val());
-
-                    if(Validate){
-                        CropMarketingHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
 
-
+            if(Validate){
+                $row.find('select, input').change(function(){
+                    $tr = $(this).closest('tr');
+                    CropMarketingHelper.Validation.RequiredField.Validate($tr);
+                })
+            }
 
             return $row;
         },
@@ -1142,11 +1092,6 @@ var LivestockMarketingHelper = {
     },
     Set: function(array, surveyId){
         this.LivestockMarketing.Set(array, surveyId);
-        if(Validate){
-            LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
-                LivestockMarketingHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     LivestockMarketing: {
         Object: {
@@ -1171,11 +1116,17 @@ var LivestockMarketingHelper = {
                 var $row = LivestockMarketingHelper.LivestockMarketing.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', livestock_marketing.product);
-                $row.find('select[name="unit"]').selectpicker('val', livestock_marketing.unit);
+
+                $row.find('select[name="unit"]').selectpicker('val', livestock_marketing.unit)
+
                 $row.find('input[name="raisingnumber"]').val(livestock_marketing.raising_number);
+
                 $row.find('input[name="totalyield"]').val(livestock_marketing.total_yield);
+
                 $row.find('input[name="unitprice"]').val(livestock_marketing.unit_price);
+
                 $row.find('select[name="contract"]').selectpicker('val', livestock_marketing.contract);
+
                 $row.find('select[name="loss"]').selectpicker('val', livestock_marketing.loss);
 
                 $row.attr('data-survey-id', surveyId);
@@ -1185,6 +1136,11 @@ var LivestockMarketingHelper = {
 
                 LivestockMarketingHelper.LivestockMarketing.Container.append($row);
             })
+            if(Validate){
+                LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
+                    LivestockMarketingHelper.Validation.RequiredField.Validate($(this));
+                })
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1228,13 +1184,16 @@ var LivestockMarketingHelper = {
                     obj.total_yield = parseInt($tr.find('[name="totalyield"]').val());
                     obj.unit = parseInt($tr.find('[name="unit"]').val());
                     obj.unit_price = parseInt($tr.find('[name="unitprice"]').val());
-
-                    if(Validate){
-                        LivestockMarketingHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
             return $row;
+
+            if(Validate){
+                $row.find('select, input').change(function(){
+                    $tr = $(this).closest('tr');
+                    LivestockMarketingHelper.Validation.RequiredField.Validate($tr);
+                })
+            }
         },
     },
     Adder: {
@@ -1253,7 +1212,7 @@ var LivestockMarketingHelper = {
 
                     if(Validate){
                         LivestockMarketingHelper.Validation.RequiredField.Validate($row);
-                        LivestockMarketingHelper.Validation.IncomeChecked.Validate();
+                        LivestockMarketingHelper.Validation.IncomeChecked.Validation();
                     }
                 }
             })
@@ -1517,14 +1476,6 @@ var PopulationHelper = {
     },
     Set: function(array, surveyId){
         this.Population.Set(array, surveyId);
-        if(Validate){
-            PopulationHelper.Population.Container.find('tr').each(function(){
-                PopulationHelper.Validation.RequiredField.Validate($(this));
-                PopulationHelper.Validation.BirthYear.Validate($(this));
-                PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($(this));
-            })
-            PopulationHelper.Validation.AtLeastOne65Worker.Validate();
-        }
     },
     Population: {
         Object: {
@@ -1561,6 +1512,14 @@ var PopulationHelper = {
 
                 PopulationHelper.Population.Container.append($row);
             })
+
+            if(Validate){
+                PopulationHelper.Population.Container.find('tr').each(function(){
+                    PopulationHelper.Validation.BirthYear.Validate($(this));
+                    PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($(this));
+                })
+                PopulationHelper.Validation.AtLeastOne65Worker.Validate();
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1604,16 +1563,19 @@ var PopulationHelper = {
                     obj.life_style = parseInt($tr.find('[name="lifestyle"]').val());
                     obj.other_farm_work = parseInt($tr.find('[name="otherfarmwork"]').val());
 
-
-                    if(Validate){
-                        PopulationHelper.Validation.RequiredField.Validate($tr);
-                        PopulationHelper.Validation.BirthYear.Validate($tr);
-                        PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($tr);
-                        PopulationHelper.Validation.AtLeastOne65Worker.Validate();
-                    }
                 }
             })
 
+            if(Validate){
+                $row.find('select, input').change(function(){
+                    $tr = $(this).closest('tr');
+                    PopulationHelper.Validation.RequiredField.Validate($tr);
+                    PopulationHelper.Validation.BirthYear.Validate($tr);
+                    PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($tr);
+                    PopulationHelper.Validation.AtLeastOne65Worker.Validate();
+                })
+
+            }
             return $row;
         },
     },
@@ -1695,10 +1657,9 @@ var PopulationHelper = {
         },
     },
 }
+
 var LongTermHireHelper = {
-    Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="longtermhire"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.LongTermHire.Bind($row);
@@ -1711,11 +1672,6 @@ var LongTermHireHelper = {
     },
     Set: function(array, surveyId){
         this.LongTermHire.Set(array, surveyId);
-        if(Validate){
-            LongTermHireHelper.LongTermHire.Container.find('tr').each(function(){
-                LongTermHireHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     LongTermHire: {
         Object: {
@@ -1740,13 +1696,16 @@ var LongTermHireHelper = {
                 var $row = LongTermHireHelper.LongTermHire.$Row.clone(true, true);
 
                 $row.find('select[name="worktype"]').selectpicker('val', long_term_hire.work_type);
+
                 long_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
                     .attr('data-numberworker-id', number_worker.id)
                     .val(number_worker.count).trigger('change');
-                });
+                })
+
                 $row.find('select[name="month"]').selectpicker('val', long_term_hire.months);
+
                 $row.find('input[name="avgworkday"]').val(long_term_hire.avg_work_day);
 
                 $row.attr('data-survey-id', surveyId);
@@ -1780,13 +1739,6 @@ var LongTermHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-                        
-                        if(Validate){
-                            var guid = $tr.data('guid');
-                            LongTermHireHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
-                            LongTermHireHelper.Alert.alert();
-                            SurveyHelper.Hire.Validation.HireExist.Validate();
-                        }
                     })
                 }
             })
@@ -1805,13 +1757,8 @@ var LongTermHireHelper = {
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.months = $tr.find('[name="month"]').val();
                     obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
-
-                    if(Validate){
-                        LongTermHireHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
-
             return $row;
         },
     },
@@ -1828,34 +1775,14 @@ var LongTermHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     LongTermHireHelper.LongTermHire.Container.append($row);
-
-                    if(Validate){
-                        LongTermHireHelper.Validation.RequiredField.Validate($row);
-                    }
                 }
             })
         },
     },
-    Validation: {
-        RequiredField: {
-            Validate: function($row){
-                var guid = $row.data('guid');
-                var index = LongTermHireHelper.LongTermHire.Container.find('tr').index($row) + 1;
-                function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
-                }
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), LongTermHireHelper.Alert, makeString('主要僱用工作類型'));
-                Helper.LogHandler(!$row.find('[name="sumcount"]').val(), LongTermHireHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, LongTermHireHelper.Alert, makeString('僱用月份'));
-                Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), LongTermHireHelper.Alert, makeString('平均每月工作日數'));
-            },
-        },
-    },
+    Alert: null,
 }
 var ShortTermHireHelper = {
-    Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="shorttermhire"]'));
         var $row = $(row);
         $row.find('select[name="worktype"]').attr('multiple', '');
         this.ShortTermHire.Bind($row);
@@ -1868,11 +1795,6 @@ var ShortTermHireHelper = {
     },
     Set: function(array){
         this.ShortTermHire.Set(array);
-        if(Validate){
-            ShortTermHireHelper.ShortTermHire.Container.find('tr').each(function(){
-                ShortTermHireHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     ShortTermHire: {
         Object: {
@@ -1896,14 +1818,17 @@ var ShortTermHireHelper = {
             array.forEach(function(short_term_hire, i){
                 var $row = ShortTermHireHelper.ShortTermHire.$Row.clone(true, true);
 
-                $row.find('select[name="month"]').selectpicker('val', short_term_hire.month);
+                $row.find('select[name="month"]').selectpicker('val', short_term_hire.month)
+
                 short_term_hire.number_workers.forEach(function(number_worker, j){
                     $row.find('input[name="numberworker"]')
                     .filter('[data-agescope-id="{0}"]'.format(number_worker.age_scope))
                     .attr('data-numberworker-id', number_worker.id)
                     .val(number_worker.count).trigger('change');
                 })
+
                 $row.find('select[name="worktype"]').selectpicker('val', short_term_hire.work_types);
+
                 $row.find('input[name="avgworkday"]').val(short_term_hire.avg_work_day);
 
                 short_term_hire.guid = Helper.CreateGuid();
@@ -1934,13 +1859,6 @@ var ShortTermHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
-                        if(Validate){
-                            var guid = $tr.data('guid');
-                            ShortTermHireHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
-                            ShortTermHireHelper.Alert.alert();
-                            SurveyHelper.Hire.Validation.HireExist.Validate();
-                        }
                     })
                 }
             })
@@ -1958,10 +1876,6 @@ var ShortTermHireHelper = {
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.month = parseInt($tr.find('[name="month"]').val());
                     obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
-                    
-                    if(Validate){
-                        ShortTermHireHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
             return $row;
@@ -1980,34 +1894,14 @@ var ShortTermHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     ShortTermHireHelper.ShortTermHire.Container.append($row);
-                    
-                    if(Validate){
-                        ShortTermHireHelper.Validation.RequiredField.Validate($row);
-                    }
                 }
             })
         },
     },
-    Validation: {
-        RequiredField: {
-            Validate: function($row){
-                var guid = $row.data('guid');
-                var index = ShortTermHireHelper.ShortTermHire.Container.find('tr').index($row) + 1;
-                function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
-                }
-                Helper.LogHandler(!$row.find('[name="month"]').val(), ShortTermHireHelper.Alert, makeString('僱用月份'));
-                Helper.LogHandler(!$row.find('[name="sumcount"]').val(), ShortTermHireHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="worktype"]').val().length == 0, ShortTermHireHelper.Alert, makeString('主要僱用工作類型'));
-                Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), ShortTermHireHelper.Alert, makeString('平均每月工作日數'));
-            },
-        },
-    },
+    Alert: null,
 }
 var NoSalaryHireHelper = {
-    Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="nosalaryhire"]'));
         var $row = $(row);
         $row.find('select[name="month"]');
         this.NoSalaryHire.Bind($row);
@@ -2020,11 +1914,6 @@ var NoSalaryHireHelper = {
     },
     Set: function(array){
         this.NoSalaryHire.Set(array);
-        if(Validate){
-            NoSalaryHireHelper.NoSalaryHire.Container.find('tr').each(function(){
-                NoSalaryHireHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     NoSalaryHire: {
         Object: {
@@ -2046,7 +1935,9 @@ var NoSalaryHireHelper = {
         Set: function (array) {
             array.forEach(function(no_salary_hire, i){
                 var $row = NoSalaryHireHelper.NoSalaryHire.$Row.clone(true, true);
-                $row.find('select[name="month"]').selectpicker('val', no_salary_hire.month);
+
+                $row.find('select[name="month"]').selectpicker('val', no_salary_hire.month)
+
                 $row.find('input[name="count"]').val(no_salary_hire.count);
 
                 no_salary_hire.guid = Helper.CreateGuid();
@@ -2068,13 +1959,6 @@ var NoSalaryHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
-                        if(Validate){
-                            var guid = $tr.data('guid');
-                            NoSalaryHireHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
-                            NoSalaryHireHelper.Alert.alert();
-                            SurveyHelper.Hire.Validation.HireExist.Validate();
-                        }
                     })
                 }
             })
@@ -2090,10 +1974,6 @@ var NoSalaryHireHelper = {
 
                     obj.month = parseInt($tr.find('[name="month"]').val());
                     obj.count = parseInt($tr.find('[name="count"]').val());
-
-                    if(Validate){
-                        NoSalaryHireHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
             return $row;
@@ -2112,32 +1992,15 @@ var NoSalaryHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     NoSalaryHireHelper.NoSalaryHire.Container.append($row);
-
-                    if(Validate){
-                        NoSalaryHireHelper.Validation.RequiredField.Validate($row);
-                    }
                 }
             })
         },
     },
-    Validation: {
-        RequiredField: {
-            Validate: function($row){
-                var guid = $row.data('guid');
-                var index = NoSalaryHireHelper.NoSalaryHire.Container.find('tr').index($row) + 1;
-                function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
-                }
-                Helper.LogHandler(!$row.find('[name="month"]').val(), NoSalaryHireHelper.Alert, makeString('月份'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), NoSalaryHireHelper.Alert, makeString('人數'));
-            },
-        },
-    },
-}
-var LongTermLackHelper = {
     Alert: null,
+}
+
+var LongTermLackHelper = {
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="longtermlack"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.LongTermLack.Bind($row);
@@ -2150,11 +2013,6 @@ var LongTermLackHelper = {
     },
     Set: function(array, surveyId){
         this.LongTermLack.Set(array, surveyId);
-        if(Validate){
-            LongTermLackHelper.LongTermLack.Container.find('tr').each(function(){
-                LongTermLackHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     LongTermLack: {
         Object: {
@@ -2179,10 +2037,13 @@ var LongTermLackHelper = {
                 var $row = LongTermLackHelper.LongTermLack.$Row.clone(true, true);
 
                 $row.find('select[name="worktype"]').selectpicker('val', long_term_lack.work_type);
+
                 $row.find('input[name="count"]').val(long_term_lack.count);
+
                 $row.find('select[name="month"]').selectpicker('val', long_term_lack.months);
+
                 $row.attr('data-survey-id', surveyId);
-                
+
                 long_term_lack.guid = Helper.CreateGuid();
                 $row.attr('data-guid', long_term_lack.guid);
 
@@ -2203,12 +2064,6 @@ var LongTermLackHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
-                        if(Validate){
-                            var guid = $tr.data('guid');
-                            LongTermLackHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
-                            LongTermLackHelper.Alert.alert();
-                        }
                     })
                 }
             })
@@ -2226,10 +2081,6 @@ var LongTermLackHelper = {
                     obj.work_type = parseInt($tr.find('[name="worktype"]').val());
                     obj.months = $tr.find('[name="month"]').val();
                     obj.count = parseInt($tr.find('[name="count"]').val());
-
-                    if(Validate){
-                        LongTermLackHelper.Validation.RequiredField.Validate($tr);
-                    }
                 }
             })
             return $row;
@@ -2248,33 +2099,15 @@ var LongTermLackHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     LongTermLackHelper.LongTermLack.Container.append($row);
-
-                    if(Validate){
-                        LongTermLackHelper.Validation.RequiredField.Validate($row);
-                    }
                 }
             })
         },
     },
-    Validation: {
-        RequiredField: {
-            Validate: function($row){
-                var guid = $row.data('guid');
-                var index = LongTermLackHelper.LongTermLack.Container.find('tr').index($row) + 1;
-                function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
-                }
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), LongTermLackHelper.Alert, makeString('主要短缺工作類型'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), LongTermLackHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, LongTermLackHelper.Alert, makeString('缺工月份'));
-            },
-        },
-    },
-}
-var ShortTermLackHelper = {
     Alert: null,
+}
+
+var ShortTermLackHelper = {
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="shorttermlack"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.ShortTermLack.Bind($row);
@@ -2287,11 +2120,6 @@ var ShortTermLackHelper = {
     },
     Set: function(array, surveyId){
         this.ShortTermLack.Set(array, surveyId);
-        if(Validate){
-            ShortTermLackHelper.ShortTermLack.Container.find('tr').each(function(){
-                ShortTermLackHelper.Validation.RequiredField.Validate($(this));
-            })
-        }
     },
     ShortTermLack: {
         Object: {
@@ -2316,8 +2144,11 @@ var ShortTermLackHelper = {
                 var $row = ShortTermLackHelper.ShortTermLack.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', short_term_lack.product);
+
                 $row.find('select[name="worktype"]').selectpicker('val', short_term_lack.work_type);
+
                 $row.find('input[name="count"]').val(short_term_lack.count);
+
                 $row.find('select[name="month"]').selectpicker('val', short_term_lack.months);
 
                 $row.attr('data-survey-id', surveyId);
@@ -2342,12 +2173,6 @@ var ShortTermLackHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-                        
-                        if(Validate){
-                            var guid = $tr.data('guid');
-                            ShortTermLackHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
-                            ShortTermLackHelper.Alert.alert();
-                        }
                     })
                 }
             })
@@ -2366,10 +2191,6 @@ var ShortTermLackHelper = {
                     obj.work_type = $tr.find('[name="worktype"]').val();
                     obj.months = $tr.find('[name="month"]').val();
                     obj.count = parseInt($tr.find('[name="count"]').val());
-                    
-                    if(Validate){
-                         ShortTermLackHelper.Validation.RequiredField.Validate($tr);                   
-                    }
                 }
             })
             return $row;
@@ -2388,30 +2209,13 @@ var ShortTermLackHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     ShortTermLackHelper.ShortTermLack.Container.append($row);
-                    
-                    if(Validate){
-                        ShortTermLackHelper.Validation.RequiredField.Validate($row);
-                    }
                 }
             })
         },
     },
-    Validation: {
-        RequiredField: {
-            Validate: function($row){
-                var guid = $row.data('guid');
-                var index = ShortTermLackHelper.ShortTermLack.Container.find('tr').index($row) + 1;
-                function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
-                }
-                Helper.LogHandler(!$row.find('[name="product"]').val(), ShortTermLackHelper.Alert, makeString('農畜產品名稱'));
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), ShortTermLackHelper.Alert, makeString('主要短缺工作類型'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), ShortTermLackHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, ShortTermLackHelper.Alert, makeString('缺工月份'));
-            },
-        },
-    },
+    Alert: null,
 }
+
 var SubsidyHelper = {
     Setup: function(){
         this.Bind();
