@@ -942,21 +942,13 @@ var CropMarketingHelper = {
                 var $row = CropMarketingHelper.CropMarketing.$Row.clone(true, true);
 
                 $row.find('select[name="product"]').selectpicker('val', crop_marketing.product);
-
                 $row.find('input[name="landnumber"]').val(crop_marketing.land_number);
-
                 $row.find('input[name="landarea"]').val(crop_marketing.land_area);
-
                 $row.find('input[name="planttimes"]').val(crop_marketing.plant_times);
-
                 $row.find('select[name="unit"]').selectpicker('val', crop_marketing.unit);
-
                 $row.find('input[name="totalyield"]').val(crop_marketing.total_yield);
-
                 $row.find('input[name="unitprice"]').val(crop_marketing.unit_price);
-
                 $row.find('select[name="hasfacility"]').selectpicker('val', crop_marketing.has_facility);
-
                 $row.find('select[name="loss"]').selectpicker('val', crop_marketing.loss);
 
                 $row.attr('data-survey-id', surveyId);
@@ -965,11 +957,12 @@ var CropMarketingHelper = {
                 $row.attr('data-guid', crop_marketing.guid);
 
                 CropMarketingHelper.CropMarketing.Container.append($row);
-
-                if(Validate){
-                    CropMarketingHelper.Validation.RequiredField.Validate($row);
-                }
             })
+            if(Validate){
+                CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
+                    CropMarketingHelper.Validation.RequiredField.Validate($(this));
+                })
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1142,11 +1135,12 @@ var LivestockMarketingHelper = {
                 $row.attr('data-guid', livestock_marketing.guid);
 
                 LivestockMarketingHelper.LivestockMarketing.Container.append($row);
-
-                if(Validate){
-                    LivestockMarketingHelper.Validation.RequiredField.Validate($row);
-                }
             })
+            if(Validate){
+                LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
+                    LivestockMarketingHelper.Validation.RequiredField.Validate($(this));
+                })
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1386,7 +1380,6 @@ var AnnualIncomeHelper = {
         },
     },
 }
-
 var PopulationAgeHelper = {
     Alert: null,
     Set: function(array) {
@@ -1468,7 +1461,9 @@ var PopulationAgeHelper = {
     },
 }
 var PopulationHelper = {
+    Alert: null,
     Setup: function(row){
+        this.Alert = new Helper.Alert($('.alert[name="population"]'));
         var $row = $(row);
         this.Population.Bind($row);
         this.Adder.Bind();
@@ -1503,21 +1498,13 @@ var PopulationHelper = {
         Set: function (array, surveyId) {
             array.forEach(function(population, i){
                 var $row = PopulationHelper.Population.$Row.clone(true, true);
-
                 $row.find('select[name="relationship"]').selectpicker('val', population.relationship);
-
                 $row.find('select[name="gender"]').selectpicker('val', population.gender);
-
                 $row.find('input[name="birthyear"]').val(population.birth_year);
-
                 $row.find('select[name="educationlevel"]').selectpicker('val', population.education_level);
-
                 $row.find('select[name="farmerworkday"]').selectpicker('val', population.farmer_work_day);
-
                 $row.find('select[name="lifestyle"]').selectpicker('val', population.life_style);
-
                 $row.find('select[name="otherfarmwork"]').selectpicker('val', population.other_farm_work);
-
                 $row.attr('data-survey-id', surveyId);
 
                 population.guid = Helper.CreateGuid();
@@ -1525,6 +1512,14 @@ var PopulationHelper = {
 
                 PopulationHelper.Population.Container.append($row);
             })
+
+            if(Validate){
+                PopulationHelper.Population.Container.find('tr').each(function(){
+                    PopulationHelper.Validation.BirthYear.Validate($(this));
+                    PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($(this));
+                })
+                PopulationHelper.Validation.AtLeastOne65Worker.Validate();
+            }
         },
         Reset: function() {
             this.Container.html('');
@@ -1541,7 +1536,11 @@ var PopulationHelper = {
                         })
                         $tr.remove();
                         if(Validate){
+                            var guid = $tr.data('guid');
+                            PopulationHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
+                            PopulationHelper.Alert.alert();
                             PopulationAgeHelper.Validation.MemberCount.Validate();
+                            PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         }
                     })
                 }
@@ -1563,8 +1562,20 @@ var PopulationHelper = {
                     obj.farmer_work_day = parseInt($tr.find('[name="farmerworkday"]').val());
                     obj.life_style = parseInt($tr.find('[name="lifestyle"]').val());
                     obj.other_farm_work = parseInt($tr.find('[name="otherfarmwork"]').val());
+
                 }
             })
+
+            if(Validate){
+                $row.find('select, input').change(function(){
+                    $tr = $(this).closest('tr');
+                    PopulationHelper.Validation.RequiredField.Validate($tr);
+                    PopulationHelper.Validation.BirthYear.Validate($tr);
+                    PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($tr);
+                    PopulationHelper.Validation.AtLeastOne65Worker.Validate();
+                })
+
+            }
             return $row;
         },
     },
@@ -1582,13 +1593,69 @@ var PopulationHelper = {
                     $row.attr('data-survey-id', MainSurveyId);
                     PopulationHelper.Population.Container.append($row);
                     if(Validate){
+                        PopulationHelper.Validation.RequiredField.Validate($row);
                         PopulationAgeHelper.Validation.MemberCount.Validate();
+                        PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                     }
                 }
             })
         },
     },
-    Alert: null,
+    Validation: {
+        RequiredField: {
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
+                function makeString(name){
+                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                }
+                Helper.LogHandler(!$row.find('[name="relationship"]').val(), PopulationHelper.Alert, makeString('與戶長關係'));
+                Helper.LogHandler(!$row.find('[name="gender"]').val(), PopulationHelper.Alert, makeString('性別'));
+                Helper.LogHandler(!$row.find('[name="birthyear"]').val(), PopulationHelper.Alert, makeString('出生年次'));
+                Helper.LogHandler(!$row.find('[name="educationlevel"]').val(), PopulationHelper.Alert, makeString('教育程度'));
+                Helper.LogHandler(!$row.find('[name="farmerworkday"]').val(), PopulationHelper.Alert, makeString('全年自家農牧業工作日數'));
+                Helper.LogHandler(!$row.find('[name="lifestyle"]').val(), PopulationHelper.Alert, makeString('全年主要生活型態'));
+                Helper.LogHandler(!$row.find('[name="otherfarmwork"]').val(), PopulationHelper.Alert, makeString('是否有從事農牧業外工作'));
+            },
+        },
+        BirthYear: {
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
+                var year = $row.find('[name="birthyear"]').val()
+                if(year == '') return;
+                var con = parseInt(year) < 1 || parseInt(year) > 91 || !Helper.NumberValidate(year);
+                var msg = $('<p data-guid="{0}">第{1}列出生年次應介於1年至91年之間（實足年齡滿15歲）</p>'.format(guid, index))
+                Helper.LogHandler(con, PopulationHelper.Alert, msg);
+            },
+        },
+        LifeStyleWorkDayLimit: {
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
+                var farmerWorkdayId = $row.find('[name="farmerworkday"]').val();
+                var lifeStyleId = $row.find('[name="lifestyle"]').val();
+                var con = farmerWorkdayId == 1 &&  lifeStyleId == 1;
+                var msg = $('<p data-guid="{0}">第{1}列全年從事工作勾選無，主要生活型態不得勾選自營農牧業工作</p>'.format(guid, index));
+                Helper.LogHandler(con, PopulationHelper.Alert, msg);
+            }
+        },
+        AtLeastOne65Worker: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var con = true;
+                PopulationHelper.Population.Container.find('tr').each(function(){
+                    var birthYear = $(this).find('[name="birthyear"]').val();
+                    var farmerWorkdayId = $(this).find('[name="farmerworkday"]').val();
+                    if(birthYear <= 91 && birthYear >=42 && Helper.NumberValidate(birthYear) && farmerWorkdayId > 1){
+                        con = false;
+                    }
+                })
+                var msg = $('<p data-guid="{0}">各戶至少應有1位65歲以下(出生年次42年至91年)全年從事自家農牧業工作日數達1日以上</p>'.format(this.Guid));
+                Helper.LogHandler(con, PopulationHelper.Alert, msg);
+            },
+        },
+    },
 }
 
 var LongTermHireHelper = {
