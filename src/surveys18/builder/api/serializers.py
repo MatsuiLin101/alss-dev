@@ -8,7 +8,7 @@ from surveys18.models import (
     BuilderFile,
     BuilderFileType,
 )
-from surveys18.builder.tokenizer import Builder
+from surveys18.builder.tokenizer_labor import Builder
 
 
 class BuilderFileTypeSerializer(ModelSerializer):
@@ -33,12 +33,17 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         """
         errors = list()
         data_list = str(data.get('datafile').read().decode('utf-8-sig')).splitlines()
+        file_type = data.get('type')
 
         for i, string in enumerate(data_list):
             try:
-                builder = Builder(string=string)
-                builder.build()
-                builder.build(readonly=False)
+                if file_type.id == 1:
+                    # builder = Builder(string=string)
+                    # builder.build()
+                    # builder.build(readonly=False)
+                if file_type.id == 2:
+                    pass
+                pass
             except Exception as e:
                 errors.append({
                     'string': string,
