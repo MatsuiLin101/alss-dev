@@ -61,6 +61,15 @@ var Set = function (data, surveyId) {
     LongTermHireHelper.Set(data.long_term_hires, surveyId);
     LongTermLackHelper.Set(data.long_term_lacks, surveyId);
     ShortTermLackHelper.Set(data.short_term_lacks, surveyId);
+
+    if(Validate){
+        CropMarketingHelper.Validation.IncomeChecked.Validate();
+        LivestockMarketingHelper.Validation.IncomeChecked.Validate();
+        AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
+        AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
+        SurveyHelper.Hire.Validation.HireExist.Validate();
+        SurveyHelper.Lack.Validation.LackExist.Validate();
+    }
 }
 
 var Setup = function(globalUI){
@@ -80,17 +89,19 @@ var Setup = function(globalUI){
     if('shorttermhire' in globalUI) ShortTermHireHelper.Setup(globalUI.shorttermhire);
     if('shorttermlack' in globalUI) ShortTermLackHelper.Setup(globalUI.shorttermlack);
     if('nosalaryhire' in globalUI) NoSalaryHireHelper.Setup(globalUI.nosalaryhire);
-
-    if(Validate){
-        CropMarketingHelper.Validation.IncomeChecked.Validate();
-        LivestockMarketingHelper.Validation.IncomeChecked.Validate();
-        AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
-        AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
-        SurveyHelper.Hire.Validation.HireExist.Validate();
-    }
 }
 
 var Helper = {
+    Counter: {
+        UI: '<span class="badge alert-danger"></span>',
+        Create: function(){
+            var $ui = $(this.UI);
+            $ui.bind('set', function(event, number){
+                $(this).html(number);
+            })
+            return $ui;
+        },
+    },
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
@@ -107,6 +118,7 @@ var Helper = {
             finds.remove();
         }
         alert.alert();
+        alert.count();
     },
     Alert: function ($obj) {
         this.$object = $obj;
@@ -122,6 +134,18 @@ var Helper = {
             this.message = $('<div>');
             this.$object.html(this.message).hide();
         }
+        this.count = function(){
+            var panelId = $obj.closest('.panel').attr('id');
+            var $tab = $('.js-tabs-control[data-target="#{0}"]'.format(panelId));
+            if($tab){
+                var $ui = $tab.find('.badge');
+                if($ui.length == 0){
+                    $ui = Helper.Counter.Create().appendTo($tab);
+                }
+                var errorCount = $('#{0} .alert p[data-guid]'.format(panelId)).length;
+                $ui.trigger('set', errorCount);
+            }
+        },
         this.$object.hide();
     },
     Dialog: {
@@ -198,7 +222,10 @@ var SurveyHelper = {
     Alert: null,
     Setup: function() {
         this.Alert = new Helper.Alert($('.alert[name="survey"]'));
+
         this.Hire.Setup();
+        this.Lack.Setup();
+
         this.FarmerName.Bind();
         this.Phone.Bind();
         this.AddressMatch.Bind();
@@ -403,6 +430,10 @@ var SurveyHelper = {
         },
     },
     Lack: {
+        Alert: null,
+        Setup: function(){
+            this.Alert = new Helper.Alert($('.alert[name="lack"]'));
+        },
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
             this.Container.change(function(){
@@ -422,6 +453,12 @@ var SurveyHelper = {
                         })
                         CloneData[MainSurveyId].lacks = lacks;
                     })
+
+                    if(Validate){
+                        SurveyHelper.Lack.Validation.Empty.Validate();
+                        SurveyHelper.Lack.Validation.SingleSelection.Validate();
+                        SurveyHelper.Lack.Validation.LackExist.Validate();
+                    }
                 }
             })
         },
@@ -431,9 +468,47 @@ var SurveyHelper = {
                 .filter('[data-lack-id="{0}"]'.format(lack))
                 .prop('checked', true);
             })
+
+            if(Validate){
+                SurveyHelper.Lack.Validation.Empty.Validate();
+                SurveyHelper.Lack.Validation.SingleSelection.Validate();
+            }
         },
         Reset: function(){
             this.Container.prop('checked', false);
+        },
+        Validation: {
+            Empty: {
+                Guid: Helper.CreateGuid(),
+                Validate: function(){
+                    var con = SurveyHelper.Lack.Container.filter(':checked').length == 0;
+                    var msg = $('<p data-grid="{0}">不可漏填此問項</p>'.format(this.Guid));
+                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                },
+            },
+            SingleSelection: {
+                Guid: Helper.CreateGuid(),
+                Validate: function(){
+                    var con = SurveyHelper.Lack.Container.filter(':checked').length > 1;
+                    var msg = $('<p data-grid="{0}">限註記一個項目</p>'.format(this.Guid));
+                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                },
+            },
+            LackExist: {
+                Guid: Helper.CreateGuid(),
+                Validate: function(){
+                    var checked = SurveyHelper.Lack.Container.filter('[data-islack="false"]:checked').length == 1;
+                    var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
+                                 ShortTermLackHelper.ShortTermLack.Container.find('tr').length > 0;
+                    var con = checked && exists;
+                    msg = $('<p data-guid="{0}">勾選無短缺人力，問項3.2.2, 3.2.3應為空白</p>'.format(this.Guid));
+                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+
+                    var con = !checked && !exists;
+                    msg = $('<p data-guid="{0}">若全年無短缺人力，應勾選無</p>'.format(this.Guid));
+                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                },
+            },
         },
     },
     Note: {
@@ -2208,6 +2283,7 @@ var LongTermLackHelper = {
                             var guid = $tr.data('guid');
                             LongTermLackHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
                             LongTermLackHelper.Alert.alert();
+                            SurveyHelper.Lack.Validation.LackExist.Validate();
                         }
                     })
                 }
@@ -2251,6 +2327,7 @@ var LongTermLackHelper = {
 
                     if(Validate){
                         LongTermLackHelper.Validation.RequiredField.Validate($row);
+                        SurveyHelper.Lack.Validation.LackExist.Validate();
                     }
                 }
             })
@@ -2347,6 +2424,7 @@ var ShortTermLackHelper = {
                             var guid = $tr.data('guid');
                             ShortTermLackHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
                             ShortTermLackHelper.Alert.alert();
+                            SurveyHelper.Lack.Validation.LackExist.Validate();
                         }
                     })
                 }
