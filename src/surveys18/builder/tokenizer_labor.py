@@ -183,9 +183,9 @@ class Builder(object):
                     period=period_h * 60 + period_m,
                     distance=distance_km
                 )
+
         except ValueError as e:
             raise CreateModelError(target='Survey', msg=e)
-
         else:
             self.survey = survey
 
@@ -335,9 +335,9 @@ class Builder(object):
                                 num = i + 1
                                 management_type = ManagementType.objects.get(id=num)
                                 self.survey.management_types.add(management_type)
+
                     except ValueError as e:
                         raise CreateModelError(target='management', msg=e)
-
 
     def build_crop_marketing(self):
         if self.survey.is_updated is False:
@@ -592,7 +592,7 @@ class Builder(object):
     def build_long_term_hire(self):
         string = self.string[5]
         if len(string) % 30 != 0 :
-            raise StringLengthError('LongTermHire')
+            raise StringLengthError(target='LongTermHire')
         else:
             if len(string) > 0:
                 try:
@@ -722,7 +722,7 @@ class Builder(object):
     def build_long_term_lack(self):
         string = self.string[8]
         if len(string) % 17 != 0:
-            raise StringLengthError('LongTermLack')
+            raise StringLengthError(target='LongTermLack')
         else:
             if len(string) > 0 :
                 try:
@@ -751,7 +751,7 @@ class Builder(object):
     def build_short_term_lack(self):
         string = self.string[9]
         if len(string) % 21 != 0:
-            raise StringLengthError('ShortTermLack')
+            raise StringLengthError(target='ShortTermLack')
         else:
             if len(string) > 0:
                 try:
@@ -891,24 +891,3 @@ class Builder(object):
 
                 except ValueError as e:
                     raise CreateModelError(target='Subsidy', msg=e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

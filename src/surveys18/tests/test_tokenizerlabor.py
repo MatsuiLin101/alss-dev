@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from surveys18.builder.tokenizer import Builder
+from surveys18.builder.tokenizer_labor import Builder
 from surveys18.builder.exceptions import SignError, StringLengthError, CreateModelError
 from surveys18.models import (
     MarketType,
