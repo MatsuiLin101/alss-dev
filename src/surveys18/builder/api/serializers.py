@@ -38,6 +38,7 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         for i, string in enumerate(data_list):
             try:
                 if file_type.id == 1:
+                    pass
                     # builder = Builder(string=string)
                     # builder.build()
                     # builder.build(readonly=False)
