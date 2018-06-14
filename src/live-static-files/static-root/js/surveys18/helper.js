@@ -620,7 +620,7 @@ var SurveyHelper = {
                 if(Validate) {
                     SurveyHelper.Address.Validation.AddressRequire.Validate();
                     SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
-                    SubsidyHelper.AddressMatch.Validation.Duplicate.Validate();
+                    SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
                 }
             })
         },
@@ -630,7 +630,7 @@ var SurveyHelper = {
             if(Validate){
                 SurveyHelper.Address.Validation.AddressRequire.Validate();
                 SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
-                SubsidyHelper.AddressMatch.Validation.Duplicate.Validate();
+                SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
