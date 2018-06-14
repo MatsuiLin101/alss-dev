@@ -74,7 +74,7 @@ div[data-partial=survey] {
 }
 
 .alert p[data-guid] {
-    margin-bottom: 0;
+    margin-bottom: 1.5px;
 }
 
 .btn-group-lg > .btn, .btn-lg {
