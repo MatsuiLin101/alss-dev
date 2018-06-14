@@ -72,7 +72,7 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'lack.yaml', verbosity=0)
         call_command('loaddata', 'refuse-reason.yaml', verbosity=0)
         # self.string = "6700500100020101####林阿忠0912345678/###29911110501屏東縣屏東市屏東路2號#+00250000000003001000000000100000001農所實驗#00000000000100+A001104201100210000002321D011103001100072000007520+F00230000900000150500000F001300100000150009750031010000410020101030201+010110300200000010100000001000202203202000001001000000010001+120040020010011010000000000005220040020010011111111111111113+0100900000500412130000000000001004010001005004142100000000000285+01002070050011+2200110100000000014001111111111111+A60213002110000000000C50612001000110000000+1012120000101時間太忙#1勞工不穩定#+稻受雨害影響#005260035"
-        self.string = "1001015104500101####王文雄0912180608/##########2401嘉義縣水上鄉寬士村崎仔頭２２之２３３號#+0010000000000000000000000010000000000100000000000+D029101001100081000022021+0300000003000000030201+01011031030001000010000000100020220360300001000100000001000303105707000010001000000010001++04041025009007130000000000000010050400250090071300000000000000101005002801600613000000000000001011050029015006130000000000000010+0100+++0000000000100#1沒人願意做，太辛苦#+#000100050"
+        self.string = "1001401063900101####郭豐政0981032228/##########1110#+00000005000000000000000000100000000#00000100000000+C033105001100180000008320+0500000005020101020101+010110740600000100100000001000202207506000100001000000010001++0500200200000012000000000000007006002002000000120000000000000070080020020000001200000000000000700900200200000012000000000000007011002002000000120000000000000070+0001++C03312002000000110000+0000000000110#0#+１．農戶雖有５甲地，但因去年颱風毀損，其中１甲收１５０００斤、４甲地收１５０００斤，本來需３～５年生長期，農戶第二年先將採收些，因此產量較少。２．臨時工主要幫忙授粉、套袋、採收。#000480016"
         self.builder = Builder(self.string)
         self.builder.build_survey()
 
@@ -82,31 +82,28 @@ class ModelTestCase(TestCase):
     #     print(check_string)
 
     def test_build_survey(self):
-        test="6700500100020202++D0080100110008000005020+++++++++"
-        test=test.split("+")
-        print(test)
-        self.assertEquals(self.builder.survey.farmer_id, "100101510450")
+        self.assertEquals(self.builder.survey.farmer_id, "100140106390")
         self.assertEquals(self.builder.survey.page, 1)
         self.assertEquals(self.builder.survey.total_pages, 1)
-        self.assertEquals(self.builder.survey.farmer_name, "王文雄")
-        self.assertEquals(self.builder.survey.origin_class, 24)
-        self.assertEquals(self.builder.survey.note, "")
-        self.assertEquals(self.builder.survey.period, 10)
-        self.assertEquals(self.builder.survey.distance, 50)
+        self.assertEquals(self.builder.survey.farmer_name, "郭豐政")
+        self.assertEquals(self.builder.survey.origin_class, 11)
+        # self.assertEquals(self.builder.survey.note, "")
+        self.assertEquals(self.builder.survey.period, 48)
+        self.assertEquals(self.builder.survey.distance, 16)
 
         # check survey query string
 
 
     def test_build_phone(self):
         self.builder.build_phone()
-        self.assertEquals(self.builder.phones[0].phone, "0912180608")
+        self.assertEquals(self.builder.phones[0].phone, "0981032228")
         # self.assertEquals(self.builder.phones[1].phone, "2991111")
 
     def test_build_address(self):
         self.builder.build_address()
-        self.assertEquals(self.builder.address.match, False)
-        self.assertEquals(self.builder.address.mismatch, True)
-        self.assertEquals(self.builder.address.address, "嘉義縣水上鄉寬士村崎仔頭２２之２３３號")
+        self.assertEquals(self.builder.address.match, True)
+        self.assertEquals(self.builder.address.mismatch, False)
+        self.assertEquals(self.builder.address.address, "")
 
     def test_build_land_area(self):
         self.builder.build_land_area()
