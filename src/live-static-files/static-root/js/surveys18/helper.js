@@ -46,22 +46,22 @@ var Set = function (data, surveyId) {
     if (data.page == 1) {
         MainSurveyId = surveyId;
         SurveyHelper.Set(data);
-        LandAreaHelper.Set(data.land_areas);
-        BusinessHelper.Set(data.businesses);
-        ManagementTypeHelper.Set(data.management_types);
-        AnnualIncomeHelper.Set(data.annual_incomes);
-        PopulationAgeHelper.Set(data.population_ages);
-        ShortTermHireHelper.Set(data.short_term_hires);
-        NoSalaryHireHelper.Set(data.no_salary_hires);
-        SubsidyHelper.Set(data.subsidy);
+        if(data.land_areas) LandAreaHelper.Set(data.land_areas);
+        if(data.businesses) BusinessHelper.Set(data.businesses);
+        if(data.management_types) ManagementTypeHelper.Set(data.management_types);
+        if(data.annual_incomes) AnnualIncomeHelper.Set(data.annual_incomes);
+        if(data.population_ages) PopulationAgeHelper.Set(data.population_ages);
+        if(data.short_term_hires) ShortTermHireHelper.Set(data.short_term_hires);
+        if(data.no_salary_hires) NoSalaryHireHelper.Set(data.no_salary_hires);
+        if(data.subsidy) SubsidyHelper.Set(data.subsidy);
     }
     /* need setting survey surveyId to locate which obj */
-    CropMarketingHelper.Set(data.crop_marketings, surveyId);
-    LivestockMarketingHelper.Set(data.livestock_marketings, surveyId);
-    PopulationHelper.Set(data.populations, surveyId);
-    LongTermHireHelper.Set(data.long_term_hires, surveyId);
-    LongTermLackHelper.Set(data.long_term_lacks, surveyId);
-    ShortTermLackHelper.Set(data.short_term_lacks, surveyId);
+    if(data.crop_marketings) CropMarketingHelper.Set(data.crop_marketings, surveyId);
+    if(data.livestock_marketings) LivestockMarketingHelper.Set(data.livestock_marketings, surveyId);
+    if(data.populations) PopulationHelper.Set(data.populations, surveyId);
+    if(data.long_term_hires) LongTermHireHelper.Set(data.long_term_hires, surveyId);
+    if(data.long_term_lacks) LongTermLackHelper.Set(data.long_term_lacks, surveyId);
+    if(data.short_term_lacks) ShortTermLackHelper.Set(data.short_term_lacks, surveyId);
 
     if(Validate){
         CropMarketingHelper.Validation.IncomeChecked.Validate();
