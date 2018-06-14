@@ -66,14 +66,20 @@ var Set = function (data, surveyId) {
     if(Validate){
         CropMarketingHelper.Validation.IncomeChecked.Validate();
         LivestockMarketingHelper.Validation.IncomeChecked.Validate();
+        BusinessHelper.Validation.MarketType4Checked.Validate();
         AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
         AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
+        AnnualIncomeHelper.Validation.AnnualTotal.Validate();
+        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
+        PopulationHelper.Validation.MarketType3Checked.Validate();
         SurveyHelper.Hire.Validation.HireExist.Validate();
         SurveyHelper.Lack.Validation.LackExist.Validate();
     }
 }
 
 var Setup = function(globalUI){
+    Helper.LogHandler.Setup();
+
     SurveyHelper.Setup();
     LandAreaHelper.Setup();
     BusinessHelper.Setup();
@@ -106,22 +112,60 @@ var Helper = {
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
-    LogHandler: function (condition, alert, msg) {
-        var tag = msg.prop('tagName');
-        var guid = msg.data('guid');
-        var text = msg.text();
-        var finds = alert.message.find('{0}[data-guid="{1}"]:contains({2})'.format(tag, guid, text));
-        if (condition) {
-            if (finds.length == 0) {
-                alert.message.append(msg);
+    LogHandler: {
+        Setup: function(){
+            this.Bind();
+        },
+        Bind: function(){
+            $('.alert').on('click', '.btn-warning', function(){
+                this.click();
+            })
+        },
+        UI: '\
+            <p data-guid="" style="line-height:30px;">\
+                <span></span>\
+                <button type="button" class="btn btn-warning btn-sm pull-right">\
+                    <i class="fa fa-remove" aria-hidden="true"></i>我已確認這是例外且註記於備註，略過此錯誤\
+                </button>\
+            </p>\
+        ',
+        Create: function(alert, msg, guid){
+            $ui = $(this.UI);
+            $ui.attr('data-guid', guid);
+            $ui.find('span').text(msg);
+            $ui[0].Alert = alert;
+            $ui.find('.btn')[0].click = function(){
+                var $ui = $(this).parent();
+                var guid = $ui.data('guid');
+                var alert =  $ui[0].Alert;
+                $ui.remove();
+                alert.exceptions.push(guid);
+                alert.alert();
+                alert.count();
             }
-        } else {
-            finds.remove();
-        }
-        alert.alert();
-        alert.count();
+            if(!alert.$object.hasClass('alert-danger')){
+                $ui.find('.btn').remove();
+            }
+            return $ui;
+        },
+        Log: function (condition, alert, msg, guid) {
+            var guid = guid || null;
+            var $ui = this.Create(alert, msg, guid);
+            var finds = alert.message.find('p[data-guid="{0}"]:contains({1})'.format(guid, msg));
+            if (condition) {
+                if (finds.length == 0 && alert.exceptions.indexOf(guid) == -1) {
+                    alert.message.append($ui);
+                }
+            } else {
+                finds.remove();
+            }
+            alert.alert();
+            alert.count();
+        },
     },
     Alert: function ($obj) {
+        /* store exceptions */
+        this.exceptions = [];
         this.$object = $obj;
         this.message = $('<div>');
         this.alert = function () {
@@ -222,7 +266,7 @@ var Helper = {
 var SurveyHelper = {
     Alert: null,
     Setup: function() {
-        this.Alert = new Helper.Alert($('.alert[name="survey"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="survey"]'));
 
         this.Hire.Setup();
         this.Lack.Setup();
@@ -292,8 +336,8 @@ var SurveyHelper = {
                 Guid: Helper.CreateGuid(),
                 Validate: function(){
                     var empty = CloneData[MainSurveyId].farmer_name == '';
-                    var msg = $('<p data-guid="{0}">受訪人不可漏填</p>'.format(this.Guid));
-                    Helper.LogHandler(empty, SurveyHelper.Alert, msg);
+                    var msg = '受訪人不可漏填';
+                    Helper.LogHandler.Log(empty, SurveyHelper.Alert, msg, this.Guid);
                 },
             },
         },
@@ -344,8 +388,8 @@ var SurveyHelper = {
                             empty = false;
                         }
                     });
-                    var msg = $('<p data-guid="{0}">聯絡電話不可漏填</p>'.format(this.Guid));
-                    Helper.LogHandler(empty, SurveyHelper.Alert, msg);
+                    var msg = '聯絡電話不可漏填';
+                    Helper.LogHandler.Log(empty, SurveyHelper.Alert, msg, this.Guid);
                 },
             },
         },
@@ -353,7 +397,7 @@ var SurveyHelper = {
     Hire: {
         Alert: null,
         Setup: function(){
-            this.Alert = new Helper.Alert($('.alert[name="hire"]'));
+            this.Alert = new Helper.Alert($('.alert-danger[name="hire"]'));
         },
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
@@ -400,16 +444,16 @@ var SurveyHelper = {
                 Guid: Helper.CreateGuid(),
                 Validate: function(){
                     var con = SurveyHelper.Hire.Container.filter(':checked').length == 0;
-                    var msg = $('<p data-grid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
+                    var msg = '不可漏填此問項';
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guid);
                 },
             },
             SingleSelection: {
                 Guid: Helper.CreateGuid(),
                 Validate: function(){
                     var con = SurveyHelper.Hire.Container.filter(':checked').length > 1;
-                    var msg = $('<p data-grid="{0}">限註記一個項目</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
+                    var msg = '限註記一個項目';
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guid);
                 },
             },
             HireExist: {
@@ -420,12 +464,12 @@ var SurveyHelper = {
                                  ShortTermHireHelper.ShortTermHire.Container.find('tr').length +
                                  NoSalaryHireHelper.NoSalaryHire.Container.find('tr').length > 0;
                     var con = checked && exists;
-                    msg = $('<p data-guid="{0}">勾選無外僱人力，【問項3.1.2及3.1.3及3.1.4】應為空白</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
+                    var msg = '勾選無外僱人力，【問項3.1.2及3.1.3及3.1.4】應為空白';
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guid);
 
                     var con = !checked && !exists;
-                    msg = $('<p data-guid="{0}">若全年無外僱人力，應勾選無</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
+                    var msg = '若全年無外僱人力，應勾選無';
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guid);
                 },
             },
         },
@@ -433,7 +477,7 @@ var SurveyHelper = {
     Lack: {
         Alert: null,
         Setup: function(){
-            this.Alert = new Helper.Alert($('.alert[name="lack"]'));
+            this.Alert = new Helper.Alert($('.alert-danger[name="lack"]'));
         },
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
@@ -483,16 +527,16 @@ var SurveyHelper = {
                 Guid: Helper.CreateGuid(),
                 Validate: function(){
                     var con = SurveyHelper.Lack.Container.filter(':checked').length == 0;
-                    var msg = $('<p data-grid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                    var msg = '不可漏填此問項';
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guid);
                 },
             },
             SingleSelection: {
                 Guid: Helper.CreateGuid(),
                 Validate: function(){
                     var con = SurveyHelper.Lack.Container.filter(':checked').length > 1;
-                    var msg = $('<p data-grid="{0}">限註記一個項目</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                    var msg = '限註記一個項目';
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guid);
                 },
             },
             LackExist: {
@@ -502,12 +546,12 @@ var SurveyHelper = {
                     var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
                                  ShortTermLackHelper.ShortTermLack.Container.find('tr').length > 0;
                     var con = checked && exists;
-                    msg = $('<p data-guid="{0}">勾選無短缺人力，【問項3.2.2及3.2.3】應為空白</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                    msg = '勾選無短缺人力，【問項3.2.2及3.2.3】應為空白';
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guid);
 
                     var con = !checked && !exists;
-                    msg = $('<p data-guid="{0}">若全年無短缺人力，應勾選無</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
+                    msg = '若全年無短缺人力，應勾選無';
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guid);
                 },
             },
         },
@@ -568,8 +612,8 @@ var SurveyHelper = {
                                  .prop('checked');
                     var empty = !SurveyHelper.Address.Container.val();
                     var con = !checked && !empty;
-                    var msg = $('<p data-guid="{0}">填寫地址，請勾選地址與調查名冊不同</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Alert, msg);
+                    var msg = '填寫地址，請勾選地址與調查名冊不同';
+                    Helper.LogHandler.Log(con, SurveyHelper.Alert, msg, this.Guid);
                 },
             },
         },
@@ -606,8 +650,8 @@ var SurveyHelper = {
                                  .prop('checked');
                     var empty = !SurveyHelper.Address.Container.val();
                     var con = checked && empty;
-                    var msg = $('<p data-guid="{0}">勾選地址與調查名冊不同，地址不可為空白</p>'.format(this.Guid));
-                    Helper.LogHandler(con, SurveyHelper.Alert, msg);
+                    var msg = '勾選地址與調查名冊不同，地址不可為空白';
+                    Helper.LogHandler.Log(con, SurveyHelper.Alert, msg, this.Guid);
                 },
             },
         }
@@ -642,7 +686,7 @@ var SurveyHelper = {
 var LandAreaHelper = {
     Alert: null,
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="landarea"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="landarea"]'));
         this.LandStatus.Bind();
         this.LandType.Bind();
         this.Validation.Setup();
@@ -784,8 +828,8 @@ var LandAreaHelper = {
             Guid: Helper.CreateGuid(),
             Validate: function(){
                 var empty = CloneData[MainSurveyId].land_areas.length == 0;
-                var msg = $('<p data-guid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                Helper.LogHandler(empty, LandAreaHelper.Alert, msg);
+                var msg = '不可漏填此問項';
+                Helper.LogHandler.Log(empty, LandAreaHelper.Alert, msg, this.Guid);
             },
         },
         LandStatusEmpty: {
@@ -817,8 +861,8 @@ var LandAreaHelper = {
                     })
                     var con = checked && (has_status && empty);
                     var guid = LandAreaHelper.Validation.LandStatusEmpty.Guid.Filter(landTypeId);
-                    var msg = $('<p data-guid="{0}">有勾選{1}應填寫對應面積</p>'.format(guid, landTypeName));
-                    Helper.LogHandler(con, LandAreaHelper.Alert, msg);
+                    var msg = '有勾選{0}應填寫對應面積'.format(landTypeName);
+                    Helper.LogHandler.Log(con, LandAreaHelper.Alert, msg, guid);
                 })
             }
         },
@@ -826,13 +870,16 @@ var LandAreaHelper = {
 }
 var BusinessHelper = {
     Alert: null,
+    Info: null,
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="business"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="business"]'));
+        this.Info = new Helper.Alert($('.alert-info[name="business"]'));
         this.FarmRelatedBusiness.Bind();
         this.Extra.Bind();
     },
     Reset: function(){
          if (this.Alert) { this.Alert.reset(); }
+         if (this.Info) { this.Info.reset(); }
          this.FarmRelatedBusiness.Reset();
          this.Extra.Reset();
     },
@@ -848,6 +895,11 @@ var BusinessHelper = {
                 .filter('[data-farmrelatedbusiness-id="{0}"]'.format(business.farm_related_business))
                 .prop('checked', true);
             })
+            if(Validate){
+                BusinessHelper.Validation.Empty.Validate();
+                BusinessHelper.Validation.Duplicate.Validate();
+                BusinessHelper.Validation.FarmRelatedBusiness2Checked.Validate();
+            }
         },
         Reset: function(){
             this.Container.prop('checked', false);
@@ -855,10 +907,10 @@ var BusinessHelper = {
         Bind: function(){
             this.Container.change(function(){
                 var checked = $(this).prop('checked');
-                var farmerRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
+                var farmRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
                 if(!checked){
                     BusinessHelper.Extra.Container
-                    .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmerRelatedBusinessId))
+                    .filter('[data-farmrelatedbusiness-id="{0}"]'.format(farmRelatedBusinessId))
                     .val('');
                 }
 
@@ -867,6 +919,8 @@ var BusinessHelper = {
                     if(Validate){
                         BusinessHelper.Validation.Empty.Validate();
                         BusinessHelper.Validation.Duplicate.Validate();
+                        BusinessHelper.Validation.MarketType4Checked.Validate();
+                        BusinessHelper.Validation.FarmRelatedBusiness2Checked.Validate();
                     }
                 }
             })
@@ -937,8 +991,8 @@ var BusinessHelper = {
             Guid: Helper.CreateGuid(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].businesses.length == 0;
-                var msg = $('<p data-guid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                Helper.LogHandler(con, BusinessHelper.Alert, msg);
+                var msg = '不可漏填此問項';
+                Helper.LogHandler.Log(con, BusinessHelper.Alert, msg, this.Guid);
             }
         },
         Duplicate: {
@@ -954,17 +1008,46 @@ var BusinessHelper = {
                     else falseChecked = true;
                 })
                 var con = trueChecked && falseChecked;
-                var msg = $('<p data-guid="{0}">無兼營與有兼營不可重複勾選</p>'.format(this.Guid));
-                Helper.LogHandler(con, BusinessHelper.Alert, msg);
+                var msg = '無兼營與有兼營不可重複勾選';
+                Helper.LogHandler.Log(con, BusinessHelper.Alert, msg, this.Guid);
             },
         },
-
+        MarketType4Checked: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var marketType4Checked = AnnualIncomeHelper.AnnualIncome.Container
+                                         .filter('[data-markettype-id="4"]:checked').length > 0;
+                var farmRelatedBusiness357Checked = false;
+                BusinessHelper.FarmRelatedBusiness.Container
+                .filter(':checked')
+                .each(function(){
+                    var farmRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
+                    if(farmRelatedBusinessId == 3 ||
+                       farmRelatedBusinessId == 5 ||
+                       farmRelatedBusinessId == 7)
+                    {
+                        farmRelatedBusiness357Checked = true;
+                    }
+                })
+                var con = !marketType4Checked && farmRelatedBusiness357Checked;
+                var msg = '若勾選3、5、7之農業相關事業，應有勾選【問項1.6】全年銷售額之『休閒、餐飲及相關事業』';
+                Helper.LogHandler.Log(con, BusinessHelper.Alert, msg, this.Guid);
+            },
+        },
+        FarmRelatedBusiness2Checked: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var con = BusinessHelper.FarmRelatedBusiness.Container.filter('[data-farmrelatedbusiness-id="2"]').prop('checked');
+                var msg = '勾選『農產品加工』者，應於【問項1.6】之『農產品』或『畜禽產品』之銷售額計入其加工收入';
+                Helper.LogHandler.Log(con, BusinessHelper.Info, msg, this.Guid);
+            },
+        }
     },
 }
 var ManagementTypeHelper = {
     Alert: null,
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="managementtype"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="managementtype"]'));
         this.ManagementType.Bind();
     },
     Reset: function(){
@@ -1016,16 +1099,16 @@ var ManagementTypeHelper = {
             Guid: Helper.CreateGuid(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].management_types.length == 0;
-                var msg = $('<p data-guid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                Helper.LogHandler(con, ManagementTypeHelper.Alert, msg);
+                var msg = '不可漏填此問項';
+                Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guid);
             },
         },
         SingleSelection: {
             Guid: Helper.CreateGuid(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].management_types.length > 1;
-                var msg = $('<p data-guid="{0}">限註記一個項目</p>'.format(this.Guid));
-                Helper.LogHandler(con, ManagementTypeHelper.Alert, msg);
+                var msg = '限註記一個項目';
+                Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guid);
             }
         },
     },
@@ -1033,7 +1116,7 @@ var ManagementTypeHelper = {
 var CropMarketingHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="cropmarketing"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="cropmarketing"]'));
         var $row = $(row);
         this.CropMarketing.Bind($row);
         this.CropMarketing.$Row = $row;
@@ -1112,6 +1195,7 @@ var CropMarketingHelper = {
                             CropMarketingHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
                             CropMarketingHelper.Alert.alert();
                             AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
+                            AnnualIncomeHelper.Validation.AnnualTotal.Validate();
                         }
                     })
                 }
@@ -1139,12 +1223,10 @@ var CropMarketingHelper = {
 
                     if(Validate){
                         CropMarketingHelper.Validation.RequiredField.Validate($tr);
+                        AnnualIncomeHelper.Validation.AnnualTotal.Validate();
                     }
                 }
             })
-
-
-
             return $row;
         },
     },
@@ -1176,17 +1258,17 @@ var CropMarketingHelper = {
                 var guid = $row.data('guid');
                 var index = CropMarketingHelper.CropMarketing.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="product"]').val(), CropMarketingHelper.Alert, makeString('作物名稱'));
-                Helper.LogHandler(!$row.find('[name="landnumber"]').val(), CropMarketingHelper.Alert, makeString('耕作地代號'));
-                Helper.LogHandler(!$row.find('[name="landarea"]').val(), CropMarketingHelper.Alert, makeString('種植面積'));
-                Helper.LogHandler(!$row.find('[name="planttimes"]').val(), CropMarketingHelper.Alert, makeString('種植次數'));
-                Helper.LogHandler(!$row.find('[name="unit"]').val(), CropMarketingHelper.Alert, makeString('單位'));
-                Helper.LogHandler(!$row.find('[name="totalyield"]').val(), CropMarketingHelper.Alert, makeString('全年產量'));
-                Helper.LogHandler(!$row.find('[name="unitprice"]').val(), CropMarketingHelper.Alert, makeString('平均單價'));
-                Helper.LogHandler(!$row.find('[name="hasfacility"]').val(), CropMarketingHelper.Alert, makeString('是否使用農業設施'));
-                Helper.LogHandler(!$row.find('[name="loss"]').val(), CropMarketingHelper.Alert, makeString('特殊情形'));
+                Helper.LogHandler.Log(!$row.find('[name="product"]').val(), CropMarketingHelper.Alert, makeString('作物名稱'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="landnumber"]').val(), CropMarketingHelper.Alert, makeString('耕作地代號'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="landarea"]').val(), CropMarketingHelper.Alert, makeString('種植面積'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="planttimes"]').val(), CropMarketingHelper.Alert, makeString('種植次數'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="unit"]').val(), CropMarketingHelper.Alert, makeString('單位'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="totalyield"]').val(), CropMarketingHelper.Alert, makeString('全年產量'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="unitprice"]').val(), CropMarketingHelper.Alert, makeString('平均單價'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="hasfacility"]').val(), CropMarketingHelper.Alert, makeString('是否使用農業設施'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="loss"]').val(), CropMarketingHelper.Alert, makeString('特殊情形'), guid);
             },
         },
         IncomeChecked: {
@@ -1197,8 +1279,8 @@ var CropMarketingHelper = {
                               .filter(':checked').length > 0;
                 var exists = CropMarketingHelper.CropMarketing.Container.find('tr').length > 0;
                 var con = !checked && exists;
-                var msg = $('<p data-guid="{0}">有生產農產品，【問項1.6】應有勾選『農作物及其製品』之銷售額區間</p>'.format(this.Guid));
-                Helper.LogHandler(con, CropMarketingHelper.Alert, msg);
+                var msg = '有生產農產品，【問項1.6】應有勾選『農作物及其製品』之銷售額區間';
+                Helper.LogHandler.Log(con, CropMarketingHelper.Alert, msg, this.Guid);
             },
         },
     },
@@ -1206,7 +1288,7 @@ var CropMarketingHelper = {
 var LivestockMarketingHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="livestockmarketing"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="livestockmarketing"]'));
         var $row = $(row);
         this.LivestockMarketing.Bind($row);
         this.LivestockMarketing.$Row = $row;
@@ -1282,6 +1364,7 @@ var LivestockMarketingHelper = {
                             LivestockMarketingHelper.Alert.message.find('[data-guid="{0}"]'.format(guid)).remove();
                             LivestockMarketingHelper.Alert.alert();
                             AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
+                            AnnualIncomeHelper.Validation.AnnualTotal.Validate();
                         }
                     })
                 }
@@ -1307,6 +1390,7 @@ var LivestockMarketingHelper = {
 
                     if(Validate){
                         LivestockMarketingHelper.Validation.RequiredField.Validate($tr);
+                        AnnualIncomeHelper.Validation.AnnualTotal.Validate();
                     }
                 }
             })
@@ -1341,16 +1425,16 @@ var LivestockMarketingHelper = {
                 var guid = $row.data('guid');
                 var index = LivestockMarketingHelper.LivestockMarketing.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="product"]').val(), LivestockMarketingHelper.Alert, makeString('作物名稱'));
-                Helper.LogHandler(!$row.find('[name="unit"]').val(), LivestockMarketingHelper.Alert, makeString('單位'));
-                Helper.LogHandler(!$row.find('[name="raisingnumber"]').val(), LivestockMarketingHelper.Alert, makeString('年底在養數量'));
-                Helper.LogHandler(!$row.find('[name="totalyield"]').val(), LivestockMarketingHelper.Alert, makeString('全年銷售數量'));
-                Helper.LogHandler(!$row.find('[name="unit"]').val(), LivestockMarketingHelper.Alert, makeString('單位'));
-                Helper.LogHandler(!$row.find('[name="unitprice"]').val(), LivestockMarketingHelper.Alert, makeString('平均單價'));
-                Helper.LogHandler(!$row.find('[name="contract"]').val(), LivestockMarketingHelper.Alert, makeString('契約飼養'));
-                Helper.LogHandler(!$row.find('[name="loss"]').val(), LivestockMarketingHelper.Alert, makeString('特殊情形'));
+                Helper.LogHandler.Log(!$row.find('[name="product"]').val(), LivestockMarketingHelper.Alert, makeString('作物名稱'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="unit"]').val(), LivestockMarketingHelper.Alert, makeString('單位'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="raisingnumber"]').val(), LivestockMarketingHelper.Alert, makeString('年底在養數量'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="totalyield"]').val(), LivestockMarketingHelper.Alert, makeString('全年銷售數量'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="unit"]').val(), LivestockMarketingHelper.Alert, makeString('單位'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="unitprice"]').val(), LivestockMarketingHelper.Alert, makeString('平均單價'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="contract"]').val(), LivestockMarketingHelper.Alert, makeString('契約飼養'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="loss"]').val(), LivestockMarketingHelper.Alert, makeString('特殊情形'), guid);
             },
         },
         IncomeChecked: {
@@ -1361,8 +1445,8 @@ var LivestockMarketingHelper = {
                               .filter(':checked').length > 0;
                 var exists = LivestockMarketingHelper.LivestockMarketing.Container.find('tr').length > 0;
                 var con = !checked && exists;
-                var msg = $('<p data-guid="{0}">有生產畜產品，【問項1.6】應有勾選『畜禽作物及其製品』之銷售額區間</p>'.format(this.Guid));
-                Helper.LogHandler(con, LivestockMarketingHelper.Alert, msg);
+                var msg = '有生產畜產品，【問項1.6】應有勾選『畜禽作物及其製品』之銷售額區間';
+                Helper.LogHandler.Log(con, LivestockMarketingHelper.Alert, msg, this.Guid);
             },
         },
     },
@@ -1370,7 +1454,7 @@ var LivestockMarketingHelper = {
 var AnnualIncomeHelper = {
     Alert: null,
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="annualincome"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="annualincome"]'));
         this.AnnualIncome.Bind();
     },
     Set: function(array) {
@@ -1432,8 +1516,12 @@ var AnnualIncomeHelper = {
                                 AnnualIncomeHelper.Validation.IncomeTotal.Validate();
                                 AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
                                 AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
+                                AnnualIncomeHelper.Validation.AnnualTotal.Validate();
+                                AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
                                 CropMarketingHelper.Validation.IncomeChecked.Validate();
                                 LivestockMarketingHelper.Validation.IncomeChecked.Validate();
+                                BusinessHelper.Validation.MarketType4Checked.Validate();
+                                PopulationHelper.Validation.MarketType3Checked.Validate();
                             }
                         })
                         CloneData[MainSurveyId].annual_incomes = annualIncomes;
@@ -1451,8 +1539,8 @@ var AnnualIncomeHelper = {
                               .filter(':checked').length > 0;
                 var exists = CropMarketingHelper.CropMarketing.Container.find('tr').length > 0;
                 var con = checked && !exists;
-                var msg = $('<p data-guid="{0}">有勾選『農作物及其製品』之銷售額區間，【問項1.4】應有生產農產品</p>'.format(this.Guid));
-                Helper.LogHandler(con, AnnualIncomeHelper.Alert, msg);
+                var msg = '有勾選『農作物及其製品』之銷售額區間，【問項1.4】應有生產農產品';
+                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
             },
         },
         LivestockMarketingExist: {
@@ -1463,8 +1551,8 @@ var AnnualIncomeHelper = {
                               .filter(':checked').length > 0;
                 var exists = LivestockMarketingHelper.LivestockMarketing.Container.find('tr').length > 0;
                 var con = checked && !exists;
-                var msg = $('<p data-guid="{0}">有勾選『畜禽作物及其製品』之銷售額區間，【問項1.5】應有生產畜產品</p>'.format(this.Guid));
-                Helper.LogHandler(con, AnnualIncomeHelper.Alert, msg);
+                var msg = '有勾選『畜禽作物及其製品』之銷售額區間，【問項1.5】應有生產畜產品';
+                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
             },
         },
         IncomeTotal: {
@@ -1491,8 +1579,65 @@ var AnnualIncomeHelper = {
                 checkedMax = parseInt($input.data('max'));
 
                 var con = checkedMax <= totalMin || checkedMin > totalMax;
-                var msg = $('<p data-guid="{0}">銷售額總計之區間，應與各類別區間加總相對應</p>'.format(this.Guid));
-                Helper.LogHandler(con, AnnualIncomeHelper.Alert, msg);
+                var msg = '銷售額總計之區間，應與各類別區間加總相對應';
+                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
+            },
+        },
+        AnnualTotal: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                function addTotal($row){
+                    var totalYield = $row.find('[name="totalyield"]').val();
+                    var unitPrice = $row.find('[name="unitprice"]').val();
+                    if(Helper.NumberValidate(totalYield) && Helper.NumberValidate(unitPrice)){
+                        countTotal += totalYield * unitPrice;
+                    }
+                }
+                /* Crop Marketing */
+                checkedTotal = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="1"]:checked');
+                if(checkedTotal.length == 1){
+                    /* sum total */
+                    var countTotal = 0;
+                    CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
+                        addTotal($(this));
+                    })
+
+                    var checkedMin = checkedTotal.data('min') * 10000;
+                    var checkedMax = checkedTotal.data('max') * 10000;
+
+                    var con = countTotal < checkedMin || countTotal > checkedMax;
+                    var msg = '【問項1.4】農作物產銷情形之全年產量與平均單價乘積({0}元)與勾選農作物之全年銷售額區間不符'
+                              .format(numberWithCommas(countTotal));
+                    Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
+                }
+
+                /* Livestock Marketing */
+                checkedTotal = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="2"]:checked');
+                if(checkedTotal.length == 1){
+                    /* sum total */
+                    var countTotal = 0;
+                    LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
+                        addTotal($(this));
+                    })
+
+                    var checkedMin = checkedTotal.data('min') * 10000;
+                    var checkedMax = checkedTotal.data('max') * 10000;
+
+                    var con = countTotal < checkedMin  || countTotal > checkedMax;
+                    var msg = '【問項1.5】畜禽產銷情形之全年產量與平均單價乘積({0}元)與勾選畜禽產品之全年銷售額區間不符'
+                                .format(numberWithCommas(countTotal));
+                    Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
+                }
+            },
+        },
+        LifeStyle3Selected: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var lifeStyleChecked = PopulationHelper.Population.Container.find('[name="lifestyle"] > option[value="3"]:selected').length > 0;
+                var marketTypeChecked = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="3"]:checked').length > 0;
+                var con = !lifeStyleChecked && marketTypeChecked;
+                var msg = '有勾選『受託提供農事及畜牧服務』之銷售額區間，【問項2.2】戶內應有人勾選『受託提供農事及畜牧服務』之主要生活型態';
+                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guid);
             },
         },
     },
@@ -1506,7 +1651,7 @@ var PopulationAgeHelper = {
         this.PopulationAge.Reset();
     },
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="populationage"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="populationage"]'));
         this.PopulationAge.Bind();
     },
     PopulationAge: {
@@ -1570,8 +1715,8 @@ var PopulationAgeHelper = {
                     if(count) over15Count += count;
                 })
                 var con = over15Count != PopulationHelper.Population.Container.find('tr').length;
-                var msg = $('<p data-guid="{0}">滿15歲以上男、女性人數，應等於【問項2.2】總人數</p>'.format(this.Guid));
-                Helper.LogHandler(con, PopulationAgeHelper.Alert, msg);
+                var msg = '滿15歲以上男、女性人數，應等於【問項2.2】總人數';
+                Helper.LogHandler.Log(con, PopulationAgeHelper.Alert, msg, this.Guid);
             },
         },
 
@@ -1580,7 +1725,7 @@ var PopulationAgeHelper = {
 var PopulationHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="population"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="population"]'));
         var $row = $(row);
         this.Population.Bind($row);
         this.Adder.Bind();
@@ -1597,7 +1742,8 @@ var PopulationHelper = {
             PopulationHelper.Population.Container.find('tr').each(function(){
                 PopulationHelper.Validation.RequiredField.Validate($(this));
                 PopulationHelper.Validation.BirthYear.Validate($(this));
-                PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($(this));
+                PopulationHelper.Validation.FarmerWorkDay.Validate($(this));
+                PopulationHelper.Validation.OtherFarmerWork.Validate($(this));
             })
             PopulationHelper.Validation.AtLeastOne65Worker.Validate();
         }
@@ -1684,8 +1830,11 @@ var PopulationHelper = {
                     if(Validate){
                         PopulationHelper.Validation.RequiredField.Validate($tr);
                         PopulationHelper.Validation.BirthYear.Validate($tr);
-                        PopulationHelper.Validation.LifeStyleWorkDayLimit.Validate($tr);
+                        PopulationHelper.Validation.FarmerWorkDay.Validate($tr);
+                        PopulationHelper.Validation.OtherFarmerWork.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
+                        PopulationHelper.Validation.MarketType3Checked.Validate();
+                        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
                     }
                 }
             })
@@ -1721,15 +1870,15 @@ var PopulationHelper = {
                 var guid = $row.data('guid');
                 var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(guid, index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="relationship"]').val(), PopulationHelper.Alert, makeString('與戶長關係'));
-                Helper.LogHandler(!$row.find('[name="gender"]').val(), PopulationHelper.Alert, makeString('性別'));
-                Helper.LogHandler(!$row.find('[name="birthyear"]').val(), PopulationHelper.Alert, makeString('出生年次'));
-                Helper.LogHandler(!$row.find('[name="educationlevel"]').val(), PopulationHelper.Alert, makeString('教育程度'));
-                Helper.LogHandler(!$row.find('[name="farmerworkday"]').val(), PopulationHelper.Alert, makeString('全年自家農牧業工作日數'));
-                Helper.LogHandler(!$row.find('[name="lifestyle"]').val(), PopulationHelper.Alert, makeString('全年主要生活型態'));
-                Helper.LogHandler(!$row.find('[name="otherfarmwork"]').val(), PopulationHelper.Alert, makeString('是否有從事農牧業外工作'));
+                Helper.LogHandler.Log(!$row.find('[name="relationship"]').val(), PopulationHelper.Alert, makeString('與戶長關係'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="gender"]').val(), PopulationHelper.Alert, makeString('性別'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="birthyear"]').val(), PopulationHelper.Alert, makeString('出生年次'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="educationlevel"]').val(), PopulationHelper.Alert, makeString('教育程度'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="farmerworkday"]').val(), PopulationHelper.Alert, makeString('全年自家農牧業工作日數'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="lifestyle"]').val(), PopulationHelper.Alert, makeString('全年主要生活型態'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="otherfarmwork"]').val(), PopulationHelper.Alert, makeString('是否有從事農牧業外工作'), guid);
             },
         },
         BirthYear: {
@@ -1739,20 +1888,46 @@ var PopulationHelper = {
                 var year = $row.find('[name="birthyear"]').val()
                 if(year == '') return;
                 var con = parseInt(year) < 1 || parseInt(year) > 91 || !Helper.NumberValidate(year);
-                var msg = $('<p data-guid="{0}">第{1}列出生年次應介於1年至91年之間（實足年齡滿15歲）</p>'.format(guid, index))
-                Helper.LogHandler(con, PopulationHelper.Alert, msg);
+                var msg = '第{0}列出生年次應介於1年至91年之間（實足年齡滿15歲）'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
             },
         },
-        LifeStyleWorkDayLimit: {
+        FarmerWorkDay: {
             Validate: function($row){
                 var guid = $row.data('guid');
                 var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
                 var farmerWorkdayId = $row.find('[name="farmerworkday"]').val();
                 var lifeStyleId = $row.find('[name="lifestyle"]').val();
-                var con = farmerWorkdayId == 1 &&  lifeStyleId == 1;
-                var msg = $('<p data-guid="{0}">第{1}列全年從事工作勾選無，主要生活型態不得勾選自營農牧業工作</p>'.format(guid, index));
-                Helper.LogHandler(con, PopulationHelper.Alert, msg);
-            }
+                var con = farmerWorkdayId >=  7 && lifeStyleId != 1;
+                var msg = '第{0}列全年從事自家農牧業工作日數大於180日，主要生活型態應勾選『自營農牧業工作』'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+
+                var con = farmerWorkdayId == 1 && lifeStyleId == 1;
+                var msg = '第{0}列全年從事自家農牧業工作日數勾選『無』，主要生活型態不得勾選『自營農牧業工作』'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+
+                var con = farmerWorkdayId < 3 && lifeStyleId == 1;
+                var msg = '第{0}列全年主要生活型態勾選『自營農牧業工作』，全年從事自家農牧業工作日數應超過30日，惟種稻或果樹採粗放式經營者不在此限'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+
+                var con = farmerWorkdayId >= 7 && (lifeStyleId == 6 || lifeStyleId == 7);
+                var msg = '第{0}列全年主要生活型態勾選『料理家務、育兒』或『其他』，全年從事自家農牧業工作日數不應超過180日'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+            },
+        },
+        OtherFarmerWork: {
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
+                var lifeStyleId = $row.find('[name="lifestyle"]').val();
+                var otherFarmWorkId = $row.find('[name="otherfarmwork"]').val();
+                var con = (lifeStyleId == 4 || lifeStyleId == 5) && otherFarmWorkId != 3;
+                var msg = '第{0}列主要生活型態勾選『自營農牧業外工作』或『受僱農牧業外工作』，是否有從事農牧業外工作應勾選『從事非農牧業時間為多』'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+                var con = (lifeStyleId == 1 || lifeStyleId == 2 || lifeStyleId == 3) && otherFarmWorkId == 3;
+                var msg = '第{0}列主要生活型態勾選『自營農牧業工作』、『受僱農牧業工作』或『受託提供農事及畜牧服務』，是否有從事農牧業外工作不應勾選『從事非農牧業時間為多』'.format(index);
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, guid);
+            },
         },
         AtLeastOne65Worker: {
             Guid: Helper.CreateGuid(),
@@ -1765,8 +1940,18 @@ var PopulationHelper = {
                         con = false;
                     }
                 })
-                var msg = $('<p data-guid="{0}">各戶至少應有1位65歲以下(出生年次42年至91年)全年從事自家農牧業工作日數達1日以上</p>'.format(this.Guid));
-                Helper.LogHandler(con, PopulationHelper.Alert, msg);
+                var msg = '各戶至少應有1位65歲以下(出生年次42年至91年)全年從事自家農牧業工作日數達1日以上';
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guid);
+            },
+        },
+        MarketType3Checked: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var lifeStyleChecked = PopulationHelper.Population.Container.find('[name="lifestyle"] > option[value="3"]:selected').length > 0;
+                var marketTypeChecked = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="3"]:checked').length > 0;
+                var con = lifeStyleChecked && !marketTypeChecked;
+                var msg = '戶內人口主要生活型態有勾選『受託提供農事及畜牧服務』，【問項1.6】應有勾選『受託提供農事及畜牧服務』之銷售額區間';
+                Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guid);
             },
         },
     },
@@ -1774,7 +1959,7 @@ var PopulationHelper = {
 var LongTermHireHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="longtermhire"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="longtermhire"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.LongTermHire.Bind($row);
@@ -1920,23 +2105,22 @@ var LongTermHireHelper = {
                 var guid = $row.data('guid');
                 var index = LongTermHireHelper.LongTermHire.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), LongTermHireHelper.Alert, makeString('主要僱用工作類型'));
-                Helper.LogHandler(!$row.find('[name="sumcount"]').val(), LongTermHireHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, LongTermHireHelper.Alert, makeString('僱用月份'));
-                Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), LongTermHireHelper.Alert, makeString('平均每月工作日數'));
+                Helper.LogHandler.Log(!$row.find('[name="worktype"]').val(), LongTermHireHelper.Alert, makeString('主要僱用工作類型'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="sumcount"]').val(), LongTermHireHelper.Alert, makeString('人數'), guid);
+                Helper.LogHandler.Log($row.find('[name="month"]').val().length == 0, LongTermHireHelper.Alert, makeString('僱用月份'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="avgworkday"]').val(), LongTermHireHelper.Alert, makeString('平均每月工作日數'), guid);
             },
         },
         AvgWorkDay: {
-            Guid: Helper.CreateGuid(),
             Validate: function($row){
                 var guid = $row.data('guid');
                 var index = LongTermHireHelper.LongTermHire.Container.find('tr').index($row) + 1;
                 var avgWorkDay = $row.find('[name="avgworkday"]').val();
                 var con = avgWorkDay > 30 && Helper.NumberValidate(avgWorkDay);
-                var msg = $('<p data-guid="{0}">第{1}列每月工作日數應小於30日</p>'.format(guid, index));
-                Helper.LogHandler(con, LongTermHireHelper.Alert, msg);
+                var msg = '第{0}列每月工作日數應小於30日'.format(index);
+                Helper.LogHandler.Log(con, LongTermHireHelper.Alert, msg, guid);
             },
         },
     },
@@ -1944,7 +2128,7 @@ var LongTermHireHelper = {
 var ShortTermHireHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="shorttermhire"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="shorttermhire"]'));
         var $row = $(row);
         $row.find('select[name="worktype"]').attr('multiple', '');
         this.ShortTermHire.Bind($row);
@@ -2085,23 +2269,22 @@ var ShortTermHireHelper = {
                 var guid = $row.data('guid');
                 var index = ShortTermHireHelper.ShortTermHire.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name);
                 }
-                Helper.LogHandler(!$row.find('[name="month"]').val(), ShortTermHireHelper.Alert, makeString('僱用月份'));
-                Helper.LogHandler(!$row.find('[name="sumcount"]').val(), ShortTermHireHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="worktype"]').val().length == 0, ShortTermHireHelper.Alert, makeString('主要僱用工作類型'));
-                Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), ShortTermHireHelper.Alert, makeString('平均每月工作日數'));
+                Helper.LogHandler.Log(!$row.find('[name="month"]').val(), ShortTermHireHelper.Alert, makeString('僱用月份'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="sumcount"]').val(), ShortTermHireHelper.Alert, makeString('人數'), guid);
+                Helper.LogHandler.Log($row.find('[name="worktype"]').val().length == 0, ShortTermHireHelper.Alert, makeString('主要僱用工作類型'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="avgworkday"]').val(), ShortTermHireHelper.Alert, makeString('平均每月工作日數'), guid);
             },
         },
         AvgWorkDay: {
-            Guid: Helper.CreateGuid(),
             Validate: function($row){
                 var guid = $row.data('guid');
                 var index = ShortTermHireHelper.ShortTermHire.Container.find('tr').index($row) + 1;
                 var avgWorkDay = $row.find('[name="avgworkday"]').val();
                 var con = avgWorkDay > 30 && Helper.NumberValidate(avgWorkDay);
-                var msg = $('<p data-guid="{0}">第{1}列每月工作日數應小於30日</p>'.format(guid, index));
-                Helper.LogHandler(con, ShortTermHireHelper.Alert, msg);
+                var msg = '第{0}列每月工作日數應小於30日'.format(index);
+                Helper.LogHandler.Log(con, ShortTermHireHelper.Alert, msg, guid);
             },
         },
     },
@@ -2109,7 +2292,7 @@ var ShortTermHireHelper = {
 var NoSalaryHireHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="nosalaryhire"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="nosalaryhire"]'));
         var $row = $(row);
         $row.find('select[name="month"]');
         this.NoSalaryHire.Bind($row);
@@ -2228,10 +2411,10 @@ var NoSalaryHireHelper = {
                 var guid = $row.data('guid');
                 var index = NoSalaryHireHelper.NoSalaryHire.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="month"]').val(), NoSalaryHireHelper.Alert, makeString('月份'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), NoSalaryHireHelper.Alert, makeString('人數'));
+                Helper.LogHandler.Log(!$row.find('[name="month"]').val(), NoSalaryHireHelper.Alert, makeString('月份'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="count"]').val(), NoSalaryHireHelper.Alert, makeString('人數'), guid);
             },
         },
     },
@@ -2239,7 +2422,7 @@ var NoSalaryHireHelper = {
 var LongTermLackHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="longtermlack"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="longtermlack"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.LongTermLack.Bind($row);
@@ -2366,11 +2549,11 @@ var LongTermLackHelper = {
                 var guid = $row.data('guid');
                 var index = LongTermLackHelper.LongTermLack.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), LongTermLackHelper.Alert, makeString('主要短缺工作類型'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), LongTermLackHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, LongTermLackHelper.Alert, makeString('缺工月份'));
+                Helper.LogHandler.Log(!$row.find('[name="worktype"]').val(), LongTermLackHelper.Alert, makeString('主要短缺工作類型'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="count"]').val(), LongTermLackHelper.Alert, makeString('人數'), guid);
+                Helper.LogHandler.Log($row.find('[name="month"]').val().length == 0, LongTermLackHelper.Alert, makeString('缺工月份'), guid);
             },
         },
     },
@@ -2378,7 +2561,7 @@ var LongTermLackHelper = {
 var ShortTermLackHelper = {
     Alert: null,
     Setup: function(row){
-        this.Alert = new Helper.Alert($('.alert[name="shorttermlack"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="shorttermlack"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.ShortTermLack.Bind($row);
@@ -2507,12 +2690,12 @@ var ShortTermLackHelper = {
                 var guid = $row.data('guid');
                 var index = ShortTermLackHelper.ShortTermLack.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return $('<p data-guid="{0}">第{1}列{2}不可空白</p>'.format(guid, index, name))
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
-                Helper.LogHandler(!$row.find('[name="product"]').val(), ShortTermLackHelper.Alert, makeString('農畜產品名稱'));
-                Helper.LogHandler(!$row.find('[name="worktype"]').val(), ShortTermLackHelper.Alert, makeString('主要短缺工作類型'));
-                Helper.LogHandler(!$row.find('[name="count"]').val(), ShortTermLackHelper.Alert, makeString('人數'));
-                Helper.LogHandler($row.find('[name="month"]').val().length == 0, ShortTermLackHelper.Alert, makeString('缺工月份'));
+                Helper.LogHandler.Log(!$row.find('[name="product"]').val(), ShortTermLackHelper.Alert, makeString('農畜產品名稱'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="worktype"]').val(), ShortTermLackHelper.Alert, makeString('主要短缺工作類型'), guid);
+                Helper.LogHandler.Log(!$row.find('[name="count"]').val(), ShortTermLackHelper.Alert, makeString('人數'), guid);
+                Helper.LogHandler.Log($row.find('[name="month"]').val().length == 0, ShortTermLackHelper.Alert, makeString('缺工月份'), guid);
             },
         },
     },
@@ -2520,7 +2703,7 @@ var ShortTermLackHelper = {
 var SubsidyHelper = {
     Alert: null,
     Setup: function(){
-        this.Alert = new Helper.Alert($('.alert[name="subsidy"]'));
+        this.Alert = new Helper.Alert($('.alert-danger[name="subsidy"]'));
         this.Bind();
     },
     Container: {
@@ -2672,8 +2855,8 @@ var SubsidyHelper = {
                 var hasSubsidy = SubsidyHelper.Container.HasSubsidy.prop('checked');
                 var noneSubsidy = SubsidyHelper.Container.NoneSubsidy.prop('checked');
                 var con = !hasSubsidy && !noneSubsidy;
-                var msg = $('<p data-guid="{0}">不可漏填此問項</p>'.format(this.Guid));
-                Helper.LogHandler(con, SubsidyHelper.Alert, msg);
+                var msg = '不可漏填此問項';
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guid);
             },
         },
     },
