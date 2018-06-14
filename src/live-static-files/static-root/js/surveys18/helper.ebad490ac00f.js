@@ -125,7 +125,7 @@ var Helper = {
             <p data-guid="" data-groupid="" style="line-height:30px;">\
                 <span></span>\
                 <button type="button" class="btn btn-warning btn-sm pull-right">\
-                    <i class="fa fa-remove" aria-hidden="true"></i>這是特殊情形\
+                    <i class="fa fa-remove" aria-hidden="true"></i>/這是特殊情形\
                 </button>\
             </p>\
         ',
