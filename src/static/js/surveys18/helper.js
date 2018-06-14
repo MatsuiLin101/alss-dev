@@ -9,9 +9,9 @@ var MainSurveyId = 0;
 /* Validate */
 var Validate = true;
 
-/* jQuery Spinner */
-var Loading = $.loading();
-
+/* jQuery Loading settings */
+$.loading.default.tip = '請稍後';
+$.loading.default.imgPath = '../static/vendor/ajax-loading/img/ajax-loading.gif';
 
 /* BootstrapDialog settings */
 BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
@@ -19,9 +19,10 @@ BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
 BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '確認';
 
 $(document).ready(function () {
+    /* jQuery Spinner */
+    var Loading = $.loading();
     /* setup*/
     Setup(GlobalUI);
-
 })
 
 var Reset = function () {
@@ -81,14 +82,14 @@ var Setup = function(globalUI){
     PopulationAgeHelper.Setup();
     SubsidyHelper.Setup();
 
-    if('cropmarketing' in globalUI) CropMarketingHelper.Setup(globalUI.cropmarketing);
-    if('livestockmarketing' in globalUI) LivestockMarketingHelper.Setup(globalUI.livestockmarketing);
-    if('population' in globalUI) PopulationHelper.Setup(globalUI.population);
-    if('longtermhire' in globalUI) LongTermHireHelper.Setup(globalUI.longtermhire);
-    if('longtermlack' in globalUI) LongTermLackHelper.Setup(globalUI.longtermlack);
-    if('shorttermhire' in globalUI) ShortTermHireHelper.Setup(globalUI.shorttermhire);
-    if('shorttermlack' in globalUI) ShortTermLackHelper.Setup(globalUI.shorttermlack);
-    if('nosalaryhire' in globalUI) NoSalaryHireHelper.Setup(globalUI.nosalaryhire);
+    CropMarketingHelper.Setup(globalUI.cropmarketing);
+    LivestockMarketingHelper.Setup(globalUI.livestockmarketing);
+    PopulationHelper.Setup(globalUI.population);
+    LongTermHireHelper.Setup(globalUI.longtermhire);
+    LongTermLackHelper.Setup(globalUI.longtermlack);
+    ShortTermHireHelper.Setup(globalUI.shorttermhire);
+    ShortTermLackHelper.Setup(globalUI.shorttermlack);
+    NoSalaryHireHelper.Setup(globalUI.nosalaryhire);
 }
 
 var Helper = {
@@ -419,7 +420,7 @@ var SurveyHelper = {
                                  ShortTermHireHelper.ShortTermHire.Container.find('tr').length +
                                  NoSalaryHireHelper.NoSalaryHire.Container.find('tr').length > 0;
                     var con = checked && exists;
-                    msg = $('<p data-guid="{0}">勾選無外僱人力，問項3.1.2, 3.1.3, 3.1.4應為空白</p>'.format(this.Guid));
+                    msg = $('<p data-guid="{0}">勾選無外僱人力，【問項3.1.2及3.1.3及3.1.4】應為空白</p>'.format(this.Guid));
                     Helper.LogHandler(con, SurveyHelper.Hire.Alert, msg);
 
                     var con = !checked && !exists;
@@ -501,7 +502,7 @@ var SurveyHelper = {
                     var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
                                  ShortTermLackHelper.ShortTermLack.Container.find('tr').length > 0;
                     var con = checked && exists;
-                    msg = $('<p data-guid="{0}">勾選無短缺人力，問項3.2.2, 3.2.3應為空白</p>'.format(this.Guid));
+                    msg = $('<p data-guid="{0}">勾選無短缺人力，【問項3.2.2及3.2.3】應為空白</p>'.format(this.Guid));
                     Helper.LogHandler(con, SurveyHelper.Lack.Alert, msg);
 
                     var con = !checked && !exists;
@@ -679,7 +680,7 @@ var LandAreaHelper = {
                 if(!checked){
                     LandAreaHelper.LandStatus.Container
                     .filter('[data-landtype-id="{0}"]'.format(type))
-                    .val('');
+                    .val('').trigger('change');
                 }
 
                 if(CloneData){
@@ -1196,7 +1197,7 @@ var CropMarketingHelper = {
                               .filter(':checked').length > 0;
                 var exists = CropMarketingHelper.CropMarketing.Container.find('tr').length > 0;
                 var con = !checked && exists;
-                var msg = $('<p data-guid="{0}">有生產農產品，問項1.6應有勾選『農作物及其製品』之銷售額區間</p>'.format(this.Guid));
+                var msg = $('<p data-guid="{0}">有生產農產品，【問項1.6】應有勾選『農作物及其製品』之銷售額區間</p>'.format(this.Guid));
                 Helper.LogHandler(con, CropMarketingHelper.Alert, msg);
             },
         },
@@ -1360,7 +1361,7 @@ var LivestockMarketingHelper = {
                               .filter(':checked').length > 0;
                 var exists = LivestockMarketingHelper.LivestockMarketing.Container.find('tr').length > 0;
                 var con = !checked && exists;
-                var msg = $('<p data-guid="{0}">有生產畜產品，問項1.6應有勾選『畜禽作物及其製品』之銷售額區間</p>'.format(this.Guid));
+                var msg = $('<p data-guid="{0}">有生產畜產品，【問項1.6】應有勾選『畜禽作物及其製品』之銷售額區間</p>'.format(this.Guid));
                 Helper.LogHandler(con, LivestockMarketingHelper.Alert, msg);
             },
         },
@@ -1450,7 +1451,7 @@ var AnnualIncomeHelper = {
                               .filter(':checked').length > 0;
                 var exists = CropMarketingHelper.CropMarketing.Container.find('tr').length > 0;
                 var con = checked && !exists;
-                var msg = $('<p data-guid="{0}">有勾選『農作物及其製品』之銷售額區間，問項1.4應有生產農產品</p>'.format(this.Guid));
+                var msg = $('<p data-guid="{0}">有勾選『農作物及其製品』之銷售額區間，【問項1.4】應有生產農產品</p>'.format(this.Guid));
                 Helper.LogHandler(con, AnnualIncomeHelper.Alert, msg);
             },
         },
@@ -1462,7 +1463,7 @@ var AnnualIncomeHelper = {
                               .filter(':checked').length > 0;
                 var exists = LivestockMarketingHelper.LivestockMarketing.Container.find('tr').length > 0;
                 var con = checked && !exists;
-                var msg = $('<p data-guid="{0}">有勾選『畜禽作物及其製品』之銷售額區間，問項1.5應有生產畜產品</p>'.format(this.Guid));
+                var msg = $('<p data-guid="{0}">有勾選『畜禽作物及其製品』之銷售額區間，【問項1.5】應有生產畜產品</p>'.format(this.Guid));
                 Helper.LogHandler(con, AnnualIncomeHelper.Alert, msg);
             },
         },
@@ -1569,7 +1570,7 @@ var PopulationAgeHelper = {
                     if(count) over15Count += count;
                 })
                 var con = over15Count != PopulationHelper.Population.Container.find('tr').length;
-                var msg = $('<p data-guid="{0}">滿15歲以上男、女性人數，應等於問項2.2總人數</p>'.format(this.Guid));
+                var msg = $('<p data-guid="{0}">滿15歲以上男、女性人數，應等於【問項2.2】總人數</p>'.format(this.Guid));
                 Helper.LogHandler(con, PopulationAgeHelper.Alert, msg);
             },
         },
@@ -1789,6 +1790,7 @@ var LongTermHireHelper = {
         if(Validate){
             LongTermHireHelper.LongTermHire.Container.find('tr').each(function(){
                 LongTermHireHelper.Validation.RequiredField.Validate($(this));
+                LongTermHireHelper.Validation.AvgWorkDay.Validate($(this));
             })
         }
     },
@@ -1883,6 +1885,7 @@ var LongTermHireHelper = {
 
                     if(Validate){
                         LongTermHireHelper.Validation.RequiredField.Validate($tr);
+                        LongTermHireHelper.Validation.AvgWorkDay.Validate($tr);
                     }
                 }
             })
@@ -1925,6 +1928,17 @@ var LongTermHireHelper = {
                 Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), LongTermHireHelper.Alert, makeString('平均每月工作日數'));
             },
         },
+        AvgWorkDay: {
+            Guid: Helper.CreateGuid(),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = LongTermHireHelper.LongTermHire.Container.find('tr').index($row) + 1;
+                var avgWorkDay = $row.find('[name="avgworkday"]').val();
+                var con = avgWorkDay > 30 && Helper.NumberValidate(avgWorkDay);
+                var msg = $('<p data-guid="{0}">第{1}列每月工作日數應小於30日</p>'.format(guid, index));
+                Helper.LogHandler(con, LongTermHireHelper.Alert, msg);
+            },
+        },
     },
 }
 var ShortTermHireHelper = {
@@ -1946,6 +1960,7 @@ var ShortTermHireHelper = {
         if(Validate){
             ShortTermHireHelper.ShortTermHire.Container.find('tr').each(function(){
                 ShortTermHireHelper.Validation.RequiredField.Validate($(this));
+                ShortTermHireHelper.Validation.AvgWorkDay.Validate($(this));
             })
         }
     },
@@ -2036,6 +2051,7 @@ var ShortTermHireHelper = {
                     
                     if(Validate){
                         ShortTermHireHelper.Validation.RequiredField.Validate($tr);
+                        ShortTermHireHelper.Validation.AvgWorkDay.Validate($tr);
                     }
                 }
             })
@@ -2075,6 +2091,17 @@ var ShortTermHireHelper = {
                 Helper.LogHandler(!$row.find('[name="sumcount"]').val(), ShortTermHireHelper.Alert, makeString('人數'));
                 Helper.LogHandler($row.find('[name="worktype"]').val().length == 0, ShortTermHireHelper.Alert, makeString('主要僱用工作類型'));
                 Helper.LogHandler(!$row.find('[name="avgworkday"]').val(), ShortTermHireHelper.Alert, makeString('平均每月工作日數'));
+            },
+        },
+        AvgWorkDay: {
+            Guid: Helper.CreateGuid(),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = ShortTermHireHelper.ShortTermHire.Container.find('tr').index($row) + 1;
+                var avgWorkDay = $row.find('[name="avgworkday"]').val();
+                var con = avgWorkDay > 30 && Helper.NumberValidate(avgWorkDay);
+                var msg = $('<p data-guid="{0}">第{1}列每月工作日數應小於30日</p>'.format(guid, index));
+                Helper.LogHandler(con, ShortTermHireHelper.Alert, msg);
             },
         },
     },
@@ -2491,7 +2518,9 @@ var ShortTermLackHelper = {
     },
 }
 var SubsidyHelper = {
+    Alert: null,
     Setup: function(){
+        this.Alert = new Helper.Alert($('.alert[name="subsidy"]'));
         this.Bind();
     },
     Container: {
@@ -2522,6 +2551,9 @@ var SubsidyHelper = {
             .attr('data-refuse-id', refuse.id)
             .val(refuse.extra);
         })
+        if(Validate){
+            SubsidyHelper.Validation.Empty.Validate();
+        }
     },
     Reset: function(){
         this.Container.HasSubsidy.prop('checked', false);
@@ -2540,12 +2572,30 @@ var SubsidyHelper = {
         Helper.BindInterOnly(this.Container.Hour);
         this.Container.HasSubsidy.change(function(){
             if(CloneData){
-                CloneData[MainSurveyId].subsidy.has_subsidy = $(this).prop('checked');
+                var checked = $(this).prop('checked');
+                CloneData[MainSurveyId].subsidy.has_subsidy = checked;
+                if(!checked){
+                    SubsidyHelper.Container.Count.val('').trigger('change');
+                    SubsidyHelper.Container.Month.val('').trigger('change');
+                    SubsidyHelper.Container.Day.val('').trigger('change');
+                    SubsidyHelper.Container.Hour.val('').trigger('change');
+                }
+                if(Validate){
+                    SubsidyHelper.Validation.Empty.Validate();
+                }
             }
         })
         this.Container.NoneSubsidy.change(function(){
             if(CloneData){
-                CloneData[MainSurveyId].subsidy.none_subsidy = $(this).prop('checked');
+                var checked = $(this).prop('checked');
+                CloneData[MainSurveyId].subsidy.none_subsidy = checked;
+                if(!checked){
+                    SubsidyHelper.Container.RefuseReason.prop('checked', false).trigger('change');
+                    SubsidyHelper.Container.Extra.val('').trigger('change');
+                }
+                if(Validate){
+                    SubsidyHelper.Validation.Empty.Validate();
+                }
             }
         })
         this.Container.Count.change(function(){
@@ -2571,13 +2621,14 @@ var SubsidyHelper = {
         this.Container.RefuseReason.change(function(){
             SubsidyHelper.Object.Refuse.Collect();
         })
-        this.Container.Extra.change(function(){
+        this.Container.Extra.change(function(e){
             /* make sure checked before change textbox value */
             var refuseReasonId = $(this).data('refusereason-id');
-            var checked = SubsidyHelper.Container.RefuseReason
+            var noneSubsidyChecked = SubsidyHelper.Container.NoneSubsidy.prop('checked');
+            var reasonChecked = SubsidyHelper.Container.RefuseReason
                           .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
                           .prop('checked');
-            if(!checked){
+            if(noneSubsidyChecked && !reasonChecked){
                 Helper.Dialog.ShowAlert('請先勾選無申請之原因');
                 e.preventDefault();
             }
@@ -2613,7 +2664,19 @@ var SubsidyHelper = {
                 }
             },
         }
-    }
+    },
+    Validation: {
+        Empty: {
+            Guid: Helper.CreateGuid(),
+            Validate: function(){
+                var hasSubsidy = SubsidyHelper.Container.HasSubsidy.prop('checked');
+                var noneSubsidy = SubsidyHelper.Container.NoneSubsidy.prop('checked');
+                var con = !hasSubsidy && !noneSubsidy;
+                var msg = $('<p data-guid="{0}">不可漏填此問項</p>'.format(this.Guid));
+                Helper.LogHandler(con, SubsidyHelper.Alert, msg);
+            },
+        },
+    },
 }
 
 

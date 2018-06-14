@@ -29,6 +29,9 @@ $(document).ready(function() {
         FixAffixWidth();
     });
 
+    /* jQuery Spinner */
+    var Loading = $.loading();
+
     /* autocomplete */
     $( "#farmerId" ).autocomplete({
         source: FarmerIds,
@@ -44,6 +47,10 @@ $(document).ready(function() {
         $('.js-panel-contents .panel').hide();
         $(target).show();
     })
+    $('#nav-about, #nav-brand').click(function(){
+        $('[data-partial]').hide();
+        $('[data-partial="about"]').show();
+    });
 
 
     /* get farmer data*/
@@ -68,7 +75,6 @@ $(document).ready(function() {
                         $('[data-partial]').hide();
                         $('[data-partial="survey"]').show();
                         if(readonly) $('.js-set-survey').hide();
-                        $('#farmerId').val('');
                     }
                 })
             }).done(function(){
@@ -115,11 +121,6 @@ $(document).ready(function() {
                 })
             }
         }
-    });
-
-    $('#nav-about, #nav-brand').click(function(){
-        $('[data-partial]').hide();
-        $('[data-partial="about"]').show();
     });
 })
 
