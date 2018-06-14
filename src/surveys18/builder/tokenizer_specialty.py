@@ -48,7 +48,8 @@ from surveys18.models import (
 class Builder(object):
 
     def __init__(self, string):
-        string = string.replace(" ","")
+        string = string.replace(u'\u3000', u'')
+        string = string.replace(" ", "")
         self.string = string.split(",")
 
     def build(self, readonly=True):
@@ -63,7 +64,7 @@ class Builder(object):
             self.build_livestock_marketing()
             self.build_population()
         except Exception as e:
-            Survey.objects.filter(farmer_id=self.survey.farmer_id, page=self.survey.page,
+            Survey.objects.filter(farmer_id=self.survey.farmer_id,
                                   readonly=self.survey.readonly).delete()
             raise e
 
@@ -73,10 +74,11 @@ class Builder(object):
         page = 1
         name = self.string[7]
         is_updated = True
-        obj = Survey.objects.filter(page=page, farmer_id=farmer_id).all()
-        if obj is None:
+        obj = Survey.objects.filter(farmer_id=farmer_id, readonly=readonly).first()
+        if obj:
+            self.survey = obj
+        else:
             try:
-
                 survey = Survey.objects.create(
                     farmer_id=farmer_id,
                     farmer_name=name,
@@ -86,7 +88,6 @@ class Builder(object):
                     readonly=readonly
                 )
 
-                self.survey = survey
             except ValueError as e:
                 raise CreateModelError(target='Survey', msg=e)
             else:
@@ -109,27 +110,29 @@ class Builder(object):
 
     def build_address(self):
         address = self.string[10]
-        if len(address) > 0:
-            try:
-                address = AddressMatch.objects.create(
-                    survey=self.survey,
-                    mismatch=True,
-                    address=address
-                )
-            except ValueError as e:
-                raise CreateModelError(target='Address Match', msg=e)
+        obj = Business.objects.filter(survey=self.survey).first()
+        if obj is None:
+            if len(address) > 0:
+                try:
+                    address = AddressMatch.objects.create(
+                        survey=self.survey,
+                        mismatch=True,
+                        address=address
+                    )
+                except ValueError as e:
+                    raise CreateModelError(target='Address Match', msg=e)
+                else:
+                    self.address = address
             else:
-                self.address = address
-        else:
-            try:
-                address = AddressMatch.objects.create(
-                    survey=self.survey,
-                    match=True,
-                )
-            except ValueError as e:
-                raise CreateModelError(target='Address Match', msg=e)
-            else:
-                self.address = address
+                try:
+                    address = AddressMatch.objects.create(
+                        survey=self.survey,
+                        match=True,
+                    )
+                except ValueError as e:
+                    raise CreateModelError(target='Address Match', msg=e)
+                else:
+                    self.address = address
 
 
     def build_land_area(self):
@@ -139,21 +142,22 @@ class Builder(object):
                 self.land_area = []
                 cnt = 0
                 for i in range(0, len(land_area_str),3):
-                    if int(land_area_str[i]) > 0:
-                        type = 1 if cnt < 3 else 2
-                        status = (i % 3) + 1
+                    for j in range(1, 4):
+                        if int(land_area_str[i+j-1]) > 0:
+                            type = 1 if i < 3 else 2
+                            status = j
 
-                        land_type = LandType.objects.get(id=type)
-                        land_status = LandStatus.objects.get(id=status)
+                            land_type = LandType.objects.get(id=type)
+                            land_status = LandStatus.objects.get(id=status)
 
-                        land_area = LandArea.objects.create(
-                            survey=self.survey,
-                            type=land_type,
-                            status=land_status,
-                            value=int(land_area_str[i])
-                        )
-                        self.land_area.append(land_area)
-                    cnt = cnt + 1
+                            land_area = LandArea.objects.create(
+                                survey=self.survey,
+                                type=land_type,
+                                status=land_status,
+                                value=int(land_area_str[i])
+                            )
+                            self.land_area.append(land_area)
+
 
                 if int(land_area_str[-1]) > 0:
                     land_type = LandType.objects.get(id=3)
@@ -168,10 +172,17 @@ class Builder(object):
 
     def build_business(self):
         business_str = self.string[40:50]
-        if len(business_str) > 0:
+        if len(business_str) > 1:
             try:
                 self.business = []
-                for i in range(0, 8):
+                if business_str[0] == "0":
+                    business = Business.objects.create(
+                        survey=self.survey,
+                        farm_related_business=FarmRelatedBusiness.objects.get(code=1)
+
+                    )
+                    self.business.append(business)
+                for i in range(1, 8):
                     if business_str[i] == "1":
                         num = i + 1
                         business = Business.objects.create(
@@ -190,7 +201,6 @@ class Builder(object):
                 elif len(business_str[9]) > 0 :
                     business = Business.objects.create(
                         survey=self.survey,
-                        farm_related_business=FarmRelatedBusiness.objects.get(code=9),
                         extra=business_str[9]
                     )
                     self.business.append(business)
@@ -199,12 +209,12 @@ class Builder(object):
                 raise CreateModelError(target='Business', msg=e)
 
     def build_management(self):
-        management_str = self.string[55]
+        management_str = self.string[56]
         if len(management_str) > 0 :
             try:
-                char = list(management_str)
+                char = management_str.split(".")
                 num = int(char[0])
-                if num > 3:
+                if num < 3:
                     num = num
                 elif num > 3 and num < 8 :
                     num = num+1
@@ -218,7 +228,7 @@ class Builder(object):
                     num = 0
 
                 if num> 0:
-                    management_type = ManagementType.objects.get(id=num)
+                    management_type = ManagementType.objects.get(code=num)
                     self.survey.management_types.add(management_type)
 
             except ValueError as e:
@@ -228,6 +238,7 @@ class Builder(object):
         crop_marketing_str = self.string[19:30]
         if len(crop_marketing_str[0]) > 0:
             try:
+                self.crop_marketing = []
                 product_str = crop_marketing_str[0]
                 product = Product.objects.filter(code=product_str).first()
                 land_number = crop_marketing_str[2]
@@ -238,19 +249,20 @@ class Builder(object):
                 total_yield  = crop_marketing_str[6]
                 unit_price = crop_marketing_str[7]
                 has_facility_str = int(crop_marketing_str[8])
-                if has_facility_str == 0:
-                    has_facility = None
+                if has_facility_str == 2:
+                    has_facility = 0
                 elif has_facility_str == 1:
                     has_facility = 1
 
                 loss_str = int(crop_marketing_str[10])
                 loss = Loss.objects.filter(code=loss_str, type=1).first()
+                # print(product,land_number,land_number,plant_times,unit,total_yield,unit_price,has_facility,loss)
 
                 crop_marketing = CropMarketing.objects.create(
                     survey=self.survey,
                     product=product,
                     land_number=land_number,
-                    land_area=land_area,
+                    land_area=land_number,
                     plant_times=plant_times,
                     unit=unit,
                     total_yield=total_yield,
@@ -267,6 +279,7 @@ class Builder(object):
         livestock_str = self.string[31:40]
         if len(livestock_str[0]) > 0 :
             try:
+                self.livestock_marketing = []
                 product_str = livestock_str[0]
                 product = Product.objects.filter(code=product_str).first()
                 unit_str = livestock_str[2]
@@ -278,6 +291,8 @@ class Builder(object):
                 contract = Contract.objects.filter(code=contract_str).first()
                 loss_str = int(livestock_str[7])
                 loss = Loss.objects.filter(code=loss_str, type=2).first()
+
+                # print(product,unit,raising_number,total_yield,unit_price,contract,loss)
 
                 livestock_marketing = LivestockMarketing.objects.create(
                     survey=self.survey,
@@ -305,24 +320,27 @@ class Builder(object):
                 gender = Gender.objects.filter(code=gender_str).first()
 
                 birth_year = int(int(population_str[2])/100)
+
                 education_level_str = int(population_str[3])
                 education_level = EducationLevel.objects.filter(code=education_level_str).first()
-                farmer_work_day_str = population_str[4]
-                farmer_work_day_cnt, farmer_work_day_id = self.id_and_value(farmer_work_day_str)
-                if farmer_work_day_cnt != 1:
-                    farmer_work_day = None
-                else:
-                    farmer_work_day = FarmerWorkDay.objects.filter(code=farmer_work_day_id).first()
+                farmer_work_day_str = int(population_str[4])
 
-                population = Population.objects.create(
-                    survey=self.survey,
-                    relationship=relationship,
-                    gender=gender,
-                    birth_year=birth_year,
-                    education_level=education_level,
-                    farmer_work_day=farmer_work_day
-                )
-                self.population.append(population)
+                if farmer_work_day_str == 8:
+                    farmer_work_day_id = 1
+                else:
+                    farmer_work_day_id = farmer_work_day_str+1
+                farmer_work_day = FarmerWorkDay.objects.filter(code=farmer_work_day_id).first()
+
+                if birth_year < 92 :
+                    population = Population.objects.create(
+                        survey=self.survey,
+                        relationship=relationship,
+                        gender=gender,
+                        birth_year=birth_year,
+                        education_level=education_level,
+                        farmer_work_day=farmer_work_day
+                    )
+                    self.population.append(population)
 
             except ValueError as e:
                 raise CreateModelError(target='Population', msg=e)

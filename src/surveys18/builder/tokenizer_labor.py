@@ -144,17 +144,17 @@ class Builder(object):
             raise StringLengthError(target='Survey', msg=e)
 
         # dup
-        obj = Survey.objects.filter(page=page, farmer_id=farmer_id, readonly=readonly, is_updated=False).all()
-        obj_2 = Survey.objects.filter(page=page, farmer_id=farmer_id, readonly=False, is_updated=False).all()
-        obj_3 = Survey.objects.filter(page=page, farmer_id=farmer_id, readonly=readonly, is_updated=True).all()
-        if obj:
-            obj.delete()
-        if obj_2:
-            obj_2.delete()
-        if obj_3:
-            self.survey=obj_3
+        exists = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=False).all()
+        if exists:
+            exists.delete()
+
+        # if specialty exists, get and update survey
+        exists_specialty = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=True, readonly=readonly).first()
+        if exists_specialty:
+            self.survey = exists_specialty
+
         try:
-            if obj_3 :
+            if self.survey:
                 self.survey.farmer_name = name
                 self.survey.total_pages = total_pages
                 self.survey.note = note
@@ -583,9 +583,6 @@ class Builder(object):
 
                 self.survey.save()
 
-                print(self.survey.non_hire)
-                print(self.survey.hire)
-
             except ValueError as e:
                     raise CreateModelError(target='hire', msg=e)
 
@@ -758,7 +755,6 @@ class Builder(object):
                     self.short_term_lack = []
                     for i in range(0,len(string),21):
                         short_term_lack_str=string[i:i+21]
-                        print(short_term_lack_str)
                         product_str=short_term_lack_str[0:4]
                         product = Product.objects.filter(code=product_str).first()
                         work_type_str=short_term_lack_str[4:6]
@@ -771,7 +767,6 @@ class Builder(object):
                             work_type=work_type,
                             count=count
                         )
-                        print(product,work_type,count)
 
                         months_str = short_term_lack_str[9:]
                         for j in range(0, 12):
