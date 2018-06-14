@@ -125,7 +125,7 @@ var Helper = {
             <p data-guid="" style="line-height:30px;">\
                 <span></span>\
                 <button type="button" class="btn btn-warning btn-sm pull-right">\
-                    <i class="fa fa-remove" aria-hidden="true"></i>我已確認這是例外且註記於備註，略過此錯誤\
+                    <i class="fa fa-remove" aria-hidden="true"></i>這是例外狀況\
                 </button>\
             </p>\
         ',
@@ -1870,7 +1870,7 @@ var PopulationHelper = {
                 var guid = $row.data('guid');
                 var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
                 function makeString(name){
-                    return '第{0}列{1}不可空白'.format(guid, index, name)
+                    return '第{0}列{1}不可空白'.format(index, name)
                 }
                 Helper.LogHandler.Log(!$row.find('[name="relationship"]').val(), PopulationHelper.Alert, makeString('與戶長關係'), guid);
                 Helper.LogHandler.Log(!$row.find('[name="gender"]').val(), PopulationHelper.Alert, makeString('性別'), guid);
