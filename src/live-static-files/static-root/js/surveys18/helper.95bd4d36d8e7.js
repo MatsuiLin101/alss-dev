@@ -620,7 +620,7 @@ var SurveyHelper = {
                 if(Validate) {
                     SurveyHelper.Address.Validation.AddressRequire.Validate();
                     SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
-                    SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
+                    SubsidyHelper.AddressMatch.Validation.Duplicate.Validate();
                 }
             })
         },
@@ -630,7 +630,7 @@ var SurveyHelper = {
             if(Validate){
                 SurveyHelper.Address.Validation.AddressRequire.Validate();
                 SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
-                SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
+                SubsidyHelper.AddressMatch.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
@@ -654,7 +654,7 @@ var SurveyHelper = {
                 Validate: function(){
                     var con = SurveyHelper.AddressMatch.Container.filter(':checked').length > 1;
                     var msg = '限填一個項目';
-                    Helper.LogHandler.Log(con, SurveyHelper.Alert, msg, this.Guids[0]);
+                    Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0]);
                 },
             },
         },
