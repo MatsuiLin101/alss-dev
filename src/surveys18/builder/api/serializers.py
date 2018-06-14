@@ -8,7 +8,8 @@ from surveys18.models import (
     BuilderFile,
     BuilderFileType,
 )
-from surveys18.builder.tokenizer_labor import Builder
+from surveys18.builder.tokenizer_labor import Builder as LaborBuilder
+from surveys18.builder.tokenizer_specialty import Builder as SpecialtyBuilder
 
 
 class BuilderFileTypeSerializer(ModelSerializer):
@@ -38,13 +39,14 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         for i, string in enumerate(data_list):
             try:
                 if file_type.id == 1:
-                    pass
-                    # builder = Builder(string=string)
-                    # builder.build()
-                    # builder.build(readonly=False)
-                if file_type.id == 2:
-                    pass
-                pass
+                    builder = LaborBuilder(string=string)
+                    builder.build()
+                    builder.build(readonly=False)
+                elif file_type.id == 2:
+                    builder = SpecialtyBuilder(string=string)
+                    builder.build()
+                    builder.build(readonly=False)
+
             except Exception as e:
                 errors.append({
                     'string': string,
