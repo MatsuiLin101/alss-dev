@@ -39,7 +39,6 @@ $(document).ready(function() {
 
     /* panel control */
     $('.js-tabs-control').on('click', function() {
-
         $(this).siblings().removeClass('active');
         $(this).toggleClass('active');
 
@@ -47,9 +46,10 @@ $(document).ready(function() {
         $('.js-panel-contents .panel').hide();
         $(target).show();
     })
-    $('#nav-about, #nav-brand').click(function(){
+    $('.js-partial-control').click(function(){
+        var target = $(this).data('target');
         $('[data-partial]').hide();
-        $('[data-partial="about"]').show();
+        $('[data-partial="{0}"]'.format(target)).show();
     });
 
 
@@ -66,6 +66,10 @@ $(document).ready(function() {
                 // it resolves itself after 1 seconds
                 var timer = $.Deferred();
                 setTimeout(timer.resolve, 1000);
+
+                // turn on or turn off validation
+                Helper.LogHandler.ValidationActive = readonly != true;
+
                 var ajax = GetFarmerData(url, farmerId, readonly).fail(function(){
                     Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
                 });
@@ -78,6 +82,14 @@ $(document).ready(function() {
                     }
                 })
             }).done(function(){
+                // update or create review log
+                data = {
+                    current_errors: Helper.LogHandler.CollectError.GetCurrent(),
+                    object_id: CloneData[MainSurveyId].id,
+                    app_label: 'surveys18',
+                    model: 'survey',
+                }
+                var ajax = SetLogData(JSON.stringify(data));
                 Loading.close();
             })
         } else {
@@ -113,7 +125,15 @@ $(document).ready(function() {
                         Reset();
                         Object.values(CloneData).forEach(function(survey, i){
                             Set(survey, survey.id);
-                        })
+                        });
+                        // update review log
+                        data = {
+                            current_errors: Helper.LogHandler.CollectError.GetCurrent(),
+                            object_id: CloneData[MainSurveyId].id,
+                            app_label: 'surveys18',
+                            model: 'survey',
+                        }
+                        var ajax = SetLogData(JSON.stringify(data));
                         Helper.Dialog.ShowInfo('成功更新調查表！');
                     })
                 }).done(function(){
@@ -177,4 +197,26 @@ var SetFarmerData = function (url, data) {
         }
     })
 }
+
+var SetLogData = function (data) {
+    return $.ajax({
+        url: 'logs/api/update/',
+        async: false,
+        type: 'PATCH',
+        data: {
+            data: data
+        },
+        success: function (data) {
+            if ('id' in data) {
+                console.log('A review log has been updated/created in backend.')
+            }
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    })
+}
+
 

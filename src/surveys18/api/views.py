@@ -1,4 +1,6 @@
 import json
+import logging
+from django.contrib.contenttypes.models import ContentType
 from django.http import JsonResponse
 from django.db.models import Q
 
@@ -17,6 +19,8 @@ from rest_framework.permissions import (
 
 from .serializers import SurveySerializer
 from surveys18.models import Survey
+
+logger = logging.getLogger('review')
 
 
 class SurveyListAPIView(ListAPIView):
@@ -55,7 +59,11 @@ class SurveyUpdateAPIView(UpdateAPIView):
             serializer.save()
             return JsonResponse(data=serializer.data)
         else:
-            print(serializer.errors)
+            logger.exception(serializer.errors, extra={
+                'object_id': pk,
+                'content_type': ContentType.objects.filter(app_label='surveys18', model='survey').first(),
+                'user': request.user,
+            })
 
         return JsonResponse(data=serializer.errors, safe=False)
 

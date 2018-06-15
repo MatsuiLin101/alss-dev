@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     # third part
     'crispy_forms',
     'rest_framework',
+    'django_db_logger',
 
     # local
+    'logs',
     'accounts',
     'surveys18',
 ]
@@ -174,5 +176,32 @@ FIXTURE_DIRS = [
 # Crispy
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# Logging
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+#         },
+#         'simple': {
+#             'format': '%(levelname)s %(asctime)s %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'review_log_handler': {
+#             'level': 'DEBUG',
+#             'class': 'logs.handlers.ReviewLogHandler'
+#         },
+#     },
+#     'loggers': {
+#         'review': {
+#             'handlers': ['review_log_handler'],
+#             'level': 'DEBUG'
+#         },
+#     }
+# }
 
 
