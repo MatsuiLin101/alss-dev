@@ -65,7 +65,8 @@ table[name=population] div.bootstrap-select.form-control {
     display: none;
 }
 
-div[data-partial=survey] {
+div[data-partial=survey],
+div[data-partial=datatable] {
     display: none;
 }
 
