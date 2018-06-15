@@ -49,6 +49,7 @@ from surveys18.models import (
 class Builder(object):
 
     def __init__(self, string):
+        string = string[0]
         token_size, self.more_page = self.check_string(string)
         delimiter_plus = '+'
         delimiter_pound = '#+'
@@ -88,7 +89,7 @@ class Builder(object):
             self.build_subsidy()
         except Exception as e:
             Survey.objects.filter(farmer_id=self.survey.farmer_id, page=self.survey.page,
-                                  readonly=self.survey.readonly).delete()
+                                  readonly=self.survey.readonly, is_updated=False).delete()
             raise e
 
     @staticmethod
@@ -126,6 +127,7 @@ class Builder(object):
 
     def build_survey(self, readonly=True):
         try:
+            self.more_page = True
             string = self.string[0]
             farmer_id = string[0:12]
             total_pages = int(string[12:14])
@@ -144,7 +146,7 @@ class Builder(object):
             raise StringLengthError(target='Survey', msg=e)
 
         # dup
-        exists = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=False).all()
+        exists = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=False, readonly=readonly).all()
         if exists:
             exists.delete()
 
@@ -153,41 +155,80 @@ class Builder(object):
         if exists_specialty:
             self.survey = exists_specialty
 
+            #delete old data
+            self.survey.total_pages = 1
+            self.survey.note = None
+            self.survey.period = None
+            self.survey.distance = None
+            self.survey.hire = False
+            self.survey.non_hire = False
+            self.survey.lacks.clear()
+
+            annualIncomes = AnnualIncome.objects.filter(survey=self.survey).all()
+            if annualIncomes:
+                annualIncomes.delete()
+            populations = Population.objects.filter(survey=self.survey).all()
+            if populations:
+                for value in populations:
+                    value.life_style = None
+                    value.other_farm_work = None
+            population_ages = PopulationAge.objects.filter(survey=self.survey).all()
+            if population_ages:
+                population_ages.delete()
+            long_term_hires = LongTermHire.objects.filter(survey=self.survey).all()
+            if long_term_hires:
+                long_term_hires.delete()
+            short_term_hires = ShortTermHire.objects.filter(survey=self.survey).all()
+            if short_term_hires:
+                short_term_hires.delete()
+            no_salary_hires = NoSalaryHire.objects.filter(survey=self.survey).all()
+            if no_salary_hires:
+                no_salary_hires.delete()
+            long_term_lacks = LongTermLack.objects.filter(survey=self.survey).all()
+            if long_term_lacks:
+                long_term_lacks.delete()
+            short_term_lacks = ShortTermLack.objects.filter(survey=self.survey).all()
+            if short_term_lacks:
+                short_term_lacks.delete()
+            subsidy = Subsidy.objects.filter(survey=self.survey).first()
+            if subsidy:
+                subsidy.delete()
+
         try:
-            if self.survey:
-                self.survey.farmer_name = name
+            if exists_specialty:
                 self.survey.total_pages = total_pages
                 self.survey.note = note
                 self.survey.period = period_h * 60 + period_m
                 self.survey.distance = distance_km
                 self.survey.save()
-
-            elif self.more_page:
-                survey = Survey.objects.create(
-                    farmer_id=farmer_id,
-                    page=page,
-                    total_pages=total_pages,
-                    readonly=readonly,
-                    is_updated=False
-                )
             else:
-                survey = Survey.objects.create(
-                    farmer_id=farmer_id,
-                    page=page,
-                    total_pages=total_pages,
-                    farmer_name=name,
-                    origin_class=ori_class,
-                    readonly=readonly,
-                    is_updated=False,
-                    note=note,
-                    period=period_h * 60 + period_m,
-                    distance=distance_km
-                )
 
+                if self.more_page:
+                    survey = Survey.objects.create(
+                        farmer_id=farmer_id,
+                        page=page,
+                        total_pages=total_pages,
+                        readonly=readonly,
+                        is_updated=False
+                    )
+                else:
+                    survey = Survey.objects.create(
+                        farmer_id=farmer_id,
+                        page=page,
+                        total_pages=total_pages,
+                        farmer_name=name,
+                        origin_class=ori_class,
+                        readonly=readonly,
+                        is_updated=False,
+                        note=note,
+                        period=period_h * 60 + period_m,
+                        distance=distance_km
+                    )
         except ValueError as e:
             raise CreateModelError(target='Survey', msg=e)
         else:
-            self.survey = survey
+            if exists_specialty is None:
+                self.survey = survey
 
     def build_phone(self):
         if self.survey.is_updated is False:
@@ -543,8 +584,8 @@ class Builder(object):
                         # print(relationship,gender,birth_year,education_level,farmer_work_day,life_style,other_farm_work)
 
                         if self.survey.is_updated :
-                            obj = Population.objects.get(survey__id=self.survey.id , birth_year=birth_year,
-                                                         gender=gender, relationship=relationship)
+                            obj = Population.objects.filter(survey__id=self.survey.id , birth_year=birth_year,
+                                                         gender=gender, relationship=relationship).first()
 
                             if obj:
                                 obj.life_style=life_style
