@@ -48,9 +48,15 @@ from surveys18.models import (
 class Builder(object):
 
     def __init__(self, string):
-        string = string.replace(u'\u3000', u'')
-        string = string.replace(" ", "")
-        self.string = string.split(",")
+
+        for i in range(0,len(string)):
+            string[i] = string[i].replace(u'\u3000', u'')
+            string[i] = string[i].replace(" ", "")
+
+        if len(string) == 57:
+            self.string = string
+        else:
+            raise SignError(sign=',')
 
     def build(self, readonly=True):
         self.build_survey(readonly=readonly)
@@ -67,6 +73,13 @@ class Builder(object):
             Survey.objects.filter(farmer_id=self.survey.farmer_id,
                                   readonly=self.survey.readonly).delete()
             raise e
+
+    @staticmethod
+    def data_exit(string):
+        if string:
+            return string
+        else:
+            return None
 
     def build_survey(self, readonly=True):
         farmer_id = self.string[2]
@@ -143,29 +156,31 @@ class Builder(object):
                 cnt = 0
                 for i in range(0, len(land_area_str),3):
                     for j in range(1, 4):
-                        if int(land_area_str[i+j-1]) > 0:
-                            type = 1 if i < 3 else 2
-                            status = j
+                        if land_area_str[i+j-1]:
+                            if int(land_area_str[i+j-1]) > 0:
+                                type = 1 if i < 3 else 2
+                                status = j
 
-                            land_type = LandType.objects.get(id=type)
-                            land_status = LandStatus.objects.get(id=status)
+                                land_type = LandType.objects.get(id=type)
+                                land_status = LandStatus.objects.get(id=status)
 
-                            land_area = LandArea.objects.create(
-                                survey=self.survey,
-                                type=land_type,
-                                status=land_status,
-                                value=int(land_area_str[i])
-                            )
-                            self.land_area.append(land_area)
+                                land_area = LandArea.objects.create(
+                                    survey=self.survey,
+                                    type=land_type,
+                                    status=land_status,
+                                    value=int(land_area_str[i])
+                                )
+                                self.land_area.append(land_area)
 
 
-                if int(land_area_str[-1]) > 0:
-                    land_type = LandType.objects.get(id=3)
-                    land_area = LandArea.objects.create(
-                        survey=self.survey,
-                        type=land_type,
-                    )
-                    self.land_area.append(land_area)
+                if land_area_str[-1]:
+                    if int(land_area_str[-1]) > 0:
+                        land_type = LandType.objects.get(id=3)
+                        land_area = LandArea.objects.create(
+                            survey=self.survey,
+                            type=land_type,
+                        )
+                        self.land_area.append(land_area)
 
             except ValueError as e:
                 raise CreateModelError(target='Land Area', msg=e)
@@ -244,7 +259,7 @@ class Builder(object):
                 land_number = crop_marketing_str[2]
                 land_area = crop_marketing_str[3]
                 plant_times = crop_marketing_str[4]
-                unit_str = int(crop_marketing_str[5])
+                unit_str = int(crop_marketing_str[5]) if crop_marketing_str[5] else None
                 unit = Unit.objects.filter(code=unit_str, type=1).first()
                 total_yield  = crop_marketing_str[6]
                 unit_price = crop_marketing_str[7]
@@ -253,8 +268,10 @@ class Builder(object):
                     has_facility = 0
                 elif has_facility_str == 1:
                     has_facility = 1
+                else:
+                    has_facility = None
 
-                loss_str = int(crop_marketing_str[10])
+                loss_str = int(crop_marketing_str[10]) if crop_marketing_str[10] else None
                 loss = Loss.objects.filter(code=loss_str, type=1).first()
                 # print(product,land_number,land_number,plant_times,unit,total_yield,unit_price,has_facility,loss)
 
@@ -262,7 +279,7 @@ class Builder(object):
                     survey=self.survey,
                     product=product,
                     land_number=land_number,
-                    land_area=land_number,
+                    land_area=land_area,
                     plant_times=plant_times,
                     unit=unit,
                     total_yield=total_yield,
@@ -276,7 +293,7 @@ class Builder(object):
                 raise CreateModelError(target='CropMarketing', msg=e)
 
     def build_livestock_marketing(self):
-        livestock_str = self.string[31:40]
+        livestock_str = self.string[31:41]
         if len(livestock_str[0]) > 0 :
             try:
                 self.livestock_marketing = []
@@ -284,12 +301,12 @@ class Builder(object):
                 product = Product.objects.filter(code=product_str).first()
                 unit_str = livestock_str[2]
                 unit = Unit.objects.filter(code=unit_str, type=2).first()
-                raising_number = int(livestock_str[3])
-                total_yield = int(livestock_str[4])
-                unit_price = int(livestock_str[5])
-                contract_str = int(livestock_str[6])
+                raising_number = int(livestock_str[3]) if livestock_str[3] else None
+                total_yield = int(livestock_str[4]) if livestock_str[4] else None
+                unit_price = int(livestock_str[5]) if livestock_str[5] else None
+                contract_str = int(livestock_str[6]) if livestock_str[6] else None
                 contract = Contract.objects.filter(code=contract_str).first()
-                loss_str = int(livestock_str[7])
+                loss_str = int(livestock_str[8]) if livestock_str[8] else None
                 loss = Loss.objects.filter(code=loss_str, type=2).first()
 
                 # print(product,unit,raising_number,total_yield,unit_price,contract,loss)
@@ -314,21 +331,22 @@ class Builder(object):
         if len(population_str[0]) > 0:
             try:
                 self.population=[]
-                relationship_str = int(population_str[0])
+                relationship_str = int(population_str[0]) if population_str[0] else None
                 relationship = Relationship.objects.filter(code=relationship_str).first()
-                gender_str = int(population_str[1])
+                gender_str = int(population_str[1]) if population_str[1] else None
                 gender = Gender.objects.filter(code=gender_str).first()
 
-                birth_year = int(int(population_str[2])/100)
+                birth_year = int(int(population_str[2])/100) if population_str[2] else None
 
-                education_level_str = int(population_str[3])
+                education_level_str = int(population_str[3]) if population_str[3] else None
                 education_level = EducationLevel.objects.filter(code=education_level_str).first()
-                farmer_work_day_str = int(population_str[4])
+                farmer_work_day_str = int(population_str[4]) if population_str[4] else None
 
-                if farmer_work_day_str == 8:
-                    farmer_work_day_id = 1
-                else:
-                    farmer_work_day_id = farmer_work_day_str+1
+                if farmer_work_day_str:
+                    if farmer_work_day_str == 8:
+                        farmer_work_day_id = 1
+                    else:
+                        farmer_work_day_id = farmer_work_day_str+1
                 farmer_work_day = FarmerWorkDay.objects.filter(code=farmer_work_day_id).first()
 
                 if birth_year < 92 :

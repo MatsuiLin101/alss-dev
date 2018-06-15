@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     ModelSerializer,
@@ -33,10 +35,13 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         Validate via build
         """
         errors = list()
-        data_list = str(data.get('datafile').read().decode('utf-8-sig')).splitlines()
         file_type = data.get('type')
 
-        for i, string in enumerate(data_list):
+        file = data.get('datafile')
+        fp = StringIO(file.read().decode('utf-8-sig'))
+        content = list(csv.reader(fp, skipinitialspace=True, delimiter=','))
+
+        for i, string in enumerate(content):
             try:
                 if file_type.id == 1:
                     builder = LaborBuilder(string=string)
