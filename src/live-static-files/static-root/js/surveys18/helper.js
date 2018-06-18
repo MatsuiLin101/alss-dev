@@ -76,7 +76,6 @@ var Set = function (data, surveyId) {
 
 var Setup = function(globalUI){
     Helper.LogHandler.Setup();
-    Helper.DataTable.ReviewLogRetrieve.Setup();
 
     SurveyHelper.Setup();
     LandAreaHelper.Setup();
@@ -101,57 +100,64 @@ var Helper = {
         ReviewLogRetrieve: {
             Container: $('#review-log-datatable'),
             Setup: function() {
-                this.Container.DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "logs/api/",
-                        type: "GET"
-                    },
-                    language: {
-                        "processing":   "處理中...",
-                        "loadingRecords": "載入中...",
-                        "lengthMenu":   "顯示 _MENU_ 項結果",
-                        "zeroRecords":  "沒有符合的結果",
-                        "info":         "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
-                        "infoEmpty":    "顯示第 0 至 0 項結果，共 0 項",
-                        "infoFiltered": "(從 _MAX_ 項結果中過濾)",
-                        "infoPostFix":  "",
-                        "search":       "搜尋:",
-                        "paginate": {
-                            "first":    "第一頁",
-                            "previous": "上一頁",
-                            "next":     "下一頁",
-                            "last":     "最後一頁"
+                if(!$.fn.DataTable.isDataTable(this.Container)){
+                    this.Container.DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "logs/api/",
+                            type: "GET"
                         },
-                        "aria": {
-                            "sortAscending":  ": 升冪排列",
-                            "sortDescending": ": 降冪排列"
-                        }
-                    },
-                    columns: [
-                        {
-                            title: '使用者名稱',
-                            data: 'user',
+                        language: {
+                            "processing":   "處理中...",
+                            "loadingRecords": "載入中...",
+                            "lengthMenu":   "顯示 _MENU_ 項結果",
+                            "zeroRecords":  "沒有符合的結果",
+                            "info":         "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+                            "infoEmpty":    "顯示第 0 至 0 項結果，共 0 項",
+                            "infoFiltered": "(從 _MAX_ 項結果中過濾)",
+                            "infoPostFix":  "",
+                            "search":       "搜尋:",
+                            "paginate": {
+                                "first":    "第一頁",
+                                "previous": "上一頁",
+                                "next":     "下一頁",
+                                "last":     "最後一頁"
+                            },
+                            "aria": {
+                                "sortAscending":  ": 升冪排列",
+                                "sortDescending": ": 降冪排列"
+                            }
                         },
-                        {
-                            title: '農戶編號',
-                            data: 'content_object',
-                        },
-                        {
-                            title: '原始錯誤數',
-                            data: 'initial_errors',
-                        },
-                        {
-                            title: '目前錯誤數',
-                            data: 'current_errors',
-                        },
-                        {
-                            title: '上次更新',
-                            data: 'update_datetime',
-                        },
-                    ]
-                });
+                        columns: [
+                            {
+                                title: '使用者名稱',
+                                data: 'user',
+                            },
+                            {
+                                title: '農戶編號',
+                                data: 'content_object',
+                            },
+                            {
+                                title: '原始錯誤數',
+                                data: 'initial_errors',
+                            },
+                            {
+                                title: '目前錯誤數',
+                                data: 'current_errors',
+                            },
+                            {
+                                title: '上次更新',
+                                data: 'update_datetime',
+                            },
+                        ]
+                    });
+                }else{
+                    this.Reload();
+                }
+            },
+            Reload: function(){
+                this.Container.DataTable().ajax.reload();
             },
         },
     },
