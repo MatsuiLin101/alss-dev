@@ -43,13 +43,17 @@ $(document).ready(function() {
         $(this).toggleClass('active');
 
         var target = $(this).data('target');
-        $('.js-panel-contents .panel').hide();
+        var $partial = $('.js-panel-contents [data-partial="survey"]');
+        $partial.find('.panel').hide();
         $(target).show();
     })
     $('.js-partial-control').click(function(){
         var target = $(this).data('target');
-        $('[data-partial]').hide();
-        $('[data-partial="{0}"]'.format(target)).show();
+        if(target == 'datatable'){
+            Helper.DataTable.ReviewLogRetrieve.Setup();
+        }
+        $('.js-panel-contents [data-partial]').hide();
+        $('.js-panel-contents [data-partial="{0}"]'.format(target)).show();
     });
 
 
@@ -82,14 +86,6 @@ $(document).ready(function() {
                     }
                 })
             }).done(function(){
-                // update or create review log
-                data = {
-                    current_errors: Helper.LogHandler.CollectError.GetCurrent(),
-                    object_id: CloneData[MainSurveyId].id,
-                    app_label: 'surveys18',
-                    model: 'survey',
-                }
-                var ajax = SetLogData(JSON.stringify(data));
                 Loading.close();
             })
         } else {
@@ -134,6 +130,7 @@ $(document).ready(function() {
                             model: 'survey',
                         }
                         var ajax = SetLogData(JSON.stringify(data));
+                        Helper.DataTable.ReviewLogRetrieve.Reload();
                         Helper.Dialog.ShowInfo('成功更新調查表！');
                     })
                 }).done(function(){
