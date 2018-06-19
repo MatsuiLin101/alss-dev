@@ -137,7 +137,7 @@ var Helper = {
                             },
                             {
                                 title: '農戶編號',
-                                data: 'content_type',
+                                data: 'content_object',
                             },
                             {
                                 title: '原始錯誤數',
