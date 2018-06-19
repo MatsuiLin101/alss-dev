@@ -31,7 +31,7 @@ class ReviewLog(StatusLog):
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     initial_errors = IntegerField(null=True, blank=True, verbose_name=_('Initialed Error Count'))
-    current_errors = IntegerField( null=True, blank=True, verbose_name=_('Current Error Count'))
+    current_errors = IntegerField(null=True, blank=True, verbose_name=_('Current Error Count'))
     update_datetime = DateTimeField(auto_now=True, auto_now_add=False,
                                     null=True, blank=True,
                                     verbose_name=_('Updated'))
@@ -47,6 +47,7 @@ def query_by_args(request, **kwargs):
     start = int(kwargs.get('start', None)[0])
     order_column = kwargs.get('order[0][column]', None)[0]
     order = kwargs.get('order[0][dir]', None)[0]
+    search_value = kwargs.get('search[value]', None)[0]
 
     order_column = ORDER_COLUMN_CHOICES[order_column]
     # django orm '-' -> desc
@@ -55,6 +56,10 @@ def query_by_args(request, **kwargs):
 
     queryset = ReviewLog.objects.filter(user=request.user).all()
     total = queryset.count()
+
+    if search_value:
+        queryset = queryset.filter(Q(survey__farmer_id__icontains=search_value) |
+                                   Q(user__username__icontains=search_value))
 
     count = queryset.count()
     queryset = queryset.order_by(order_column)[start:start + length]

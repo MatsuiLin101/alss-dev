@@ -30,6 +30,7 @@ class ReviewLogViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewLogListSerializer
     permission_classes = [IsAuthenticated]
 
+    # overwrite list for jQuery DataTable
     def list(self, request, **kwargs):
         reviews = query_by_args(request, **request.query_params)
         serializer = ReviewLogListSerializer(reviews['items'], many=True)

@@ -136,7 +136,7 @@ var Helper = {
                             },
                             {
                                 title: '農戶編號',
-                                data: 'content_object',
+                                data: 'content_type',
                             },
                             {
                                 title: '原始錯誤數',
@@ -157,7 +157,9 @@ var Helper = {
                 }
             },
             Reload: function(){
-                this.Container.DataTable().ajax.reload();
+                if($.fn.DataTable.isDataTable(this.Container)){
+                    this.Container.DataTable().ajax.reload();
+                }
             },
         },
     },
