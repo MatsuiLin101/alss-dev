@@ -62,7 +62,6 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
                     'index': i,
                     'error': e,
                 })
-                pass
 
         if errors:
             raise ValidationError(errors)
