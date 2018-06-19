@@ -75,6 +75,7 @@ var Set = function (data, surveyId) {
 }
 
 var Setup = function(globalUI){
+
     Helper.LogHandler.Setup();
 
     SurveyHelper.Setup();
@@ -383,11 +384,13 @@ var Helper = {
     },
 }
 
+
 var SurveyHelper = {
     Alert: null,
+    Warning: null,
     Setup: function() {
         this.Alert = new Helper.Alert($('.alert-danger[name="survey"]'));
-
+        this.Warning = new Helper.Alert($('.alert-warning[name="survey"]'));
         this.Hire.Setup();
         this.Lack.Setup();
 
@@ -401,6 +404,7 @@ var SurveyHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Warning) { this.Warning.reset(); }
         this.FarmerId.Reset();
         this.FarmerName.Reset();
         this.Phone.Reset();
@@ -419,6 +423,24 @@ var SurveyHelper = {
         this.Hire.Set(obj);
         this.Lack.Set(obj);
         this.Note.Set(obj);
+        this.IsUpdated.Validation.IsUpdated.Validate(obj);
+    },
+    IsUpdated: {
+        Validation: {
+            IsUpdated: {
+                Guids: Helper.Guid.Create(),
+                Validate: function(obj){
+                    msg = '此單元已更新為主力農家調查資料';
+                    Helper.LogHandler.Log(obj.is_updated, SurveyHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, LandAreaHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, BusinessHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, ManagementTypeHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, CropMarketingHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, LivestockMarketingHelper.Warning, msg, this.Guids[0], null, false);
+                    Helper.LogHandler.Log(obj.is_updated, PopulationHelper.Warning, msg, this.Guids[0], null, false);
+                },
+            }
+        }
     },
     FarmerId: {
         Container: $('#panel1 input[name="farmerid"]'),
@@ -814,14 +836,17 @@ var SurveyHelper = {
 }
 var LandAreaHelper = {
     Alert: null,
+    Warning: null,
     Setup: function(){
         this.Alert = new Helper.Alert($('.alert-danger[name="landarea"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="landarea"]'));
         this.LandStatus.Bind();
         this.LandType.Bind();
         this.Validation.Setup();
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Warning) { this.Warning.reset(); }
         this.LandType.Reset();
         this.LandStatus.Reset();
     },
@@ -1000,15 +1025,18 @@ var LandAreaHelper = {
 var BusinessHelper = {
     Alert: null,
     Info: null,
+    Warning: null,
     Setup: function(){
         this.Alert = new Helper.Alert($('.alert-danger[name="business"]'));
         this.Info = new Helper.Alert($('.alert-info[name="business"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="business"]'));
         this.FarmRelatedBusiness.Bind();
         this.Extra.Bind();
     },
     Reset: function(){
          if (this.Alert) { this.Alert.reset(); }
          if (this.Info) { this.Info.reset(); }
+         if (this.Warning) { this.Warning.reset(); }
          this.FarmRelatedBusiness.Reset();
          this.Extra.Reset();
     },
@@ -1175,12 +1203,15 @@ var BusinessHelper = {
 }
 var ManagementTypeHelper = {
     Alert: null,
+    Warning: null,
     Setup: function(){
         this.Alert = new Helper.Alert($('.alert-danger[name="managementtype"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="managementtype"]'));
         this.ManagementType.Bind();
     },
     Reset: function(){
          if (this.Alert) { this.Alert.reset(); }
+         if (this.Warning) { this.Warning.reset(); }
          this.ManagementType.Reset();
     },
     Set: function(array){
@@ -1244,8 +1275,10 @@ var ManagementTypeHelper = {
 }
 var CropMarketingHelper = {
     Alert: null,
+    Warning: null,
     Setup: function(row){
         this.Alert = new Helper.Alert($('.alert-danger[name="cropmarketing"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="cropmarketing"]'));
         var $row = $(row);
         this.CropMarketing.Bind($row);
         this.CropMarketing.$Row = $row;
@@ -1253,6 +1286,7 @@ var CropMarketingHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Warning) { this.Warning.reset(); }
         this.CropMarketing.Reset();
     },
     Set: function(array, surveyId){
@@ -1416,8 +1450,10 @@ var CropMarketingHelper = {
 }
 var LivestockMarketingHelper = {
     Alert: null,
+    Warning: null,
     Setup: function(row){
         this.Alert = new Helper.Alert($('.alert-danger[name="livestockmarketing"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="livestockmarketing"]'));
         var $row = $(row);
         this.LivestockMarketing.Bind($row);
         this.LivestockMarketing.$Row = $row;
@@ -1425,6 +1461,7 @@ var LivestockMarketingHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Warning) { this.Warning.reset(); }
         this.LivestockMarketing.Reset();
     },
     Set: function(array, surveyId){
@@ -1853,8 +1890,10 @@ var PopulationAgeHelper = {
 }
 var PopulationHelper = {
     Alert: null,
+    Warning: null,
     Setup: function(row){
         this.Alert = new Helper.Alert($('.alert-danger[name="population"]'));
+        this.Warning = new Helper.Alert($('.alert-warning[name="population"]'));
         var $row = $(row);
         this.Population.Bind($row);
         this.Adder.Bind();
@@ -1863,6 +1902,7 @@ var PopulationHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Warning) { this.Warning.reset(); }
         this.Population.Reset();
     },
     Set: function(array, surveyId){
