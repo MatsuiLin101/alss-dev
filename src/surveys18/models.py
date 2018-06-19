@@ -53,7 +53,7 @@ class BuilderFileType(Model):
 
 class BuilderFile(Model):
     create_time = DateTimeField(auto_now_add=True, verbose_name=_('Create Time'))
-    user = ForeignKey(settings.AUTH_USER_MODEL, related_name='files', verbose_name=_('User'))
+    user = ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,  related_name='files', verbose_name=_('User'))
     token = TextField(null=True, blank=True, verbose_name=_('Token String'))
     datafile = FileField(null=True, blank=True, upload_to='surveys18/builders/', verbose_name=_('DataFile'))
     type = ForeignKey('surveys18.BuilderFileType', null=True,
@@ -65,10 +65,10 @@ class BuilderFile(Model):
         verbose_name_plural = _('BuilderFile')
 
     def __str__(self):
-        return self.user
+        return self.type
 
     def __unicode__(self):
-        return self.user
+        return self.type
 
 
 class Survey(Model):

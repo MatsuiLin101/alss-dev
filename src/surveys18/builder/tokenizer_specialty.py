@@ -1,5 +1,4 @@
-from .exceptions import SignError, StringLengthError, CreateModelError
-from django.contrib.contenttypes.models import ContentType
+from .exceptions import SignError, CreateModelError
 
 from surveys18.models import (
     MarketType,
@@ -45,17 +44,13 @@ from surveys18.models import (
     Refuse
 )
 
-class Builder(object):
 
+class Builder(object):
     def __init__(self, string):
 
-        for i in range(0,len(string)):
-            string[i] = string[i].replace(u'\u3000', u'')
-            string[i] = string[i].replace(" ", "")
+        self.string = [x.replace(u'\u3000', u'').replace(' ', '').strip() for x in string.split(',')]
 
-        if len(string) == 57:
-            self.string = string
-        else:
+        if len(self.string) != 57:
             raise SignError(sign=',')
 
     def build(self, readonly=True):

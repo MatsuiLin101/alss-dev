@@ -1,5 +1,3 @@
-import csv
-from io import StringIO
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     ModelSerializer,
@@ -36,15 +34,13 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         """
         errors = list()
         file_type = data.get('type')
-
         file = data.get('datafile')
-        if file:
-            fp = StringIO(file.read().decode('utf-8-sig'))
-            content = list(csv.reader(fp, skipinitialspace=True, delimiter=','))
-
         token = data.get('token')
         if token:
             content = [token]
+
+        if file:
+            content = file.read().decode('utf-8-sig').splitlines()
 
         if file and token:
             raise ValidationError('Not Allow To Provide Upload File And Single Token At Same Time')
@@ -53,12 +49,12 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
             try:
                 if file_type.id == 1:
                     builder = LaborBuilder(string=string)
-                    builder.build()
-                    builder.build(readonly=False)
+
                 elif file_type.id == 2:
                     builder = SpecialtyBuilder(string=string)
-                    builder.build()
-                    builder.build(readonly=False)
+
+                builder.build()
+                builder.build(readonly=False)
 
             except Exception as e:
                 errors.append({
