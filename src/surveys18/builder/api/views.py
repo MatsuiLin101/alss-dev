@@ -3,6 +3,7 @@ from rest_framework.generics import (
 )
 
 from rest_framework.permissions import IsAdminUser
+from django.contrib.auth.models import User
 from .serializers import BuilderFileSerializer
 from surveys18.models import BuilderFile
 
@@ -16,7 +17,11 @@ class BuilderFileCreateAPIView(CreateAPIView):
         if serializer.is_valid():
             datafile = self.request.data.get('datafile')
             token = self.request.data.get('token')
-            serializer.save(user=self.request.user,
+            user = self.request.user
+            if not isinstance(user, User):
+                user = None
+
+            serializer.save(user=user,
                             datafile=datafile, token=token)
         else:
             print(serializer.errors)
