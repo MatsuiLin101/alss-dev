@@ -296,7 +296,7 @@ var Helper = {
                 if($ui.length == 0){
                     $ui = Helper.Counter.Create().appendTo($tab);
                 }
-                var errorCount = $('#{0} .alert p[data-guid]'.format(panelId)).length;
+                var errorCount = $('#{0} .alert-danger p[data-guid]'.format(panelId)).length;
                 $ui.trigger('set', errorCount);
             }
 
