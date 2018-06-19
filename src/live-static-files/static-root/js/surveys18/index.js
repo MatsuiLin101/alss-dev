@@ -33,10 +33,13 @@ $(document).ready(function() {
     var Loading = $.loading();
 
     /* autocomplete */
-    $( "#farmerId" ).autocomplete({
+    $("#farmerId").typeahead({
         source: FarmerIds,
-        minLength: 3,
-    });
+        autoSelect: true,
+        fitToElement: true,
+    })
+
+
 
     /* panel control */
     $('.js-tabs-control').on('click', function() {
