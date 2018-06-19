@@ -39,8 +39,6 @@ $(document).ready(function() {
         fitToElement: true,
     })
 
-
-
     /* panel control */
     $('.js-tabs-control').on('click', function() {
         $(this).siblings().removeClass('active');
@@ -49,6 +47,8 @@ $(document).ready(function() {
         var target = $(this).data('target');
         var $partial = $('.js-panel-contents [data-partial="survey"]');
         $partial.find('.panel').hide();
+        $('.js-panel-contents [data-partial]').hide();
+        $partial.show();
         $(target).show();
     })
     $('.js-partial-control').click(function(){
