@@ -83,10 +83,13 @@ $(document).ready(function() {
                     if(ajax[0].length > 0){
                         $('[data-partial]').hide();
                         $('[data-partial="survey"]').show();
+                        $('[data-partial="survey"] .panel').show();
+                        $('.js-tabs-control').removeClass('active');
                         if(readonly) $('.js-set-survey').hide();
                     }
                 })
             }).done(function(){
+                $('#farmerId').val('');
                 Loading.close();
             })
         } else {
