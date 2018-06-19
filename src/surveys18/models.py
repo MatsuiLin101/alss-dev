@@ -58,17 +58,17 @@ class BuilderFile(Model):
     datafile = FileField(null=True, blank=True, upload_to='surveys18/builders/', verbose_name=_('DataFile'))
     type = ForeignKey('surveys18.BuilderFileType', null=True,
                       blank=True, on_delete=CASCADE,
-                      verbose_name=_('Investigator'))
+                      verbose_name=_('BuilderFileType'))
 
     class Meta:
         verbose_name = _('BuilderFile')
         verbose_name_plural = _('BuilderFile')
 
     def __str__(self):
-        return self.type
+        return str(self.type)
 
     def __unicode__(self):
-        return self.type
+        return str(self.type)
 
 
 class Survey(Model):
