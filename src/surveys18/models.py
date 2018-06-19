@@ -20,6 +20,7 @@ from django.db.models import (
     Q,
     FileField,
 )
+from logs.models import ReviewLog
 
 
 YES_NO_CHOICES = (
@@ -53,7 +54,8 @@ class BuilderFileType(Model):
 class BuilderFile(Model):
     create_time = DateTimeField(auto_now_add=True, verbose_name=_('Create Time'))
     user = ForeignKey(settings.AUTH_USER_MODEL, related_name='files', verbose_name=_('User'))
-    datafile = FileField(upload_to='surveys18/builders/', verbose_name=_('DataFile'))
+    token = TextField(null=True, blank=True, verbose_name=_('Token String'))
+    datafile = FileField(null=True, blank=True, upload_to='surveys18/builders/', verbose_name=_('DataFile'))
     type = ForeignKey('surveys18.BuilderFileType', null=True,
                       blank=True, on_delete=CASCADE,
                       verbose_name=_('Investigator'))
@@ -63,10 +65,10 @@ class BuilderFile(Model):
         verbose_name_plural = _('BuilderFile')
 
     def __str__(self):
-        return self.datafile.name
+        return self.user
 
     def __unicode__(self):
-        return self.datafile.name
+        return self.user
 
 
 class Survey(Model):
@@ -107,6 +109,9 @@ class Survey(Model):
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
+
+    review_logs = GenericRelation(ReviewLog,
+                                  related_query_name='survey')
 
     class Meta:
         verbose_name = _('Survey')

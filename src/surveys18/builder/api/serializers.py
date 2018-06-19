@@ -25,7 +25,7 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = BuilderFile
-        fields = ['datafile', 'type']
+        fields = ['token', 'datafile', 'type']
 
     def create(self, validated_data):
         return BuilderFile.objects.create(**validated_data)
@@ -38,8 +38,16 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         file_type = data.get('type')
 
         file = data.get('datafile')
-        fp = StringIO(file.read().decode('utf-8-sig'))
-        content = list(csv.reader(fp, skipinitialspace=True, delimiter=','))
+        if file:
+            fp = StringIO(file.read().decode('utf-8-sig'))
+            content = list(csv.reader(fp, skipinitialspace=True, delimiter=','))
+
+        token = data.get('token')
+        if token:
+            content = [token]
+
+        if file and token:
+            raise ValidationError('Not Allow To Provide Upload File And Single Token At Same Time')
 
         for i, string in enumerate(content):
             try:

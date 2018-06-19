@@ -3,23 +3,36 @@ from rest_framework.serializers import (
     IntegerField,
     SerializerMethodField,
     DateTimeField,
+    RelatedField,
 )
 from logs.models import (
     ReviewLog,
 )
+from surveys18.models import Survey as Survey18
+
+
+class ContentObjectRelatedField(RelatedField):
+    """
+    A custom field to use for the `content_object` generic relationship.
+    """
+
+    def to_representation(self, value):
+        """
+        Serialize content objects to a simple textual representation.
+        """
+        if isinstance(value, Survey18):
+            return value.farmer_id
+        raise Exception('Unexpected type of content object')
 
 
 class ReviewLogListSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
     user = SerializerMethodField()
-    content_object = SerializerMethodField()
+    content_object = ContentObjectRelatedField(read_only=True)
     update_datetime = DateTimeField(format="%Y/%m/%d %H:%M:%S")
 
     def get_user(self, instance):
         return instance.user.username
-
-    def get_content_object(self, instance):
-        return instance.content_object.farmer_id
 
     class Meta:
         model = ReviewLog
