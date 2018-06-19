@@ -49,7 +49,7 @@ from surveys18.models import (
 class Builder(object):
 
     def __init__(self, string):
-        string = string[0]
+
         token_size, self.more_page = self.check_string(string)
         delimiter_plus = '+'
         delimiter_pound = '#+'
