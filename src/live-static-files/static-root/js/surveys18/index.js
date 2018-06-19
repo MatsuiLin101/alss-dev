@@ -35,6 +35,7 @@ $(document).ready(function() {
     /* autocomplete */
     $( "#farmerId" ).autocomplete({
         source: FarmerIds,
+        minLength: 3,
     });
 
     /* panel control */

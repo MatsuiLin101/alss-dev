@@ -8,6 +8,7 @@
             </th>
             <td>
                 <div name="landarea" class="alert alert-danger"></div>
+                <div name="landarea" class="alert alert-warning"></div>
                 {% for type in land_types %}
                 <div class="col-md-3">
                     <label>
@@ -36,6 +37,7 @@
             </th>
             <td>
                 <div name="business" class="alert alert-danger"></div>
+                <div name="business" class="alert alert-warning"></div>
                 <div name="business" class="alert alert-info"></div>
                 <div class="form-horizontal">
                     {% for business in farm_related_businesses %}
@@ -61,6 +63,7 @@
                 <small class="form-text text-muted">(請按全年生產價值最多者註記一項)</small>
             </th>
             <td>
+                <div name="managementtype" class="alert alert-warning"></div>
                 <div name="managementtype" class="alert alert-danger"></div>
                 <div class="form-horizontal">
                     {% for type in management_types %}
