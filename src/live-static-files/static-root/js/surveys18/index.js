@@ -89,6 +89,7 @@ $(document).ready(function() {
                         $('[data-partial="survey"] .panel').show();
                         $('.js-tabs-control').removeClass('active');
                         if(readonly) $('.js-set-survey').hide();
+                        else $('.js-set-survey').show();
                     }
                 })
             }).done(function(){
