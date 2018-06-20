@@ -2322,8 +2322,10 @@ var LongTermHireHelper = {
 }
 var ShortTermHireHelper = {
     Alert: null,
+    Info: null,
     Setup: function(row){
         this.Alert = new Helper.Alert($('.alert-danger[name="shorttermhire"]'));
+        this.Info = new Helper.Alert($('.alert-info[name="shorttermhire"]'));
         var $row = $(row);
         $row.find('select[name="worktype"]').attr('multiple', '');
         this.ShortTermHire.Bind($row);
@@ -2332,6 +2334,7 @@ var ShortTermHireHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Info) { this.Info.reset(); }
         this.ShortTermHire.Reset();
     },
     Set: function(array){
@@ -2341,6 +2344,7 @@ var ShortTermHireHelper = {
                 ShortTermHireHelper.Validation.RequiredField.Validate($(this));
                 ShortTermHireHelper.Validation.AvgWorkDay.Validate($(this));
             })
+            ShortTermHireHelper.Validation.Over6Month.Validate();
         }
     },
     ShortTermHire: {
@@ -2408,6 +2412,7 @@ var ShortTermHireHelper = {
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(ShortTermHireHelper.Alert, $tr, $nextAll);
                             SurveyHelper.Hire.Validation.HireExist.Validate();
+                            ShortTermHireHelper.Validation.Over6Month.Validate();
                         }
                     })
                 }
@@ -2452,6 +2457,7 @@ var ShortTermHireHelper = {
                     
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermHireHelper.Validation.RequiredField.Validate($row);
+                        ShortTermHireHelper.Validation.Over6Month.Validate();
                     }
                 }
             })
@@ -2481,6 +2487,15 @@ var ShortTermHireHelper = {
                 var con = avgWorkDay > 30 && Helper.NumberValidate(avgWorkDay);
                 var msg = '第<i class="row-index">{0}</i>列每月工作日數應小於30日'.format(index);
                 Helper.LogHandler.Log(con, ShortTermHireHelper.Alert, msg, this.Guids[0], guid);
+            },
+        },
+        Over6Month: {
+            Guids: Helper.Guid.CreateMulti(),
+            Validate: function(){
+                var length = ShortTermHireHelper.ShortTermHire.Container.find('tr').length;
+                var con = length >= 6;
+                var msg = '填列之月份超過6個月，請確認是否為常僱而非臨時工，並於備註說明';
+                Helper.LogHandler.Log(con, ShortTermHireHelper.Info, msg, this.Guids[0], null, false);
             },
         },
     },
@@ -2756,8 +2771,10 @@ var LongTermLackHelper = {
 }
 var ShortTermLackHelper = {
     Alert: null,
+    Info: null,
     Setup: function(row){
         this.Alert = new Helper.Alert($('.alert-danger[name="shorttermlack"]'));
+        this.Info = new Helper.Alert($('.alert-info[name="shorttermlack"]'));
         $row = $(row);
         $row.find('select[name="month"]').attr('multiple', '');
         this.ShortTermLack.Bind($row);
@@ -2766,6 +2783,7 @@ var ShortTermLackHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        if (this.Info) { this.Info.reset(); }
         this.ShortTermLack.Reset();
     },
     Set: function(array, surveyId){
@@ -2773,6 +2791,7 @@ var ShortTermLackHelper = {
         if(Helper.LogHandler.ValidationActive){
             ShortTermLackHelper.ShortTermLack.Container.find('tr').each(function(){
                 ShortTermLackHelper.Validation.RequiredField.Validate($(this));
+                ShortTermLackHelper.Validation.Over6Month.Validate($(this));
             })
         }
     },
@@ -2851,7 +2870,8 @@ var ShortTermLackHelper = {
                     obj.count = parseInt($tr.find('[name="count"]').val());
                     
                     if(Helper.LogHandler.ValidationActive){
-                         ShortTermLackHelper.Validation.RequiredField.Validate($tr);                   
+                         ShortTermLackHelper.Validation.RequiredField.Validate($tr);
+                         ShortTermLackHelper.Validation.Over6Month.Validate($tr);
                     }
                 }
             })
@@ -2894,6 +2914,17 @@ var ShortTermLackHelper = {
                 Helper.LogHandler.Log($row.find('[name="month"]').val().length == 0, ShortTermLackHelper.Alert, makeString('缺工月份'), this.Guids[3], guid);
             },
         },
+        Over6Month: {
+            Guids: Helper.Guid.CreateMulti(),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = ShortTermLackHelper.ShortTermLack.Container.find('tr').index($row) + 1;
+                var msg = '第<i class="row-index">{0}</i>列填列之月份超過6個月，請確認是否為常僱而非臨時工，並於備註說明'.format(index);
+                var con = $row.find('[name="month"]').val().length >= 6;
+                Helper.LogHandler.Log(con, ShortTermLackHelper.Info, msg, this.Guids[0], guid, false);
+            },
+        },
+
     },
 }
 var SubsidyHelper = {
@@ -2932,6 +2963,7 @@ var SubsidyHelper = {
         })
         if(Helper.LogHandler.ValidationActive){
             SubsidyHelper.Validation.Empty.Validate();
+            SubsidyHelper.Validation.Duplicate.Validate();
         }
     },
     Reset: function(){
@@ -2961,6 +2993,7 @@ var SubsidyHelper = {
                 }
                 if(Helper.LogHandler.ValidationActive){
                     SubsidyHelper.Validation.Empty.Validate();
+                    SubsidyHelper.Validation.Duplicate.Validate();
                 }
             }
         })
@@ -2974,6 +3007,7 @@ var SubsidyHelper = {
                 }
                 if(Helper.LogHandler.ValidationActive){
                     SubsidyHelper.Validation.Empty.Validate();
+                    SubsidyHelper.Validation.Duplicate.Validate();
                 }
             }
         })
@@ -3053,6 +3087,16 @@ var SubsidyHelper = {
                 var con = !hasSubsidy && !noneSubsidy;
                 var msg = '不可漏填此問項';
                 Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0]);
+            },
+        },
+        Duplicate: {
+            Guids: Helper.Guid.CreateMulti(),
+            Validate: function(){
+                var hasSubsidy = SubsidyHelper.Container.HasSubsidy.prop('checked');
+                var noneSubsidy = SubsidyHelper.Container.NoneSubsidy.prop('checked');
+                var con = hasSubsidy && noneSubsidy;
+                var msg = '有申請及無申請不得重複勾選';
+               Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0]);
             },
         },
     },
