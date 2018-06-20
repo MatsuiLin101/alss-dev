@@ -54,7 +54,11 @@ def query_by_args(request, **kwargs):
     if order == 'desc':
         order_column = '-' + order_column
 
-    queryset = ReviewLog.objects.filter(user=request.user).all()
+    if request.user.is_staff:
+        queryset = ReviewLog.objects.all()
+    else:
+        queryset = ReviewLog.objects.filter(user=request.user).all()
+
     total = queryset.count()
 
     if search_value:

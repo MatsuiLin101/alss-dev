@@ -56,8 +56,8 @@ $(document).ready(function() {
         if(target == 'datatable'){
             Helper.DataTable.ReviewLogRetrieve.Setup();
         }
-        $('.js-panel-contents [data-partial]').hide();
-        $('.js-panel-contents [data-partial="{0}"]'.format(target)).show();
+        $('[data-partial]').hide();
+        $('[data-partial="{0}"]'.format(target)).show();
     });
 
 
@@ -89,6 +89,7 @@ $(document).ready(function() {
                         $('[data-partial="survey"] .panel').show();
                         $('.js-tabs-control').removeClass('active');
                         if(readonly) $('.js-set-survey').hide();
+                        else $('.js-set-survey').show();
                     }
                 })
             }).done(function(){
