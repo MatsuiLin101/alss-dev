@@ -60,6 +60,14 @@ $(document).ready(function() {
         $('[data-partial="{0}"]'.format(target)).show();
     });
 
+    function showLoading(deferred){
+        Loading.open();
+        setTimeout(function(){
+            deferred.resolve();
+        }, 500);
+        return deferred.promise();
+    }
+
 
     /* get farmer data*/
     $('.js-get-survey').click(function () {
@@ -68,8 +76,8 @@ $(document).ready(function() {
         var readonly = $(this).data('readonly');
         if (farmerId) {
             $.when(
-                setTimeout(Loading.open(), 1000)
-            ).then(function(){
+                $.Deferred(showLoading)
+            ).done(function(){
                 // a trivial timer, just for demo purposes -
                 // it resolves itself after 1 seconds
                 var timer = $.Deferred();
@@ -107,8 +115,8 @@ $(document).ready(function() {
             if(!CloneData[MainSurveyId].readonly){
                 var url = $(this).data('url');
                 $.when(
-                    setTimeout(Loading.open(), 1000)
-                ).then(function(){
+                    $.Deferred(showLoading)
+                ).done(function(){
 
                     // a trivial timer, just for demo purposes -
                     // it resolves itself after 1 seconds
