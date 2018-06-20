@@ -143,6 +143,7 @@ var Helper = {
                             {
                                 title: '原始錯誤數',
                                 data: 'initial_errors',
+                                sortable: false,
                             },
                             {
                                 title: '目前錯誤數',
