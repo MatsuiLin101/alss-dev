@@ -47,16 +47,6 @@ label.fw-400 {
     max-width: 80px;
 }
 
-table[name=longtermhire] div.bootstrap-select.form-control,
-table[name=shorttermhire] div.bootstrap-select.form-control{
-    max-width: 15rem;
-}
-
-
-table[name=population] div.bootstrap-select.form-control {
-    max-width: 15rem;
-}
-
 .w-50 {
     width: 50px;
 }
