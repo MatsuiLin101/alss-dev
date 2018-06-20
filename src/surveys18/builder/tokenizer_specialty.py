@@ -47,6 +47,14 @@ from surveys18.models import (
 
 class Builder(object):
     def __init__(self, string):
+        self.survey = None
+        self.phones = []
+        self.address = None
+        self.land_area = []
+        self.business = []
+        self.crop_marketing = []
+        self.livestock_marketing = []
+        self.population = []
 
         self.string = [x.replace(u'\u3000', u'').replace(' ', '').strip() for x in string.split(',')]
 
@@ -105,7 +113,6 @@ class Builder(object):
         phones = self.string[8:10]
         if len(phones[0]) > 0 or len(phones[1]) > 0:
             try:
-                self.phones = []
                 for number in phones:
                     if len(number) > 0:
                         phone = Phone.objects.create(
@@ -147,16 +154,14 @@ class Builder(object):
         land_area_str = self.string[12:18]
         if len(land_area_str[0]) > 0 :
             try:
-                self.land_area = []
-                cnt = 0
                 for i in range(0, len(land_area_str),3):
                     for j in range(1, 4):
                         if land_area_str[i+j-1]:
                             if int(land_area_str[i+j-1]) > 0:
-                                type = 1 if i < 3 else 2
+                                type_id = 1 if i < 3 else 2
                                 status = j
 
-                                land_type = LandType.objects.get(id=type)
+                                land_type = LandType.objects.get(id=type_id)
                                 land_status = LandStatus.objects.get(id=status)
 
                                 land_area = LandArea.objects.create(
@@ -184,7 +189,6 @@ class Builder(object):
         business_str = self.string[40:50]
         if len(business_str) > 1:
             try:
-                self.business = []
                 if business_str[0] == "0":
                     business = Business.objects.create(
                         survey=self.survey,
@@ -226,13 +230,13 @@ class Builder(object):
                 num = int(char[0])
                 if num < 3:
                     num = num
-                elif num > 3 and num < 8 :
+                elif (num > 3) and (num < 8) :
                     num = num+1
                 elif num == 10:
                     num = 12
                 elif num == 12:
                     num = 13
-                elif num == 11 or num == 13 or num == 14 or num == 15 :
+                elif (num == 11) or (num == 13) or (num == 14) or (num == 15) :
                     num = 14
                 else:
                     num = 0
@@ -248,7 +252,6 @@ class Builder(object):
         crop_marketing_str = self.string[19:30]
         if len(crop_marketing_str[0]) > 0:
             try:
-                self.crop_marketing = []
                 product_str = crop_marketing_str[0]
                 product = Product.objects.filter(code=product_str).first()
                 land_number = crop_marketing_str[2]
@@ -291,7 +294,6 @@ class Builder(object):
         livestock_str = self.string[31:41]
         if len(livestock_str[0]) > 0 :
             try:
-                self.livestock_marketing = []
                 product_str = livestock_str[0]
                 product = Product.objects.filter(code=product_str).first()
                 unit_str = livestock_str[2]
@@ -325,7 +327,6 @@ class Builder(object):
         population_str = self.string[51:56]
         if len(population_str[0]) > 0:
             try:
-                self.population=[]
                 relationship_str = int(population_str[0]) if population_str[0] else None
                 relationship = Relationship.objects.filter(code=relationship_str).first()
                 gender_str = int(population_str[1]) if population_str[1] else None
