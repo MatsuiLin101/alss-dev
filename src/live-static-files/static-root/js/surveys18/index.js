@@ -68,7 +68,7 @@ $(document).ready(function() {
         var readonly = $(this).data('readonly');
         if (farmerId) {
             $.when(
-                Loading.open(),
+                setTimeout(Loading.open(), 1000)
             ).then(function(){
                 // a trivial timer, just for demo purposes -
                 // it resolves itself after 1 seconds
@@ -106,7 +106,9 @@ $(document).ready(function() {
         if(CloneData){
             if(!CloneData[MainSurveyId].readonly){
                 var url = $(this).data('url');
-                $.when(Loading.open()).then(function(){
+                $.when(
+                    setTimeout(Loading.open(), 1000)
+                ).then(function(){
 
                     // a trivial timer, just for demo purposes -
                     // it resolves itself after 1 seconds
