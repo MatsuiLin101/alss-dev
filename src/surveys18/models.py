@@ -319,6 +319,7 @@ class LongTermHire(Model):
     class Meta:
         verbose_name = _('LongTermHire')
         verbose_name_plural = _('LongTermHire')
+        ordering = ('id',)
 
     def __str__(self):
         return str(self.survey)
@@ -430,6 +431,7 @@ class Population(Model):
     class Meta:
         verbose_name = _('Population')
         verbose_name_plural = _('Population')
+        ordering = ('id', 'relationship', )
 
     def __str__(self):
         return str(self.survey)
@@ -605,6 +607,7 @@ class CropMarketing(Model):
     class Meta:
         verbose_name = _('CropMarketing')
         verbose_name_plural = _('CropMarketing')
+        ordering = ('id', 'land_number', )
 
     def __str__(self):
         return str(self.survey)
@@ -642,6 +645,7 @@ class LivestockMarketing(Model):
     class Meta:
         verbose_name = _('LivestockMarketing')
         verbose_name_plural = _('LivestockMarketing')
+        ordering = ('id',)
 
     def __str__(self):
         return str(self.survey)
@@ -717,6 +721,12 @@ class ProductType(Model):
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return str(self.name)
 
 
 class Product(Model):
@@ -839,6 +849,9 @@ class LandType(Model):
                                blank=True,
                                related_name='land_type',
                                verbose_name=_('Land Statuses'))
+    unit = ForeignKey('surveys18.Unit', related_name='land_type'
+                      , null=True, blank=True, verbose_name=_('Unit'))
+    has_land = BooleanField(default=True, verbose_name=_('Has Land'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True,
                                 verbose_name=_('Updated'))
