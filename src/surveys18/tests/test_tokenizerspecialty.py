@@ -48,7 +48,6 @@ from surveys18.models import (
 
 class ModelTestCase(TestCase):
     def setUp(self):
-        call_command('loaddata', 'land-type.yaml', verbosity=0)
         call_command('loaddata', 'land-status.yaml', verbosity=0)
         call_command('loaddata', 'farm-related-business.yaml', verbosity=0)
         call_command('loaddata', 'management-type.yaml', verbosity=0)
@@ -56,16 +55,17 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'product.yaml', verbosity=0)
         call_command('loaddata', 'loss.yaml', verbosity=0)
         call_command('loaddata', 'unit.yaml', verbosity=0)
+        call_command('loaddata', 'land-type.yaml', verbosity=0)
         call_command('loaddata', 'contract.yaml', verbosity=0)
-        call_command('loaddata', 'income-range.yaml', verbosity=0)
-        call_command('loaddata', 'market-type.yaml', verbosity=0)
         call_command('loaddata', 'age-scope.yaml', verbosity=0)
         call_command('loaddata', 'gender.yaml', verbosity=0)
         call_command('loaddata', 'relationship.yaml', verbosity=0)
         call_command('loaddata', 'education-level.yaml', verbosity=0)
         call_command('loaddata', 'farmer-work-day.yaml', verbosity=0)
-        call_command('loaddata', 'age-scope.yaml', verbosity=0)
-        self.string = "16,106,100070416190,1,55,,3,賴武郎　　,0931668195 ,04-7583927 ,彰化縣線西鄉下犁村１７鄰下塭路５００巷９０號,,0,0,0,0,0,0,3,E999,其他農作___(請說明),2   ,100,6,1,72000,15,1,\"(短期蔬菜,小白菜,油菜，青江菜)\",1,3,F001,肉豬,3,0,1300,8400,0,,0,,,,,,,,,,,3,3,1,06800 ,6,7,"
+        call_command('loaddata', 'life-style.yaml', verbosity=0)
+        call_command('loaddata', 'other-farm-work.yaml', verbosity=0)
+
+        self.string = "279,106,100091101020,1,3,,2,廖見興　　,0912308329 ,55989438 ,雲林縣二崙鄉楊賢村８鄰楊賢路５４號,,0,360,0,0,0,0,1,A001,蓬萊米(梗稻)1期,1   ,300,1,1,28800,17,2,,1,,,,,,,,,,,0, , , , , , ,, ,,1,1,1,05500 ,4,6,1. 稻作"
 
 
         self.builder = Builder(self.string)
@@ -73,28 +73,29 @@ class ModelTestCase(TestCase):
 
     def test_build_survey(self):
         obj = Survey.objects.get(farmer_id=self.builder.survey.farmer_id)
-        self.assertEquals(obj.farmer_id, "100070416190")
+        self.assertEquals(obj.farmer_id, "100091101020")
         self.assertEquals(obj.page, 1)
         self.assertEquals(obj.total_pages, 1)
-        self.assertEquals(obj.farmer_name, "賴武郎")
+        self.assertEquals(obj.farmer_name, "廖見興")
 
     def test_build_phone(self):
         self.builder.build_phone()
         obj = Phone.objects.filter(survey=self.builder.survey).all()
-        self.assertEquals(obj[0].phone, "0931668195")
-        self.assertEquals(obj[1].phone, "04-7583927")
+        self.assertEquals(obj[0].phone, "0912308329")
+        self.assertEquals(obj[1].phone, "55989438")
 
     def test_build_address(self):
         self.builder.build_address()
         obj = AddressMatch.objects.get(survey=self.builder.survey)
         self.assertEquals(obj.match, False)
         self.assertEquals(obj.mismatch, True)
-        self.assertEquals(obj.address, "彰化縣線西鄉下犁村１７鄰下塭路５００巷９０號")
+        # self.assertEquals(obj.address, "彰化縣線西鄉下犁村１７鄰下塭路５００巷９０號")
 
     def test_build_land_area(self):
         self.builder.build_land_area()
         obj = LandArea.objects.filter(survey=self.builder.survey).all()
-        self.assertEquals(len(obj[1]), 1)
+        self.assertEquals(len(obj), 1)
+        print(obj[0].type, obj[0].status, obj[0].value)
 
         # self.assertEquals(obj[0].type.id, 1)
         # self.assertEquals(obj[0].status.id, 1)

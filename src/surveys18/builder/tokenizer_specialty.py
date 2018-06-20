@@ -152,6 +152,7 @@ class Builder(object):
 
     def build_land_area(self):
         land_area_str = self.string[12:18]
+        print(land_area_str)
         if len(land_area_str[0]) > 0 :
             try:
                 for i in range(0, len(land_area_str),3):
@@ -168,7 +169,7 @@ class Builder(object):
                                     survey=self.survey,
                                     type=land_type,
                                     status=land_status,
-                                    value=int(land_area_str[i])
+                                    value=int(land_area_str[i+j-1])
                                 )
                                 self.land_area.append(land_area)
 
