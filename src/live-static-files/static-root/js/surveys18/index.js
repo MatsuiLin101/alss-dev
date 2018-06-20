@@ -64,7 +64,7 @@ $(document).ready(function() {
         Loading.open();
         setTimeout(function(){
             deferred.resolve();
-        }, 1000);
+        }, 500);
         return deferred.promise();
     }
 
