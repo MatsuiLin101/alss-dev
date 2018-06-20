@@ -103,3 +103,17 @@
     name: 兩
     type: 2
 
+- model: surveys18.Unit
+  pk: 16
+  fields:
+    code: 1
+    name: 坪
+
+- model: surveys18.Unit
+  pk: 17
+  fields:
+    code: 2
+    name: 公畝
+
+
+

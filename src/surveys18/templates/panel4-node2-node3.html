@@ -1,8 +1,9 @@
 <label class="control-label">4. 貴戶106年是否有申請農委會「改善農業季節性缺工2.0措施計畫」所推動農業師傅或農耕士之補助？</label>
+<div name="subsidy" class="alert alert-danger"></div>
 <div>
     <div class="form-group col-md-1">
     <label>
-        <input type="checkbox" name="hassubsidy" data-hassubsidy-id="1">有
+        <input type="checkbox" name="hassubsidy">有
     </label>
 </div>
     <div class="form-group col-md-11">
@@ -12,9 +13,9 @@
     </div>
     <div class="form-inline">
         <label class="fw-400">申請工時</label>
-        <input type="text" class="small form-control" name="monthdelta" placeholder="0">月
-        <input type="text" class="small form-control" name="daydelta" placeholder="0">日
-        <input type="text" class="small form-control" name="hourdelta" placeholder="0">時
+        <input type="text" class="small form-control" name="monthdelta">月
+        <input type="text" class="small form-control" name="daydelta">日
+        <input type="text" class="small form-control" name="hourdelta">時
     </div>
 </div>
 </div>
@@ -22,7 +23,8 @@
 <div class="form-group">
     <div class="form-group col-md-1">
         <label>
-            <input type="checkbox" name="hassubsidy" data-hassubsidy-id="0">無
+            <input type="checkbox" name="nonesubsidy">無
+            <small class="text-muted">（可複選）</small>
         </label>
     </div>
     <div class="form-group col-md-11">

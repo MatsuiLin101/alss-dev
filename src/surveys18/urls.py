@@ -1,8 +1,6 @@
-from django.conf.urls import url
-from .views import (
-    get_surveys,
-)
+from django.conf.urls import url, include
 
 urlpatterns = [
-    url(r'^get-surveys/$', get_surveys, name='get_surveys'),
+    url(r'^api/', include('surveys18.api.urls', namespace='api')),
+    url(r'^builder/', include('surveys18.builder.urls', namespace='builder')),
 ]

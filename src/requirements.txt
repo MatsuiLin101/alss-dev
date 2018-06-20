@@ -6,6 +6,8 @@ django-model-utils==3.0.0
 Pillow==5.0.0
 PyYAML==3.12
 Markdown==2.6.11
+django-db-logger==0.1.6
+
 
 
 
