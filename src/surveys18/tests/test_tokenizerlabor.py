@@ -48,6 +48,7 @@ from surveys18.models import (
 
 class ModelTestCase(TestCase):
     def setUp(self):
+        call_command('loaddata', 'unit.yaml', verbosity=0)
         call_command('loaddata', 'land-type.yaml', verbosity=0)
         call_command('loaddata', 'land-status.yaml', verbosity=0)
         call_command('loaddata', 'farm-related-business.yaml', verbosity=0)
@@ -55,7 +56,6 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'product-type.yaml', verbosity=0)
         call_command('loaddata', 'product.yaml', verbosity=0)
         call_command('loaddata', 'loss.yaml', verbosity=0)
-        call_command('loaddata', 'unit.yaml', verbosity=0)
         call_command('loaddata', 'contract.yaml', verbosity=0)
         call_command('loaddata', 'income-range.yaml', verbosity=0)
         call_command('loaddata', 'market-type.yaml', verbosity=0)
