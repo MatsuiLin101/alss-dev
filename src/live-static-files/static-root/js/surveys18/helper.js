@@ -1875,7 +1875,7 @@ var PopulationAgeHelper = {
             Validate: function(){
                 var over15Count = 0;
                 PopulationAgeHelper.PopulationAge.Container
-                .filter('[data-age-scope="5"]')
+                .filter('[data-agescope-id="5"]')
                 .each(function(){
                     var count = parseInt($(this).val());
                     if(count) over15Count += count;

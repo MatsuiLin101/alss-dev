@@ -56,8 +56,8 @@ $(document).ready(function() {
         if(target == 'datatable'){
             Helper.DataTable.ReviewLogRetrieve.Setup();
         }
-        $('.js-panel-contents [data-partial]').hide();
-        $('.js-panel-contents [data-partial="{0}"]'.format(target)).show();
+        $('[data-partial]').hide();
+        $('[data-partial="{0}"]'.format(target)).show();
     });
 
 
