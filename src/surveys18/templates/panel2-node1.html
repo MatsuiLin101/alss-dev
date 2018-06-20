@@ -12,7 +12,8 @@
                 {% for type in land_types %}
                 <div class="col-md-3">
                     <label>
-                        <input type="checkbox"  data-landtype-name="{{ type.name }}" data-landtype-id="{{ type.id }}" name="landtype">
+                        <input type="checkbox"  data-landtype-name="{{ type.name }}" data-landtype-id="{{ type.id }}"
+                               data-has-land="{{ type.has_land|yesno:'true,false' }}" name="landtype">
                         ({{ type.id }}) {{ type.name }}
                     </label>
                 </div>
@@ -21,7 +22,7 @@
                     <div class="form-inline">
                         <label class="fw-400">{{ status.name }}</label>
                         <input type="text" class="small form-control" data-landtype-id="{{ type.id }}" data-landstatus-id="{{ status.id }}" name="landstatus"/>
-                        坪
+                        {{ type.unit }}
                     </div>
                     {% endfor %}
                 </div>

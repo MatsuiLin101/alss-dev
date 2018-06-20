@@ -68,6 +68,7 @@ var Set = function (data, surveyId) {
         AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
         AnnualIncomeHelper.Validation.AnnualTotal.Validate();
         AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
+        PopulationAgeHelper.Validation.MemberCount.Validate();
         PopulationHelper.Validation.MarketType3Checked.Validate();
         SurveyHelper.Hire.Validation.HireExist.Validate();
         SurveyHelper.Lack.Validation.LackExist.Validate();
@@ -598,7 +599,7 @@ var SurveyHelper = {
                 },
             },
             HireExist: {
-                Guids: Helper.Guid.CreateMulti(),
+                Guids: Helper.Guid.CreateMulti(1),
                 Validate: function(){
                     var checked = SurveyHelper.Hire.Container.filter('[data-field="nonhire"]').prop('checked');
                     var exists = LongTermHireHelper.LongTermHire.Container.find('tr').length +
@@ -610,7 +611,7 @@ var SurveyHelper = {
 
                     var con = !checked && !exists;
                     var msg = '若全年無外僱人力，應勾選無';
-                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[1]);
                 },
             },
         },
@@ -681,7 +682,7 @@ var SurveyHelper = {
                 },
             },
             LackExist: {
-                Guids: Helper.Guid.CreateMulti(),
+                Guids: Helper.Guid.CreateMulti(1),
                 Validate: function(){
                     var checked = SurveyHelper.Lack.Container.filter('[data-islack="false"]:checked').length == 1;
                     var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
@@ -692,7 +693,7 @@ var SurveyHelper = {
 
                     var con = !checked && !exists;
                     msg = '若全年無短缺人力，應勾選無';
-                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[0]);
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[1]);
                 },
             },
         },
@@ -866,6 +867,7 @@ var LandAreaHelper = {
             if(Helper.LogHandler.ValidationActive){
                 LandAreaHelper.Validation.Empty.Validate();
                 LandAreaHelper.Validation.LandStatusEmpty.Validate();
+                LandAreaHelper.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
@@ -886,6 +888,7 @@ var LandAreaHelper = {
                     if(Helper.LogHandler.ValidationActive){
                         LandAreaHelper.Validation.Empty.Validate();
                         LandAreaHelper.Validation.LandStatusEmpty.Validate();
+                        LandAreaHelper.Validation.Duplicate.Validate();
                     }
                 }
             })
@@ -984,6 +987,16 @@ var LandAreaHelper = {
                 var empty = CloneData[MainSurveyId].land_areas.length == 0;
                 var msg = '不可漏填此問項';
                 Helper.LogHandler.Log(empty, LandAreaHelper.Alert, msg, this.Guids[0]);
+            },
+        },
+        Duplicate: {
+            Guids: Helper.Guid.Create(),
+            Validate: function(){
+                var trueChecked = LandAreaHelper.LandType.Container.filter('[data-has-land="true"]:checked').length > 0;
+                var falseChecked = LandAreaHelper.LandType.Container.filter('[data-has-land="false"]:checked').length > 0;
+                var con = trueChecked && falseChecked;
+                var msg = '有耕作地及無耕作地不得重複勾選';
+                Helper.LogHandler.Log(con, LandAreaHelper.Alert, msg, this.Guids[0]);
             },
         },
         LandStatusEmpty: {
@@ -1619,14 +1632,18 @@ var LivestockMarketingHelper = {
 }
 var AnnualIncomeHelper = {
     Alert: null,
+    Info: null,
     Setup: function(){
         this.Alert = new Helper.Alert($('.alert-danger[name="annualincome"]'));
+        this.Info = new Helper.Alert($('.alert-info[name="annualincome"]'));
         this.AnnualIncome.Bind();
     },
     Set: function(array) {
         this.AnnualIncome.Set(array);
     },
     Reset: function() {
+        if (this.Alert) { this.Alert.reset(); }
+        if (this.Info) { this.Info.reset(); }
         this.AnnualIncome.Reset();
     },
     AnnualIncome: {
@@ -1750,50 +1767,54 @@ var AnnualIncomeHelper = {
             },
         },
         AnnualTotal: {
-            Guids: Helper.Guid.CreateMulti(),
+            Guids: Helper.Guid.CreateMulti(3),
             Validate: function(){
-                function addTotal($row){
+                function getSum($row){
                     var totalYield = $row.find('[name="totalyield"]').val();
                     var unitPrice = $row.find('[name="unitprice"]').val();
                     if(Helper.NumberValidate(totalYield) && Helper.NumberValidate(unitPrice)){
-                        countTotal += totalYield * unitPrice;
+                        return totalYield * unitPrice;
                     }
+                    else return 0;
                 }
+
                 /* Crop Marketing */
                 checkedTotal = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="1"]:checked');
-                if(checkedTotal.length == 1){
-                    /* sum total */
-                    var countTotal = 0;
-                    CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
-                        addTotal($(this));
-                    })
+                // check total
+                var countTotal = 0;
+                CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
+                    countTotal += getSum($(this));
+                })
 
-                    var checkedMin = checkedTotal.data('min') * 10000;
-                    var checkedMax = checkedTotal.data('max') * 10000;
+                var checkedMin = checkedTotal.data('min') * 10000;
+                var checkedMax = checkedTotal.data('max') * 10000;
 
-                    var con = countTotal < checkedMin || countTotal > checkedMax;
-                    var msg = '【問項1.4】農作物產銷情形之全年產量與平均單價乘積({0}元)與勾選農作物之全年銷售額區間不符'
-                              .format(numberWithCommas(countTotal));
-                    Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
-                }
+                var con = countTotal < checkedMin || countTotal > checkedMax;
+                var msg = '【問項1.4】農作物產銷情形之全年產量與平均單價乘積({0}元)與勾選農作物之全年銷售額區間不符'
+                          .format(numberWithCommas(countTotal));
+                Helper.LogHandler.Log(checkedTotal.length == 1 && con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
+                // show total
+                var msg ='目前農作物產銷情形之全年產量與平均單價乘積：{0}元'.format(numberWithCommas(countTotal));
+                Helper.LogHandler.Log(countTotal > 0, AnnualIncomeHelper.Info, msg, this.Guids[1], null, false);
 
                 /* Livestock Marketing */
                 checkedTotal = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="2"]:checked');
-                if(checkedTotal.length == 1){
-                    /* sum total */
-                    var countTotal = 0;
-                    LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
-                        addTotal($(this));
-                    })
+                // check total
+                var countTotal = 0;
+                LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
+                    countTotal += getSum($(this));
+                })
 
-                    var checkedMin = checkedTotal.data('min') * 10000;
-                    var checkedMax = checkedTotal.data('max') * 10000;
+                var checkedMin = checkedTotal.data('min') * 10000;
+                var checkedMax = checkedTotal.data('max') * 10000;
 
-                    var con = countTotal < checkedMin  || countTotal > checkedMax;
-                    var msg = '【問項1.5】畜禽產銷情形之全年產量與平均單價乘積({0}元)與勾選畜禽產品之全年銷售額區間不符'
-                                .format(numberWithCommas(countTotal));
-                    Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
-                }
+                var con = countTotal < checkedMin  || countTotal > checkedMax;
+                var msg = '【問項1.5】畜禽產銷情形之全年產量與平均單價乘積({0}元)與勾選畜禽產品之全年銷售額區間不符'
+                            .format(numberWithCommas(countTotal));
+                Helper.LogHandler.Log(checkedTotal.length == 1 && con, AnnualIncomeHelper.Alert, msg, this.Guids[2]);
+                // show total
+                var msg ='目前畜禽產銷情形之全年產量與平均單價乘積：{0}元'.format(numberWithCommas(countTotal));
+                Helper.LogHandler.Log(countTotal > 0, AnnualIncomeHelper.Info, msg, this.Guids[3], null, false);
             },
         },
         LifeStyle3Selected: {
@@ -1861,7 +1882,6 @@ var PopulationAgeHelper = {
                     if(obj){
                         obj.count = parseInt($(this).val());
                     }
-
                     if(Helper.LogHandler.ValidationActive){
                         PopulationAgeHelper.Validation.MemberCount.Validate();
                     }
