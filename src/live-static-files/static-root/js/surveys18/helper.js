@@ -599,7 +599,7 @@ var SurveyHelper = {
                 },
             },
             HireExist: {
-                Guids: Helper.Guid.CreateMulti(),
+                Guids: Helper.Guid.CreateMulti(1),
                 Validate: function(){
                     var checked = SurveyHelper.Hire.Container.filter('[data-field="nonhire"]').prop('checked');
                     var exists = LongTermHireHelper.LongTermHire.Container.find('tr').length +
@@ -611,7 +611,7 @@ var SurveyHelper = {
 
                     var con = !checked && !exists;
                     var msg = '若全年無外僱人力，應勾選無';
-                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
+                    Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[1]);
                 },
             },
         },
@@ -682,7 +682,7 @@ var SurveyHelper = {
                 },
             },
             LackExist: {
-                Guids: Helper.Guid.CreateMulti(),
+                Guids: Helper.Guid.CreateMulti(1),
                 Validate: function(){
                     var checked = SurveyHelper.Lack.Container.filter('[data-islack="false"]:checked').length == 1;
                     var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
@@ -693,7 +693,7 @@ var SurveyHelper = {
 
                     var con = !checked && !exists;
                     msg = '若全年無短缺人力，應勾選無';
-                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[0]);
+                    Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[1]);
                 },
             },
         },
