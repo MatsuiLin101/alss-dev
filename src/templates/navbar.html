@@ -18,14 +18,14 @@
             <li class="dropdown">
             <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">功能 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="{% url 'surveys18:builder:api:create' %}">匯入</a></li>
+              <li><a href="{% url 'surveys18:builder:api:create' %}" target="_blank">匯入</a></li>
             </ul>
             </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
             <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-user"></i>{{ user.first_name }}{{ user.last_name }}<span class="caret"></span></a>
+                <i class="fa fa-user"></i> {{ user.first_name }}{{ user.last_name }}<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a class="nav-link js-partial-control" data-target="datatable">{% trans '檢視編輯歷史' %}</a></li>
                 <li role="separator" class="divider"></li>

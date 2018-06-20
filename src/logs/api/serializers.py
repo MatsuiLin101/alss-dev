@@ -32,7 +32,10 @@ class ReviewLogListSerializer(ModelSerializer):
     update_datetime = DateTimeField(format="%Y/%m/%d %H:%M:%S")
 
     def get_user(self, instance):
-        return instance.user.username
+        if instance.user.first_name:
+            return instance.user.first_name + instance.user.last_name
+        else:
+            return instance.user.username
 
     class Meta:
         model = ReviewLog
