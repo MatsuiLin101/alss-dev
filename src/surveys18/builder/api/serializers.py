@@ -32,38 +32,41 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
         """
         Validate via build
         """
-        errors = list()
-        file_type = data.get('type')
-        file = data.get('datafile')
-        token = data.get('token')
-        if token:
-            content = [token]
+        try:
+            errors = list()
+            file_type = data.get('type')
+            file = data.get('datafile')
+            token = data.get('token')
+            if token:
+                content = [token]
 
-        if file:
-            content = file.read().decode('utf-8-sig').splitlines()
+            if file:
+                content = file.read().decode('utf-8-sig').splitlines()
 
-        if file and token:
-            raise ValidationError('Not Allow To Provide Upload File And Single Token At Same Time')
+            if file and token:
+                raise ValidationError('Not Allow To Provide Upload File And Single Token At Same Time')
 
-        for i, string in enumerate(content):
-            try:
-                if file_type.id == 1:
-                    builder = LaborBuilder(string=string)
+            for i, string in enumerate(content):
+                try:
+                    if file_type.id == 1:
+                        builder = LaborBuilder(string=string)
 
-                elif file_type.id == 2:
-                    builder = SpecialtyBuilder(string=string)
+                    elif file_type.id == 2:
+                        builder = SpecialtyBuilder(string=string)
 
-                builder.build()
-                builder.build(readonly=False)
+                    builder.build()
+                    builder.build(readonly=False)
 
-            except Exception as e:
-                errors.append({
-                    'string': string,
-                    'index': i,
-                    'error': e,
-                })
+                except Exception as e:
+                    errors.append({
+                        'string': string,
+                        'index': i,
+                        'error': e,
+                    })
 
-        if errors:
-            raise ValidationError(errors)
+            if errors:
+                raise ValidationError(errors)
 
-        return data
+            return data
+        except Exception as e:
+            raise ValidationError(e)

@@ -25,5 +25,3 @@ class BuilderFileCreateAPIView(CreateAPIView):
 
             serializer.save(user=user,
                             datafile=datafile, token=token)
-        else:
-            raise ValidationError(serializer.errors)
