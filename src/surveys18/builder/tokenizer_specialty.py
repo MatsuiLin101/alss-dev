@@ -58,7 +58,7 @@ class Builder(object):
 
         self.string = [x.replace(u'\u3000', u'').replace(' ', '').strip() for x in string.split(',')]
 
-        if len(self.string) != 57:
+        if len(self.string) != 58:
             raise SignError(sign=',')
 
     def build(self, readonly=True):
@@ -124,34 +124,31 @@ class Builder(object):
                 raise CreateModelError(target='Phone', msg=e)
 
     def build_address(self):
-        address = self.string[10]
+        address = self.string[10:12]
         obj = Business.objects.filter(survey=self.survey).first()
         if obj is None:
-            if len(address) > 0:
+            if len(address[0]) > 0:
                 try:
-                    address = AddressMatch.objects.create(
-                        survey=self.survey,
-                        mismatch=True,
-                        address=address
-                    )
-                except ValueError as e:
-                    raise CreateModelError(target='Address Match', msg=e)
-                else:
-                    self.address = address
-            else:
-                try:
-                    address = AddressMatch.objects.create(
-                        survey=self.survey,
-                        match=True,
-                    )
-                except ValueError as e:
-                    raise CreateModelError(target='Address Match', msg=e)
-                else:
-                    self.address = address
+                    if address[0] == "是":
+                        mismatch = False
+                        match = True
+                    else:
+                        mismatch = True
+                        match = False
 
+                    address = AddressMatch.objects.create(
+                        survey=self.survey,
+                        match=match,
+                        mismatch=mismatch,
+                        address=address[1]
+                    )
+                except ValueError as e:
+                    raise CreateModelError(target='Address Match', msg=e)
+                else:
+                    self.address = address
 
     def build_land_area(self):
-        land_area_str = self.string[12:18]
+        land_area_str = self.string[13:19]
         print(land_area_str)
         if len(land_area_str[0]) > 0 :
             try:
@@ -187,7 +184,7 @@ class Builder(object):
                 raise CreateModelError(target='Land Area', msg=e)
 
     def build_business(self):
-        business_str = self.string[40:50]
+        business_str = self.string[41:51]
         if len(business_str) > 1:
             try:
                 if business_str[0] == "0":
@@ -224,7 +221,7 @@ class Builder(object):
                 raise CreateModelError(target='Business', msg=e)
 
     def build_management(self):
-        management_str = self.string[56]
+        management_str = self.string[57]
         if len(management_str) > 0 :
             try:
                 char = management_str.split(".")
@@ -250,7 +247,7 @@ class Builder(object):
                 raise CreateModelError(target='management', msg=e)
 
     def build_crop_marketing(self):
-        crop_marketing_str = self.string[19:30]
+        crop_marketing_str = self.string[20:31]
         if len(crop_marketing_str[0]) > 0:
             try:
                 product_str = crop_marketing_str[0]
@@ -292,7 +289,7 @@ class Builder(object):
                 raise CreateModelError(target='CropMarketing', msg=e)
 
     def build_livestock_marketing(self):
-        livestock_str = self.string[31:41]
+        livestock_str = self.string[32:42]
         if len(livestock_str[0]) > 0 :
             try:
                 product_str = livestock_str[0]
@@ -325,7 +322,7 @@ class Builder(object):
                 raise CreateModelError(target='LivestockMarketing', msg=e)
 
     def build_population(self):
-        population_str = self.string[51:56]
+        population_str = self.string[52:57]
         if len(population_str[0]) > 0:
             try:
                 relationship_str = int(population_str[0]) if population_str[0] else None
