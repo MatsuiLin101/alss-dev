@@ -1,7 +1,9 @@
 from rest_framework.generics import (
     CreateAPIView,
 )
-
+from rest_framework.serializers import (
+    ValidationError,
+)
 from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
 from .serializers import BuilderFileSerializer
@@ -24,4 +26,4 @@ class BuilderFileCreateAPIView(CreateAPIView):
             serializer.save(user=user,
                             datafile=datafile, token=token)
         else:
-            print(serializer.errors)
+            raise ValidationError(serializer.errors)
