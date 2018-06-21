@@ -65,7 +65,7 @@ class ModelTestCase(TestCase):
         call_command('loaddata', 'life-style.yaml', verbosity=0)
         call_command('loaddata', 'other-farm-work.yaml', verbosity=0)
 
-        self.string = "279,106,100091101020,1,3,,2,廖見興　　,0912308329 ,55989438 ,雲林縣二崙鄉楊賢村８鄰楊賢路５４號,,0,360,0,0,0,0,1,A001,蓬萊米(梗稻)1期,1   ,300,1,1,28800,17,2,,1,,,,,,,,,,,0, , , , , , ,, ,,1,1,1,05500 ,4,6,1. 稻作"
+        self.string = "279,106,100091101020,1,3,,2,廖見興　　,0912308329 ,55989438 ,否,雲林縣二崙鄉楊賢村８鄰楊賢路５４號,,0,360,0,0,0,0,1,A001,蓬萊米(梗稻)1期,1   ,300,1,1,28800,17,2,,1,,,,,,,,,,,0, , , , , , ,, ,,1,1,1,05500 ,4,6,1. 稻作"
 
 
         self.builder = Builder(self.string)
@@ -89,7 +89,7 @@ class ModelTestCase(TestCase):
         obj = AddressMatch.objects.get(survey=self.builder.survey)
         self.assertEquals(obj.match, False)
         self.assertEquals(obj.mismatch, True)
-        # self.assertEquals(obj.address, "彰化縣線西鄉下犁村１７鄰下塭路５００巷９０號")
+        # self.assertEquals(obj.address, "雲林縣二崙鄉楊賢村８鄰楊賢路５４號")
 
     def test_build_land_area(self):
         self.builder.build_land_area()
@@ -108,31 +108,47 @@ class ModelTestCase(TestCase):
     def test_build_business(self):
         self.builder.build_business()
         obj = Business.objects.filter(survey=self.builder.survey).all()
-        self.assertEquals(len(obj), 0)
-        # self.assertEquals(obj[0].farm_related_business, None)
+        self.assertEquals(len(obj), 1)
+        self.assertEquals(obj[0].farm_related_business.code, 1)
         # self.assertEquals(obj[0].extra, "123")
 
     def test_build_management(self):
         self.builder.build_management()
         obj = Survey.objects.filter(farmer_id=self.builder.survey.farmer_id).all()
-        self.assertEquals(len(obj), 0)
-        # m_obj = obj[0].management_types.all()
-        # self.assertEquals(m_obj[0].code, 14)
+        self.assertEquals(len(obj), 1)
+        m_obj = obj[0].management_types.all()
+        self.assertEquals(m_obj[0].code, 1)
 
     def test_build_crop_marketing(self):
         self.builder.build_crop_marketing()
         obj = CropMarketing.objects.filter(survey=self.builder.survey).all()
         self.assertEquals(len(obj), 1)
+        self.assertEquals(obj[0].product.code, 'A001')
+        self.assertEquals(obj[0].land_number, 1)
+        self.assertEquals(obj[0].land_area, 300)
+        self.assertEquals(obj[0].plant_times, 1)
+        self.assertEquals(obj[0].unit.name, '公斤')
+        self.assertEquals(obj[0].total_yield, 28800)
+        self.assertEquals(obj[0].unit_price, 17)
+        self.assertEquals(obj[0].has_facility, 0)
+        self.assertEquals(obj[0].loss.name, '災害')
+
 
     def test_build_livestock_marketing(self):
         self.builder.build_livestock_marketing()
         obj = LivestockMarketing.objects.filter(survey=self.builder.survey).all()
-        self.assertEquals(len(obj), 1)
+        self.assertEquals(len(obj), 0)
 
     def test_build_population(self):
         self.builder.build_population()
         obj = Population.objects.filter(survey=self.builder.survey).all()
         self.assertEquals(len(obj), 1)
+        self.assertEquals(obj[0].relationship.code, 1)
+        self.assertEquals(obj[0].gender.code, 1)
+        self.assertEquals(obj[0].birth_year, 55)
+        self.assertEquals(obj[0].education_level.code, 4)
+        self.assertEquals(obj[0].farmer_work_day.code, 7)
+
 
 
 
