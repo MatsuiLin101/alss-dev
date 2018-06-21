@@ -42,12 +42,25 @@ from .models import (
     Business,
 )
 
+
+class SurveyAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'farmer_id',
+                    'farmer_name',
+                    'total_pages',
+                    'page',
+                    'readonly',
+                    'is_updated',
+                    'update_time')
+    list_filter = ('is_updated', 'readonly', 'page')
+
+
+admin.site.register(Survey, SurveyAdmin)
 admin.site.register(BuilderFile)
 admin.site.register(BuilderFileType)
 admin.site.register(MarketType)
 admin.site.register(IncomeRange)
 admin.site.register(AnnualIncome)
-admin.site.register(Survey)
 admin.site.register(AddressMatch)
 admin.site.register(Lack)
 admin.site.register(Phone)
