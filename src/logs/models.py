@@ -26,7 +26,7 @@ ORDER_COLUMN_CHOICES = Choices(
 
 
 class ReviewLog(StatusLog):
-    user = ForeignKey(settings.AUTH_USER_MODEL, related_name='review_logs', verbose_name=_('User'))
+    user = ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='review_logs', verbose_name=_('User'))
     content_type = ForeignKey(ContentType, limit_choices_to=SURVEY_CHOICES)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')

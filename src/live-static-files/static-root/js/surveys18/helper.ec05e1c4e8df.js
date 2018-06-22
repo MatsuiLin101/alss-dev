@@ -526,8 +526,7 @@ var SurveyHelper = {
             }
         },
         Reset: function(){
-            SurveyHelper.Phone.Container.val('');
-            SurveyHelper.Phone.Container.attr('data-phone-id', '');
+                SurveyHelper.Phone.Container.val('');
         },
         Validation: {
             Empty: {
@@ -553,18 +552,27 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
             this.Container.change(function(){
-                if(CloneData) {
-                    var field = $(this).data('field');
-                    if(field == 'hire')
-                        CloneData[MainSurveyId].hire = this.checked;
-                    else if(field == 'nonhire')
-                        CloneData[MainSurveyId].non_hire = this.checked;
 
-                    if(Helper.LogHandler.ValidationActive){
-                        SurveyHelper.Hire.Validation.Empty.Validate();
-                        SurveyHelper.Hire.Validation.HireExist.Validate();
-                        SurveyHelper.Hire.Validation.Duplicate.Validate();
-                    }
+                /* make it radio */
+                var deChecked = function(input){
+                    var deferred = $.Deferred();
+                    SurveyHelper.Hire.Container.not(input).prop('checked', false);
+                    deferred.resolve();
+                }
+
+                if(CloneData) {
+                    $.when(deChecked(this)).then(function(){
+                        var field = $(this).data('field');
+                        if(field == 'hire')
+                            CloneData[MainSurveyId].hire = this.checked;
+                        else if(field == 'nonhire')
+                            CloneData[MainSurveyId].non_hire = this.checked;
+
+                        if(Helper.LogHandler.ValidationActive){
+                            SurveyHelper.Hire.Validation.Empty.Validate();
+                            SurveyHelper.Hire.Validation.HireExist.Validate();
+                        }
+                    })
                 }
             })
         },
@@ -574,7 +582,7 @@ var SurveyHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.Hire.Validation.Empty.Validate();
-                SurveyHelper.Hire.Validation.Duplicate.Validate();
+                SurveyHelper.Hire.Validation.SingleSelection.Validate();
             }
         },
         Reset: function(){
@@ -590,11 +598,11 @@ var SurveyHelper = {
                     Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
                 },
             },
-            Duplicate: {
+            SingleSelection: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
                     var con = SurveyHelper.Hire.Container.filter(':checked').length > 1;
-                    var msg = '有外僱及無外僱人力不得重複勾選';
+                    var msg = '限註記一個項目';
                     Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
                 },
             },
@@ -643,7 +651,7 @@ var SurveyHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.Lack.Validation.Empty.Validate();
-                        SurveyHelper.Lack.Validation.Duplicate.Validate();
+                        SurveyHelper.Lack.Validation.SingleSelection.Validate();
                         SurveyHelper.Lack.Validation.LackExist.Validate();
                     }
                 }
@@ -658,7 +666,7 @@ var SurveyHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.Lack.Validation.Empty.Validate();
-                SurveyHelper.Lack.Validation.Duplicate.Validate();
+                SurveyHelper.Lack.Validation.SingleSelection.Validate();
             }
         },
         Reset: function(){
@@ -673,7 +681,7 @@ var SurveyHelper = {
                     Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[0]);
                 },
             },
-            Duplicate: {
+            SingleSelection: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
                     var con = SurveyHelper.Lack.Container.filter(':checked').length > 1;
@@ -1223,7 +1231,7 @@ var ManagementTypeHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 ManagementTypeHelper.Validation.Empty.Validate();
-                ManagementTypeHelper.Validation.Duplicate.Validate();
+                ManagementTypeHelper.Validation.SingleSelection.Validate();
             }
         },
         Reset: function(){
@@ -1243,7 +1251,7 @@ var ManagementTypeHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         ManagementTypeHelper.Validation.Empty.Validate();
-                        ManagementTypeHelper.Validation.Duplicate.Validate();
+                        ManagementTypeHelper.Validation.SingleSelection.Validate();
                     }
                 }
             })
@@ -1258,7 +1266,7 @@ var ManagementTypeHelper = {
                 Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guids[0]);
             },
         },
-        Duplicate: {
+        SingleSelection: {
             Guids: Helper.Guid.CreateMulti(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].management_types.length > 1;
@@ -1661,7 +1669,6 @@ var AnnualIncomeHelper = {
         },
         Reset: function(){
             this.Container.prop('checked', false);
-            this.Container.attr('data-annualincome-id', '')
         },
         Bind: function(){
             this.Container.change(function(){
@@ -2432,7 +2439,7 @@ var ShortTermHireHelper = {
                     }
                     var obj = ShortTermHireHelper.ShortTermHire.Object.Filter(guid);
 
-                    obj.work_types = $tr.find('[name="worktype"]').val();
+                    obj.work_type = $tr.find('[name="worktype"]').val();
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.month = parseInt($tr.find('[name="month"]').val());
                     obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
@@ -2997,9 +3004,7 @@ var SubsidyHelper = {
         this.Container.Day.val('');
         this.Container.Hour.val('');
         this.Container.RefuseReason.prop('checked', false);
-        this.Container.RefuseReason.attr('data-refuse-id', '');
         this.Container.Extra.val('');
-        this.Container.Extra.attr('data-refuse-id', '');
     },
     Bind: function(){
         Helper.BindInterOnly(this.Container.Count);

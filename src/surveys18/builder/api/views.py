@@ -1,3 +1,4 @@
+import logging
 from rest_framework.generics import (
     CreateAPIView,
 )
@@ -8,6 +9,8 @@ from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
 from .serializers import BuilderFileSerializer
 from surveys18.models import BuilderFile
+
+system_logger = logging.getLogger('system')
 
 
 class BuilderFileCreateAPIView(CreateAPIView):
@@ -27,4 +30,5 @@ class BuilderFileCreateAPIView(CreateAPIView):
                 serializer.save(user=user,
                                 datafile=datafile, token=token)
         except Exception as e:
+            system_logger.exception(e)
             raise ValidationError(e)
