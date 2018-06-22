@@ -8,6 +8,9 @@ from rest_framework.generics import (
     ListAPIView,
     UpdateAPIView,
 )
+from rest_framework.exceptions import (
+    ValidationError,
+)
 
 from rest_framework.filters import (
     SearchFilter,
@@ -66,7 +69,7 @@ class SurveyUpdateAPIView(UpdateAPIView):
                     'content_type': ContentType.objects.filter(app_label='surveys18', model='survey').first(),
                     'user': request.user,
                 })
-                return JsonResponse(data=serializer.errors, safe=False)
+                raise ValidationError(serializer.errors)
 
         except Exception as e:
             return JsonResponse(data=e, safe=False)
