@@ -73,3 +73,10 @@ div[data-partial=datatable] {
 }
 
 
+@media(max-width: 992px) {
+    .alert .btn.pull-right{
+        display: none;
+    }
+}
+
+
