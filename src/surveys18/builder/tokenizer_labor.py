@@ -66,7 +66,6 @@ class Builder(object):
         self.short_term_lack = []
         self.subsidy = None
         self.refuse = []
-
         token_size, self.more_page = self.check_string(string)
         delimiter_plus = '+'
         delimiter_pound = '#+'
@@ -527,7 +526,7 @@ class Builder(object):
 
                             value = int(population_age_str[i+j:i+j+2])
                             age_scope = AgeScope.objects.get(id=int(j/4+4))
-                            if i/2 == 1 and value > 0:
+                            if i/2 == 1 :
                                 gender=Gender.objects.get(id=1)
                                 population_age = PopulationAge.objects.create(
                                     survey=self.survey,
@@ -536,7 +535,7 @@ class Builder(object):
                                     count=value
                                 )
                                 self.population_age.append(population_age)
-                            elif i/2 == 2 and value > 0:
+                            elif i/2 == 2 :
                                 gender=Gender.objects.get(id=2)
                                 population_age = PopulationAge.objects.create(
                                     survey=self.survey,
