@@ -137,8 +137,8 @@ $(document).ready(function() {
                     ).done(function(){
                         // this won't be called until *all* the AJAX and the timer have finished
                         Reset();
-                        Object.values(CloneData).forEach(function(survey, i){
-                            Set(survey, survey.id);
+                        Object.keys(CloneData).forEach(function(key, i){
+                            Set(CloneData[key], CloneData[key].id);
                         });
                         // update review log
                         data = {
