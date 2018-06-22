@@ -78,7 +78,6 @@ $(document).ready(function() {
             $.when(
                 $.Deferred(showLoading)
             ).done(function(){
-                // a trivial timer, just for demo purposes -
                 // it resolves itself after 1 seconds
                 var timer = $.Deferred();
                 setTimeout(timer.resolve, 1000);
@@ -102,14 +101,8 @@ $(document).ready(function() {
                 })
             }).done(function(){
                 $('#farmerId').val('');
-                // update review log
-                data = {
-                    current_errors: Helper.LogHandler.CollectError.GetCurrent(),
-                    object_id: CloneData[MainSurveyId].id,
-                    app_label: 'surveys18',
-                    model: 'survey',
-                }
-                var ajax = SetLogData(JSON.stringify(data));
+                // only set initial error length once
+                Helper.LogHandler.CollectError.InitialErrors = Helper.LogHandler.CollectError.GetCurrent();
                 Loading.close();
             })
         } else {
@@ -126,7 +119,6 @@ $(document).ready(function() {
                     $.Deferred(showLoading)
                 ).done(function(){
 
-                    // a trivial timer, just for demo purposes -
                     // it resolves itself after 1 seconds
                     var timer = $.Deferred();
                     setTimeout(timer.resolve, 1000);
@@ -148,8 +140,9 @@ $(document).ready(function() {
                         Object.keys(CloneData).forEach(function(key, i){
                             Set(CloneData[key], CloneData[key].id);
                         });
-                        // update review log
+                        // create or update review log
                         data = {
+                            initial_errors: Helper.LogHandler.CollectError.InitialErrors,
                             current_errors: Helper.LogHandler.CollectError.GetCurrent(),
                             object_id: CloneData[MainSurveyId].id,
                             app_label: 'surveys18',

@@ -179,7 +179,7 @@ var Helper = {
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
-    LogHandler: {        
+    LogHandler: {
         Setup: function(){
             this.Bind();
             this.ValidationActive = true;
@@ -253,6 +253,7 @@ var Helper = {
             alert.alert();
         },
         CollectError: {
+            InitialErrors: null,
             GetCurrent: function(){
                 var counter = 0;
                 $('.alert-block.alert-danger').each(function(){
