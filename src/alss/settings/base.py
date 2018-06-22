@@ -212,4 +212,5 @@ LOGGING = {
     }
 }
 
-
+# Session Settings
+SESSION_COOKIE_AGE = 7200
