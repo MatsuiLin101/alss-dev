@@ -135,8 +135,8 @@ class Builder(object):
     def id_and_value(string):
         cnt = 0
         index = 0
-        for i in range(0,len(string)):
-            if string[i] == "1" :
+        for i in range(0, len(string)):
+            if string[i] == "1":
                 index = i+1
                 cnt = cnt+1
         return cnt, index
@@ -171,7 +171,7 @@ class Builder(object):
         if exists_specialty:
             self.survey = exists_specialty
 
-            #delete old data
+            # delete old data
             self.survey.total_pages = 1
             self.survey.note = None
             self.survey.period = None
@@ -310,8 +310,8 @@ class Builder(object):
                         for i in range(5, len(area_str), 5):
                             if int(area_str[cnt*5:i]) > 0:
 
-                                type_id = 1 if cnt<3 else 2
-                                status = int((i/5))-3 if i/5>3 else int((i/5))
+                                type_id = 1 if cnt < 3 else 2
+                                status = int((i/5))-3 if i/5 > 3 else int((i/5))
 
                                 land_type = LandType.objects.get(id=type_id)
                                 land_status = LandStatus.objects.get(id=status)
@@ -348,7 +348,7 @@ class Builder(object):
                 else:
                     try:
 
-                        for i in range(0,8):
+                        for i in range(0, 8):
                             if business_str[i] == "1":
                                 num = i+1
                                 business = Business.objects.create(
@@ -357,7 +357,7 @@ class Builder(object):
 
                                 )
                                 self.business.append(business)
-                        if business_str[8] == "1" :
+                        if business_str[8] == "1":
                             business = Business.objects.create(
                                 survey=self.survey,
                                 farm_related_business=FarmRelatedBusiness.objects.get(code=9),
@@ -386,7 +386,7 @@ class Builder(object):
                     raise StringLengthError(target='management', msg=e)
                 else:
                     try:
-                        for i in range(0,14):
+                        for i in range(0, 14):
                             if management_str[i] == "1":
                                 num = i + 1
                                 management_type = ManagementType.objects.get(id=num)
@@ -398,33 +398,33 @@ class Builder(object):
     def build_crop_marketing(self):
         if self.survey.is_updated is False:
             string = self.string[2]
-            if len(string)% 25 != 0 :
+            if len(string) % 25 != 0:
                 raise StringLengthError(target='CropMarketing')
             else:
                 if len(string) > 0:
                     try:
 
-                        num = int(len(string)/ 25)
-                        for i in range(0,num):
+                        num = int(len(string) / 25)
+                        for i in range(0, num):
                             crop_marketing = string[i*25:i*25+25]
                             product_str = crop_marketing[0:4]
                             product = Product.objects.filter(code=product_str).first()
                             land_number = int(crop_marketing[4:5])
                             land_area = int(crop_marketing[5:9])
-                            plant_times =  int(crop_marketing[9:10])
+                            plant_times = int(crop_marketing[9:10])
                             unit_str = int(crop_marketing[10:11])
-                            unit = Unit.objects.filter(code=unit_str , type = 1).first()
+                            unit = Unit.objects.filter(code=unit_str, type=1).first()
                             total_yield = int(crop_marketing[11:18])
                             unit_price = int(crop_marketing[18:23])
                             has_facility_str = int(crop_marketing[23:24])
-                            if has_facility_str == 0 :
+                            if has_facility_str == 0:
                                 has_facility = None
-                            elif has_facility_str == 1 :
+                            elif has_facility_str == 1:
                                 has_facility = 1
                             else:
                                 has_facility = 0
                             loss_str = int(crop_marketing[24:25])
-                            loss = Loss.objects.filter(code=loss_str, type = 1).first()
+                            loss = Loss.objects.filter(code=loss_str, type=1).first()
 
                             crop_marketing = CropMarketing.objects.create(
                                 survey=self.survey,
@@ -450,27 +450,26 @@ class Builder(object):
             else:
                 livestock_str = string
 
-
-            if (len(livestock_str))% 24 != 0 :
+            if (len(livestock_str)) % 24 != 0:
                 raise StringLengthError(target='LivestockMarketing')
             else:
                 if len(string) > 0:
                     try:
 
-                        num = int(len(livestock_str)/ 24)
-                        for i in range(0,num):
+                        num = int(len(livestock_str) / 24)
+                        for i in range(0, num):
                             livestock = livestock_str[i*24:i*24+24]
                             product_str = livestock[0:4]
                             product = Product.objects.filter(code=product_str).first()
                             unit_str = int(livestock[4:5])
-                            unit = Unit.objects.filter(code=unit_str , type = 2).first()
+                            unit = Unit.objects.filter(code=unit_str, type=2).first()
                             raising_number = int(livestock[5:11])
                             total_yield = int(livestock[11:17])
                             unit_price = int(livestock[17:22])
                             contract_str = int(livestock[22:23])
                             contract = Contract.objects.filter(code=contract_str).first()
                             loss_str = int(livestock[23:24])
-                            loss = Loss.objects.filter(code=loss_str, type = 2).first()
+                            loss = Loss.objects.filter(code=loss_str, type=2).first()
 
                             livestock_marketing = LivestockMarketing.objects.create(
                                 survey=self.survey,
@@ -496,13 +495,13 @@ class Builder(object):
             else:
                 try:
 
-                    for i in range(0,10,2):
+                    for i in range(0, 10, 2):
                         value = int(annual_income_str[i:i+2])
                         if value > 0:
                             num = i/2+1
                             market_type = MarketType.objects.get(id=num)
                             income_range = IncomeRange.objects.get(id=value)
-                            annual_income=AnnualIncome.objects.create(
+                            annual_income = AnnualIncome.objects.create(
                                 survey=self.survey,
                                 market_type=market_type,
                                 income_range=income_range
@@ -520,14 +519,13 @@ class Builder(object):
                 raise StringLengthError(target='PopulationAge')
             else:
                 try:
-
-                    for j in range(0,len(population_age_str),6):
-                        for i in range(0,6,2):
+                    for j in range(0, len(population_age_str), 6):
+                        for i in range(0, 6, 2):
 
                             value = int(population_age_str[i+j:i+j+2])
                             age_scope = AgeScope.objects.get(id=int(j/4+4))
-                            if i/2 == 1 :
-                                gender=Gender.objects.get(id=1)
+                            if i/2 == 1 and value > 0:
+                                gender = Gender.objects.get(id=1)
                                 population_age = PopulationAge.objects.create(
                                     survey=self.survey,
                                     gender=gender,
@@ -535,8 +533,8 @@ class Builder(object):
                                     count=value
                                 )
                                 self.population_age.append(population_age)
-                            elif i/2 == 2 :
-                                gender=Gender.objects.get(id=2)
+                            elif i/2 == 2:
+                                gender = Gender.objects.get(id=2)
                                 population_age = PopulationAge.objects.create(
                                     survey=self.survey,
                                     gender=gender,
@@ -544,7 +542,6 @@ class Builder(object):
                                     count=value
                                 )
                                 self.population_age.append(population_age)
-
 
                 except ValueError as e:
                     raise CreateModelError(target='PopulationAge', msg=e)
@@ -552,37 +549,37 @@ class Builder(object):
     def build_population(self):
         string = self.string[4]
         if self.more_page is False:
-            string=string[:-2]
+            string = string[:-2]
 
-        if (len(string))%29 != 0:
+        if (len(string)) % 29 != 0:
             raise StringLengthError(target='Population')
         else:
             if len(string) > 0:
                 try:
-                    for i in range(0,len(string),29):
+                    for i in range(0, len(string), 29):
                         population_str = string[i:i+29]
                         relationship_str = int(population_str[2:4])
 
-                        relationship=Relationship.objects.filter(code=relationship_str).first()
+                        relationship = Relationship.objects.filter(code=relationship_str).first()
                         gender_str = int(population_str[4:5])
-                        gender=Gender.objects.filter(code=gender_str).first()
+                        gender = Gender.objects.filter(code=gender_str).first()
 
                         birth_year = int(population_str[5:8])
                         education_level_str = int(population_str[8:10])
                         education_level = EducationLevel.objects.filter(code=education_level_str).first()
                         farmer_work_day_str = population_str[10:18]
                         farmer_work_day_cnt, farmer_work_day_id = self.id_and_value(farmer_work_day_str)
-                        if farmer_work_day_cnt != 1 :
+                        if farmer_work_day_cnt != 1:
                             farmer_work_day = None
                         else:
                             farmer_work_day = FarmerWorkDay.objects.filter(code=farmer_work_day_id).first()
 
-                        life_style_str=population_str[18:26]
+                        life_style_str = population_str[18:26]
                         life_style_cnt, life_style_id = self.id_and_value(life_style_str)
-                        if farmer_work_day_cnt != 1 :
+                        if farmer_work_day_cnt != 1:
                             life_style = None
                         else:
-                            life_style=LifeStyle.objects.filter(code=life_style_id).first()
+                            life_style = LifeStyle.objects.filter(code=life_style_id).first()
 
                         other_farm_work_str = population_str[26:]
                         other_farm_work_cnt, other_farm_work_id = self.id_and_value(other_farm_work_str)
@@ -596,9 +593,9 @@ class Builder(object):
                         #       other_farm_work_str)
                         # print(relationship,gender,birth_year,education_level,farmer_work_day,life_style,other_farm_work)
 
-                        if self.survey.is_updated :
-                            obj = Population.objects.filter(survey__id=self.survey.id , birth_year=birth_year,
-                                                         gender=gender).first()
+                        if self.survey.is_updated:
+                            obj = Population.objects.filter(survey__id=self.survey.id, birth_year=birth_year,
+                                                            gender=gender).first()
 
                             if obj:
                                 obj.life_style = life_style
@@ -616,7 +613,6 @@ class Builder(object):
                                 other_farm_work=other_farm_work
                             )
                             self.population.append(population)
-
 
                 except ValueError as e:
                     raise CreateModelError(target='Population', msg=e)
@@ -642,14 +638,14 @@ class Builder(object):
 
     def build_long_term_hire(self):
         string = self.string[5]
-        if len(string) % 30 != 0 :
+        if len(string) % 30 != 0:
             raise StringLengthError(target='LongTermHire')
         else:
             if len(string) > 0:
                 try:
                     for i in range(0, len(string), 30):
-                        long_term_hire_str=string[i:i+30]
-                        work_type_str=int(long_term_hire_str[0:2])
+                        long_term_hire_str = string[i:i+30]
+                        work_type_str = int(long_term_hire_str[0:2])
                         work_type = WorkType.objects.filter(code=work_type_str).first()
 
                         avg_work_day_str = int(long_term_hire_str[26:])/10
@@ -660,18 +656,18 @@ class Builder(object):
                         )
 
                         months_str = long_term_hire_str[14:26]
-                        for j in range(0,12):
-                            if months_str[j] == "1" :
-                                long_term_hire.months.add( Month.objects.get(value=j+1))
+                        for j in range(0, 12):
+                            if months_str[j] == "1":
+                                long_term_hire.months.add(Month.objects.get(value=j+1))
 
                         age_str = long_term_hire_str[5:14]
 
-                        for j in range(0,len(age_str),3):
+                        for j in range(0, len(age_str), 3):
                             num = j/3+1
                             age_scope = AgeScope.objects.get(id=num)
                             count = int(age_str[j:j+3])
 
-                            if count > 0 :
+                            if count > 0:
                                 NumberWorkers.objects.create(
                                     content_type=ContentType.objects.get(app_label="surveys18", model="longtermhire"),
                                     object_id=long_term_hire.id,
@@ -686,7 +682,7 @@ class Builder(object):
     def build_short_term_hire(self):
         if self.more_page is False:
             string = self.string[6]
-            if len(string) % 32 != 0 :
+            if len(string) % 32 != 0:
                 raise StringLengthError(target='ShortTermHire')
             else:
                 try:
@@ -705,19 +701,19 @@ class Builder(object):
                             )
 
                             work_types_str = short_term_hire_str[14:28]
-                            for j in range(0,len(work_types_str),2):
+                            for j in range(0, len(work_types_str), 2):
                                 code = int(work_types_str[j:j+2])
                                 work_type = WorkType.objects.filter(code=code).first()
                                 if work_type:
                                     short_term_hire.work_types.add(work_type)
 
                             number_workers_str = short_term_hire_str[5:14]
-                            for j in range(0,len(number_workers_str),3):
+                            for j in range(0, len(number_workers_str), 3):
                                 num = j/3+1
                                 age_scope = AgeScope.objects.get(id=num)
                                 count = int(number_workers_str[j:j+3])
 
-                                if count > 0 :
+                                if count > 0:
                                     NumberWorkers.objects.create(
                                         content_type=ContentType.objects.get(app_label="surveys18", model="shorttermhire"),
                                         object_id=short_term_hire.id,
@@ -733,16 +729,16 @@ class Builder(object):
         if self.more_page is False:
             string = self.string[7]
 
-            if ( len(string)-4 )% 5 != 0:
+            if (len(string)-4) % 5 != 0:
                 raise StringLengthError(target='NoSalaryHire')
             else:
                 try:
-                    for i in range(0,(len(string)-4),5):
+                    for i in range(0, (len(string)-4), 5):
                         no_salary_str = string[i:i+5]
                         month_str = no_salary_str[0:2]
                         month = Month.objects.filter(value=month_str).first()
                         count = int(no_salary_str[2:])
-                        if month :
+                        if month:
                             no_salary_hire = NoSalaryHire.objects.create(
                                 survey=self.survey,
                                 month=month,
@@ -757,10 +753,10 @@ class Builder(object):
         if self.more_page is False:
             string = self.string[7][-4:]
             try:
-                lack_str=string
-                for i in range(0,len(string)):
+                lack_str = string
+                for i in range(0, len(string)):
                     if lack_str[i] == "1":
-                        lack=Lack.objects.filter(id=i+1).first()
+                        lack = Lack.objects.filter(id=i+1).first()
                         if lack:
                             self.survey.lacks.add(lack)
 
@@ -772,23 +768,23 @@ class Builder(object):
         if len(string) % 17 != 0:
             raise StringLengthError(target='LongTermLack')
         else:
-            if len(string) > 0 :
+            if len(string) > 0:
                 try:
-                    for i in range(0,len(string),17):
+                    for i in range(0, len(string), 17):
                         long_term_lack_str = string[i:i+17]
                         work_type_str = long_term_lack_str[0:2]
                         work_type = WorkType.objects.filter(code=work_type_str).first()
-                        count=int(long_term_lack_str[2:5])
-                        long_term_lack=LongTermLack.objects.create(
+                        count = int(long_term_lack_str[2:5])
+                        long_term_lack = LongTermLack.objects.create(
                             survey=self.survey,
                             work_type=work_type,
                             count=count
                         )
                         months_str = long_term_lack_str[5:]
-                        for j in range(0,12):
+                        for j in range(0, 12):
                             if months_str[j] == "1":
                                 month = Month.objects.filter(value=j + 1).first()
-                                if month :
+                                if month:
                                     long_term_lack.months.add(month)
                         self.long_term_lack.append(long_term_lack)
 
@@ -802,14 +798,14 @@ class Builder(object):
         else:
             if len(string) > 0:
                 try:
-                    for i in range(0,len(string),21):
+                    for i in range(0, len(string), 21):
                         short_term_lack_str = string[i:i+21]
                         product_str = short_term_lack_str[0:4]
                         product = Product.objects.filter(code=product_str).first()
                         work_type_str = short_term_lack_str[4:6]
                         work_type = WorkType.objects.filter(code=work_type_str).first()
 
-                        count=int(short_term_lack_str[6:9])
+                        count = int(short_term_lack_str[6:9])
                         short_term_lack = ShortTermLack.objects.create(
                             survey=self.survey,
                             product=product,
@@ -867,7 +863,7 @@ class Builder(object):
                     self.subsidy = subsidy
 
                     reason_str = string[0][11:12]
-                    if reason_str == "1" :
+                    if reason_str == "1":
 
                         reason = RefuseReason.objects.filter(id=1).first()
                         if reason:
@@ -884,7 +880,7 @@ class Builder(object):
                     elif len(reason_str) == 1:
                         if reason_str[0] == "1":
                             reason = RefuseReason.objects.filter(id=2).first()
-                            if reason :
+                            if reason:
                                 refuse = Refuse.objects.create(
                                     subsidy=self.subsidy,
                                     reason=reason,
@@ -894,7 +890,7 @@ class Builder(object):
                     else:
                         if reason_str[0] == "1":
                             reason = RefuseReason.objects.filter(id=2).first()
-                            if reason :
+                            if reason:
                                 refuse = Refuse.objects.create(
                                     subsidy=self.subsidy,
                                     reason=reason,
@@ -923,7 +919,7 @@ class Builder(object):
                             raise StringLengthError(target='Subsidy')
                         if reason_str[0] == "1":
                             reason = RefuseReason.objects.filter(id=3).first()
-                            if reason :
+                            if reason:
                                 refuse = Refuse.objects.create(
                                     subsidy=self.subsidy,
                                     reason=reason,
