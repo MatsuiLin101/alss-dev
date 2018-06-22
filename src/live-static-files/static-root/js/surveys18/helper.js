@@ -527,7 +527,7 @@ var SurveyHelper = {
         },
         Reset: function(){
             SurveyHelper.Phone.Container.val('');
-            SurveyHelper.Phone.attr('data-phone-id', '');
+            SurveyHelper.Phone.Container.attr('data-phone-id', '');
         },
         Validation: {
             Empty: {
