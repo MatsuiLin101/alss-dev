@@ -63,7 +63,9 @@ def query_by_args(request, **kwargs):
 
     if search_value:
         queryset = queryset.filter(Q(survey__farmer_id__icontains=search_value) |
-                                   Q(user__username__icontains=search_value))
+                                   Q(user__username__icontains=search_value) |
+                                   Q(user__first_name__icontains=search_value) |
+                                   Q(user__last_name__icontains=search_value))
 
     count = queryset.count()
     queryset = queryset.order_by(order_column)[start:start + length]
