@@ -59,9 +59,10 @@ class ReviewLogUpdateSerializer(ModelSerializer):
             obj = ReviewLog.objects.filter(content_type=content_type,
                                            object_id=object_id).order_by('update_datetime').first()
             if obj:
+                # get earliest initial errors if already been count
                 initial_errors = obj.initial_errors if obj else None
             else:
-                initial_errors = validated_data['current_errors'] if 'current_errors' in validated_data else None
+                initial_errors = validated_data['initial_errors'] if 'initial_errors' in validated_data else None
 
             current_errors = validated_data['current_errors'] if 'current_errors' in validated_data else None
 
