@@ -422,12 +422,26 @@ class SurveySerializer(ModelSerializer):
                 )
 
         '''PopulationAge'''
+        population_age_ids = [item['id'] for item in validated_data['population_ages'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.population_ages.all():
+            if obj.id not in population_age_ids:
+                obj.delete()
         for item in validated_data['population_ages']:
-            # Update included in the request
-            population_age_qs = instance.population_ages.filter(id=item['id'])
-            if population_age_qs:
-                population_age_qs.update(
+            if 'id' in item.keys():
+                # Update included in the request
+                population_age_qs = instance.population_ages.filter(id=item['id'])
+                if population_age_qs:
+                    population_age_qs.update(
+                        count=item['count'] if 'count' in item else None,
+                    )
+            else:
+                # Create
+                PopulationAge.objects.create(
+                    survey=instance,
                     count=item['count'] if 'count' in item else None,
+                    age_scope=item['age_scope'] if 'age_scope' in item else None,
+                    gender=item['gender'] if 'gender' in item else None,
                 )
 
         '''Population'''
