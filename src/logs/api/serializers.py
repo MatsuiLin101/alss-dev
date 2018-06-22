@@ -1,8 +1,8 @@
+from django.utils import timezone
 from rest_framework.serializers import (
     ModelSerializer,
     IntegerField,
     SerializerMethodField,
-    DateTimeField,
     RelatedField,
 )
 from logs.models import (
@@ -29,13 +29,16 @@ class ReviewLogListSerializer(ModelSerializer):
     id = IntegerField(read_only=False)
     user = SerializerMethodField()
     content_object = ContentObjectRelatedField(read_only=True)
-    update_datetime = DateTimeField(format="%Y/%m/%d %H:%M:%S")
+    update_datetime = SerializerMethodField()
 
     def get_user(self, instance):
         if instance.user.first_name:
             return instance.user.first_name + instance.user.last_name
         else:
             return instance.user.username
+
+    def get_update_datetime(self, instance):
+        return timezone.localtime(instance.update_datetime).strftime('%Y/%m/%d %H:%M:%S')
 
     class Meta:
         model = ReviewLog
@@ -66,6 +69,6 @@ class ReviewLogUpdateSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         if 'current_errors' in validated_data:
             instance.current_errors = validated_data['current_errors']
-        instance.save()
+            instance.save()
 
         return instance
