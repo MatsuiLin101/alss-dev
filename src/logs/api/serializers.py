@@ -15,7 +15,6 @@ class ContentObjectRelatedField(RelatedField):
     """
     A custom field to use for the `content_object` generic relationship.
     """
-
     def to_representation(self, value):
         """
         Serialize content objects to a simple textual representation.
@@ -53,18 +52,27 @@ class ReviewLogUpdateSerializer(ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        instance = ReviewLog.objects.create(
-            user=validated_data['user'],
-            content_type=validated_data['content_type'],
-            object_id=validated_data['object_id'],
-            initial_errors=0,
-            current_errors=0,
-        )
-        if 'current_errors' in validated_data:
-            instance.initial_errors = validated_data['current_errors']
-            instance.current_errors = validated_data['current_errors']
-            instance.save()
-        return instance
+        content_type = validated_data['content_type']
+        object_id = validated_data['object_id']
+
+        if content_type and object_id:
+            obj = ReviewLog.objects.filter(content_type=content_type,
+                                           object_id=object_id).order_by('update_datetime').first()
+            if obj:
+                initial_errors = obj.initial_errors if obj else None
+            else:
+                initial_errors = validated_data['current_errors'] if 'current_errors' in validated_data else None
+
+            current_errors = validated_data['current_errors'] if 'current_errors' in validated_data else None
+
+            instance = ReviewLog.objects.create(
+                user=validated_data['user'],
+                content_type=content_type,
+                object_id=object_id,
+                initial_errors=initial_errors,
+                current_errors=current_errors,
+            )
+            return instance
 
     def update(self, instance, validated_data):
         if 'current_errors' in validated_data:
