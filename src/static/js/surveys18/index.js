@@ -102,6 +102,14 @@ $(document).ready(function() {
                 })
             }).done(function(){
                 $('#farmerId').val('');
+                // update review log
+                data = {
+                    current_errors: Helper.LogHandler.CollectError.GetCurrent(),
+                    object_id: CloneData[MainSurveyId].id,
+                    app_label: 'surveys18',
+                    model: 'survey',
+                }
+                var ajax = SetLogData(JSON.stringify(data));
                 Loading.close();
             })
         } else {

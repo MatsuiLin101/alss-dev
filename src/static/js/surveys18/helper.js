@@ -1872,6 +1872,8 @@ var PopulationAgeHelper = {
                     var obj = PopulationAgeHelper.PopulationAge.Object.Filter(ageScopeId, genderId);
                     if(obj){
                         obj.count = parseInt($(this).val());
+                    }else{
+
                     }
                     if(Helper.LogHandler.ValidationActive){
                         PopulationAgeHelper.Validation.MemberCount.Validate();
@@ -2253,7 +2255,7 @@ var LongTermHireHelper = {
                     obj.work_type = parseInt($tr.find('[name="worktype"]').val());
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.months = $tr.find('[name="month"]').val();
-                    obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
+                    obj.avg_work_day = parseFloat($tr.find('[name="avgworkday"]').val());
 
                     if(Helper.LogHandler.ValidationActive){
                         LongTermHireHelper.Validation.RequiredField.Validate($tr);
@@ -2435,7 +2437,7 @@ var ShortTermHireHelper = {
                     obj.work_types = $tr.find('[name="worktype"]').val();
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.month = parseInt($tr.find('[name="month"]').val());
-                    obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
+                    obj.avg_work_day = parseFloat($tr.find('[name="avgworkday"]').val());
                     
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermHireHelper.Validation.RequiredField.Validate($tr);
