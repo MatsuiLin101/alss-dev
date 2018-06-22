@@ -726,9 +726,6 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
             this.Container.change(function(){
-                /* make it radio */
-                SurveyHelper.AddressMatch.Container.not($(this)).prop('checked', false);
-
                 if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
@@ -736,6 +733,7 @@ var SurveyHelper = {
                     else if(field == 'mismatch')
                         CloneData[MainSurveyId].address_match.mismatch = $(this).prop('checked');
                 }
+
                 if(Helper.LogHandler.ValidationActive) {
                     SurveyHelper.Address.Validation.AddressRequire.Validate();
                     SurveyHelper.AddressMatch.Validation.Duplicate.Validate();

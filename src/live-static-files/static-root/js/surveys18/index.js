@@ -204,6 +204,9 @@ var SetFarmerData = function (url, data) {
             if ('id' in data) {
                 CloneData[data.id] = data;
             }
+            else{
+                console.log(data);
+            }
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

@@ -20,7 +20,8 @@ from rest_framework.permissions import (
 from .serializers import SurveySerializer
 from surveys18.models import Survey
 
-logger = logging.getLogger('review')
+review_logger = logging.getLogger('review')
+system_logger = logging.getLogger('system')
 
 
 class SurveyListAPIView(ListAPIView):
@@ -49,21 +50,27 @@ class SurveyUpdateAPIView(UpdateAPIView):
         return Survey.objects.get(id=pk)
 
     def patch(self, request):
-        data = json.loads(request.data.get('data'))
-        pk = data.get('id')
-        survey = self.get_object(pk)
-        serializer = SurveySerializer(survey,
-                                      data=data,
-                                      partial=True)  # set partial=True to update a data partially
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(data=serializer.data)
-        else:
-            logger.exception(serializer.errors, extra={
-                'object_id': pk,
-                'content_type': ContentType.objects.filter(app_label='surveys18', model='survey').first(),
-                'user': request.user,
-            })
+        try:
+            data = json.loads(request.data.get('data'))
+            pk = data.get('id')
+            survey = self.get_object(pk)
+            serializer = SurveySerializer(survey,
+                                          data=data,
+                                          partial=True)  # set partial=True to update a data partially
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(data=serializer.data)
+            else:
+                review_logger.error(serializer.errors, extra={
+                    'object_id': pk,
+                    'content_type': ContentType.objects.filter(app_label='surveys18', model='survey').first(),
+                    'user': request.user,
+                })
+                return JsonResponse(data=serializer.errors, safe=False)
 
-        return JsonResponse(data=serializer.errors, safe=False)
+        except Exception as e:
+            return JsonResponse(data=e, safe=False)
+            system_logger.exception(e)
+
+
 

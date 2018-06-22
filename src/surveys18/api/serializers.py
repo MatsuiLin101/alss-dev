@@ -219,7 +219,7 @@ class BusinessSerializer(ModelSerializer):
 
 class SurveySerializer(ModelSerializer):
     annual_incomes = AnnualIncomeSerializer(many=True)
-    address_match = AddressMatchSerializer()
+    address_match = AddressMatchSerializer(required=False, allow_null=True)
     businesses = BusinessSerializer(many=True)
     phones = PhoneSerializer(many=True)
     land_areas = LandAreaSerializer(many=True)
@@ -227,7 +227,7 @@ class SurveySerializer(ModelSerializer):
     livestock_marketings = LivestockMarketingSerializer(many=True)
     population_ages = PopulationAgeSerializer(many=True)
     populations = PopulationSerializer(many=True)
-    subsidy = SubsidySerializer()
+    subsidy = SubsidySerializer(required=False, allow_null=True)
     long_term_hires = LongTermHireSerializer(many=True)
     short_term_hires = ShortTermHireSerializer(many=True)
     no_salary_hires = NoSalaryHireSerializer(many=True)
@@ -265,10 +265,11 @@ class SurveySerializer(ModelSerializer):
                 instance.lacks.add(obj)
 
         '''AddressMatch'''
-        instance.address_match.match = validated_data['address_match']['match']
-        instance.address_match.mismatch = validated_data['address_match']['mismatch']
-        instance.address_match.address = validated_data['address_match']['address']
-        instance.address_match.save()
+        if validated_data['address_match']:
+            instance.address_match.match = validated_data['address_match']['match']
+            instance.address_match.mismatch = validated_data['address_match']['mismatch']
+            instance.address_match.address = validated_data['address_match']['address']
+            instance.address_match.save()
 
         '''LandArea'''
         land_area_ids = [item['id'] for item in validated_data['land_areas'] if 'id' in item]
@@ -673,37 +674,39 @@ class SurveySerializer(ModelSerializer):
                         obj.months.add(month)
 
         '''Subsidy'''
-        subsidy = validated_data['subsidy']
-        # Update
-        instance.subsidy.has_subsidy = subsidy['has_subsidy']
-        instance.subsidy.none_subsidy = subsidy['none_subsidy']
-        instance.subsidy.month_delta = subsidy['month_delta']
-        instance.subsidy.day_delta = subsidy['day_delta']
-        instance.subsidy.hour_delta = subsidy['day_delta']
-        instance.subsidy.count = subsidy['count']
-        '''Refuse'''
-        refuse_ids = [item['id'] for item in subsidy['refuses'] if 'id' in item]
-        # Delete not included in the request
-        for obj in instance.subsidy.refuses.all():
-            if obj.id not in refuse_ids:
-                obj.delete()
-        for item in subsidy['refuses']:
-            if 'id' in item.keys():
-                # Update included in the request
-                refuse_qs = instance.subsidy.refuses.filter(id=item['id'])
-                if refuse_qs:
-                    refuse_qs.update(
+        if validated_data['subsidy']:
+            subsidy = validated_data['subsidy']
+            # Update
+            instance.subsidy.has_subsidy = subsidy['has_subsidy']
+            instance.subsidy.none_subsidy = subsidy['none_subsidy']
+            instance.subsidy.month_delta = subsidy['month_delta']
+            instance.subsidy.day_delta = subsidy['day_delta']
+            instance.subsidy.hour_delta = subsidy['day_delta']
+            instance.subsidy.count = subsidy['count']
+            '''Refuse'''
+            refuse_ids = [item['id'] for item in subsidy['refuses'] if 'id' in item]
+            # Delete not included in the request
+            for obj in instance.subsidy.refuses.all():
+                if obj.id not in refuse_ids:
+                    obj.delete()
+            for item in subsidy['refuses']:
+                if 'id' in item.keys():
+                    # Update included in the request
+                    refuse_qs = instance.subsidy.refuses.filter(id=item['id'])
+                    if refuse_qs:
+                        refuse_qs.update(
+                            reason=item['reason'] if 'reason' in item else None,
+                            extra=item['extra'] if 'extra' in item else None,
+                        )
+                else:
+                    # Create
+                    Refuse.objects.create(
+                        subsidy=instance.subsidy,
                         reason=item['reason'] if 'reason' in item else None,
                         extra=item['extra'] if 'extra' in item else None,
                     )
-            else:
-                # Create
-                Refuse.objects.create(
-                    subsidy=instance.subsidy,
-                    reason=item['reason'] if 'reason' in item else None,
-                    extra=item['extra'] if 'extra' in item else None,
-                )
-        instance.subsidy.save()
+            instance.subsidy.save()
+
         return instance
 
 
