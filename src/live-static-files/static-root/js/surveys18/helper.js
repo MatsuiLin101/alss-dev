@@ -2432,7 +2432,7 @@ var ShortTermHireHelper = {
                     }
                     var obj = ShortTermHireHelper.ShortTermHire.Object.Filter(guid);
 
-                    obj.work_type = $tr.find('[name="worktype"]').val();
+                    obj.work_types = $tr.find('[name="worktype"]').val();
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.month = parseInt($tr.find('[name="month"]').val());
                     obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
