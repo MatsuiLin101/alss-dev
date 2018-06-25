@@ -254,6 +254,10 @@ var Helper = {
         },
         CollectError: {
             InitialErrors: null,
+            Init: function(){
+                // init only once after get survey
+                this.InitialErrors = this.GetCurrent();
+            },
             GetCurrent: function(){
                 var counter = 0;
                 $('.alert-block.alert-danger').each(function(){
