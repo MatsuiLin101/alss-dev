@@ -83,7 +83,7 @@ $(document).ready(function() {
                 setTimeout(timer.resolve, 1000);
 
                 // turn on or turn off validation
-                Helper.LogHandler.ValidationActive = readonly != true;
+                Helper.LogHandler.ValidationActive = true; //readonly != true;
 
                 var ajax = GetFarmerData(url, farmerId, readonly).fail(function(){
                     Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
@@ -100,9 +100,7 @@ $(document).ready(function() {
                     }
                 })
             }).done(function(){
-                $('#farmerId').val('');
-                // only set initial error length once
-                Helper.LogHandler.CollectError.InitialErrors = Helper.LogHandler.CollectError.GetCurrent();
+                Helper.LogHandler.CollectError.Init();
                 Loading.close();
             })
         } else {
