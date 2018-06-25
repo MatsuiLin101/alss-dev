@@ -501,6 +501,12 @@ var SurveyHelper = {
     },
     Phone: {
         Object: {
+            New: function(surveyId, phone){
+                return {
+                    survey: surveyId,
+                    phone: phone ? phone : null,
+                }
+            },
             Filter: function(id){
                 var objects = CloneData[MainSurveyId].phones.filter(function(obj){
                     return obj.id == id;
@@ -514,7 +520,12 @@ var SurveyHelper = {
             this.Container.change(function(){
                 if(CloneData) {
                     var id = $(this).data('phone-id');
-                    SurveyHelper.Phone.Object.Filter(id).phone = $(this).val();
+                    var obj = SurveyHelper.Phone.Object.Filter(id);
+                    if(!obj){
+                        obj = SurveyHelper.Phone.Object.New(MainSurveyId);
+                        CloneData[MainSurveyId].phones.push(obj);
+                    }
+                    obj.phone = $(this).val();
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.Phone.Validation.Empty.Validate();
                     }
