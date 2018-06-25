@@ -248,11 +248,25 @@ class SurveySerializer(ModelSerializer):
         instance.save()
 
         '''Phone'''
+        phone_ids = [item['id'] for item in validated_data['phones'] if 'id' in item]
+        # Delete not included in the request
+        for obj in instance.phones.all():
+            if obj.id not in phone_ids:
+                obj.delete()
         for item in validated_data['phones']:
-            phone_qs = instance.phones.filter(id=item['id'])
-            phone_qs.update(
-                phone=item['phone']
-            )
+            if 'id' in item.keys():
+                # Update included in the request
+                phone_qs = instance.phones.filter(id=item['id'])
+                if phone_qs:
+                    phone_qs.update(
+                        phone=item['phone'] if 'phone' in item else None,
+                    )
+            else:
+                # Create
+                Phone.objects.create(
+                    survey=instance,
+                    phone=item['phone'] if 'phone' in item else None,
+                )
 
         '''Lack'''
         lack_ids = [item.id for item in validated_data['lacks']]
