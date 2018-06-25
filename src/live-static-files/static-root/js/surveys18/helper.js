@@ -153,7 +153,8 @@ var Helper = {
                                 title: '上次更新',
                                 data: 'update_datetime',
                             },
-                        ]
+                        ],
+                        order: [[ 4, "desc" ]],
                     });
                 }else{
                     this.Reload();

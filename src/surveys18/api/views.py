@@ -72,8 +72,9 @@ class SurveyUpdateAPIView(UpdateAPIView):
                 raise ValidationError(serializer.errors)
 
         except Exception as e:
-            return JsonResponse(data=e, safe=False)
             system_logger.exception(e)
+            return JsonResponse(data=e, safe=False)
+
 
 
 

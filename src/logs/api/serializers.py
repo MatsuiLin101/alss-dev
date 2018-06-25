@@ -8,6 +8,9 @@ from rest_framework.serializers import (
 from logs.models import (
     ReviewLog,
 )
+from logging import (
+    INFO,
+)
 from surveys18.models import Survey as Survey18
 
 
@@ -67,6 +70,7 @@ class ReviewLogUpdateSerializer(ModelSerializer):
             current_errors = validated_data['current_errors'] if 'current_errors' in validated_data else None
 
             instance = ReviewLog.objects.create(
+                level=INFO,
                 user=validated_data['user'],
                 content_type=content_type,
                 object_id=object_id,
