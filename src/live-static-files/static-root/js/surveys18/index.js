@@ -1,4 +1,12 @@
-var csrftoken = $.cookie('csrftoken');
+/* pace settings */
+Pace.options = {
+  ajax: false,
+}
+
+/* jQuery loading settings */
+$.loading.default.tip = '請稍後';
+$.loading.default.imgPath = '../static/vendor/ajax-loading/img/ajax-loading.gif';
+
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -209,7 +217,7 @@ var SetFarmerData = function (url, data) {
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
             }
         }
     })
@@ -230,7 +238,7 @@ var SetLogData = function (data) {
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
             }
         }
     })
