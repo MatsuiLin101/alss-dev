@@ -12,7 +12,7 @@ body {
     }
 }
 
-@media (min-width: 992px) and (max-width: 1500px){
+@media (min-width: 992px){
     #wrapper .affix {
       padding-left: 15px;
     }
