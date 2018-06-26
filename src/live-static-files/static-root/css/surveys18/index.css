@@ -3,7 +3,7 @@ body {
   padding-top: 70px;
 }
 
-@media(max-width: 992px) {
+@media(max-width: 1500px) {
     #wrapper .affix {
       position: static;
       width: auto;
@@ -12,9 +12,9 @@ body {
     }
 }
 
-@media(min-width: 992px) {
+@media (min-width: 992px) and (max-width: 1500px){
     #wrapper .affix {
-      padding-left: 30px;
+      padding-left: 15px;
     }
 }
 
@@ -73,7 +73,7 @@ div[data-partial=datatable] {
 }
 
 
-@media(max-width: 992px) {
+@media(max-width: 1500px) {
     .alert .btn.pull-right{
         display: none;
   }
@@ -84,9 +84,5 @@ div[data-partial=datatable] {
         position: static !important;
     }
 }
-@media (min-width: 768px) {
-    .table-responsive {
-        overflow: visible;
-    }
-}
+
 

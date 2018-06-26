@@ -63,7 +63,6 @@ var Set = function (data, surveyId) {
         AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
         AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
         AnnualIncomeHelper.Validation.AnnualTotal.Validate();
-        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
         PopulationAgeHelper.Validation.MemberCount.Validate();
         PopulationHelper.Validation.MarketType3Checked.Validate();
         SurveyHelper.Hire.Validation.HireExist.Validate();
@@ -1704,7 +1703,6 @@ var AnnualIncomeHelper = {
                                 AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
                                 AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
                                 AnnualIncomeHelper.Validation.AnnualTotal.Validate();
-                                AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
                                 CropMarketingHelper.Validation.IncomeChecked.Validate();
                                 LivestockMarketingHelper.Validation.IncomeChecked.Validate();
                                 BusinessHelper.Validation.MarketType4Checked.Validate();
@@ -1819,16 +1817,6 @@ var AnnualIncomeHelper = {
                 // show total
                 var msg ='目前畜禽產銷情形之全年產量與平均單價乘積：{0}元'.format(numberWithCommas(countTotal));
                 Helper.LogHandler.Log(countTotal > 0, AnnualIncomeHelper.Info, msg, this.Guids[3], null, false);
-            },
-        },
-        LifeStyle3Selected: {
-            Guids: Helper.Guid.CreateMulti(),
-            Validate: function(){
-                var lifeStyleChecked = PopulationHelper.Population.Container.find('[name="lifestyle"] > option[value="3"]:selected').length > 0;
-                var marketTypeChecked = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="3"]:checked').length > 0;
-                var con = !lifeStyleChecked && marketTypeChecked;
-                var msg = '有勾選『受託提供農事及畜牧服務』之銷售額區間，【問項2.2】戶內應有人勾選『受託提供農事及畜牧服務』之主要生活型態';
-                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
             },
         },
     },
@@ -2036,7 +2024,6 @@ var PopulationHelper = {
                         PopulationHelper.Validation.OtherFarmerWork.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         PopulationHelper.Validation.MarketType3Checked.Validate();
-                        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
                     }
                 }
             })
