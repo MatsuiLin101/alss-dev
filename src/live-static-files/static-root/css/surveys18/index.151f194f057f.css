@@ -12,7 +12,7 @@ body {
     }
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) and (max-width: 1500px){
     #wrapper .affix {
       padding-left: 15px;
     }
@@ -45,10 +45,6 @@ label.fw-400 {
 
 .panel input.small {
     max-width: 80px;
-}
-
-input.form-control{
-    min-width: 70px;
 }
 
 .w-50 {
@@ -86,12 +82,6 @@ div[data-partial=datatable] {
 @media (max-width: 767px) {
     .table-responsive .dropdown-menu {
         position: static !important;
-    }
-}
-
-@media (min-width: 1500px) {
-    .table-responsive {
-        overflow: visible;
     }
 }
 

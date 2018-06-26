@@ -89,10 +89,6 @@ div[data-partial=datatable] {
     }
 }
 
-@media (min-width: 1500px) {
-    .table-responsive {
-        overflow: visible;
-    }
-}
+
 
 

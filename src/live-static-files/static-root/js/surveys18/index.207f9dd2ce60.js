@@ -17,8 +17,8 @@ function csrfSafeMethod(method) {
 function FixAffixWidth() {
     if ($(window).width() > 768) {
         /* Fix affix width in Firefox */
-        var affixMaxWidth = $('#wrapper > .row > .col-lg-2').outerWidth();
-        $('#wrapper .affix').css('max-width', affixMaxWidth - 30).css('width', '100%');
+        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
+        $('#wrapper .affix').css('max-width', affixMaxWidth - 30);
 
     }else{
         $('#wrapper .affix').css('max-width', 'none');
