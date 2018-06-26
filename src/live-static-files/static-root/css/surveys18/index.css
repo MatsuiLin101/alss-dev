@@ -47,6 +47,10 @@ label.fw-400 {
     max-width: 80px;
 }
 
+input.form-control{
+    min-width: 70px;
+}
+
 .w-50 {
     width: 50px;
 }
@@ -84,5 +88,7 @@ div[data-partial=datatable] {
         position: static !important;
     }
 }
+
+
 
 
