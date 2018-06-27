@@ -31,6 +31,13 @@ $(document).ready(function() {
         FixAffixWidth();
     });
 
+    /* Bind Enter */
+    $(document).keypress(function(e){
+        if (e.which == 13){
+            $('.js-get-survey').click();
+        }
+    });
+
     /* Loading Animation */
     Pace.on('done',function(){
         $('#wrapper').fadeIn(300);
@@ -110,6 +117,7 @@ $(document).ready(function() {
             }).done(function(){
                 Helper.LogHandler.CollectError.Init();
                 Loading.close();
+                $(window).scrollTop(0);
             })
         } else {
             Helper.Dialog.ShowAlert('請輸入農戶編號！');
