@@ -77,7 +77,7 @@ div[data-partial=datatable] {
 }
 
 
-@media(max-width: 1500px) {
+@media(max-width: 767px) {
     .alert .btn.pull-right{
         display: none;
   }
