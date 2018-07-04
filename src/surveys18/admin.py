@@ -1,4 +1,5 @@
 from django.contrib import admin
+from rangefilter.filter import DateRangeFilter
 from .models import (
     BuilderFile,
     BuilderFileType,
@@ -52,7 +53,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     'readonly',
                     'is_updated',
                     'update_time')
-    list_filter = ('is_updated', 'readonly', 'page')
+    list_filter = (('update_time', DateRangeFilter), 'readonly', 'page')
 
 
 admin.site.register(Survey, SurveyAdmin)
