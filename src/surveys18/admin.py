@@ -53,7 +53,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     'readonly',
                     'is_updated',
                     'update_time')
-    list_filter = (('update_time', DateRangeFilter), 'readonly', 'page')
+    list_filter = ('is_updated', 'readonly', 'page', ('update_time', DateRangeFilter))
 
 
 admin.site.register(Survey, SurveyAdmin)
