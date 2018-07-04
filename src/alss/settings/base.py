@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rest_framework',
     'django_db_logger',
+    'rangefilter',
 
     # local
     'logs',
