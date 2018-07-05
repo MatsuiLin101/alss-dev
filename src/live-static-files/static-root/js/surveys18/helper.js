@@ -224,6 +224,9 @@ var Helper = {
                 if (finds.length == 0 && alert.skippedErrorGuids.indexOf(guid) == -1) {
                     alert.message.append($ui);
                 }
+                if (finds.length == 1){
+                    finds.replaceWith($ui); // update text
+                }
             } else {
                 finds.remove();
             }
