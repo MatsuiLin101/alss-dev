@@ -225,7 +225,7 @@ var Helper = {
                     alert.message.append($ui);
                 }
                 if (finds.length == 1){
-                    finds.text(msg); // update text
+                    finds.replaceWith($ui); // update text
                 }
             } else {
                 finds.remove();
