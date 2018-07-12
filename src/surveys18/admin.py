@@ -65,15 +65,16 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(SurveyAdmin, self).get_search_results(request, queryset, search_term)
-        try:
-            int(search_term)
-            queryset = self.model.objects.filter(
-                Q(farmer_id=search_term) |
-                Q(farmer_name=search_term) |
-                Q(id=search_term)
-            )
-        except ValueError:
-            queryset = self.model.objects.filter(farmer_name=search_term)
+        if search_term:
+            try:
+                int(search_term)
+                queryset = self.model.objects.filter(
+                    Q(farmer_id=search_term) |
+                    Q(farmer_name=search_term) |
+                    Q(id=search_term)
+                )
+            except ValueError:
+                queryset = self.model.objects.filter(farmer_name=search_term)
 
         return queryset, use_distinct
 
