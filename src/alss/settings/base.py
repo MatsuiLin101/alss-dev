@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_db_logger',
     'rangefilter',
+    'rest_framework.authtoken',
 
     # local
     'logs',
@@ -215,3 +216,13 @@ LOGGING = {
 
 # Session Settings
 SESSION_COOKIE_AGE = 7200
+
+
+# rest_framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
