@@ -149,7 +149,7 @@ class Builder(object):
 
     def build_land_area(self):
         land_area_str = self.string[13:19]
-        print(land_area_str)
+        # print(land_area_str)
         if len(land_area_str[0]) > 0 :
             try:
                 for i in range(0, len(land_area_str),3):

@@ -166,8 +166,16 @@ class Builder(object):
         if exists:
             exists.delete()
 
+        if page > 1:
+            exists = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=True, readonly=readonly).all()
+            if exists:
+                exists.delete()
+
+
         # if specialty exists, get and update survey
-        exists_specialty = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=True, readonly=readonly).first()
+        # exists_specialty = Survey.objects.filter(page=page, farmer_id=farmer_id, is_updated=True, readonly=readonly).first()
+        exists_specialty = Survey.objects.filter( farmer_id=farmer_id, is_updated=True, readonly=readonly).first()
+
         if exists_specialty:
             self.survey = exists_specialty
 
@@ -212,11 +220,20 @@ class Builder(object):
 
         try:
             if exists_specialty:
-                self.survey.total_pages = total_pages
-                self.survey.note = note
-                self.survey.period = period_h * 60 + period_m
-                self.survey.distance = distance_km
-                self.survey.save()
+                if self.more_page:
+                    survey = Survey.objects.create(
+                        farmer_id=farmer_id,
+                        page=page,
+                        total_pages=total_pages,
+                        readonly=readonly,
+                        is_updated=True
+                    )
+                else:
+                    self.survey.total_pages = total_pages
+                    self.survey.note = note
+                    self.survey.period = period_h * 60 + period_m
+                    self.survey.distance = distance_km
+                    self.survey.save()
             else:
 
                 if self.more_page:
