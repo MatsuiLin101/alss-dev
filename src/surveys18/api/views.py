@@ -38,10 +38,14 @@ review_logger = logging.getLogger('review')
 system_logger = logging.getLogger('system')
 
 
+class SurveyPagination(pagination.PageNumberPagination):
+    page_size = 30
+
 class SurveyListAPIView(ListAPIView):
     serializer_class = SurveySerializer
     filter_backends = [SearchFilter, OrderingFilter]
     permission_classes = [IsAuthenticated]
+    pagination_class = SurveyPagination
     search_fields = ['farmer_id']
 
     def get_queryset(self, *args, **kwargs):
