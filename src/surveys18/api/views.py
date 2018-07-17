@@ -20,8 +20,19 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 
+from rest_framework import pagination
+
 from .serializers import SurveySerializer
-from surveys18.models import Survey
+from surveys18.models import(
+    Survey,
+    ShortTermHire,
+    LongTermHire,
+    NumberWorkers,
+    WorkType,
+    AgeScope,
+)
+
+from . import serializers_singleterm
 
 review_logger = logging.getLogger('review')
 system_logger = logging.getLogger('system')
@@ -77,4 +88,39 @@ class SurveyUpdateAPIView(UpdateAPIView):
 
 
 
+# serializer singleterm
 
+class SurveySingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.SurveySerializer
+    queryset = Survey.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class ShortTermHireSingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.ShortTermHireSerializer
+    queryset = ShortTermHire.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class LongTermHireSingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.LongTermHireSerializer
+    queryset = LongTermHire.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class NumberWorkersSingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.NumberWorkersSerializer
+    queryset = NumberWorkers.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class WorkTypeSingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.WorkTypeSerializer
+    queryset = WorkType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class AgeScopeSingleListAPIView(ListAPIView):
+    serializer_class = serializers_singleterm.AgeScopeSerializer
+    queryset = AgeScope.objects.all()
+    permission_classes = [IsAuthenticated]
