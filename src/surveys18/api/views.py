@@ -38,15 +38,19 @@ review_logger = logging.getLogger('review')
 system_logger = logging.getLogger('system')
 
 
-class SurveyPagination(pagination.PageNumberPagination):
+class ThirtyPagination(pagination.PageNumberPagination):
     page_size = 30
+
+
+class ThousandPagination(pagination.PageNumberPagination):
+    page_size = 1000
 
 
 class SurveyListAPIView(ListAPIView):
     serializer_class = SurveySerializer
     filter_backends = [SearchFilter, OrderingFilter]
     permission_classes = [IsAuthenticated]
-    pagination_class = SurveyPagination
+    pagination_class = ThirtyPagination
     search_fields = ['farmer_id']
 
     def get_queryset(self, *args, **kwargs):
@@ -98,24 +102,44 @@ class SurveySingleListAPIView(ListAPIView):
     serializer_class = serializers_singleton.SurveySerializer
     queryset = Survey.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = ThirtyPagination
 
 
 class ShortTermHireSingleListAPIView(ListAPIView):
     serializer_class = serializers_singleton.ShortTermHireSerializer
     queryset = ShortTermHire.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = ThirtyPagination
+
+    search_fields = ['survey__id']
+
+    def get_queryset(self, *args, **kwargs):
+        survey_id = self.request.GET.get('survey_id')
+        if survey_id:
+            return self.queryset.filter(survey__id=survey_id)
+        return self.queryset
 
 
 class LongTermHireSingleListAPIView(ListAPIView):
     serializer_class = serializers_singleton.LongTermHireSerializer
     queryset = LongTermHire.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = ThirtyPagination
+
+    search_fields = ['survey__id']
+
+    def get_queryset(self, *args, **kwargs):
+        survey_id = self.request.GET.get('survey_id')
+        if survey_id:
+            return self.queryset.filter(survey__id=survey_id)
+        return self.queryset
 
 
 class NumberWorkersSingleListAPIView(ListAPIView):
     serializer_class = serializers_singleton.NumberWorkersSerializer
     queryset = NumberWorkers.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = ThirtyPagination
 
 
 class WorkTypeSingleListAPIView(ListAPIView):
