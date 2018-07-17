@@ -19,7 +19,12 @@
             <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API介接 <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="{% url 'surveys18:builder:api:create' %}" target="_blank">匯入</a></li>
-                <li><a href="{% url 'surveys18:api:list' %}" target="_blank">Survey(Nested)</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nested</li>
+                <li><a href="{% url 'surveys18:api:list' %}" target="_blank">Survey</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Singleton</li>
+                <li><a href="{% url 'surveys18:api:list_singleton_contenttype' %}" target="_blank">ContentType</a></li>
                 <li><a href="{% url 'surveys18:api:list_singleton_survey' %}" target="_blank">Survey</a></li>
                 <li><a href="{% url 'surveys18:api:list_singleton_longtermhire' %}" target="_blank">LongTermHire</a></li>
                 <li><a href="{% url 'surveys18:api:list_singleton_shorttermhire' %}" target="_blank">ShortTermHire</a></li>
