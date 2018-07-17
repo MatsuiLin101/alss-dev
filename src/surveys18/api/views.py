@@ -121,7 +121,7 @@ class ShortTermHireSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.ShortTermHireSerializer
     queryset = ShortTermHire.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
     search_fields = ['survey__id']
 
@@ -136,7 +136,7 @@ class LongTermHireSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.LongTermHireSerializer
     queryset = LongTermHire.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
     search_fields = ['survey__id']
 
@@ -151,7 +151,7 @@ class NumberWorkersSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.NumberWorkersSerializer
     queryset = NumberWorkers.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
 
 class WorkTypeSingletonListAPIView(ListAPIView):
