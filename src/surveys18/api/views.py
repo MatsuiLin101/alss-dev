@@ -32,7 +32,7 @@ from surveys18.models import(
     AgeScope,
 )
 
-from . import serializers_singleterm
+from . import serializers_singleton
 
 review_logger = logging.getLogger('review')
 system_logger = logging.getLogger('system')
@@ -40,6 +40,7 @@ system_logger = logging.getLogger('system')
 
 class SurveyPagination(pagination.PageNumberPagination):
     page_size = 30
+
 
 class SurveyListAPIView(ListAPIView):
     serializer_class = SurveySerializer
@@ -91,40 +92,39 @@ class SurveyUpdateAPIView(UpdateAPIView):
             return JsonResponse(data=e, safe=False)
 
 
-
 # serializer singleterm
 
 class SurveySingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.SurveySerializer
+    serializer_class = serializers_singleton.SurveySerializer
     queryset = Survey.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class ShortTermHireSingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.ShortTermHireSerializer
+    serializer_class = serializers_singleton.ShortTermHireSerializer
     queryset = ShortTermHire.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class LongTermHireSingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.LongTermHireSerializer
+    serializer_class = serializers_singleton.LongTermHireSerializer
     queryset = LongTermHire.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class NumberWorkersSingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.NumberWorkersSerializer
+    serializer_class = serializers_singleton.NumberWorkersSerializer
     queryset = NumberWorkers.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class WorkTypeSingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.WorkTypeSerializer
+    serializer_class = serializers_singleton.WorkTypeSerializer
     queryset = WorkType.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class AgeScopeSingleListAPIView(ListAPIView):
-    serializer_class = serializers_singleterm.AgeScopeSerializer
+    serializer_class = serializers_singleton.AgeScopeSerializer
     queryset = AgeScope.objects.all()
     permission_classes = [IsAuthenticated]

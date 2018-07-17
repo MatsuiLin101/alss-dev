@@ -215,7 +215,7 @@ LOGGING = {
 }
 
 # Session Settings
-SESSION_COOKIE_AGE = 7200
+SESSION_COOKIE_AGE = 3600 * 12
 
 
 # rest_framework
