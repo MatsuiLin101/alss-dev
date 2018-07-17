@@ -98,7 +98,7 @@ $(document).ready(function() {
                 });
 
                 $.when(timer, ajax).done(function(timer, ajax){
-                    if(ajax[0].length > 0){
+                    if(ajax[0].results.length > 0){
                         $('[data-partial]').hide();
                         $('[data-partial="survey"]').show();
                         $('[data-partial="survey"] .panel').show();
@@ -177,15 +177,16 @@ var GetFarmerData = function (url, fid, readonly) {
             readonly: readonly,
         },
         success: function (data) {
-            if (data.length > 0) {
-                var firstPageObj = $.grep(data, function (survey) {
+            results = data.results;
+            if (results.length > 0) {
+                var firstPageObj = $.grep(results, function (survey) {
                     return survey.page == 1
                 });
                 if (firstPageObj.length > 0) {
                     Reset();
                     CloneData = {};
                     /* set surveys */
-                    data.forEach(function(survey, i){
+                    results.forEach(function(survey, i){
                         CloneData[survey.id] = survey;
                         Set(survey, survey.id);
                     })
