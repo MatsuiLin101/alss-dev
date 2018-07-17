@@ -98,18 +98,30 @@ class SurveyUpdateAPIView(UpdateAPIView):
 
 # serializer singleterm
 
-class SurveySingleListAPIView(ListAPIView):
+class ContentTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ContentTypeSerializer
+    queryset = ContentType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(
+            Q(app_label='surveys18', model='longtermhire') |
+            Q(app_label='surveys18', model='shorttermhire')
+        )
+
+
+class SurveySingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.SurveySerializer
     queryset = Survey.objects.all()
     permission_classes = [IsAuthenticated]
     pagination_class = ThirtyPagination
 
 
-class ShortTermHireSingleListAPIView(ListAPIView):
+class ShortTermHireSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.ShortTermHireSerializer
     queryset = ShortTermHire.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
     search_fields = ['survey__id']
 
@@ -120,11 +132,11 @@ class ShortTermHireSingleListAPIView(ListAPIView):
         return self.queryset
 
 
-class LongTermHireSingleListAPIView(ListAPIView):
+class LongTermHireSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.LongTermHireSerializer
     queryset = LongTermHire.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
     search_fields = ['survey__id']
 
@@ -135,20 +147,22 @@ class LongTermHireSingleListAPIView(ListAPIView):
         return self.queryset
 
 
-class NumberWorkersSingleListAPIView(ListAPIView):
+class NumberWorkersSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.NumberWorkersSerializer
     queryset = NumberWorkers.objects.all()
     permission_classes = [IsAuthenticated]
-    pagination_class = ThirtyPagination
+    pagination_class = ThousandPagination
 
 
-class WorkTypeSingleListAPIView(ListAPIView):
+class WorkTypeSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.WorkTypeSerializer
     queryset = WorkType.objects.all()
     permission_classes = [IsAuthenticated]
 
 
-class AgeScopeSingleListAPIView(ListAPIView):
+class AgeScopeSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.AgeScopeSerializer
     queryset = AgeScope.objects.all()
     permission_classes = [IsAuthenticated]
+
+

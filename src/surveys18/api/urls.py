@@ -3,22 +3,25 @@ from django.conf.urls import url
 from .views import (
     SurveyListAPIView,
     SurveyUpdateAPIView,
-    SurveySingleListAPIView,
-    ShortTermHireSingleListAPIView,
-    LongTermHireSingleListAPIView,
-    NumberWorkersSingleListAPIView,
-    AgeScopeSingleListAPIView,
-    WorkTypeSingleListAPIView,
+
+    ContentTypeSingletonListAPIView,
+    SurveySingletonListAPIView,
+    ShortTermHireSingletonListAPIView,
+    LongTermHireSingletonListAPIView,
+    NumberWorkersSingletonListAPIView,
+    AgeScopeSingletonListAPIView,
+    WorkTypeSingletonListAPIView,
 )
 
 urlpatterns = [
     url(r'^$', SurveyListAPIView.as_view(), name='list'),
     url(r'^update/$', SurveyUpdateAPIView.as_view(), name='update'),
     # serializer singleton
-    url(r'^survey/$', SurveySingleListAPIView.as_view(), name='list_singleton_survey'),
-    url(r'^shorttermhire/$', ShortTermHireSingleListAPIView.as_view(), name='list_singleton_shorttermhire'),
-    url(r'^longtermhire/$', LongTermHireSingleListAPIView.as_view(), name='list_singleton_longtermhire'),
-    url(r'^numberworkers/$', NumberWorkersSingleListAPIView.as_view(), name='list_singleton_numberworkers'),
-    url(r'^worktype/$', WorkTypeSingleListAPIView.as_view(), name='list_singleton_worktype'),
-    url(r'^agescope/$', AgeScopeSingleListAPIView.as_view(), name='list_singleton_agescope'),
+    url(r'^survey/$', SurveySingletonListAPIView.as_view(), name='list_singleton_survey'),
+    url(r'^contenttype/$', ContentTypeSingletonListAPIView.as_view(), name='list_singleton_contenttype'),
+    url(r'^shorttermhire/$', ShortTermHireSingletonListAPIView.as_view(), name='list_singleton_shorttermhire'),
+    url(r'^longtermhire/$', LongTermHireSingletonListAPIView.as_view(), name='list_singleton_longtermhire'),
+    url(r'^numberworkers/$', NumberWorkersSingletonListAPIView.as_view(), name='list_singleton_numberworkers'),
+    url(r'^worktype/$', WorkTypeSingletonListAPIView.as_view(), name='list_singleton_worktype'),
+    url(r'^agescope/$', AgeScopeSingletonListAPIView.as_view(), name='list_singleton_agescope'),
 ]
