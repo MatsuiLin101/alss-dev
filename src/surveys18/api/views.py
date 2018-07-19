@@ -28,8 +28,43 @@ from surveys18.models import(
     ShortTermHire,
     LongTermHire,
     NumberWorkers,
-    WorkType,
+    ShortTermLack,
+    LongTermLack,
+    NoSalaryHire,
+    Subsidy,
+    Refuse,
+    Population,
+    PopulationAge,
+    CropMarketing,
+    LivestockMarketing,
+    Unit,
+    Product,
+    Business,
+    LandType,
+    LandArea,
+    Phone,
+    AddressMatch,
+    AnnualIncome,
     AgeScope,
+    WorkType,
+    RefuseReason,
+    FarmerWorkDay,
+    OtherFarmWork,
+    Relationship,
+    EducationLevel,
+    LifeStyle,
+    Gender,
+    Loss,
+    Facility,
+    ProductType,
+    Contract,
+    ManagementType,
+    FarmRelatedBusiness,
+    LandStatus,
+    Lack,
+    IncomeRange,
+    MarketType,
+    Month,
 )
 
 from . import serializers_singleton
@@ -96,7 +131,7 @@ class SurveyUpdateAPIView(UpdateAPIView):
             return JsonResponse(data=e, safe=False)
 
 
-# serializer singleterm
+# Serializer Singleton
 
 class ContentTypeSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.ContentTypeSerializer
@@ -154,11 +189,126 @@ class NumberWorkersSingletonListAPIView(ListAPIView):
     pagination_class = ThousandPagination
 
 
-class WorkTypeSingletonListAPIView(ListAPIView):
-    serializer_class = serializers_singleton.WorkTypeSerializer
-    queryset = WorkType.objects.all()
+class ShortTermLackSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ShortTermLackSerializer
+    queryset = ShortTermLack.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
 
+
+class LongTermLackSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LongTermLackSerializer
+    queryset = LongTermLack.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class NoSalaryHireSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.NoSalaryHireSerializer
+    queryset = NoSalaryHire.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class SubsidySingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.SubsidySerializer
+    queryset = Subsidy.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class RefuseSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.RefuseSerializer
+    queryset = Refuse.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class PopulationSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.PopulationSerializer
+    queryset = Population.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class PopulationAgeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.PopulationAgeSerializer
+    queryset = PopulationAge.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class CropMarketingSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.CropMarketingSerializer
+    queryset = CropMarketing.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class LivestockMarketingSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LivestockMarketingSerializer
+    queryset = LivestockMarketing.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class UnitSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.UnitSerializer
+    queryset = Unit.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class ProductSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ProductSerializer
+    queryset = Product.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class BusinessSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.BusinessSerializer
+    queryset = Business.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class LandTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LandTypeSerializer
+    queryset = LandType.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class LandAreaSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LandAreaSerializer
+    queryset = LandArea.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class PhoneSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.PhoneSerializer
+    queryset = Phone.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class AddressMatchSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.AddressMatchSerializer
+    queryset = AddressMatch.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+class AnnualIncomeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.AnnualIncomeSerializer
+    queryset = AnnualIncome.objects.all()
+    permission_classes = [IsAuthenticated]
+    pagination_class = ThousandPagination
+
+
+# Sirializer Singleton No Pagination
 
 class AgeScopeSingletonListAPIView(ListAPIView):
     serializer_class = serializers_singleton.AgeScopeSerializer
@@ -166,3 +316,115 @@ class AgeScopeSingletonListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class WorkTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.WorkTypeSerializer
+    queryset = WorkType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class RefuseReasonSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.RefuseReasonSerializer
+    queryset = RefuseReason.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class FarmerWorkDaySingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.FarmerWorkDaySerializer
+    queryset = FarmerWorkDay.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class OtherFarmWorkSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.OtherFarmWorkSerializer
+    queryset = OtherFarmWork.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class RelationshipSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.RelationshipSerializer
+    queryset = Relationship.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class EducationLevelSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.EducationLevelSerializer
+    queryset = EducationLevel.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class LifeStyleSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LifeStyleSerializer
+    queryset = LifeStyle.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class GenderSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.GenderSerializer
+    queryset = Gender.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class LossSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LossSerializer
+    queryset = Loss.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class FacilitySingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.FacilitySerializer
+    queryset = Facility.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class ProductTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ProductTypeSerializer
+    queryset = ProductType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class ContractSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ContractSerializer
+    queryset = Contract.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class ManagementTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.ManagementTypeSerializer
+    queryset = ManagementType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class FarmRelatedBusinessSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.FarmRelatedBusinessSerializer
+    queryset = FarmRelatedBusiness.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class LandStatusSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LandStatusSerializer
+    queryset = LandStatus.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class LackSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.LackSerializer
+    queryset = Lack.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class IncomeRangeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.IncomeRangeSerializer
+    queryset = IncomeRange.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class MarketTypeSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.MarketTypeSerializer
+    queryset = MarketType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+class MonthSingletonListAPIView(ListAPIView):
+    serializer_class = serializers_singleton.MonthSerializer
+    queryset = Month.objects.all()
+    permission_classes = [IsAuthenticated]
