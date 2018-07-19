@@ -12,9 +12,9 @@ body {
     }
 }
 
-@media(min-width: 992px) {
+@media (min-width: 992px){
     #wrapper .affix {
-      padding-left: 30px;
+      padding-left: 15px;
     }
 }
 
@@ -47,6 +47,10 @@ label.fw-400 {
     max-width: 80px;
 }
 
+input.form-control{
+    min-width: 70px;
+}
+
 .w-50 {
     width: 50px;
 }
@@ -73,3 +77,26 @@ div[data-partial=datatable] {
 }
 
 
+@media(max-width: 767px) {
+    .alert .btn.pull-right{
+        display: none;
+  }
+}
+
+@media (max-width: 767px) {
+    .table-responsive .dropdown-menu {
+        position: static !important;
+    }
+}
+
+@media (min-width: 1500px) {
+    .table-responsive {
+        overflow: visible;
+    }
+}
+
+
+.dropdown-menu {
+   max-height: 600px;
+   overflow-y: scroll;
+}

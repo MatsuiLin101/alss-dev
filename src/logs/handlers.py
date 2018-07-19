@@ -1,10 +1,10 @@
 import logging
 import traceback
-from .models import ReviewLog
 
 
 class ReviewLogHandler(logging.Handler):
     def emit(self, record):
+        from .models import ReviewLog
 
         trace = None
 

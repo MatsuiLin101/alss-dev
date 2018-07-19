@@ -14,6 +14,10 @@ body {
     padding: 1rem;
 }
 
+.pb-1 {
+    padding-bottom: 1rem;
+}
+
 @media(min-width: 992px) {
     .w-2 {
         width: 2rem;
@@ -53,3 +57,4 @@ body {
     font-weight: 200;
     text-decoration: none;
 }
+

@@ -1,4 +1,12 @@
-var csrftoken = $.cookie('csrftoken');
+/* pace settings */
+Pace.options = {
+  ajax: false,
+}
+
+/* jQuery loading settings */
+$.loading.default.tip = '請稍後';
+$.loading.default.imgPath = '../static/vendor/ajax-loading/img/ajax-loading.gif';
+
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -7,10 +15,10 @@ function csrfSafeMethod(method) {
 
 
 function FixAffixWidth() {
-    if ($(window).width() > 992) {
+    if ($(window).width() > 768) {
         /* Fix affix width in Firefox */
-        var affixMaxWidth = $('#wrapper > .row > .col-md-2').outerWidth();
-        $('#wrapper .affix').css('max-width', affixMaxWidth - 30);
+        var affixMaxWidth = $('#wrapper > .row > .col-lg-2').outerWidth();
+        $('#wrapper .affix').css('max-width', affixMaxWidth - 30).css('width', '100%');
 
     }else{
         $('#wrapper .affix').css('max-width', 'none');
@@ -78,20 +86,19 @@ $(document).ready(function() {
             $.when(
                 $.Deferred(showLoading)
             ).done(function(){
-                // a trivial timer, just for demo purposes -
                 // it resolves itself after 1 seconds
                 var timer = $.Deferred();
                 setTimeout(timer.resolve, 1000);
 
                 // turn on or turn off validation
-                Helper.LogHandler.ValidationActive = readonly != true;
+                Helper.LogHandler.ValidationActive = true; //readonly != true;
 
                 var ajax = GetFarmerData(url, farmerId, readonly).fail(function(){
                     Helper.Dialog.ShowAlert('很抱歉，當筆資料查詢錯誤，請稍後再試。');
                 });
 
                 $.when(timer, ajax).done(function(timer, ajax){
-                    if(ajax[0].length > 0){
+                    if(ajax[0].results.length > 0){
                         $('[data-partial]').hide();
                         $('[data-partial="survey"]').show();
                         $('[data-partial="survey"] .panel').show();
@@ -101,8 +108,9 @@ $(document).ready(function() {
                     }
                 })
             }).done(function(){
-                $('#farmerId').val('');
+                Helper.LogHandler.CollectError.Init();
                 Loading.close();
+                $(window).scrollTop(0);
             })
         } else {
             Helper.Dialog.ShowAlert('請輸入農戶編號！');
@@ -118,7 +126,6 @@ $(document).ready(function() {
                     $.Deferred(showLoading)
                 ).done(function(){
 
-                    // a trivial timer, just for demo purposes -
                     // it resolves itself after 1 seconds
                     var timer = $.Deferred();
                     setTimeout(timer.resolve, 1000);
@@ -137,11 +144,12 @@ $(document).ready(function() {
                     ).done(function(){
                         // this won't be called until *all* the AJAX and the timer have finished
                         Reset();
-                        Object.values(CloneData).forEach(function(survey, i){
-                            Set(survey, survey.id);
+                        Object.keys(CloneData).forEach(function(key, i){
+                            Set(CloneData[key], CloneData[key].id);
                         });
-                        // update review log
+                        // create or update review log
                         data = {
+                            initial_errors: Helper.LogHandler.CollectError.InitialErrors,
                             current_errors: Helper.LogHandler.CollectError.GetCurrent(),
                             object_id: CloneData[MainSurveyId].id,
                             app_label: 'surveys18',
@@ -169,15 +177,16 @@ var GetFarmerData = function (url, fid, readonly) {
             readonly: readonly,
         },
         success: function (data) {
-            if (data.length > 0) {
-                var firstPageObj = $.grep(data, function (survey) {
+            results = data.results;
+            if (results.length > 0) {
+                var firstPageObj = $.grep(results, function (survey) {
                     return survey.page == 1
                 });
                 if (firstPageObj.length > 0) {
                     Reset();
                     CloneData = {};
                     /* set surveys */
-                    data.forEach(function(survey, i){
+                    results.forEach(function(survey, i){
                         CloneData[survey.id] = survey;
                         Set(survey, survey.id);
                     })
@@ -204,10 +213,13 @@ var SetFarmerData = function (url, data) {
             if ('id' in data) {
                 CloneData[data.id] = data;
             }
+            else{
+                console.log(data);
+            }
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
             }
         }
     })
@@ -228,7 +240,7 @@ var SetLogData = function (data) {
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
             }
         }
     })

@@ -89,6 +89,7 @@ class Survey(Model):
                             related_name='surveys18',
                             verbose_name=_('Lack'))
     management_types = ManyToManyField('surveys18.ManagementType',
+                                       blank=True,
                                        related_name='surveys',
                                        verbose_name=_('Management Types'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))

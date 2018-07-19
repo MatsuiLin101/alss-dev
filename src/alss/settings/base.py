@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rest_framework',
     'django_db_logger',
+    'rangefilter',
+    'rest_framework.authtoken',
 
     # local
     'logs',
@@ -179,29 +181,48 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Logging
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-#         },
-#         'simple': {
-#             'format': '%(levelname)s %(asctime)s %(message)s'
-#         },
-#     },
-#     'handlers': {
-#         'review_log_handler': {
-#             'level': 'DEBUG',
-#             'class': 'logs.handlers.ReviewLogHandler'
-#         },
-#     },
-#     'loggers': {
-#         'review': {
-#             'handlers': ['review_log_handler'],
-#             'level': 'DEBUG'
-#         },
-#     }
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        'review_log_handler': {
+            'level': 'DEBUG',
+            'class': 'logs.handlers.ReviewLogHandler'
+        },
+        'system_log_handler': {
+            'level': 'DEBUG',
+            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler'
+        },
+    },
+    'loggers': {
+        'review': {
+            'handlers': ['review_log_handler'],
+            'level': 'DEBUG'
+        },
+        'system': {
+            'handlers': ['system_log_handler'],
+            'level': 'DEBUG'
+        },
+    }
+}
+
+# Session Settings
+SESSION_COOKIE_AGE = 3600 * 12
 
 
+# rest_framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}

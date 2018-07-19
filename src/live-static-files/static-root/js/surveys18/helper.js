@@ -6,10 +6,6 @@ var FarmerIds = $.parseJSON($('#fid').val());
 var CloneData = null;
 var MainSurveyId = 0;
 
-/* jQuery Loading settings */
-$.loading.default.tip = '請稍後';
-$.loading.default.imgPath = '../static/vendor/ajax-loading/img/ajax-loading.gif';
-
 /* BootstrapDialog settings */
 BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
 BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
@@ -67,7 +63,6 @@ var Set = function (data, surveyId) {
         AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
         AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
         AnnualIncomeHelper.Validation.AnnualTotal.Validate();
-        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
         PopulationAgeHelper.Validation.MemberCount.Validate();
         PopulationHelper.Validation.MarketType3Checked.Validate();
         SurveyHelper.Hire.Validation.HireExist.Validate();
@@ -153,7 +148,8 @@ var Helper = {
                                 title: '上次更新',
                                 data: 'update_datetime',
                             },
-                        ]
+                        ],
+                        order: [[ 4, "desc" ]],
                     });
                 }else{
                     this.Reload();
@@ -179,7 +175,7 @@ var Helper = {
     NumberValidate: function (number) {
         return $.isNumeric(number) && Math.floor(number) == number && number >= 0;
     },
-    LogHandler: {        
+    LogHandler: {
         Setup: function(){
             this.Bind();
             this.ValidationActive = true;
@@ -228,6 +224,9 @@ var Helper = {
                 if (finds.length == 0 && alert.skippedErrorGuids.indexOf(guid) == -1) {
                     alert.message.append($ui);
                 }
+                if (finds.length == 1){
+                    finds.replaceWith($ui); // update text
+                }
             } else {
                 finds.remove();
             }
@@ -253,6 +252,11 @@ var Helper = {
             alert.alert();
         },
         CollectError: {
+            InitialErrors: null,
+            Init: function(){
+                // init only once after get survey
+                this.InitialErrors = this.GetCurrent();
+            },
             GetCurrent: function(){
                 var counter = 0;
                 $('.alert-block.alert-danger').each(function(){
@@ -384,6 +388,13 @@ var Helper = {
             }
         });
     },
+    BindCreateIndex: function($tbody){
+        $tbody[0].refreshIndex = function(){
+            $(this).find('tr').each(function(i, row){
+                $(row).find('[name="index"]').html(i+1);
+            })
+        }
+    },
 }
 
 
@@ -488,6 +499,12 @@ var SurveyHelper = {
     },
     Phone: {
         Object: {
+            New: function(surveyId, phone){
+                return {
+                    survey: surveyId,
+                    phone: phone ? phone : null,
+                }
+            },
             Filter: function(id){
                 var objects = CloneData[MainSurveyId].phones.filter(function(obj){
                     return obj.id == id;
@@ -501,7 +518,12 @@ var SurveyHelper = {
             this.Container.change(function(){
                 if(CloneData) {
                     var id = $(this).data('phone-id');
-                    SurveyHelper.Phone.Object.Filter(id).phone = $(this).val();
+                    var obj = SurveyHelper.Phone.Object.Filter(id);
+                    if(!obj){
+                        obj = SurveyHelper.Phone.Object.New(MainSurveyId);
+                        CloneData[MainSurveyId].phones.push(obj);
+                    }
+                    obj.phone = $(this).val();
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.Phone.Validation.Empty.Validate();
                     }
@@ -519,7 +541,8 @@ var SurveyHelper = {
             }
         },
         Reset: function(){
-                SurveyHelper.Phone.Container.val('');
+            SurveyHelper.Phone.Container.val('');
+            SurveyHelper.Phone.Container.attr('data-phone-id', '');
         },
         Validation: {
             Empty: {
@@ -545,27 +568,18 @@ var SurveyHelper = {
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
             this.Container.change(function(){
-
-                /* make it radio */
-                var deChecked = function(input){
-                    var deferred = $.Deferred();
-                    SurveyHelper.Hire.Container.not(input).prop('checked', false);
-                    deferred.resolve();
-                }
-
                 if(CloneData) {
-                    $.when(deChecked(this)).then(function(){
-                        var field = $(this).data('field');
-                        if(field == 'hire')
-                            CloneData[MainSurveyId].hire = this.checked;
-                        else if(field == 'nonhire')
-                            CloneData[MainSurveyId].non_hire = this.checked;
+                    var field = $(this).data('field');
+                    if(field == 'hire')
+                        CloneData[MainSurveyId].hire = this.checked;
+                    else if(field == 'nonhire')
+                        CloneData[MainSurveyId].non_hire = this.checked;
 
-                        if(Helper.LogHandler.ValidationActive){
-                            SurveyHelper.Hire.Validation.Empty.Validate();
-                            SurveyHelper.Hire.Validation.HireExist.Validate();
-                        }
-                    })
+                    if(Helper.LogHandler.ValidationActive){
+                        SurveyHelper.Hire.Validation.Empty.Validate();
+                        SurveyHelper.Hire.Validation.HireExist.Validate();
+                        SurveyHelper.Hire.Validation.Duplicate.Validate();
+                    }
                 }
             })
         },
@@ -575,7 +589,7 @@ var SurveyHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.Hire.Validation.Empty.Validate();
-                SurveyHelper.Hire.Validation.SingleSelection.Validate();
+                SurveyHelper.Hire.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
@@ -591,11 +605,11 @@ var SurveyHelper = {
                     Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
                 },
             },
-            SingleSelection: {
+            Duplicate: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
                     var con = SurveyHelper.Hire.Container.filter(':checked').length > 1;
-                    var msg = '限註記一個項目';
+                    var msg = '有外僱及無外僱人力不得重複勾選';
                     Helper.LogHandler.Log(con, SurveyHelper.Hire.Alert, msg, this.Guids[0]);
                 },
             },
@@ -644,7 +658,7 @@ var SurveyHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.Lack.Validation.Empty.Validate();
-                        SurveyHelper.Lack.Validation.SingleSelection.Validate();
+                        SurveyHelper.Lack.Validation.Duplicate.Validate();
                         SurveyHelper.Lack.Validation.LackExist.Validate();
                     }
                 }
@@ -659,7 +673,7 @@ var SurveyHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.Lack.Validation.Empty.Validate();
-                SurveyHelper.Lack.Validation.SingleSelection.Validate();
+                SurveyHelper.Lack.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
@@ -674,7 +688,7 @@ var SurveyHelper = {
                     Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[0]);
                 },
             },
-            SingleSelection: {
+            Duplicate: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
                     var con = SurveyHelper.Lack.Container.filter(':checked').length > 1;
@@ -719,9 +733,6 @@ var SurveyHelper = {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
             this.Container.change(function(){
-                /* make it radio */
-                SurveyHelper.AddressMatch.Container.not($(this)).prop('checked', false);
-
                 if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
@@ -729,9 +740,9 @@ var SurveyHelper = {
                     else if(field == 'mismatch')
                         CloneData[MainSurveyId].address_match.mismatch = $(this).prop('checked');
                 }
+
                 if(Helper.LogHandler.ValidationActive) {
                     SurveyHelper.Address.Validation.AddressRequire.Validate();
-                    SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
                     SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
                 }
             })
@@ -741,7 +752,6 @@ var SurveyHelper = {
             this.Container.filter('[data-field="mismatch"]').prop('checked', obj.address_match.mismatch);
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.Address.Validation.AddressRequire.Validate();
-                SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
                 SurveyHelper.AddressMatch.Validation.Duplicate.Validate();
             }
         },
@@ -749,18 +759,6 @@ var SurveyHelper = {
             this.Container.prop('checked', false);
         },
         Validation: {
-            AddressMatchRequire: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var checked = SurveyHelper.AddressMatch.Container
-                                 .filter('[data-field="mismatch"]')
-                                 .prop('checked');
-                    var empty = !SurveyHelper.Address.Container.val();
-                    var con = !checked && !empty;
-                    var msg = '填寫地址，請勾選地址與調查名冊不同';
-                    Helper.LogHandler.Log(con, SurveyHelper.Alert, msg, this.Guids[0]);
-                },
-            },
             Duplicate: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
@@ -780,7 +778,6 @@ var SurveyHelper = {
                 }
                 if(Helper.LogHandler.ValidationActive) {
                     SurveyHelper.Address.Validation.AddressRequire.Validate();
-                    SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
                 }
             })
         },
@@ -788,7 +785,6 @@ var SurveyHelper = {
             this.Container.val(obj.address_match.address);
             if(Helper.LogHandler.ValidationActive) {
                 SurveyHelper.Address.Validation.AddressRequire.Validate();
-                SurveyHelper.AddressMatch.Validation.AddressMatchRequire.Validate();
             }
         },
         Reset: function(){
@@ -1242,7 +1238,7 @@ var ManagementTypeHelper = {
 
             if(Helper.LogHandler.ValidationActive){
                 ManagementTypeHelper.Validation.Empty.Validate();
-                ManagementTypeHelper.Validation.SingleSelection.Validate();
+                ManagementTypeHelper.Validation.Duplicate.Validate();
             }
         },
         Reset: function(){
@@ -1262,7 +1258,7 @@ var ManagementTypeHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         ManagementTypeHelper.Validation.Empty.Validate();
-                        ManagementTypeHelper.Validation.SingleSelection.Validate();
+                        ManagementTypeHelper.Validation.Duplicate.Validate();
                     }
                 }
             })
@@ -1277,7 +1273,7 @@ var ManagementTypeHelper = {
                 Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guids[0]);
             },
         },
-        SingleSelection: {
+        Duplicate: {
             Guids: Helper.Guid.CreateMulti(),
             Validate: function(){
                 var con = CloneData[MainSurveyId].management_types.length > 1;
@@ -1297,6 +1293,7 @@ var CropMarketingHelper = {
         this.CropMarketing.Bind($row);
         this.CropMarketing.$Row = $row;
         this.Adder.Bind();
+        Helper.BindCreateIndex(this.CropMarketing.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -1350,6 +1347,7 @@ var CropMarketingHelper = {
 
                 CropMarketingHelper.CropMarketing.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -1367,6 +1365,8 @@ var CropMarketingHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
+                        CropMarketingHelper.CropMarketing.Container[0].refreshIndex();
+
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(CropMarketingHelper.Alert, $tr, $nextAll);
                             AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
@@ -1419,6 +1419,7 @@ var CropMarketingHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     CropMarketingHelper.CropMarketing.Container.append($row);
+                    CropMarketingHelper.CropMarketing.Container[0].refreshIndex();
 
                     if(Helper.LogHandler.ValidationActive){
                         CropMarketingHelper.Validation.RequiredField.Validate($row);
@@ -1472,6 +1473,7 @@ var LivestockMarketingHelper = {
         this.LivestockMarketing.Bind($row);
         this.LivestockMarketing.$Row = $row;
         this.Adder.Bind();
+        Helper.BindCreateIndex(this.LivestockMarketing.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -1523,6 +1525,7 @@ var LivestockMarketingHelper = {
 
                 LivestockMarketingHelper.LivestockMarketing.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -1539,7 +1542,7 @@ var LivestockMarketingHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
+                        LivestockMarketingHelper.LivestockMarketing.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(LivestockMarketingHelper.Alert, $tr, $nextAll);
                             AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
@@ -1589,6 +1592,7 @@ var LivestockMarketingHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     LivestockMarketingHelper.LivestockMarketing.Container.append($row);
+                    LivestockMarketingHelper.LivestockMarketing.Container[0].refreshIndex();
 
                     if(Helper.LogHandler.ValidationActive){
                         LivestockMarketingHelper.Validation.RequiredField.Validate($row);
@@ -1672,6 +1676,7 @@ var AnnualIncomeHelper = {
         },
         Reset: function(){
             this.Container.prop('checked', false);
+            this.Container.attr('data-annualincome-id', '')
         },
         Bind: function(){
             this.Container.change(function(){
@@ -1701,7 +1706,6 @@ var AnnualIncomeHelper = {
                                 AnnualIncomeHelper.Validation.CropMarketingExist.Validate();
                                 AnnualIncomeHelper.Validation.LivestockMarketingExist.Validate();
                                 AnnualIncomeHelper.Validation.AnnualTotal.Validate();
-                                AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
                                 CropMarketingHelper.Validation.IncomeChecked.Validate();
                                 LivestockMarketingHelper.Validation.IncomeChecked.Validate();
                                 BusinessHelper.Validation.MarketType4Checked.Validate();
@@ -1818,16 +1822,6 @@ var AnnualIncomeHelper = {
                 Helper.LogHandler.Log(countTotal > 0, AnnualIncomeHelper.Info, msg, this.Guids[3], null, false);
             },
         },
-        LifeStyle3Selected: {
-            Guids: Helper.Guid.CreateMulti(),
-            Validate: function(){
-                var lifeStyleChecked = PopulationHelper.Population.Container.find('[name="lifestyle"] > option[value="3"]:selected').length > 0;
-                var marketTypeChecked = AnnualIncomeHelper.AnnualIncome.Container.filter('[data-markettype-id="3"]:checked').length > 0;
-                var con = !lifeStyleChecked && marketTypeChecked;
-                var msg = '有勾選『受託提供農事及畜牧服務』之銷售額區間，【問項2.2】戶內應有人勾選『受託提供農事及畜牧服務』之主要生活型態';
-                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
-            },
-        },
     },
 }
 var PopulationAgeHelper = {
@@ -1844,6 +1838,13 @@ var PopulationAgeHelper = {
     },
     PopulationAge: {
         Object: {
+            New: function(surveyId, ageScopeId, genderId){
+                return {
+                    survey: surveyId,
+                    age_scope: ageScopeId,
+                    gender: genderId,
+                }
+            },
             Filter: function(age_scope, gender){
                 var objects = CloneData[MainSurveyId].population_ages.filter(function(obj){
                     return obj.age_scope == age_scope && obj.gender == gender
@@ -1880,9 +1881,11 @@ var PopulationAgeHelper = {
                     var ageScopeId = $(this).data('agescope-id');
                     var genderId = $(this).data('gender-id');
                     var obj = PopulationAgeHelper.PopulationAge.Object.Filter(ageScopeId, genderId);
-                    if(obj){
-                        obj.count = parseInt($(this).val());
+                    if(!obj){
+                        obj = PopulationAgeHelper.PopulationAge.Object.New(MainSurveyId, ageScopeId, genderId);
+                        CloneData[MainSurveyId].population_ages.push(obj);
                     }
+                    obj.count = parseInt($(this).val());
                     if(Helper.LogHandler.ValidationActive){
                         PopulationAgeHelper.Validation.MemberCount.Validate();
                     }
@@ -1894,15 +1897,22 @@ var PopulationAgeHelper = {
         MemberCount: {
             Guids: Helper.Guid.CreateMulti(),
             Validate: function(){
-                var over15Count = 0;
+                var over15Male = 0;
+                var over15Female = 0;
                 PopulationAgeHelper.PopulationAge.Container
                 .filter('[data-agescope-id="5"]')
                 .each(function(){
                     var count = parseInt($(this).val());
-                    if(count) over15Count += count;
+                    var genderId = $(this).attr('data-gender-id');
+                    if(count){
+                        if(genderId == 1) over15Male += count;
+                        if(genderId == 2) over15Female += count
+                    }
                 })
-                var con = over15Count != PopulationHelper.Population.Container.find('tr').length;
-                var msg = '滿15歲以上男、女性人數，應等於【問項2.2】總人數';
+                var male = PopulationHelper.Population.Container.find('[name="gender"] > option[value="1"]:selected').length;
+                var female = PopulationHelper.Population.Container.find('[name="gender"] > option[value="2"]:selected').length;
+                var con = (over15Male != male) || (over15Female != female);
+                var msg = '滿15歲以上男、女性人數，應等於【問項2.2】男、女性人數';
                 Helper.LogHandler.Log(con, PopulationAgeHelper.Alert, msg, this.Guids[0]);
             },
         },
@@ -1919,6 +1929,7 @@ var PopulationHelper = {
         this.Population.Bind($row);
         this.Adder.Bind();
         this.Population.$Row = $row;
+        Helper.BindCreateIndex(this.Population.Container);
 
     },
     Reset: function () {
@@ -1970,9 +1981,9 @@ var PopulationHelper = {
 
                 population.guid = Helper.Guid.Create();
                 $row.attr('data-guid', population.guid);
-
                 PopulationHelper.Population.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -1989,6 +2000,7 @@ var PopulationHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
+                        PopulationHelper.Population.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(PopulationHelper.Alert, $tr, $nextAll);
                             PopulationAgeHelper.Validation.MemberCount.Validate();
@@ -2015,7 +2027,6 @@ var PopulationHelper = {
                     obj.life_style = parseInt($tr.find('[name="lifestyle"]').val());
                     obj.other_farm_work = parseInt($tr.find('[name="otherfarmwork"]').val());
 
-
                     if(Helper.LogHandler.ValidationActive){
                         PopulationHelper.Validation.RequiredField.Validate($tr);
                         PopulationHelper.Validation.BirthYear.Validate($tr);
@@ -2023,11 +2034,10 @@ var PopulationHelper = {
                         PopulationHelper.Validation.OtherFarmerWork.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         PopulationHelper.Validation.MarketType3Checked.Validate();
-                        AnnualIncomeHelper.Validation.LifeStyle3Selected.Validate();
+                        PopulationAgeHelper.Validation.MemberCount.Validate();
                     }
                 }
             })
-
             return $row;
         },
     },
@@ -2044,6 +2054,7 @@ var PopulationHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     PopulationHelper.Population.Container.append($row);
+                    PopulationHelper.Population.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         PopulationHelper.Validation.RequiredField.Validate($row);
                         PopulationAgeHelper.Validation.MemberCount.Validate();
@@ -2158,6 +2169,7 @@ var LongTermHireHelper = {
         this.LongTermHire.Bind($row);
         this.Adder.Bind();
         this.LongTermHire.$Row = $row;
+        Helper.BindCreateIndex(this.LongTermHire.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -2169,6 +2181,7 @@ var LongTermHireHelper = {
             LongTermHireHelper.LongTermHire.Container.find('tr').each(function(){
                 LongTermHireHelper.Validation.RequiredField.Validate($(this));
                 LongTermHireHelper.Validation.AvgWorkDay.Validate($(this));
+                LongTermHireHelper.Validation.LongTerm.Validate($(this));
             })
         }
     },
@@ -2211,6 +2224,7 @@ var LongTermHireHelper = {
 
                 LongTermHireHelper.LongTermHire.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -2236,7 +2250,7 @@ var LongTermHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-                        
+                        LongTermHireHelper.LongTermHire.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(LongTermHireHelper.Alert, $tr, $nextAll);
                             LongTermHireHelper.Alert.alert();
@@ -2259,15 +2273,15 @@ var LongTermHireHelper = {
                     obj.work_type = parseInt($tr.find('[name="worktype"]').val());
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.months = $tr.find('[name="month"]').val();
-                    obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
+                    obj.avg_work_day = parseFloat($tr.find('[name="avgworkday"]').val());
 
                     if(Helper.LogHandler.ValidationActive){
                         LongTermHireHelper.Validation.RequiredField.Validate($tr);
                         LongTermHireHelper.Validation.AvgWorkDay.Validate($tr);
+                        LongTermHireHelper.Validation.LongTerm.Validate($tr);
                     }
                 }
             })
-
             return $row;
         },
     },
@@ -2284,7 +2298,7 @@ var LongTermHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     LongTermHireHelper.LongTermHire.Container.append($row);
-
+                    LongTermHireHelper.LongTermHire.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         LongTermHireHelper.Validation.RequiredField.Validate($row);
                     }
@@ -2318,6 +2332,16 @@ var LongTermHireHelper = {
                 Helper.LogHandler.Log(con, LongTermHireHelper.Alert, msg, this.Guids[0], guid);
             },
         },
+        LongTerm: {
+            Guids: Helper.Guid.CreateMulti(),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = LongTermHireHelper.LongTermHire.Container.find('tr').index($row) + 1;
+                var con = $row.find('[name="month"]').val().length < 6;
+                var msg = '第<i class="row-index">{0}</i>列填列之月份應大於等於6個月'.format(index);
+                Helper.LogHandler.Log(con, LongTermHireHelper.Alert, msg, this.Guids[0], guid);
+            }
+        },
     },
 }
 var ShortTermHireHelper = {
@@ -2331,6 +2355,7 @@ var ShortTermHireHelper = {
         this.ShortTermHire.Bind($row);
         this.Adder.Bind();
         this.ShortTermHire.$Row = $row;
+        Helper.BindCreateIndex(this.ShortTermHire.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -2384,7 +2409,7 @@ var ShortTermHireHelper = {
 
                 ShortTermHireHelper.ShortTermHire.Container.append($row);
             })
-
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -2408,7 +2433,7 @@ var ShortTermHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
+                        ShortTermHireHelper.ShortTermHire.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(ShortTermHireHelper.Alert, $tr, $nextAll);
                             SurveyHelper.Hire.Validation.HireExist.Validate();
@@ -2427,10 +2452,10 @@ var ShortTermHireHelper = {
                     }
                     var obj = ShortTermHireHelper.ShortTermHire.Object.Filter(guid);
 
-                    obj.work_type = $tr.find('[name="worktype"]').val();
+                    obj.work_types = $tr.find('[name="worktype"]').val();
                     obj.number_workers = SurveyHelper.NumberWorker.Object.Collect($tr.find('[name="numberworker"]'));
                     obj.month = parseInt($tr.find('[name="month"]').val());
-                    obj.avg_work_day = parseInt($tr.find('[name="avgworkday"]').val());
+                    obj.avg_work_day = parseFloat($tr.find('[name="avgworkday"]').val());
                     
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermHireHelper.Validation.RequiredField.Validate($tr);
@@ -2454,7 +2479,7 @@ var ShortTermHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     ShortTermHireHelper.ShortTermHire.Container.append($row);
-                    
+                    ShortTermHireHelper.ShortTermHire.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermHireHelper.Validation.RequiredField.Validate($row);
                         ShortTermHireHelper.Validation.Over6Month.Validate();
@@ -2509,6 +2534,7 @@ var NoSalaryHireHelper = {
         this.NoSalaryHire.Bind($row);
         this.Adder.Bind();
         this.NoSalaryHire.$Row = $row;
+        Helper.BindCreateIndex(this.NoSalaryHire.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -2550,6 +2576,7 @@ var NoSalaryHireHelper = {
 
                 NoSalaryHireHelper.NoSalaryHire.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -2565,7 +2592,7 @@ var NoSalaryHireHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
+                        NoSalaryHireHelper.NoSalaryHire.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(NoSalaryHireHelper.Alert, $tr, $nextAll);
                             SurveyHelper.Hire.Validation.HireExist.Validate();
@@ -2607,7 +2634,7 @@ var NoSalaryHireHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     NoSalaryHireHelper.NoSalaryHire.Container.append($row);
-
+                    NoSalaryHireHelper.NoSalaryHire.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         NoSalaryHireHelper.Validation.RequiredField.Validate($row);
                     }
@@ -2639,6 +2666,7 @@ var LongTermLackHelper = {
         this.LongTermLack.Bind($row);
         this.Adder.Bind();
         this.LongTermLack.$Row = $row;
+        Helper.BindCreateIndex(this.LongTermLack.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -2649,6 +2677,7 @@ var LongTermLackHelper = {
         if(Helper.LogHandler.ValidationActive){
             LongTermLackHelper.LongTermLack.Container.find('tr').each(function(){
                 LongTermLackHelper.Validation.RequiredField.Validate($(this));
+                LongTermLackHelper.Validation.LongTerm.Validate($(this));
             })
         }
     },
@@ -2684,6 +2713,7 @@ var LongTermLackHelper = {
 
                 LongTermLackHelper.LongTermLack.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -2700,7 +2730,7 @@ var LongTermLackHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-
+                        LongTermLackHelper.LongTermLack.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(LongTermLackHelper.Alert, $tr, $nextAll);
                             SurveyHelper.Lack.Validation.LackExist.Validate();
@@ -2725,6 +2755,7 @@ var LongTermLackHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         LongTermLackHelper.Validation.RequiredField.Validate($tr);
+                        LongTermLackHelper.Validation.LongTerm.Validate($tr);
                     }
                 }
             })
@@ -2744,7 +2775,7 @@ var LongTermLackHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     LongTermLackHelper.LongTermLack.Container.append($row);
-
+                    LongTermLackHelper.LongTermLack.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         LongTermLackHelper.Validation.RequiredField.Validate($row);
                         SurveyHelper.Lack.Validation.LackExist.Validate();
@@ -2767,6 +2798,16 @@ var LongTermLackHelper = {
                 Helper.LogHandler.Log($row.find('[name="month"]').val().length == 0, LongTermLackHelper.Alert, makeString('缺工月份'), this.Guids[2], guid);
             },
         },
+        LongTerm: {
+            Guids: Helper.Guid.CreateMulti(),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = LongTermLackHelper.LongTermLack.Container.find('tr').index($row) + 1;
+                var con = $row.find('[name="month"]').val().length < 6;
+                var msg = '第<i class="row-index">{0}</i>列填列之月份應大於等於6個月'.format(index);
+                Helper.LogHandler.Log(con, LongTermLackHelper.Alert, msg, this.Guids[0], guid);
+            }
+        },
     },
 }
 var ShortTermLackHelper = {
@@ -2780,6 +2821,7 @@ var ShortTermLackHelper = {
         this.ShortTermLack.Bind($row);
         this.Adder.Bind();
         this.ShortTermLack.$Row = $row;
+        Helper.BindCreateIndex(this.ShortTermLack.Container);
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -2829,6 +2871,7 @@ var ShortTermLackHelper = {
 
                 ShortTermLackHelper.ShortTermLack.Container.append($row);
             })
+            this.Container[0].refreshIndex();
         },
         Reset: function() {
             this.Container.html('');
@@ -2845,7 +2888,7 @@ var ShortTermLackHelper = {
                             return obj.guid != $tr.data('guid');
                         })
                         $tr.remove();
-                        
+                        ShortTermLackHelper.ShortTermLack.Container[0].refreshIndex();
                         if(Helper.LogHandler.ValidationActive){
                             Helper.LogHandler.DeleteRow(ShortTermLackHelper.Alert, $tr, $nextAll);
                             SurveyHelper.Lack.Validation.LackExist.Validate();
@@ -2891,7 +2934,7 @@ var ShortTermLackHelper = {
                     $row.find('select').selectpicker();
                     $row.attr('data-survey-id', MainSurveyId);
                     ShortTermLackHelper.ShortTermLack.Container.append($row);
-                    
+                    ShortTermLackHelper.ShortTermLack.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermLackHelper.Validation.RequiredField.Validate($row);
                     }
@@ -2974,7 +3017,9 @@ var SubsidyHelper = {
         this.Container.Day.val('');
         this.Container.Hour.val('');
         this.Container.RefuseReason.prop('checked', false);
+        this.Container.RefuseReason.attr('data-refuse-id', '');
         this.Container.Extra.val('');
+        this.Container.Extra.attr('data-refuse-id', '');
     },
     Bind: function(){
         Helper.BindInterOnly(this.Container.Count);

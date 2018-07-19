@@ -1,0 +1,88 @@
+/* fixed-top */
+body {
+  padding-top: 70px;
+}
+
+@media(max-width: 1500px) {
+    #wrapper .affix {
+      position: static;
+      width: auto;
+      top: 0;
+      max-width: none;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1500px){
+    #wrapper .affix {
+      padding-left: 15px;
+    }
+}
+
+.form-area {
+    padding: 15px;
+}
+
+.btn-group.flex {
+  display: flex;
+}
+
+.flex .btn {
+  flex: 1
+}
+
+.panel .form-group, .panel .form-inline {
+    margin-bottom: 0.5rem;
+}
+
+.panel .col-lg-1, .panel .col-lg-10, .panel .col-lg-11, .panel .col-lg-12, .panel .col-lg-2, .panel .col-lg-3, .panel .col-lg-4, .panel .col-lg-5, .panel .col-lg-6, .panel .col-lg-7, .panel .col-lg-8, .panel .col-lg-9, .panel .col-md-1, .panel .col-md-10, .panel .col-md-11, .panel .col-md-12, .panel .col-md-2, .panel .col-md-3, .panel .col-md-4, .panel .col-md-5, .panel .col-md-6, .panel .col-md-7, .panel .col-md-8, .panel .col-md-9, .panel .col-sm-1, .panel .col-sm-10, .panel .col-sm-11, .panel .col-sm-12, .panel .col-sm-2, .panel .col-sm-3, .panel .col-sm-4, .panel .col-sm-5, .panel .col-sm-6, .panel .col-sm-7, .panel .col-sm-8, .panel .col-sm-9, .panel .col-xs-1, .panel .col-xs-10, .panel .col-xs-11, .panel .col-xs-12, .panel .col-xs-2, .panel .col-xs-3, .panel .col-xs-4, .panel .col-xs-5, .panel .col-xs-6, .panel .col-xs-7, .panel .col-xs-8, .panel .col-xs-9 {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+label.fw-400 {
+    font-weight: 400;
+}
+
+.panel input.small {
+    max-width: 80px;
+}
+
+.w-50 {
+    width: 50px;
+}
+
+#wrapper {
+    display: none;
+}
+
+div[data-partial=survey],
+div[data-partial=datatable] {
+    display: none;
+}
+
+.nav-link, .navbar-brand {
+    cursor: pointer;
+}
+
+.alert p[data-guid] {
+    margin-bottom: 1.5px;
+}
+
+.btn-group-lg > .btn, .btn-lg {
+    font-size: 16px;
+}
+
+
+@media(max-width: 1500px) {
+    .alert .btn.pull-right{
+        display: none;
+  }
+}
+
+@media (max-width: 767px) {
+    .table-responsive .dropdown-menu {
+        position: static !important;
+    }
+}
+
+

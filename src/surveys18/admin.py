@@ -1,4 +1,6 @@
 from django.contrib import admin
+from rangefilter.filter import DateRangeFilter
+from django.db.models import Q
 from .models import (
     BuilderFile,
     BuilderFileType,
@@ -42,12 +44,47 @@ from .models import (
     Business,
 )
 
+
+class SurveyAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'farmer_id',
+                    'farmer_name',
+                    'total_pages',
+                    'page',
+                    'readonly',
+                    'is_updated',
+                    'update_time',)
+    list_filter = ('is_updated',
+                   'readonly',
+                   'page',
+                   ('update_time', DateRangeFilter),)
+    search_fields = (
+        'farmer_id',
+        'farmer_name'
+    )
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super(SurveyAdmin, self).get_search_results(request, queryset, search_term)
+        if search_term:
+            try:
+                int(search_term)
+                queryset = self.model.objects.filter(
+                    Q(farmer_id=search_term) |
+                    Q(farmer_name=search_term) |
+                    Q(id=search_term)
+                )
+            except ValueError:
+                queryset = self.model.objects.filter(farmer_name=search_term)
+
+        return queryset, use_distinct
+
+
+admin.site.register(Survey, SurveyAdmin)
 admin.site.register(BuilderFile)
 admin.site.register(BuilderFileType)
 admin.site.register(MarketType)
 admin.site.register(IncomeRange)
 admin.site.register(AnnualIncome)
-admin.site.register(Survey)
 admin.site.register(AddressMatch)
 admin.site.register(Lack)
 admin.site.register(Phone)
