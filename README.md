@@ -3,28 +3,36 @@ Labor shortage survey: Provide online survey creation and edition with error exa
 
 # 2018
 
-* Land
+## Land
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-land.png?raw=true)
 
-* Management
+## Management
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-management.png?raw=true)
 
-* Marketing
+## Marketing
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-marketing.png?raw=true)
 
-* Income
+## Income
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-income.png?raw=true)
 
-* Population
+## Population
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-population.png?raw=true)
 
-* Hire
+## Hire
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-hire.png?raw=true)
 
-* Lack
+## Lack
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-lack.png?raw=true)
 
-* Other
+## Other
+
 ![image](https://github.com/COAStatistics/alss-dev/blob/master/diagram-other.png?raw=true)
 
 
