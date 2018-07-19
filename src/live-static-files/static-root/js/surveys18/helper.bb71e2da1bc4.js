@@ -2034,7 +2034,6 @@ var PopulationHelper = {
                         PopulationHelper.Validation.OtherFarmerWork.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         PopulationHelper.Validation.MarketType3Checked.Validate();
-                        PopulationAgeHelper.Validation.MemberCount.Validate();
                     }
                 }
             })

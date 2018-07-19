@@ -1897,15 +1897,22 @@ var PopulationAgeHelper = {
         MemberCount: {
             Guids: Helper.Guid.CreateMulti(),
             Validate: function(){
-                var over15Count = 0;
+                var over15Male = 0;
+                var over15Female = 0;
                 PopulationAgeHelper.PopulationAge.Container
                 .filter('[data-agescope-id="5"]')
                 .each(function(){
                     var count = parseInt($(this).val());
-                    if(count) over15Count += count;
+                    var genderId = $(this).attr('data-gender-id');
+                    if(count){
+                        if(genderId == 1) over15Male += count;
+                        if(genderId == 2) over15Female += count
+                    }
                 })
-                var con = over15Count != PopulationHelper.Population.Container.find('tr').length;
-                var msg = '滿15歲以上男、女性人數，應等於【問項2.2】總人數';
+                var male = PopulationHelper.Population.Container.find('[name="gender"] > option[value="1"]:selected').length;
+                var female = PopulationHelper.Population.Container.find('[name="gender"] > option[value="2"]:selected').length;
+                var con = (over15Male != male) || (over15Female != female);
+                var msg = '滿15歲以上男、女性人數，應等於【問項2.2】男、女性人數';
                 Helper.LogHandler.Log(con, PopulationAgeHelper.Alert, msg, this.Guids[0]);
             },
         },
@@ -2027,6 +2034,7 @@ var PopulationHelper = {
                         PopulationHelper.Validation.OtherFarmerWork.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         PopulationHelper.Validation.MarketType3Checked.Validate();
+                        PopulationAgeHelper.Validation.MemberCount.Validate();
                     }
                 }
             })
