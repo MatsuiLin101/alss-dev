@@ -1794,7 +1794,7 @@ var AnnualIncomeHelper = {
                 var checkedMin = checkedTotal.data('min') * 10000;
                 var checkedMax = checkedTotal.data('max') * 10000;
 
-                var con = countTotal < checkedMin || countTotal > checkedMax;
+                var con = countTotal < checkedMin || countTotal >= checkedMax;
                 var msg = '【問項1.4】農作物產銷情形之全年產量與平均單價乘積({0}元)與勾選農作物之全年銷售額區間不符'
                           .format(numberWithCommas(countTotal));
                 Helper.LogHandler.Log(checkedTotal.length == 1 && con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
@@ -1813,7 +1813,7 @@ var AnnualIncomeHelper = {
                 var checkedMin = checkedTotal.data('min') * 10000;
                 var checkedMax = checkedTotal.data('max') * 10000;
 
-                var con = countTotal < checkedMin  || countTotal > checkedMax;
+                var con = countTotal < checkedMin  || countTotal >= checkedMax;
                 var msg = '【問項1.5】畜禽產銷情形之全年產量與平均單價乘積({0}元)與勾選畜禽產品之全年銷售額區間不符'
                             .format(numberWithCommas(countTotal));
                 Helper.LogHandler.Log(checkedTotal.length == 1 && con, AnnualIncomeHelper.Alert, msg, this.Guids[2]);
