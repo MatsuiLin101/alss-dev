@@ -79,11 +79,20 @@ $(document).ready(function() {
 
     /* get farmer data*/
     $('.js-get-survey').click(function () {
+
+        var $btn = $(this);
+
         var farmerId = $('#farmerId').val().trim();
         var url = $(this).data('url');
         var readonly = $(this).data('readonly');
+
+        if($btn.data('ajax-sending')){
+            return;
+        }
+
         if (farmerId) {
             $.when(
+                $btn.data('ajax-sending', true),
                 $.Deferred(showLoading)
             ).done(function(){
                 // it resolves itself after 1 seconds
@@ -106,6 +115,7 @@ $(document).ready(function() {
                         if(readonly) $('.js-set-survey').hide();
                         else $('.js-set-survey').show();
                     }
+                    $btn.data('ajax-sending', false);
                 })
             }).done(function(){
                 Helper.LogHandler.CollectError.Init();
@@ -119,10 +129,15 @@ $(document).ready(function() {
 
     /* set farmer data*/
     $('.js-set-survey').click(function () {
+        $btn = $(this);
+        if($btn.data('ajax-sending')){
+            return;
+        }
         if(CloneData){
             if(!CloneData[MainSurveyId].readonly){
                 var url = $(this).data('url');
                 $.when(
+                    $btn.data('ajax-sending', true),
                     $.Deferred(showLoading)
                 ).done(function(){
 
@@ -158,6 +173,8 @@ $(document).ready(function() {
                         var ajax = SetLogData(JSON.stringify(data));
                         Helper.DataTable.ReviewLogRetrieve.Reload();
                         Helper.Dialog.ShowInfo('成功更新調查表！');
+
+                        $btn.data('ajax-sending', false);
                     })
                 }).done(function(){
                     Loading.close();
