@@ -1766,7 +1766,7 @@ var AnnualIncomeHelper = {
                 checkedMin = parseInt($input.data('min'));
                 checkedMax = parseInt($input.data('max'));
 
-                var con = checkedMax <= totalMin || checkedMin > totalMax;
+                var con = checkedMax <= totalMin || checkedMin > totalMax || !checkedMax;
                 var msg = '銷售額總計之區間，應與各類別區間加總相對應';
                 Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
             },
