@@ -1759,6 +1759,7 @@ var AnnualIncomeHelper = {
                     totalMax += max;
                 })
 
+
                 // get total input
                 $input = AnnualIncomeHelper.AnnualIncome.Container
                        .filter(':checked')
@@ -1766,7 +1767,7 @@ var AnnualIncomeHelper = {
                 checkedMin = parseInt($input.data('min'));
                 checkedMax = parseInt($input.data('max'));
 
-                var con = checkedMax <= totalMin || checkedMin > totalMax;
+                var con = checkedMax <= totalMin || checkedMin > (totalMax - 1);
                 var msg = '銷售額總計之區間，應與各類別區間加總相對應';
                 Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
 
@@ -1796,7 +1797,7 @@ var AnnualIncomeHelper = {
                 })
 
                 var checkedMin = checkedTotal.data('min') * 10000;
-                var checkedMax = checkedTotal.data('max') * 10000;
+                var checkedMax = checkedTotal.data('max') * 10000 - 1;
 
                 var con = countTotal < checkedMin || countTotal >= checkedMax;
                 var msg = '【問項1.4】農作物產銷情形之全年產量與平均單價乘積({0}元)與勾選農作物之全年銷售額區間不符'
@@ -1815,7 +1816,7 @@ var AnnualIncomeHelper = {
                 })
 
                 var checkedMin = checkedTotal.data('min') * 10000;
-                var checkedMax = checkedTotal.data('max') * 10000;
+                var checkedMax = checkedTotal.data('max') * 10000 - 1;
 
                 var con = countTotal < checkedMin  || countTotal >= checkedMax;
                 var msg = '【問項1.5】畜禽產銷情形之全年產量與平均單價乘積({0}元)與勾選畜禽產品之全年銷售額區間不符'
