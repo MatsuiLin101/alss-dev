@@ -2305,6 +2305,7 @@ var LongTermHireHelper = {
                     LongTermHireHelper.LongTermHire.Container[0].refreshIndex();
                     if(Helper.LogHandler.ValidationActive){
                         LongTermHireHelper.Validation.RequiredField.Validate($row);
+                        SurveyHelper.Hire.Validation.HireExist.Validate();
                     }
                 }
             })
@@ -2487,6 +2488,7 @@ var ShortTermHireHelper = {
                     if(Helper.LogHandler.ValidationActive){
                         ShortTermHireHelper.Validation.RequiredField.Validate($row);
                         ShortTermHireHelper.Validation.Over6Month.Validate();
+                        SurveyHelper.Hire.Validation.HireExist.Validate();
                     }
                 }
             })
@@ -2554,9 +2556,10 @@ var NoSalaryHireHelper = {
     },
     NoSalaryHire: {
         Object: {
-            New: function(guid){
+            New: function(surveyId, guid){
                 guid = guid || null;
                 return {
+                    survey: surveyId,
                     guid: guid ? guid : Helper.Guid.Create(),
                 }
             },
@@ -2619,6 +2622,7 @@ var NoSalaryHireHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         NoSalaryHireHelper.Validation.RequiredField.Validate($tr);
+                        SurveyHelper.Hire.Validation.HireExist.Validate();
                     }
                 }
             })
