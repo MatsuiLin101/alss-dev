@@ -1744,7 +1744,7 @@ var AnnualIncomeHelper = {
             },
         },
         IncomeTotal: {
-            Guids: Helper.Guid.CreateMulti(),
+            Guids: Helper.Guid.CreateMulti(2),
             Validate: function(){
                 var totalMin = 0;
                 var totalMax = 0;
@@ -1766,9 +1766,13 @@ var AnnualIncomeHelper = {
                 checkedMin = parseInt($input.data('min'));
                 checkedMax = parseInt($input.data('max'));
 
-                var con = checkedMax <= totalMin || checkedMin > totalMax || !checkedMax;
+                var con = checkedMax <= totalMin || checkedMin > totalMax;
                 var msg = '銷售額總計之區間，應與各類別區間加總相對應';
                 Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
+
+                var con = $input.length == 0;
+                var msg = '銷售額總計不可漏填';
+                Helper.LogHandler.Log(con, AnnualIncomeHelper.Alert, msg, this.Guids[1]);
             },
         },
         AnnualTotal: {
