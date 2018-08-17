@@ -1696,7 +1696,7 @@ var AnnualIncomeHelper = {
                         .each(function(){
                             var marketTypeId = $(this).data('markettype-id');
                             var incomeRangeId = $(this).data('incomerange-id');
-                            var id = $(this).data('annualincome-id');
+                            var id = $(this).attr('data-annualincome-id');
                             var obj = AnnualIncomeHelper.AnnualIncome.Object.New(MainSurveyId, marketTypeId, incomeRangeId);
                             if(id) obj.id = id;
                             annualIncomes.push(obj);
