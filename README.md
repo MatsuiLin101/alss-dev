@@ -5,6 +5,8 @@ Labor shortage survey: Provide online survey creation and edition with error exa
 
 [2018](alss-doc/2018/README.md)
 
+# Demo
 
+![image](img/alss-2018.png)
 
 

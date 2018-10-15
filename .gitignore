@@ -107,5 +107,5 @@ ENV/
 .mypy_cache/
 
 # pycharm
-.idea
+.idea/
 *.pyc
