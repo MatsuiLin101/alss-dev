@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'logs',
     'accounts',
     'surveys18',
+    'apps.surveys19',
 ]
 
 MIDDLEWARE_CLASSES = [
