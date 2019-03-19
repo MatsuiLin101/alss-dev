@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^2018/$', Surveys2018Index.as_view(), name='surveys18_index'),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^surveys18/', include('surveys18.urls', namespace='surveys18')),
+    url(r'^surveys19/', include('apps.surveys19.urls', namespace='surveys19')),
 ]
 
 if settings.DEBUG:
