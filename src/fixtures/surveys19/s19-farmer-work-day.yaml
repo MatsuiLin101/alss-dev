@@ -1,0 +1,47 @@
+- model: surveys19.FarmerWorkDay
+  pk: 1
+  fields:
+    code: 1
+    name: 無
+
+- model: surveys19.FarmerWorkDay
+  pk: 2
+  fields:
+    code: 2
+    name: 1～29日
+
+- model: surveys19.FarmerWorkDay
+  pk: 3
+  fields:
+    code: 3
+    name: 30～59日
+
+- model: surveys19.FarmerWorkDay
+  pk: 4
+  fields:
+    code: 4
+    name: 60～89日
+
+- model: surveys19.FarmerWorkDay
+  pk: 5
+  fields:
+    code: 5
+    name: 90～149日
+
+- model: surveys19.FarmerWorkDay
+  pk: 6
+  fields:
+    code: 6
+    name: 150～179日
+
+- model: surveys19.FarmerWorkDay
+  pk: 7
+  fields:
+    code: 7
+    name: 180～249日
+
+- model: surveys19.FarmerWorkDay
+  pk: 8
+  fields:
+    code: 8
+    name: 250日以上

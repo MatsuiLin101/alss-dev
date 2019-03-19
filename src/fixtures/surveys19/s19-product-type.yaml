@@ -1,0 +1,9 @@
+- model: surveys19.ProductType
+  pk: 1
+  fields:
+    name: crop
+
+- model: surveys19.ProductType
+  pk: 2
+  fields:
+    name: animal
