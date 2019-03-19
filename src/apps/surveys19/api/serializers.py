@@ -15,7 +15,6 @@ from apps.surveys19.models import (
     CropMarketing,
     LivestockMarketing,
     ProductType,
-    ProductCode,
     Product,
     Unit,
     Loss,
@@ -141,13 +140,6 @@ class ProductTypeSerializer(ModelSerializer):
 
     class Meta:
         model = ProductType
-        fields = '__all__'
-
-
-class ProductCodeSerializer(ModelSerializer):
-
-    class Meta:
-        model = ProductCode
         fields = '__all__'
 
 

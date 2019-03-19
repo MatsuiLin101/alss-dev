@@ -118,6 +118,7 @@ class CityTownCode(Model):
     """
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_('City'))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_('Town'))
+    code = CharField(max_length=20, null=True, blank=True, verbose_name=_('Code'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
                                 blank=True, verbose_name=_('Updated'))
 
@@ -126,7 +127,7 @@ class CityTownCode(Model):
         verbose_name_plural = _('City')
 
     def __str__(self):
-        return str(self.id)
+        return str(self.code)
 
 
 class FarmLocation(Model):
@@ -280,6 +281,7 @@ class CropMarketing(Model):
     """
     Changed 107
     Merge total_yield and unit_price to year_sales
+    Add name field for product_name
     Table 1.5
     """
     survey = ForeignKey('surveys19.Survey19', related_name='crop_marketings',
@@ -290,6 +292,7 @@ class CropMarketing(Model):
                         null=True, blank=True, verbose_name=_('Loss'))
     unit = ForeignKey('surveys19.Unit', related_name='crop_marketing_unit',
                         null=True, blank=True, verbose_name=_('Unit'))
+    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Product Name'))
     land_number = IntegerField(null=True, blank=True, verbose_name=_('Land Number'))
     land_area = IntegerField(null=True, blank=True, verbose_name=_('Land Area'))
     plant_times = IntegerField(null=True, blank=True, verbose_name=_('Plant Times'))
@@ -312,6 +315,7 @@ class LivestockMarketing(Model):
     """
     Changed 107
     Merge total_yield and unit_price to year_sales
+    Add name field for product_name
     Table 1.6
     """
     survey = ForeignKey('surveys19.Survey19', related_name='livestock_marketings',
@@ -324,6 +328,7 @@ class LivestockMarketing(Model):
                         null=True, blank=True, verbose_name=_('Unit'))
     contract = ForeignKey('surveys19.Contract', related_name='contract',
                             null=True, blank=True, verbose_name=_('Contract'))
+    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Product Name'))
     raising_number = IntegerField(null=True, blank=True, verbose_name=_('Raising Number'))
     year_sales = IntegerField(null=True, blank=True, verbose_name=_('Year Sales'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
@@ -350,36 +355,35 @@ class ProductType(Model):
         return str(self.name)
 
 
-class ProductCode(Model):
-    """
-    New 107
-    Table 1.5, 1.6
-    Parent level has code and name
-    """
-    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
-    code = CharField(max_length=50, verbose_name=_('Code'))
-    type = ForeignKey('surveys19.ProductType', null=True, blank=True,
-                        verbose_name=_('Product Type'))
-    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
-                                blank=True, verbose_name=_('Updated'))
-
-    class Meta:
-        verbose_name = _('Product')
-        verbose_name_plural = _('Product')
-
-    def __str__(self):
-        return str(self.name)
+# class ProductCode(Model):
+#     """
+#     New 107
+#     Table 1.5, 1.6
+#     Parent level has code and name
+#     """
+#     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
+#     code = CharField(max_length=50, verbose_name=_('Code'))
+#     type = ForeignKey('surveys19.ProductType', null=True, blank=True,
+#                         verbose_name=_('Product Type'))
+#     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
+#                                 blank=True, verbose_name=_('Updated'))
+#
+#     class Meta:
+#         verbose_name = _('Product')
+#         verbose_name_plural = _('Product')
+#
+#     def __str__(self):
+#         return str(self.name)
 
 
 class Product(Model):
     """
     Changed 107
     Table 1.5, 1.6
-    Child level only has name
+    Display code frontend
     """
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
-    code = ForeignKey('surveys19.ProductCode', null=True, blank=True,
-                        verbose_name=_('Product Code'))
+    code = CharField(max_length=50, verbose_name=_('Code'))
     type = ForeignKey('surveys19.ProductType', null=True, blank=True,
                         verbose_name=_('Product Type'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
@@ -808,6 +812,7 @@ class ShortTermLack(Model):
     """
     Changed 107
     Add avg_lack_day field
+    Add name field for product name
     Table 3.2.3
     """
     survey = ForeignKey('surveys19.Survey19', related_name='short_term_lacks', verbose_name=_('Survey19'))
@@ -815,6 +820,7 @@ class ShortTermLack(Model):
                             related_name='short_term_lacks', verbose_name=_('Product'))
     work_type = ForeignKey('surveys19.WorkType', null=True, blank=True,
                             related_name='short_term_lacks', verbose_name=_('Work Type'))
+    name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Product Name'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
     months = ManyToManyField('surveys19.Month', blank=True,
                                 related_name='short_term_lacks', verbose_name=_('Months'))
