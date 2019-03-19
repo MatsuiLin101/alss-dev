@@ -1,0 +1,16 @@
+- model: surveys19.RefuseReason
+  pk: 1
+  fields:
+    name: 不知道此資訊
+
+- model: surveys19.RefuseReason
+  pk: 2
+  fields:
+    name: 沒有意願
+    has_extra: True
+
+- model: surveys19.RefuseReason
+  pk: 3
+  fields:
+    name: 其他
+    has_extra: True

@@ -115,6 +115,7 @@ class CityTownCode(Model):
     """
     New 107
     CityTown code
+    Has yaml
     """
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_('City'))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_('Town'))
@@ -155,6 +156,7 @@ class FarmLocation(Model):
 class LandStatus(Model):
     """
     Table 1.1
+    Has yaml
     """
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
@@ -171,6 +173,7 @@ class LandStatus(Model):
 class LandType(Model):
     """
     Table 1.1
+    Has yaml
     """
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
     statuses = ManyToManyField('surveys19.LandStatus', blank=True,
@@ -228,6 +231,7 @@ class FarmRelatedBusiness(Model):
     """
     Table 1.2
     Option
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
@@ -247,6 +251,7 @@ class FarmRelatedBusiness(Model):
 class ManagementType(Model):
     """
     Table 1.3
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
@@ -346,6 +351,7 @@ class LivestockMarketing(Model):
 class ProductType(Model):
     """
     Table 1.5, 1.6
+    Has yaml
     """
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
@@ -400,6 +406,7 @@ class Product(Model):
 class Unit(Model):
     """
     Table 1.5, 1.6
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Name'))
@@ -419,6 +426,7 @@ class Unit(Model):
 class Loss(Model):
     """
     Table 1.5, 1.6
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Name'))
@@ -455,6 +463,7 @@ class Loss(Model):
 class Contract(Model):
     """
     Table 1.6
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Name'))
@@ -493,6 +502,7 @@ class AnnualIncome(Model):
 class MarketType(Model):
     """
     Table 1.7
+    Has yaml
     """
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
@@ -509,6 +519,7 @@ class MarketType(Model):
 class IncomeRange(Model):
     """
     Table 1.7
+    Has yaml
     """
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     minimum = IntegerField(verbose_name=_('Minimum Income'))
@@ -527,6 +538,7 @@ class IncomeRange(Model):
 class AgeScope(Model):
     """
     Table 2.1, 3.1.2, 3.1.3
+    Has yaml
     """
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
     group = IntegerField(verbose_name=_('Group'))
@@ -596,6 +608,7 @@ class Population(Model):
 class Relationship(Model):
     """
     Table 2.2.2
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
@@ -613,6 +626,7 @@ class Relationship(Model):
 class Gender(Model):
     """
     Table 2.2.3
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=10, null=True, blank=True, verbose_name=_('Name'))
@@ -630,6 +644,7 @@ class Gender(Model):
 class EducationLevel(Model):
     """
     Table 2.2.5
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
@@ -648,6 +663,7 @@ class EducationLevel(Model):
 class FarmerWorkDay(Model):
     """
     Table 2.2.6
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
@@ -665,6 +681,7 @@ class FarmerWorkDay(Model):
 class LifeStyle(Model):
     """
     Table 2.2.7
+    Has yaml
     """
     code = IntegerField(verbose_name=_('Code'))
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
@@ -770,6 +787,7 @@ class NumberWorkers(Model):
 class Lack(Model):
     """
     Table 3.2.1
+    Has yaml
     """
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_('Name'))
     is_lack = BooleanField(default=False, verbose_name=_('Is Lack'))
@@ -839,6 +857,7 @@ class ShortTermLack(Model):
 class WorkType(Model):
     """
     Table 3.1.2, 3.1.3, 3.2.2, 3.2.3
+    Has yaml
     """
     code = IntegerField(null=True, blank=True, verbose_name=_('Code'))
     name = CharField(max_length=30, null=True, blank=True, verbose_name=_('Name'))
@@ -896,6 +915,7 @@ class Refuse(Model):
 class RefuseReason(Model):
     """
     Table 3.3.2
+    Has yaml
     """
     name = CharField(max_length=20, null=True, blank=True, verbose_name=_('Name'))
     has_extra = BooleanField(default=False, verbose_name=_('Has Extra'))
@@ -912,6 +932,9 @@ class RefuseReason(Model):
 
 
 class Month(Model):
+    """
+    Has yaml
+    """
     name = CharField(max_length=50, unique=True, verbose_name=_('Name'))
     value = IntegerField(choices=MONTHS.items())
     update_time = DateTimeField(auto_now=True, auto_now_add=False,

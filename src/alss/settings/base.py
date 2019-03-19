@@ -174,6 +174,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "live-static-files", "media-root")
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'fixtures'),
     os.path.join(BASE_DIR, 'fixtures/test'),
+    os.path.join(BASE_DIR, 'fixtures/surveys19'),
+    os.path.join(BASE_DIR, 'fixtures/surveys19/test'),
 ]
 
 # Crispy
