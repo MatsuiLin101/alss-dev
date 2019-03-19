@@ -16,7 +16,6 @@ from apps.surveys19.models import (
     CropMarketing,
     LivestockMarketing,
     ProductType,
-    ProductCode,
     Product,
     Unit,
     Loss,
@@ -61,7 +60,6 @@ from .serializers import (
     CropMarketingSerializer,
     LivestockMarketingSerializer,
     ProductTypeSerializer,
-    ProductCodeSerializer,
     ProductSerializer,
     UnitSerializer,
     LossSerializer,
@@ -173,12 +171,6 @@ class LivestockMarketingViewSet(ReadOnlyModelViewSet):
 class ProductTypeViewSet(ReadOnlyModelViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class ProductCodeViewSet(ReadOnlyModelViewSet):
-    queryset = ProductCode.objects.all()
-    serializer_class = ProductCodeSerializer
     permission_classes = [IsAuthenticated]
 
 

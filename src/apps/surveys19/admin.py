@@ -14,7 +14,6 @@ from .models import (
     CropMarketing,
     LivestockMarketing,
     ProductType,
-    ProductCode,
     Product,
     Unit,
     Loss,
@@ -58,7 +57,6 @@ admin.site.register(ManagementType)
 admin.site.register(CropMarketing)
 admin.site.register(LivestockMarketing)
 admin.site.register(ProductType)
-admin.site.register(ProductCode)
 admin.site.register(Product)
 admin.site.register(Unit)
 admin.site.register(Loss)
