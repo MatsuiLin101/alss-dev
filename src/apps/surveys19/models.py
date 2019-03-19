@@ -111,6 +111,24 @@ class AddressMatch(Model):
         return str(self.survey)
 
 
+class CityTownCode(Model):
+    """
+    New 107
+    CityTown code
+    """
+    city = CharField(max_length=20, null=True, blank=True, verbose_name=_('City'))
+    town = CharField(max_length=20, null=True, blank=True, verbose_name=_('Town'))
+    update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
+                                blank=True, verbose_name=_('Updated'))
+
+    class Meta:
+        verbose_name = _('City')
+        verbose_name_plural = _('City')
+
+    def __str__(self):
+        return str(self.id)
+
+
 class FarmLocation(Model):
     """
     New 107
@@ -120,7 +138,8 @@ class FarmLocation(Model):
                             verbose_name=_('Survey19'))
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_('City'))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_('Town'))
-    code = IntegerField(null=False, blank=False, verbose_name=_('Code'))
+    code = ForeignKey('surveys19.CityTownCode', null=True, blank=True,
+                        related_name='farmlocation', verbose_name=_('Code'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False, null=True,
                                 blank=True, verbose_name=_('Updated'))
 
