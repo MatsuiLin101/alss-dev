@@ -4,6 +4,7 @@ from apps.surveys19.models import (
     Survey19,
     Phone,
     AddressMatch,
+    CityTownCode,
     FarmLocation,
     LandStatus,
     LandType,
@@ -63,6 +64,13 @@ class AddressMatchSerializer(ModelSerializer):
 
     class Meta:
         model = AddressMatch
+        fields = '__all__'
+
+
+class CityTownCodeSerializer(ModelSerializer):
+
+    class Meta:
+        model = CityTownCode
         fields = '__all__'
 
 

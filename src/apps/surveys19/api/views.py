@@ -5,6 +5,7 @@ from apps.surveys19.models import (
     Survey19,
     Phone,
     AddressMatch,
+    CityTownCode,
     FarmLocation,
     LandStatus,
     LandType,
@@ -49,6 +50,7 @@ from .serializers import (
     Survey19Serializer,
     PhoneSerializer,
     AddressMatchSerializer,
+    CityTownCodeSerializer,
     FarmLocationSerializer,
     LandStatusSerializer,
     LandTypeSerializer,
@@ -105,6 +107,12 @@ class PhoneViewSet(ReadOnlyModelViewSet):
 class AddressMatchViewSet(ReadOnlyModelViewSet):
     queryset = AddressMatch.objects.all()
     serializer_class = AddressMatchSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class CityTownCodeViewSet(ReadOnlyModelViewSet):
+    queryset = CityTownCode.objects.all()
+    serializer_class = CityTownCodeSerializer
     permission_classes = [IsAuthenticated]
 
 

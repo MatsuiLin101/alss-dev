@@ -4,6 +4,7 @@ from .views import (
     Survey19ViewSet,
     PhoneViewSet,
     AddressMatchViewSet,
+    CityTownCodeViewSet,
     FarmLocationViewSet,
     LandStatusViewSet,
     LandTypeViewSet,
@@ -51,6 +52,7 @@ api.trailing_slash = '/?'
 api.register(r'survey19', Survey19ViewSet)
 api.register(r'phone', PhoneViewSet)
 api.register(r'addressmatch', AddressMatchViewSet)
+api.register(r'citytowncode', CityTownCodeViewSet)
 api.register(r'farmlocation', FarmLocationViewSet)
 api.register(r'landstatus', LandStatusViewSet)
 api.register(r'landtype', LandTypeViewSet)
