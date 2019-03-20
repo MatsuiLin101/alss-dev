@@ -1,0 +1,32 @@
+- model: surveys19.ShortTermLack
+  pk: 1
+  fields:
+    survey: 1
+    name: 珍珠芭樂
+    product: 98
+    work_type: 3
+    count: 5
+    months: [5, 6, 7]
+    avg_lack_day: 1
+
+- model: surveys19.ShortTermLack
+  pk: 2
+  fields:
+    survey: 1
+    name: 巨峰葡萄
+    product: 100
+    work_type: 4
+    count: 8
+    months: [6, 7, 9]
+    avg_lack_day: 10.5
+
+- model: surveys19.ShortTermLack
+  pk: 3
+  fields:
+    survey: 1
+    name: A5和牛
+    product: 150
+    work_type: 7
+    count: 10
+    months: [11, 12, 1]
+    avg_lack_day: 1.5

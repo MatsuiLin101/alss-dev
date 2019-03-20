@@ -1,0 +1,15 @@
+- model: surveys19.LandArea
+  pk: 1
+  fields:
+    survey: 1
+    type: 2
+    status: 1
+    value: 100
+
+- model: surveys19.LandArea
+  pk: 2
+  fields:
+    survey: 1
+    type: 1
+    status: 3
+    value: 50

@@ -1,0 +1,15 @@
+- model: surveys19.AddressMatch
+  pk: 1
+  fields:
+    survey: 1
+    match: False
+    mismatch: False
+    address:
+
+- model: surveys19.AddressMatch
+  pk: 2
+  fields:
+    survey: 2
+    match: False
+    mismatch: True
+    address: 台北市

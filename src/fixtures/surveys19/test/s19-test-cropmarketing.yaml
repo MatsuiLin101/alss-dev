@@ -1,0 +1,27 @@
+- model: surveys19.CropMarketing
+  pk: 1
+  fields:
+    survey: 1
+    product: 3
+    loss: 4
+    unit: 1
+    name: 好吃的玉米
+    land_number: 1
+    land_area: 100
+    plant_times: 1
+    year_sales: 483000
+    has_facility: 2
+
+- model: surveys19.CropMarketing
+  pk: 2
+  fields:
+    survey: 2
+    product: 17
+    loss:
+    unit:
+    name: 薯條
+    land_number: 3
+    land_area: 450
+    plant_times:
+    year_sales: 0
+    has_facility:

@@ -1,0 +1,23 @@
+- model: surveys19.LivestockMarketing
+  pk: 1
+  fields:
+    survey: 1
+    product: 141
+    loss: 5
+    unit: 13
+    name: 泌乳牛
+    contract: 4
+    raising_number: 140
+    year_sales: 0
+
+- model: surveys19.LivestockMarketing
+  pk: 2
+  fields:
+    survey: 2
+    product: 150
+    loss: 5
+    unit: 13
+    name: 肉牛
+    contract: 4
+    raising_number: 0
+    year_sales: 245000
