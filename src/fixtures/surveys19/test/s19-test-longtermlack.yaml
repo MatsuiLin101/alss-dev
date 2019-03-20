@@ -1,0 +1,26 @@
+- model: surveys19.LongTermLack
+  pk: 1
+  fields:
+    survey: 1
+    work_type: 4
+    count: 5
+    months: [5, 6, 7]
+    avg_lack_day: 1
+
+- model: surveys19.LongTermLack
+  pk: 2
+  fields:
+    survey: 1
+    work_type: 4
+    count: 8
+    months: [6, 7, 9]
+    avg_lack_day: 5
+
+- model: surveys19.LongTermLack
+  pk: 3
+  fields:
+    survey: 1
+    work_type: 6
+    count: 10
+    months: [11, 12, 1]
+    avg_lack_day: 10.5

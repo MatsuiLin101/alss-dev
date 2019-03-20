@@ -1,0 +1,13 @@
+- model: surveys19.Refuse
+  pk: 1
+  fields:
+    subsidy: 1
+    reason: 2
+    extra: 測試
+
+- model: surveys19.Refuse
+  pk: 2
+  fields:
+    subsidy: 2
+    reason: 3
+    extra: 測試2

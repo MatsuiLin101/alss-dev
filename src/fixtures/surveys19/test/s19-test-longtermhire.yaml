@@ -1,0 +1,23 @@
+- model: surveys19.LongTermHire
+  pk: 1
+  fields:
+    survey: 1
+    avg_work_day: 0.5
+    work_type: 2
+    months: [1, 3, 5, 7, 9, 11]
+
+- model: surveys19.LongTermHire
+  pk: 2
+  fields:
+    survey: 1
+    avg_work_day: 1
+    work_type: 3
+    months: [1, 3, 5, 7, 9, 11, 2, 4, 6, 8, 10, 12]
+
+- model: surveys19.LongTermHire
+  pk: 3
+  fields:
+    survey: 1
+    avg_work_day: 26
+    work_type: 6
+    months: [1, 3, 5, 7, 9, 11, 2, 4, 6, 8, 10, 12]

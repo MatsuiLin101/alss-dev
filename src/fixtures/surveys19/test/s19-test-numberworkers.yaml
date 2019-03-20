@@ -1,0 +1,15 @@
+- model: surveys19.NumberWorkers
+  pk: 1
+  fields:
+    content_type: 14
+    object_id: 1
+    age_scope: 2
+    count: 5
+
+- model: surveys19.NumberWorkers
+  pk: 2
+  fields:
+    content_type: 15
+    object_id: 3
+    age_scope: 3
+    count: 8

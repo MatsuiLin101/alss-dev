@@ -1,0 +1,19 @@
+- model: surveys19.Subsidy
+  pk: 1
+  fields:
+    survey: 1
+    has_subsidy: True
+    none_subsidy: False
+    count: 2
+    month_delta: 0
+    day_delta: 2
+
+- model: surveys19.Subsidy
+  pk: 2
+  fields:
+    survey: 2
+    has_subsidy: False
+    none_subsidy: True
+    count: 2
+    month_delta: 0
+    day_delta: 2

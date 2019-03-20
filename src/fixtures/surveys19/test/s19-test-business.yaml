@@ -1,0 +1,11 @@
+- model: surveys19.Business
+  pk: 1
+  fields:
+    survey: 1
+    farm_related_business: 1
+
+- model: surveys19.Business
+  pk: 2
+  fields:
+    survey: 2
+    farm_related_business: 2
