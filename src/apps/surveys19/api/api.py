@@ -1,6 +1,7 @@
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    ContentTypeViewSet,
     Survey19ViewSet,
     PhoneViewSet,
     AddressMatchViewSet,
@@ -48,6 +49,7 @@ from .views import (
 api = DefaultRouter()
 api.trailing_slash = '/?'
 
+api.register(r'contenttype', ContentTypeViewSet)
 api.register(r'survey19', Survey19ViewSet)
 api.register(r'phone', PhoneViewSet)
 api.register(r'addressmatch', AddressMatchViewSet)

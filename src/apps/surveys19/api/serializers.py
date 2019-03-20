@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer
+from django.contrib.contenttypes.models import ContentType
+from rest_framework.serializers import ModelSerializer, IntegerField
 
 from apps.surveys19.models import (
     Survey19,
@@ -45,14 +46,15 @@ from apps.surveys19.models import (
 )
 
 
-class Survey19Serializer(ModelSerializer):
+class ContentTypeSerializer(ModelSerializer):
 
     class Meta:
-        model = Survey19
+        model = ContentType
         fields = '__all__'
 
 
 class PhoneSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = Phone
@@ -60,10 +62,14 @@ class PhoneSerializer(ModelSerializer):
 
 
 class AddressMatchSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = AddressMatch
         fields = '__all__'
+        extra_kwargs = {
+            'survey': {'validators': []},
+        }
 
 
 class CityTownCodeSerializer(ModelSerializer):
@@ -81,6 +87,7 @@ class FarmLocationSerializer(ModelSerializer):
 
 
 class LandStatusSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = LandStatus
@@ -88,6 +95,7 @@ class LandStatusSerializer(ModelSerializer):
 
 
 class LandTypeSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = LandType
@@ -95,6 +103,7 @@ class LandTypeSerializer(ModelSerializer):
 
 
 class LandAreaSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = LandArea
@@ -102,13 +111,18 @@ class LandAreaSerializer(ModelSerializer):
 
 
 class BusinessSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = Business
         fields = '__all__'
+        extra_kwargs = {
+            'farm_related_business': {'validators': []},
+        }
 
 
 class FarmRelatedBusinessSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = FarmRelatedBusiness
@@ -116,6 +130,7 @@ class FarmRelatedBusinessSerializer(ModelSerializer):
 
 
 class ManagementTypeSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = ManagementType
@@ -123,6 +138,7 @@ class ManagementTypeSerializer(ModelSerializer):
 
 
 class CropMarketingSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = CropMarketing
@@ -130,6 +146,7 @@ class CropMarketingSerializer(ModelSerializer):
 
 
 class LivestockMarketingSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = LivestockMarketing
@@ -200,6 +217,7 @@ class AgeScopeSerializer(ModelSerializer):
 
 
 class PopulationAgeSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = PopulationAge
@@ -207,6 +225,7 @@ class PopulationAgeSerializer(ModelSerializer):
 
 
 class PopulationSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = Population
@@ -248,7 +267,17 @@ class LifeStyleSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class NumberWorkersSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
+
+    class Meta:
+        model = NumberWorkers
+        fields = '__all__'
+
+
 class LongTermHireSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
+    number_workers = NumberWorkersSerializer(many=True)
 
     class Meta:
         model = LongTermHire
@@ -256,6 +285,8 @@ class LongTermHireSerializer(ModelSerializer):
 
 
 class ShortTermHireSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
+    number_workers = NumberWorkersSerializer(many=True)
 
     class Meta:
         model = ShortTermHire
@@ -263,16 +294,10 @@ class ShortTermHireSerializer(ModelSerializer):
 
 
 class NoSalaryHireSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = NoSalaryHire
-        fields = '__all__'
-
-
-class NumberWorkersSerializer(ModelSerializer):
-
-    class Meta:
-        model = NumberWorkers
         fields = '__all__'
 
 
@@ -284,6 +309,7 @@ class LackSerializer(ModelSerializer):
 
 
 class LongTermLackSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = LongTermLack
@@ -291,6 +317,7 @@ class LongTermLackSerializer(ModelSerializer):
 
 
 class ShortTermLackSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = ShortTermLack
@@ -304,18 +331,27 @@ class WorkTypeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class SubsidySerializer(ModelSerializer):
-
-    class Meta:
-        model = Subsidy
-        fields = '__all__'
-
-
 class RefuseSerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
 
     class Meta:
         model = Refuse
         fields = '__all__'
+        extra_kwargs = {
+            'reason': {'validators': []},
+        }
+
+
+class SubsidySerializer(ModelSerializer):
+    id = IntegerField(read_only=False)
+    refuses = RefuseSerializer(many=True)
+
+    class Meta:
+        model = Subsidy
+        fields = '__all__'
+        extra_kwargs = {
+            'survey': {'validators': []},
+        }
 
 
 class RefuseReasonSerializer(ModelSerializer):
@@ -329,4 +365,26 @@ class MonthSerializer(ModelSerializer):
 
     class Meta:
         model = Month
+        fields = '__all__'
+
+
+class Survey19Serializer(ModelSerializer):
+    annual_incomes = AnnualIncomeSerializer(many=True)
+    address_match = AddressMatchSerializer(required=False, allow_null=True)
+    businesses = BusinessSerializer(many=True)
+    phones = PhoneSerializer(many=True)
+    land_areas = LandAreaSerializer(many=True)
+    crop_marketings = CropMarketingSerializer(many=True)
+    livestock_marketings = LivestockMarketingSerializer(many=True)
+    population_ages = PopulationAgeSerializer(many=True)
+    populations = PopulationSerializer(many=True)
+    subsidy = SubsidySerializer(required=False, allow_null=True)
+    long_term_hires = LongTermHireSerializer(many=True)
+    short_term_hires = ShortTermHireSerializer(many=True)
+    no_salary_hires = NoSalaryHireSerializer(many=True)
+    long_term_lacks = LongTermLackSerializer(many=True)
+    short_term_lacks = ShortTermLackSerializer(many=True)
+
+    class Meta:
+        model = Survey19
         fields = '__all__'
