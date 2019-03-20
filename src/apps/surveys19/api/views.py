@@ -1,3 +1,7 @@
+from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse
+from django.db.models import Q
+
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
@@ -46,6 +50,7 @@ from apps.surveys19.models import (
 )
 
 from .serializers import (
+    ContentTypeSerializer,
     Survey19Serializer,
     PhoneSerializer,
     AddressMatchSerializer,
@@ -90,19 +95,31 @@ from .serializers import (
 )
 
 
-class Survey19ViewSet(ReadOnlyModelViewSet):
+class ContentTypeViewSet(ReadOnlyModelViewSet):
+    serializer_class = ContentTypeSerializer
+    queryset = ContentType.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(
+            Q(app_label='surveys18', model='longtermhire') |
+            Q(app_label='surveys18', model='shorttermhire')
+        )
+
+
+class Survey19ViewSet(ModelViewSet):
     queryset = Survey19.objects.all()
     serializer_class = Survey19Serializer
     permission_classes = [IsAuthenticated]
 
 
-class PhoneViewSet(ReadOnlyModelViewSet):
+class PhoneViewSet(ModelViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
     permission_classes = [IsAuthenticated]
 
 
-class AddressMatchViewSet(ReadOnlyModelViewSet):
+class AddressMatchViewSet(ModelViewSet):
     queryset = AddressMatch.objects.all()
     serializer_class = AddressMatchSerializer
     permission_classes = [IsAuthenticated]
@@ -114,7 +131,7 @@ class CityTownCodeViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class FarmLocationViewSet(ReadOnlyModelViewSet):
+class FarmLocationViewSet(ModelViewSet):
     queryset = FarmLocation.objects.all()
     serializer_class = FarmLocationSerializer
     permission_classes = [IsAuthenticated]
@@ -132,13 +149,13 @@ class LandTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class LandAreaViewSet(ReadOnlyModelViewSet):
+class LandAreaViewSet(ModelViewSet):
     queryset = LandArea.objects.all()
     serializer_class = LandAreaSerializer
     permission_classes = [IsAuthenticated]
 
 
-class BusinessViewSet(ReadOnlyModelViewSet):
+class BusinessViewSet(ModelViewSet):
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
     permission_classes = [IsAuthenticated]
@@ -156,13 +173,13 @@ class ManagementTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class CropMarketingViewSet(ReadOnlyModelViewSet):
+class CropMarketingViewSet(ModelViewSet):
     queryset = CropMarketing.objects.all()
     serializer_class = CropMarketingSerializer
     permission_classes = [IsAuthenticated]
 
 
-class LivestockMarketingViewSet(ReadOnlyModelViewSet):
+class LivestockMarketingViewSet(ModelViewSet):
     queryset = LivestockMarketing.objects.all()
     serializer_class = LivestockMarketingSerializer
     permission_classes = [IsAuthenticated]
@@ -198,7 +215,7 @@ class ContractViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class AnnualIncomeViewSet(ReadOnlyModelViewSet):
+class AnnualIncomeViewSet(ModelViewSet):
     queryset = AnnualIncome.objects.all()
     serializer_class = AnnualIncomeSerializer
     permission_classes = [IsAuthenticated]
@@ -222,13 +239,13 @@ class AgeScopeViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class PopulationAgeViewSet(ReadOnlyModelViewSet):
+class PopulationAgeViewSet(ModelViewSet):
     queryset = PopulationAge.objects.all()
     serializer_class = PopulationAgeSerializer
     permission_classes = [IsAuthenticated]
 
 
-class PopulationViewSet(ReadOnlyModelViewSet):
+class PopulationViewSet(ModelViewSet):
     queryset = Population.objects.all()
     serializer_class = PopulationSerializer
     permission_classes = [IsAuthenticated]
@@ -264,25 +281,25 @@ class LifeStyleViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class LongTermHireViewSet(ReadOnlyModelViewSet):
+class LongTermHireViewSet(ModelViewSet):
     queryset = LongTermHire.objects.all()
     serializer_class = LongTermHireSerializer
     permission_classes = [IsAuthenticated]
 
 
-class ShortTermHireViewSet(ReadOnlyModelViewSet):
+class ShortTermHireViewSet(ModelViewSet):
     queryset = ShortTermHire.objects.all()
     serializer_class = ShortTermHireSerializer
     permission_classes = [IsAuthenticated]
 
 
-class NoSalaryHireViewSet(ReadOnlyModelViewSet):
+class NoSalaryHireViewSet(ModelViewSet):
     queryset = NoSalaryHire.objects.all()
     serializer_class = NoSalaryHireSerializer
     permission_classes = [IsAuthenticated]
 
 
-class NumberWorkersViewSet(ReadOnlyModelViewSet):
+class NumberWorkersViewSet(ModelViewSet):
     queryset = NumberWorkers.objects.all()
     serializer_class = NumberWorkersSerializer
     permission_classes = [IsAuthenticated]
@@ -294,13 +311,13 @@ class LackViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class LongTermLackViewSet(ReadOnlyModelViewSet):
+class LongTermLackViewSet(ModelViewSet):
     queryset = LongTermLack.objects.all()
     serializer_class = LongTermLackSerializer
     permission_classes = [IsAuthenticated]
 
 
-class ShortTermLackViewSet(ReadOnlyModelViewSet):
+class ShortTermLackViewSet(ModelViewSet):
     queryset = ShortTermLack.objects.all()
     serializer_class = ShortTermLackSerializer
     permission_classes = [IsAuthenticated]
@@ -312,13 +329,13 @@ class WorkTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class SubsidyViewSet(ReadOnlyModelViewSet):
+class SubsidyViewSet(ModelViewSet):
     queryset = Subsidy.objects.all()
     serializer_class = SubsidySerializer
     permission_classes = [IsAuthenticated]
 
 
-class RefuseViewSet(ReadOnlyModelViewSet):
+class RefuseViewSet(ModelViewSet):
     queryset = Refuse.objects.all()
     serializer_class = RefuseSerializer
     permission_classes = [IsAuthenticated]
