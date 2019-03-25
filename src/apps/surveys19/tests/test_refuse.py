@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, Subsidy, Refuse, RefuseReason
+from apps.surveys19.models import Survey, Subsidy, Refuse, RefuseReason
 
 
 class RefuseTestCase(TestCase):
@@ -19,7 +19,7 @@ class RefuseTestCase(TestCase):
         call_command('loaddata', 's19-test-refuse.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         subsidy_list = Subsidy.objects.all()
@@ -43,12 +43,12 @@ class RefuseTestCase(TestCase):
         self.assertEquals(refuse_list_after_size, refuse_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         refuse_list = Refuse.objects.filter(subsidy__id=1)
         self.assertEquals(refuse_list.count(), 0)
 
     def test_survey_delete_all(self):
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         refuse_list = Refuse.objects.all()
 
         self.assertEquals(len(refuse_list), 0)

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, LongTermLack, WorkType, Month
+from apps.surveys19.models import Survey, LongTermLack, WorkType, Month
 
 class LongTermLackTestCase(TestCase):
     """
@@ -18,14 +18,14 @@ class LongTermLackTestCase(TestCase):
         call_command('loaddata', 's19-test-longtermlack.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         longtermlack_list = LongTermLack.objects.all()
         self.assertEquals(len(longtermlack_list), 3)
 
     def test_create_longtermlack(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         month_a = Month.objects.get(id=8)
         month_b = Month.objects.get(id=9)
         month_c = Month.objects.get(id=10)
@@ -43,13 +43,13 @@ class LongTermLackTestCase(TestCase):
         self.assertEquals(longtermlack_list_after_size, longtermlack_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         longtermlack_list = LongTermLack.objects.filter(survey=1)
         self.assertEquals(longtermlack_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         longtermlack_list = LongTermLack.objects.all()
         month_list_after_size = len(Month.objects.all())
 

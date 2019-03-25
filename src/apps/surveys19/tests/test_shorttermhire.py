@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, ShortTermHire, WorkType, Month
+from apps.surveys19.models import Survey, ShortTermHire, WorkType, Month
 
 class ShortTermHireTestCase(TestCase):
     """
@@ -18,14 +18,14 @@ class ShortTermHireTestCase(TestCase):
         call_command('loaddata', 's19-test-shorttermhire.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         shorttermhire_list = ShortTermHire.objects.all()
         self.assertEquals(len(shorttermhire_list), 5)
 
     def test_create_shorttermhire(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         work_type_code_a = WorkType.objects.get(id=5)
         work_type_code_b = WorkType.objects.get(id=4)
         month = Month.objects.get(id=4)
@@ -42,13 +42,13 @@ class ShortTermHireTestCase(TestCase):
         self.assertEquals(shorttermhire_list_after_size, shorttermhire_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         shorttermhire_list = ShortTermHire.objects.filter(survey=1)
         self.assertEquals(shorttermhire_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         shorttermhire_list = ShortTermHire.objects.all()
         month_list_after_size = len(Month.objects.all())
 

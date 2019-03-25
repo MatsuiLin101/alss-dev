@@ -1,4 +1,4 @@
-- model: surveys19.Survey19
+- model: surveys19.Survey
   pk: 1
   fields:
     farmer_id: 670100013471

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, AnnualIncome, MarketType, IncomeRange
+from apps.surveys19.models import Survey, AnnualIncome, MarketType, IncomeRange
 
 
 class AnnualIncomeTestCase(TestCase):
@@ -19,7 +19,7 @@ class AnnualIncomeTestCase(TestCase):
         call_command('loaddata', 's19-test-annualincome.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         annual_income_list = AnnualIncome.objects.all()
@@ -32,7 +32,7 @@ class AnnualIncomeTestCase(TestCase):
         self.assertEquals(len(income_range_list), 11)
 
     def test_create_annual_income(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         market_type_a = MarketType.objects.get(id=2)
         income_range_a = IncomeRange.objects.get(id=8)
         market_type_b = MarketType.objects.get(id=3)
@@ -51,14 +51,14 @@ class AnnualIncomeTestCase(TestCase):
         self.assertEquals(annual_income_list_after_size, annual_income_list_before_size + 3)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         annual_income_list = AnnualIncome.objects.filter(survey__id=1)
         self.assertEquals(annual_income_list.count(), 0)
 
     def test_survey_delete_all(self):
         market_type_list_before_size = len(MarketType.objects.all())
         income_range_list_before_size = len(IncomeRange.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         annual_income_list = AnnualIncome.objects.all()
         market_type_list_after_size = len(MarketType.objects.all())
         income_range_list_after_size = len(IncomeRange.objects.all())

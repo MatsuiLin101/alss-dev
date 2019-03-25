@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, CropMarketing, Product, Loss, Unit, ProductType
+from apps.surveys19.models import Survey, CropMarketing, Product, Loss, Unit, ProductType
 
 
 class CropMarketingTestCase(TestCase):
@@ -22,7 +22,7 @@ class CropMarketingTestCase(TestCase):
 
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         crop_marketing_list = CropMarketing.objects.all()
@@ -38,7 +38,7 @@ class CropMarketingTestCase(TestCase):
         self.assertEquals(len(unit_list), 17)
 
     def test_create_crop_marketing(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         product_a = Product.objects.get(id=100)
         product_b = Product.objects.get(id=150)
         loss_a = Loss.objects.get(id=1)
@@ -54,7 +54,7 @@ class CropMarketingTestCase(TestCase):
         self.assertEquals(crop_marketing_list_after_size, crop_marketing_list_before_size + 2)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         crop_marketing_list = CropMarketing.objects.filter(survey__id=1)
         self.assertEquals(crop_marketing_list.count(), 0)
 
@@ -62,7 +62,7 @@ class CropMarketingTestCase(TestCase):
         product_list_before_size = len(Product.objects.all())
         loss_list_before_size = len(Loss.objects.all())
         unit_list_before_size = len(Unit.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         crop_marketing_list = CropMarketing.objects.all()
         product_list_after_size = len(Product.objects.all())
         loss_list_after_size = len(Loss.objects.all())

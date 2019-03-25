@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, Subsidy
+from apps.surveys19.models import Survey, Subsidy
 
 
 class SubsidyTestCase(TestCase):
@@ -17,14 +17,14 @@ class SubsidyTestCase(TestCase):
         call_command('loaddata', 's19-test-subsidy.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         subsidy_list = Subsidy.objects.all()
         self.assertEquals(len(subsidy_list), 2)
 
     def test_create_subsidy(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
 
         subsidy_list_before_size = len(Subsidy.objects.all())
 
@@ -35,12 +35,12 @@ class SubsidyTestCase(TestCase):
         self.assertEquals(subsidy_list_after_size, subsidy_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         subsidy_list = Subsidy.objects.filter(survey__id=1)
         self.assertEquals(subsidy_list.count(), 0)
 
     def test_survey_delete_all(self):
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         subsidy_list = Subsidy.objects.all()
 
         self.assertEquals(len(subsidy_list), 0)

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, LivestockMarketing, Product, Loss, Unit, ProductType, Contract
+from apps.surveys19.models import Survey, LivestockMarketing, Product, Loss, Unit, ProductType, Contract
 
 
 class LivestockMarketingTestCase(TestCase):
@@ -23,7 +23,7 @@ class LivestockMarketingTestCase(TestCase):
 
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         product_list = Product.objects.all()
@@ -42,7 +42,7 @@ class LivestockMarketingTestCase(TestCase):
         self.assertEquals(len(livestock_marketing_list), 2)
 
     def test_create_livestock_marketing(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         product_a = Product.objects.get(id=76)
         product_b = Product.objects.get(id=68)
         loss_a = Loss.objects.get(id=8)
@@ -60,7 +60,7 @@ class LivestockMarketingTestCase(TestCase):
         self.assertEquals(livestock_marketing_list_after_size, livestock_marketing_list_before_size + 2)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         livestock__marketing_list = LivestockMarketing.objects.filter(survey__id=1)
         self.assertEquals(livestock__marketing_list.count(), 0)
 
@@ -69,7 +69,7 @@ class LivestockMarketingTestCase(TestCase):
         loss_list_before_size = len(Loss.objects.all())
         unit_list_before_size = len(Unit.objects.all())
         contract_list_before_size = len(Contract.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         livestock__marketing_list = LivestockMarketing.objects.all()
         product_list_after_size = len(Product.objects.all())
         loss_list_after_size = len(Loss.objects.all())

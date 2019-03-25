@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework.serializers import ModelSerializer, IntegerField
 
 from apps.surveys19.models import (
-    Survey19,
+    Survey,
     Phone,
     AddressMatch,
     CityTownCode,
@@ -368,7 +368,7 @@ class MonthSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class Survey19Serializer(ModelSerializer):
+class SurveySerializer(ModelSerializer):
     annual_incomes = AnnualIncomeSerializer(many=True)
     address_match = AddressMatchSerializer(required=False, allow_null=True)
     businesses = BusinessSerializer(many=True)
@@ -386,5 +386,5 @@ class Survey19Serializer(ModelSerializer):
     short_term_lacks = ShortTermLackSerializer(many=True)
 
     class Meta:
-        model = Survey19
+        model = Survey
         fields = '__all__'

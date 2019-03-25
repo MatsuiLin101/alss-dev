@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, ShortTermLack, WorkType, Month, Product, ProductType
+from apps.surveys19.models import Survey, ShortTermLack, WorkType, Month, Product, ProductType
 
 class ShortTermLackTestCase(TestCase):
     """
@@ -20,14 +20,14 @@ class ShortTermLackTestCase(TestCase):
         call_command('loaddata', 's19-test-shorttermlack.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         shorttermlack_list = ShortTermLack.objects.all()
         self.assertEquals(len(shorttermlack_list), 3)
 
     def test_create_shorttermlack(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         work_type_code_a = WorkType.objects.get(id=5)
         work_type_code_b = WorkType.objects.get(id=4)
         month_a = Month.objects.get(id=4)
@@ -55,13 +55,13 @@ class ShortTermLackTestCase(TestCase):
         self.assertEquals(shorttermlack_list_after_size, shorttermlack_list_before_size + 2)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         shorttermlack_list = ShortTermLack.objects.filter(survey=1)
         self.assertEquals(shorttermlack_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         shorttermlack_list = ShortTermLack.objects.all()
         month_list_after_size = len(Month.objects.all())
 
