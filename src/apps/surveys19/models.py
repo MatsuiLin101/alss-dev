@@ -33,7 +33,7 @@ NUMBER_WORKERS_CHOICES = (
 )
 
 
-class Survey19(Model):
+class Survey(Model):
     """
     read_only: Keep original data(read_only=True). Modify data(read_only=False).
     new field second and non_second table 1.4
@@ -49,15 +49,15 @@ class Survey19(Model):
     hire = BooleanField(default=False, verbose_name=_('Hire'))
     non_hire = BooleanField(default=False, verbose_name=_('Non Hire'))
     lacks = ManyToManyField('surveys19.Lack', blank=True,
-                                related_name='surveys19', verbose_name=_('Lack'))
+                                related_name='surveys', verbose_name=_('Lack'))
     management_types = ManyToManyField('surveys19.ManagementType', blank=True,
                                         related_name='surveys', verbose_name=_('Management Types'))
     note = TextField(null=True, blank=True, verbose_name=_('Note'))
     is_updated = BooleanField(default=False, verbose_name=_('Is Updated'))
     readonly = BooleanField(default=True, verbose_name=_('Read Only'))
 
-    investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
-                                on_delete=CASCADE, verbose_name=_('Investigator'))
+    investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=CASCADE,
+                                related_name='surveys19', verbose_name=_('Investigator'))
     date = DateField(null=True, blank=True, verbose_name=_('Investigation Date'))
     distance = IntegerField(null=True, blank=True, verbose_name=_('Investigation Distance(km)'))
     period = IntegerField(null=True, blank=True, verbose_name=_('Investigation Period'))
@@ -67,8 +67,8 @@ class Survey19(Model):
 
 
     class Meta:
-        verbose_name = _('Survey19')
-        verbose_name_plural = _('Survey19')
+        verbose_name = _('Survey')
+        verbose_name_plural = _('Survey')
 
     def __str__(self):
         return self.farmer_id
@@ -78,7 +78,7 @@ class Phone(Model):
     """
     Contact phone number
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='phones', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='phones', verbose_name=_('Survey'))
     phone = CharField(max_length=100, null=True, blank=True, verbose_name=_('Phone'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
                                 null=True, blank=True, verbose_name=_('Updated'))
@@ -95,8 +95,8 @@ class AddressMatch(Model):
     """
     Contact address
     """
-    survey = OneToOneField('surveys19.Survey19', related_name='address_match',
-                            verbose_name=_('Survey19'))
+    survey = OneToOneField('surveys19.Survey', related_name='address_match',
+                            verbose_name=_('Survey'))
     match = BooleanField(default=False, verbose_name=_('Address Match'))
     mismatch = BooleanField(default=False, verbose_name=_('Address MisMatch'))
     address = CharField(max_length=100, null=True, blank=True, verbose_name=_('Address'))
@@ -136,8 +136,8 @@ class FarmLocation(Model):
     New 107
     Check city town equal to code
     """
-    survey = OneToOneField('surveys19.Survey19', related_name='farm_location',
-                            verbose_name=_('Survey19'))
+    survey = OneToOneField('surveys19.Survey', related_name='farm_location',
+                            verbose_name=_('Survey'))
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_('City'))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_('Town'))
     code = ForeignKey('surveys19.CityTownCode', null=True, blank=True,
@@ -196,7 +196,7 @@ class LandArea(Model):
     """
     Table 1.1
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='land_areas', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='land_areas', verbose_name=_('Survey'))
     type = ForeignKey('surveys19.LandType', null=True, blank=True,
                         related_name='land_areas', verbose_name=_('Type'))
     status = ForeignKey('surveys19.LandStatus', related_name='land_areas',
@@ -218,7 +218,7 @@ class Business(Model):
     Table 1.2
     Survey data
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='businesses', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='businesses', verbose_name=_('Survey'))
     farm_related_business = ForeignKey('surveys19.FarmRelatedBusiness', null=True, blank=True,
                                         related_name='business',
                                         verbose_name=_('Farm Related Business'))
@@ -289,8 +289,8 @@ class CropMarketing(Model):
     Add name field for product_name
     Table 1.5
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='crop_marketings',
-                            verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='crop_marketings',
+                            verbose_name=_('Survey'))
     product = ForeignKey('surveys19.Product', related_name='products', null=True,
                             blank=True, verbose_name=_('Product Code'))
     loss = ForeignKey('surveys19.Loss', related_name='crop_marketing_loss',
@@ -323,8 +323,8 @@ class LivestockMarketing(Model):
     Add name field for product_name
     Table 1.6
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='livestock_marketings',
-                            verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='livestock_marketings',
+                            verbose_name=_('Survey'))
     product = ForeignKey('surveys19.Product', related_name='livestock_marketing_product',
                             null=True, blank=True, verbose_name=_('Product'))
     loss = ForeignKey('surveys19.Loss', related_name='livestock_marketing_loss',
@@ -482,8 +482,8 @@ class AnnualIncome(Model):
     """
     Table 1.7
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='annual_incomes',
-                            verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='annual_incomes',
+                            verbose_name=_('Survey'))
     market_type = ForeignKey('surveys19.MarketType', null=True, blank=True,
                                 verbose_name=_('Market Type'))
     income_range = ForeignKey('surveys19.IncomeRange', null=True, blank=True,
@@ -557,8 +557,8 @@ class PopulationAge(Model):
     """
     Table 2.1
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='population_ages',
-                            verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='population_ages',
+                            verbose_name=_('Survey'))
     gender = ForeignKey('surveys19.Gender', verbose_name=_('Gender'),
                             null=True, blank=True)
     age_scope = ForeignKey('surveys19.AgeScope', null=True, blank=True,
@@ -579,7 +579,7 @@ class Population(Model):
     """
     Table 2.2
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='populations', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='populations', verbose_name=_('Survey'))
     relationship = ForeignKey('surveys19.Relationship', null=True, blank=True,
                                 related_name='relationship', verbose_name=_('Relationship'))
     gender = ForeignKey('surveys19.Gender', null=True, blank=True,
@@ -700,7 +700,7 @@ class LongTermHire(Model):
     """
     Table 3.1.2
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='long_term_hires', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='long_term_hires', verbose_name=_('Survey'))
     avg_work_day = FloatField(null=True, blank=True, verbose_name=_('Average Work Day'))
     work_type = ForeignKey('surveys19.WorkType', null=True, blank=True,
                             related_name='long_term_hires', verbose_name=_('Work Type'))
@@ -723,7 +723,7 @@ class ShortTermHire(Model):
     """
     Table 3.1.3
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='short_term_hires', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='short_term_hires', verbose_name=_('Survey'))
     avg_work_day = FloatField(null=True, blank=True, verbose_name=_('Average Work Day'))
     month = ForeignKey('surveys19.Month', null=True, blank=True, verbose_name=_('Month'))
     work_types = ManyToManyField('surveys19.WorkType', blank=True,
@@ -745,7 +745,7 @@ class NoSalaryHire(Model):
     """
     Table 3.1.4
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='no_salary_hires', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='no_salary_hires', verbose_name=_('Survey'))
     month = ForeignKey('surveys19.Month', null=True, blank=True, verbose_name=_('Month'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
     update_time = DateTimeField(auto_now=True, auto_now_add=False,
@@ -765,7 +765,7 @@ class NumberWorkers(Model):
     Table 3.1.2, 3.1.3
     """
     content_type = ForeignKey(ContentType, limit_choices_to=NUMBER_WORKERS_CHOICES,
-                                related_name='number_workers_19')
+                                related_name='number_workers')
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     age_scope = ForeignKey('surveys19.AgeScope',
@@ -808,7 +808,7 @@ class LongTermLack(Model):
     Add avg_lack_day field
     Table 3.2.2
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='long_term_lacks', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='long_term_lacks', verbose_name=_('Survey'))
     work_type = ForeignKey('surveys19.WorkType', null=True, blank=True,
                             related_name='long_term_lacks', verbose_name=_('Work Type'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))
@@ -833,7 +833,7 @@ class ShortTermLack(Model):
     Add name field for product name
     Table 3.2.3
     """
-    survey = ForeignKey('surveys19.Survey19', related_name='short_term_lacks', verbose_name=_('Survey19'))
+    survey = ForeignKey('surveys19.Survey', related_name='short_term_lacks', verbose_name=_('Survey'))
     product = ForeignKey('surveys19.Product', null=True, blank=True,
                             related_name='short_term_lacks', verbose_name=_('Product'))
     work_type = ForeignKey('surveys19.WorkType', null=True, blank=True,
@@ -876,7 +876,7 @@ class Subsidy(Model):
     """
     Table 3.3.1
     """
-    survey = OneToOneField('surveys19.Survey19', related_name='subsidy', verbose_name=_('Survey19'))
+    survey = OneToOneField('surveys19.Survey', related_name='subsidy', verbose_name=_('Survey'))
     has_subsidy = BooleanField(default=False, verbose_name=_('Has Subsidy'))
     none_subsidy = BooleanField(default=False, verbose_name=_('None Subsidy'))
     count = IntegerField(null=True, blank=True, verbose_name=_('Number Of People'))

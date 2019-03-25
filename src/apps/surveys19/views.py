@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 
 from apps.surveys19.models import (
-    Survey19,
+    Survey,
     CityTownCode,
     LandType,
     FarmRelatedBusiness,
@@ -78,6 +78,6 @@ class Surveys2019Index(LoginRequiredMixin, TemplateView):
             'nosalaryhire': render_to_string('s19/row-ui/no-salary-hire.html', context),
         }
         context['ui'] = json.dumps(ui)
-        context['fid'] = json.dumps(list(Survey19.objects.values_list('farmer_id', flat=True).distinct()))
+        context['fid'] = json.dumps(list(Survey.objects.values_list('farmer_id', flat=True).distinct()))
 
         return context

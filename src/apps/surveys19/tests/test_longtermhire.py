@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, LongTermHire, WorkType
+from apps.surveys19.models import Survey, LongTermHire, WorkType
 
 
 class LongTermHireTestCase(TestCase):
@@ -19,7 +19,7 @@ class LongTermHireTestCase(TestCase):
 
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         longtermhire_list = LongTermHire.objects.all()
@@ -29,7 +29,7 @@ class LongTermHireTestCase(TestCase):
         self.assertEquals(len(worktype_list), 7)
 
     def test_create_longtermhire(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         work_type_code = WorkType.objects.get(id=4)
 
         longtermhire_list_before_size = len(LongTermHire.objects.all())
@@ -41,13 +41,13 @@ class LongTermHireTestCase(TestCase):
         self.assertEquals(longtermhire_list_after_size, longtermhire_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         longtermhire_list = LongTermHire.objects.filter(survey__id=1)
         self.assertEquals(longtermhire_list.count(), 0)
 
     def test_survey_delete_all(self):
         work_type_list_before_size = len(WorkType.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         longtermhire_list = LongTermHire.objects.all()
         work_type_list_after_size = len(WorkType.objects.all())
 

@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
 from apps.surveys19.models import (
-    Survey19,
+    Survey,
     Phone,
     AddressMatch,
     CityTownCode,
@@ -54,7 +54,7 @@ from apps.surveys19.models import (
 
 from .serializers import (
     ContentTypeSerializer,
-    Survey19Serializer,
+    SurveySerializer,
     PhoneSerializer,
     AddressMatchSerializer,
     CityTownCodeSerializer,
@@ -114,9 +114,9 @@ class ContentTypeViewSet(ReadOnlyModelViewSet):
         )
 
 
-class Survey19ViewSet(ModelViewSet):
-    queryset = Survey19.objects.all()
-    serializer_class = Survey19Serializer
+class SurveyViewSet(ModelViewSet):
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
     permission_classes = [IsAuthenticated]
     pagination_class = ThirtyPagination
 

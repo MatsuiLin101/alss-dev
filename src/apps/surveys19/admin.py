@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Survey19,
+    Survey,
     Phone,
     AddressMatch,
     FarmLocation,
@@ -44,7 +44,7 @@ from .models import (
 )
 
 
-admin.site.register(Survey19)
+admin.site.register(Survey)
 admin.site.register(Phone)
 admin.site.register(AddressMatch)
 admin.site.register(FarmLocation)

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, AddressMatch
+from apps.surveys19.models import Survey, AddressMatch
 
 
 class AddressMatchTestCase(TestCase):
@@ -17,14 +17,14 @@ class AddressMatchTestCase(TestCase):
         call_command('loaddata', 's19-test-addressmatch.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         address_match_list = AddressMatch.objects.all()
         self.assertEquals(len(address_match_list), 2)
 
     def test_create_address_match(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         address_match_list_before_size = len(AddressMatch.objects.all())
 
         #new value
@@ -34,6 +34,6 @@ class AddressMatchTestCase(TestCase):
         self.assertEquals(address_match_list_after_size, address_match_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         address_match_list = AddressMatch.objects.filter(survey__id=1)
         self.assertEquals(address_match_list.count(), 0)

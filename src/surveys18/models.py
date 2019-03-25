@@ -98,6 +98,7 @@ class Survey(Model):
 
     investigator = ForeignKey(settings.AUTH_USER_MODEL, null=True,
                               blank=True, on_delete=CASCADE,
+                              related_name='surveys18',
                               verbose_name=_('Investigator'))
     date = DateField(null=True, blank=True,
                      verbose_name=_('Investigation Date'))

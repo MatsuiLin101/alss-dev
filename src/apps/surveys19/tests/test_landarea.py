@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, LandArea, LandType, LandStatus, Unit, ProductType
+from apps.surveys19.models import Survey, LandArea, LandType, LandStatus, Unit, ProductType
 
 
 class LandAreaTestCase(TestCase):
@@ -22,7 +22,7 @@ class LandAreaTestCase(TestCase):
 
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         land_area_list = LandArea.objects.all()
@@ -35,7 +35,7 @@ class LandAreaTestCase(TestCase):
         self.assertEquals(len(land_status_list), 3)
 
     def test_create_land_area(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         land_type_a = LandType.objects.get(id=2)
         land_status_a = LandStatus.objects.get(id=2)
 
@@ -48,14 +48,14 @@ class LandAreaTestCase(TestCase):
         self.assertEquals(land_area_list_after_size, land_area_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         land_area_list = LandArea.objects.filter(survey__id=1)
         self.assertEquals(land_area_list.count(), 0)
 
     def test_survey_delete_all(self):
         land_type_list_before_size = len(LandType.objects.all())
         land_status_list_before_size = len(LandStatus.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         land_area_list = LandArea.objects.all()
         land_type_list_after_size = len(LandType.objects.all())
         land_status_list_after_size = len(LandStatus.objects.all())

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, NumberWorkers, AgeScope, LongTermHire, Month, WorkType
+from apps.surveys19.models import Survey, NumberWorkers, AgeScope, LongTermHire, Month, WorkType
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -22,7 +22,7 @@ class NumberWorkersTestCase(TestCase):
         call_command('loaddata', 's19-test-numberworkers.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         numberworkers_list = NumberWorkers.objects.all()

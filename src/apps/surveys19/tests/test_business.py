@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from apps.surveys19.models import Survey19, Business, FarmRelatedBusiness
+from apps.surveys19.models import Survey, Business, FarmRelatedBusiness
 
 
 class BusinessTestCase(TestCase):
@@ -18,7 +18,7 @@ class BusinessTestCase(TestCase):
         call_command('loaddata', 's19-test-business.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         business_list = Business.objects.all()
@@ -28,7 +28,7 @@ class BusinessTestCase(TestCase):
         self.assertEquals(len(farm_ralated_business_list), 9)
 
     def test_create_business(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         relatedbusiness_a = FarmRelatedBusiness.objects.get(id=3)
         relatedbusiness_b = FarmRelatedBusiness.objects.get(id=9)
 
@@ -50,13 +50,13 @@ class BusinessTestCase(TestCase):
         self.assertEquals(business_list_after_size, business_list_before_size + 2)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         business_list = Business.objects.filter(survey__id=1)
         self.assertEquals(business_list.count(), 0)
 
     def test_survey_delete_all(self):
         relatedbusiness_list_before = FarmRelatedBusiness.objects.all()
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         business_list = Business.objects.all()
         relatedbusiness_list_after = FarmRelatedBusiness.objects.all()
 

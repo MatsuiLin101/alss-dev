@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.management import call_command
 from apps.surveys19.models import (
-    Survey19,
+    Survey,
     Population,
     LifeStyle,
     FarmerWorkDay,
@@ -30,7 +30,7 @@ class PopulationTestCase(TestCase):
         call_command('loaddata', 's19-test-population.yaml', verbosity=0)
 
     def test_loaddata(self):
-        survey_list = Survey19.objects.all()
+        survey_list = Survey.objects.all()
         self.assertEquals(len(survey_list), 3)
 
         population_list = Population.objects.all()
@@ -52,7 +52,7 @@ class PopulationTestCase(TestCase):
         self.assertEquals(len(gender_list), 2)
 
     def test_create_population(self):
-        survey_id = Survey19.objects.get(id=3)
+        survey_id = Survey.objects.get(id=3)
         relationship_code = Relationship.objects.get(id=1)
         education_level_code = EducationLevel.objects.get(id=5)
         farmer_work_day = FarmerWorkDay.objects.get(id=2)
@@ -72,13 +72,13 @@ class PopulationTestCase(TestCase):
         self.assertEquals(population_list_after_size, population_list_before_size + 1)
 
     def test_survey_delete(self):
-        Survey19.objects.filter(id=1).delete()
+        Survey.objects.filter(id=1).delete()
         population_list = Population.objects.filter(survey=1)
         self.assertEquals(population_list.count(), 0)
 
     def test_survey_delete_all(self):
         farmer_work_day_list_before_size = len(FarmerWorkDay.objects.all())
-        Survey19.objects.all().delete()
+        Survey.objects.all().delete()
         population_list = Population.objects.all()
         farmer_work_day_list_after_size = len(FarmerWorkDay.objects.all())
 
