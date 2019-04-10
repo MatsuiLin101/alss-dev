@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rangefilter",
     "rest_framework.authtoken",
+    'rest_framework_swagger',
     # local
     "apps.users",
     "apps.logs",
