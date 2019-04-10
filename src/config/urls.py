@@ -20,6 +20,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from apps.surveys18.views import Surveys2018Index
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Pastebin API',)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,6 +31,7 @@ urlpatterns = [
     path("users/", include("apps.users.urls", namespace="users")),
     path("surveys18/", include("apps.surveys18.urls", namespace="surveys18")),
     path("surveys19/", include("apps.surveys19.urls", namespace="surveys19")),
+    path('api/docs/', schema_view),
 ]
 
 if settings.DEBUG:
