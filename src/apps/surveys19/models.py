@@ -346,6 +346,13 @@ class Business(Model):
         verbose_name=_("Updated"),
     )
 
+    class Meta:
+        verbose_name = _("Business")
+        verbose_name_plural = _("Business")
+
+    def __str__(self):
+        return str(self.survey)
+
 
 class FarmRelatedBusiness(Model):
     """
@@ -548,6 +555,10 @@ class ProductType(Model):
         verbose_name=_("Updated"),
     )
 
+    class Meta:
+        verbose_name = _("ProductType")
+        verbose_name_plural = _("ProductType")
+
     def __str__(self):
         return str(self.name)
 
@@ -663,8 +674,8 @@ class Contract(Model):
     )
 
     class Meta:
-        verbose_name = _("LivestockUnit")
-        verbose_name_plural = _("LivestockUnit")
+        verbose_name = _("Contract")
+        verbose_name_plural = _("Contract")
 
     def __str__(self):
         return str(self.name)
