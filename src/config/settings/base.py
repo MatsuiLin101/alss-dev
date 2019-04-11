@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "suit",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,7 +44,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rangefilter",
     "rest_framework.authtoken",
-    'rest_framework_swagger',
+    "rest_framework_swagger",
+    # 'django.contrib.admin.apps.SimpleAdminConfig',
     # local
     "apps.users",
     "apps.logs",
