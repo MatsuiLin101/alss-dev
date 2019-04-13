@@ -567,11 +567,16 @@ class Product(Model):
     """
     Changed 107
     Table 1.5, 1.6
-    Display code frontend
+    Work hour between min_hour and max_hour for crop
+    Display field hide children crop
+    Display code at frontend page
     """
 
     name = CharField(max_length=50, null=True, blank=True, verbose_name=_("Name"))
     code = CharField(max_length=50, verbose_name=_("Code"))
+    min_hour = IntegerField(null=True, blank=True, verbose_name=_("Min Hour"))
+    max_hour = IntegerField(null=True, blank=True, verbose_name=_("Max Hour"))
+    display = BooleanField(default=False, verbose_name=_("Display"))
     type = ForeignKey(
         "surveys19.ProductType",
         null=True,
