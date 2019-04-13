@@ -931,28 +931,6 @@ class Loss(Model):
         return str(self.name)
 
 
-class Facility(Model):
-    code = IntegerField(verbose_name=_("Code"))
-    name = CharField(max_length=10, null=True, blank=True, verbose_name=_("Name"))
-    update_time = DateTimeField(
-        auto_now=True,
-        auto_now_add=False,
-        null=True,
-        blank=True,
-        verbose_name=_("Updated"),
-    )
-
-    class Meta:
-        verbose_name = _("Facility")
-        verbose_name_plural = _("Facility")
-
-    def __str__(self):
-        return str(self.name)
-
-    def __unicode__(self):
-        return str(self.name)
-
-
 class Unit(Model):
     code = IntegerField(verbose_name=_("Code"))
     name = CharField(max_length=10, null=True, blank=True, verbose_name=_("Name"))

@@ -20,7 +20,6 @@ from apps.surveys18.models import (
     Contract,
     CropMarketing,
     LivestockMarketing,
-    Facility,
     PopulationAge,
     Population,
     EducationLevel,

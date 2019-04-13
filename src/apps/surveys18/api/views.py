@@ -43,7 +43,6 @@ from apps.surveys18.models import (
     LifeStyle,
     Gender,
     Loss,
-    Facility,
     ProductType,
     Contract,
     ManagementType,
@@ -286,12 +285,6 @@ class GenderViewSet(ModelViewSet):
 class LossViewSet(ModelViewSet):
     serializer_class = serializers.LossSerializer
     queryset = Loss.objects.all()
-    permission_classes = [IsAuthenticated]
-
-
-class FacilityViewSet(ModelViewSet):
-    serializer_class = serializers.FacilitySerializer
-    queryset = Facility.objects.all()
     permission_classes = [IsAuthenticated]
 
 

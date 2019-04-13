@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "rangefilter",
     "rest_framework.authtoken",
     "rest_framework_swagger",
-    # 'django.contrib.admin.apps.SimpleAdminConfig',
     # local
     "apps.users",
     "apps.logs",

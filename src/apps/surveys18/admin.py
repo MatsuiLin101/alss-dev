@@ -23,7 +23,6 @@ from .models import (
     Contract,
     CropMarketing,
     LivestockMarketing,
-    Facility,
     PopulationAge,
     Population,
     EducationLevel,
@@ -148,7 +147,6 @@ admin.site.register(Product)
 admin.site.register(Contract)
 admin.site.register(CropMarketing)
 admin.site.register(LivestockMarketing)
-admin.site.register(Facility)
 admin.site.register(PopulationAge)
 admin.site.register(Population)
 admin.site.register(EducationLevel)
