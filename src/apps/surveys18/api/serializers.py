@@ -36,7 +36,6 @@ from apps.surveys18.models import (
     LifeStyle,
     Gender,
     Loss,
-    Facility,
     ProductType,
     Contract,
     Lack,
@@ -72,12 +71,6 @@ class ContractSerializer(ModelSerializer):
 class ProductTypeSerializer(ModelSerializer):
     class Meta:
         model = ProductType
-        fields = "__all__"
-
-
-class FacilitySerializer(ModelSerializer):
-    class Meta:
-        model = Facility
         fields = "__all__"
 
 
