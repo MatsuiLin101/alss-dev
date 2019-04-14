@@ -16,7 +16,7 @@
   pk: 3
   fields:
     code: 3
-    name: 國(初)中(初職)
+    name: 國(初)中
     age: 12
 
 - model: surveys19.EducationLevel
