@@ -1,10 +1,14 @@
 import json
 
 from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse
 from django.db.models import Q
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from apps.surveys19.models import (
     Survey,
@@ -103,15 +107,17 @@ class ContentTypeViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(
-            Q(app_label="surveys18", model="longtermhire")
-            | Q(app_label="surveys18", model="shorttermhire")
+            Q(app_label="surveys19", model="longtermhire")
+            | Q(app_label="surveys19", model="shorttermhire")
         )
 
 
 class SurveyViewSet(ModelViewSet):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
+    filter_backends = [SearchFilter, OrderingFilter]
     permission_classes = [IsAuthenticated]
+    search_fields = ["farmer_id"]
 
     def get_queryset(self, *args, **kwargs):
         fid = self.request.GET.get("fid")
@@ -122,6 +128,27 @@ class SurveyViewSet(ModelViewSet):
                 Q(farmer_id=fid) & Q(readonly=readonly)
             ).distinct()
         return queryset
+
+    def get_object(self, pk):
+        return Survey.objects.get(id=pk)
+
+    @action(methods=["PATCH"], detail=False)
+    def patch(self, request):
+        try:
+            data = json.loads(request.data.get("data"))
+            pk = data.get("id")
+            survey = self.get_object(pk)
+            serializer = SurveySerializer(
+                survey, data=data, partial=True
+            )  # set partial=True to update a data partially
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(data=serializer.data)
+            else:
+                raise ValidationError(serializer.errors)
+
+        except Exception as e:
+            return JsonResponse(data=e, safe=False)
 
 
 class PhoneViewSet(ModelViewSet):
