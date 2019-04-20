@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,6 +15,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+from apps.users.models import User
 from apps.surveys19.models import (
     Survey,
     Phone,
@@ -56,6 +58,7 @@ from apps.surveys19.models import (
     Refuse,
     RefuseReason,
     Month,
+    BuilderFile,
 )
 
 from .serializers import (
@@ -101,7 +104,10 @@ from .serializers import (
     RefuseSerializer,
     RefuseReasonSerializer,
     MonthSerializer,
+    BuilderFileSerializer,
 )
+
+system_logger = logging.getLogger("system")
 
 
 class Surveys2019Index(LoginRequiredMixin, TemplateView):
@@ -171,6 +177,27 @@ class Surveys2019Index(LoginRequiredMixin, TemplateView):
         )
 
         return context
+
+
+class BuilderFileViewSet(ModelViewSet):
+    queryset = BuilderFile.objects.all()
+    serializer_class = BuilderFileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        try:
+            if serializer.is_valid():
+                datafile = self.request.data.get("datafile")
+                token = self.request.data.get("token")
+                user = self.request.user
+                if not isinstance(user, User):
+                    print(user)
+                    user = None
+
+                serializer.save(user=user, datafile=datafile, token=token)
+        except Exception as e:
+            system_logger.exception(e)
+            raise ValidationError(e)
 
 
 class ContentTypeViewSet(ReadOnlyModelViewSet):

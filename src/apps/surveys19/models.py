@@ -17,6 +17,7 @@ from django.db.models import (
     DateField,
     PositiveIntegerField,
     FloatField,
+    FileField,
     Q,
 )
 
@@ -1467,3 +1468,29 @@ class Month(Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class BuilderFile(Model):
+    create_time = DateTimeField(auto_now_add=True, verbose_name=_("Create Time"))
+    user = ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=CASCADE,
+        related_name="surveys19_files",
+        verbose_name=_("User"),
+    )
+    token = TextField(null=True, blank=True, verbose_name=_("Token String"))
+    datafile = FileField(
+        null=True,
+        blank=True,
+        upload_to="surveys19/builders/",
+        verbose_name=_("DataFile"),
+    )
+
+    class Meta:
+        verbose_name = _("BuilderFile")
+        verbose_name_plural = _("BuilderFile")
+
+    def __str__(self):
+        return str(self.user)

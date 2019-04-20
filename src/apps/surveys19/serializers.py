@@ -1,6 +1,13 @@
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.serializers import ModelSerializer, IntegerField, SerializerMethodField
+from rest_framework.serializers import (
+    ModelSerializer,
+    IntegerField,
+    SerializerMethodField,
+    HyperlinkedModelSerializer,
+    ValidationError,
+)
 
+from apps.surveys19.builder.tokenizer import Builder
 from apps.surveys19.models import (
     Survey,
     Phone,
@@ -43,7 +50,58 @@ from apps.surveys19.models import (
     Refuse,
     RefuseReason,
     Month,
+    BuilderFile,
 )
+
+
+class BuilderFileSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = BuilderFile
+        fields = ["token", "datafile"]
+
+    def create(self, validated_data):
+        return BuilderFile.objects.create(**validated_data)
+
+    def validate(self, data):
+        """
+        Validate via build
+        """
+        try:
+            errors = list()
+            file = data.get("datafile")
+            token = data.get("token")
+            if token:
+                content = [token]
+
+            if file:
+                content = file.read().decode("utf-8-sig").splitlines()
+
+            if file and token:
+                raise ValidationError(
+                    "Not Allow To Provide Upload File And Single Token At Same Time"
+                )
+
+            for i, string in enumerate(content):
+                try:
+                    # if file_type.id == 1:
+                    #     builder = LaborBuilder(string=string)
+                    #
+                    # elif file_type.id == 2:
+                    #     builder = SpecialtyBuilder(string=string)
+
+                    builder = Builder(string=string)
+
+                    builder.build()
+                    builder.build(readonly=False)
+
+                except Exception as e:
+                    errors.append({"string": string, "index": i, "error": e})
+
+            if errors:
+                raise ValidationError(errors)
+            return data
+        except Exception as e:
+            raise ValidationError(e)
 
 
 class ContentTypeSerializer(ModelSerializer):
