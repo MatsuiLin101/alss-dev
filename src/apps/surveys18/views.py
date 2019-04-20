@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -15,6 +16,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
+from apps.users.models import User
 from apps.surveys18.models import (
     Survey,
     ShortTermHire,
@@ -56,9 +58,13 @@ from apps.surveys18.models import (
     IncomeRange,
     MarketType,
     Month,
+    BuilderFile,
 )
 
 from . import serializers
+
+
+system_logger = logging.getLogger("system")
 
 
 class Surveys2018Index(LoginRequiredMixin, TemplateView):
@@ -128,6 +134,26 @@ class Surveys2018Index(LoginRequiredMixin, TemplateView):
         )
 
         return context
+
+
+class BuilderFileViewSet(ModelViewSet):
+    queryset = BuilderFile.objects.all()
+    serializer_class = serializers.BuilderFileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        try:
+            if serializer.is_valid():
+                datafile = self.request.data.get("datafile")
+                token = self.request.data.get("token")
+                user = self.request.user
+                if not isinstance(user, User):
+                    user = None
+
+                serializer.save(user=user, datafile=datafile, token=token)
+        except Exception as e:
+            system_logger.exception(e)
+            raise ValidationError(e)
 
 
 class SurveyViewSet(ModelViewSet):
