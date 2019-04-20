@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load i18n %}
+ autocomplete="off"{% extends 'base.html' %} {% load i18n %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
@@ -43,7 +43,7 @@
                     <h4 class="my-3 bold">查詢106年調查表</h4>
                     <div class="list-group">
                         <input type="text" class="form-control input-lg" id="farmerId" data-provide="typehead"
-                               placeholder="請輸入農戶編號">
+                               placeholder="請輸入農戶編號" autocomplete="off">
                         <div class="btn-group-vertical flex mt-1" role="group" aria-label="" style="width:100%;">
                             <button type="button" class="btn btn-success btn-lg js-get-survey"
                                     data-readonly="false" data-url="{% url 'surveys18:survey-list' %}">查詢</button>
