@@ -12,6 +12,8 @@ from .serializers import ReviewLogSerializer, ReviewLogListSerializer, ReviewLog
 
 from apps.logs.models import ReviewLog, query_by_args
 
+from config.permissions import IsSuperUser
+
 logger = logging.getLogger("review")
 
 
@@ -26,6 +28,13 @@ class ReviewLogViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return ReviewLogListSerializer
         return ReviewLogSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['GET', 'POST', 'PUT', 'PATCH']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsSuperUser]
+        return [permission() for permission in permission_classes]
 
     @action(methods=['GET'], detail=False)
     def datatable(self, request):

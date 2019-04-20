@@ -15,6 +15,9 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+from config.permissions import IsSuperUser
+from config.viewsets import StandardViewSet
+
 from apps.users.models import User
 from apps.surveys19.models import (
     Survey,
@@ -179,10 +182,9 @@ class Surveys2019Index(LoginRequiredMixin, TemplateView):
         return context
 
 
-class BuilderFileViewSet(ModelViewSet):
+class BuilderFileViewSet(StandardViewSet):
     queryset = BuilderFile.objects.all()
     serializer_class = BuilderFileSerializer
-    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         try:
@@ -200,10 +202,9 @@ class BuilderFileViewSet(ModelViewSet):
             raise ValidationError(e)
 
 
-class ContentTypeViewSet(ReadOnlyModelViewSet):
+class ContentTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     serializer_class = ContentTypeSerializer
     queryset = ContentType.objects.all()
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(
@@ -216,7 +217,6 @@ class SurveyViewSet(ModelViewSet):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    permission_classes = [IsAuthenticated]
     search_fields = ["farmer_id"]
 
     def get_queryset(self, *args, **kwargs):
@@ -231,6 +231,13 @@ class SurveyViewSet(ModelViewSet):
 
     def get_object(self, pk):
         return Survey.objects.get(id=pk)
+
+    def get_permissions(self):
+        if self.request.method in ['GET', 'PUT', 'PATCH']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsSuperUser]
+        return [permission() for permission in permission_classes]
 
     @action(methods=["PATCH"], detail=False)
     def patch(self, request):
@@ -251,241 +258,201 @@ class SurveyViewSet(ModelViewSet):
             return JsonResponse(data=e, safe=False)
 
 
-class PhoneViewSet(ModelViewSet):
+class PhoneViewSet(StandardViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class AddressMatchViewSet(ModelViewSet):
+class AddressMatchViewSet(StandardViewSet):
     queryset = AddressMatch.objects.all()
     serializer_class = AddressMatchSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class CityTownCodeViewSet(ReadOnlyModelViewSet):
+class CityTownCodeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = CityTownCode.objects.all()
     serializer_class = CityTownCodeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class FarmLocationViewSet(ModelViewSet):
+class FarmLocationViewSet(StandardViewSet):
     queryset = FarmLocation.objects.all()
     serializer_class = FarmLocationSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LandStatusViewSet(ReadOnlyModelViewSet):
+class LandStatusViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = LandStatus.objects.all()
     serializer_class = LandStatusSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LandTypeViewSet(ReadOnlyModelViewSet):
+class LandTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = LandType.objects.all()
     serializer_class = LandTypeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LandAreaViewSet(ModelViewSet):
+class LandAreaViewSet(StandardViewSet):
     queryset = LandArea.objects.all()
     serializer_class = LandAreaSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class BusinessViewSet(ModelViewSet):
+class BusinessViewSet(StandardViewSet):
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class FarmRelatedBusinessViewSet(ReadOnlyModelViewSet):
+class FarmRelatedBusinessViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = FarmRelatedBusiness.objects.all()
     serializer_class = FarmRelatedBusinessSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ManagementTypeViewSet(ReadOnlyModelViewSet):
+class ManagementTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = ManagementType.objects.all()
     serializer_class = ManagementTypeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class CropMarketingViewSet(ModelViewSet):
+class CropMarketingViewSet(StandardViewSet):
     queryset = CropMarketing.objects.all()
     serializer_class = CropMarketingSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LivestockMarketingViewSet(ModelViewSet):
+class LivestockMarketingViewSet(StandardViewSet):
     queryset = LivestockMarketing.objects.all()
     serializer_class = LivestockMarketingSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ProductTypeViewSet(ReadOnlyModelViewSet):
+class ProductTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ProductViewSet(ReadOnlyModelViewSet):
+class ProductViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class UnitViewSet(ReadOnlyModelViewSet):
+class UnitViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LossViewSet(ReadOnlyModelViewSet):
+class LossViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Loss.objects.all()
     serializer_class = LossSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ContractViewSet(ReadOnlyModelViewSet):
+class ContractViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Contract.objects.all()
     serializer_class = ContractSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class AnnualIncomeViewSet(ModelViewSet):
+class AnnualIncomeViewSet(StandardViewSet):
     queryset = AnnualIncome.objects.all()
     serializer_class = AnnualIncomeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class MarketTypeViewSet(ReadOnlyModelViewSet):
+class MarketTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = MarketType.objects.all()
     serializer_class = MarketTypeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class IncomeRangeViewSet(ReadOnlyModelViewSet):
+class IncomeRangeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = IncomeRange.objects.all()
     serializer_class = IncomeRangeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class AgeScopeViewSet(ReadOnlyModelViewSet):
+class AgeScopeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = AgeScope.objects.all()
     serializer_class = AgeScopeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class PopulationAgeViewSet(ModelViewSet):
+class PopulationAgeViewSet(StandardViewSet):
     queryset = PopulationAge.objects.all()
     serializer_class = PopulationAgeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class PopulationViewSet(ModelViewSet):
+class PopulationViewSet(StandardViewSet):
     queryset = Population.objects.all()
     serializer_class = PopulationSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class RelationshipViewSet(ReadOnlyModelViewSet):
+class RelationshipViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Relationship.objects.all()
     serializer_class = RelationshipSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class GenderViewSet(ReadOnlyModelViewSet):
+class GenderViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Gender.objects.all()
     serializer_class = GenderSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class EducationLevelViewSet(ReadOnlyModelViewSet):
+class EducationLevelViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = EducationLevel.objects.all()
     serializer_class = EducationLevelSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class FarmerWorkDayViewSet(ReadOnlyModelViewSet):
+class FarmerWorkDayViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = FarmerWorkDay.objects.all()
     serializer_class = FarmerWorkDaySerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LifeStyleViewSet(ReadOnlyModelViewSet):
+class LifeStyleViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = LifeStyle.objects.all()
     serializer_class = LifeStyleSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LongTermHireViewSet(ModelViewSet):
+class LongTermHireViewSet(StandardViewSet):
     queryset = LongTermHire.objects.all()
     serializer_class = LongTermHireSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ShortTermHireViewSet(ModelViewSet):
+class ShortTermHireViewSet(StandardViewSet):
     queryset = ShortTermHire.objects.all()
     serializer_class = ShortTermHireSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class NoSalaryHireViewSet(ModelViewSet):
+class NoSalaryHireViewSet(StandardViewSet):
     queryset = NoSalaryHire.objects.all()
     serializer_class = NoSalaryHireSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class NumberWorkersViewSet(ModelViewSet):
+class NumberWorkersViewSet(StandardViewSet):
     queryset = NumberWorkers.objects.all()
     serializer_class = NumberWorkersSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LackViewSet(ReadOnlyModelViewSet):
+class LackViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Lack.objects.all()
     serializer_class = LackSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class LongTermLackViewSet(ModelViewSet):
+class LongTermLackViewSet(StandardViewSet):
     queryset = LongTermLack.objects.all()
     serializer_class = LongTermLackSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class ShortTermLackViewSet(ModelViewSet):
+class ShortTermLackViewSet(StandardViewSet):
     queryset = ShortTermLack.objects.all()
     serializer_class = ShortTermLackSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class WorkTypeViewSet(ReadOnlyModelViewSet):
+class WorkTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = WorkType.objects.all()
     serializer_class = WorkTypeSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class SubsidyViewSet(ModelViewSet):
+class SubsidyViewSet(StandardViewSet):
     queryset = Subsidy.objects.all()
     serializer_class = SubsidySerializer
-    permission_classes = [IsAuthenticated]
 
 
-class RefuseViewSet(ModelViewSet):
+class RefuseViewSet(StandardViewSet):
     queryset = Refuse.objects.all()
     serializer_class = RefuseSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class RefuseReasonViewSet(ReadOnlyModelViewSet):
+class RefuseReasonViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = RefuseReason.objects.all()
     serializer_class = RefuseReasonSerializer
-    permission_classes = [IsAuthenticated]
 
 
-class MonthViewSet(ReadOnlyModelViewSet):
+class MonthViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = Month.objects.all()
     serializer_class = MonthSerializer
-    permission_classes = [IsAuthenticated]
