@@ -58,7 +58,7 @@ class BuilderFile(Model):
         null=True,
         blank=True,
         on_delete=CASCADE,
-        related_name="files",
+        related_name="surveys18_files",
         verbose_name=_("User"),
     )
     token = TextField(null=True, blank=True, verbose_name=_("Token String"))
