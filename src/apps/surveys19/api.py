@@ -43,6 +43,7 @@ from .views import (
     RefuseViewSet,
     RefuseReasonViewSet,
     MonthViewSet,
+    BuilderFileViewSet,
 )
 
 api = DefaultRouter()
@@ -90,3 +91,4 @@ api.register(r"subsidy", SubsidyViewSet)
 api.register(r"refuse", RefuseViewSet)
 api.register(r"refusereason", RefuseReasonViewSet)
 api.register(r"month", MonthViewSet)
+api.register(r"builder", BuilderFileViewSet)
