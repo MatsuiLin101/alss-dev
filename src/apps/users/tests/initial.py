@@ -11,7 +11,7 @@ logger = logging.getLogger("console")
 
 
 def create_groups():
-    """Initial three groups base on model permissions"""
+    """Initial groups base on model permissions"""
 
     if not Group.objects.filter(name='後台管理員').exists():
         admin = Group.objects.create(name='後台管理員')
@@ -34,10 +34,24 @@ def create_groups():
         ).exclude(Q(codename='delete_survey') | Q(codename='add_survey')):
             auditor107.permissions.add(permission)
 
+    if not Group.objects.filter(name='僅能檢視106年調查表').exists():
+        viewer106 = Group.objects.create(name='僅能檢視106年調查表')
+        viewer106.permissions.add(
+            Permission.objects.get(content_type__app_label='surveys18',
+                                   content_type__model='survey',
+                                   codename='view_survey'))
+
+    if not Group.objects.filter(name='僅能檢視107年調查表').exists():
+        viewer107 = Group.objects.create(name='僅能檢視107年調查表')
+        viewer107.permissions.add(
+            Permission.objects.get(content_type__app_label='surveys19',
+                                   content_type__model='survey',
+                                   codename='view_survey'))
+
         logger.info(
             f"""
 
-These user groups have been created: '後台管理員', '106年審表員', '107年審表員' ...
+These user groups have been created: '後台管理員', '106年審表員', '107年審表員', '僅能檢視106年調查表', '僅能檢視107年調查表'...
 
 """
         )
