@@ -45,7 +45,7 @@ These user groups have been created: '後台管理員', '106年審表員', '107�
 
 def create_superuser():
     """Initial fake superuser only for testing. Use in docker-compose."""
-    email = "admin@atri.org"
+    email = "admin@test.test"
     password = "123456"
     mobile = "0900000000"
 
@@ -77,7 +77,7 @@ Use this token for testing:
 def create_staff():
     """Initial fake staff only for testing. Use in docker-compose."""
 
-    email = "staff@atri.org"
+    email = "staff@test.test"
     password = "123456"
     mobile = "0900000001"
 
@@ -108,7 +108,7 @@ An staff has been create, grant to groups: '後台管理員', '106年審表員',
 def create_auditor106():
     """Initial fake auditor only for testing. Use in docker-compose."""
 
-    email = "auditor106@atri.org"
+    email = "auditor106@test.test"
     password = "123456"
     mobile = "0900000002"
 
@@ -139,7 +139,7 @@ An auditor has been create, grant to groups: '106年審表員':
 def create_auditor107():
     """Initial fake auditor only for testing. Use in docker-compose."""
 
-    email = "auditor107@atri.org"
+    email = "auditor107@test.test"
     password = "123456"
     mobile = "0900000003"
 
