@@ -116,6 +116,8 @@ var SurveyHelper = {
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
+        this.Investigator.Reset();
+        this.Reviewer.Reset();
         this.FarmerId.Reset();
         this.FarmerName.Reset();
         this.Phone.Reset();
@@ -127,6 +129,8 @@ var SurveyHelper = {
         this.Second.Reset();
     },
     Set: function (obj) {
+        this.Investigator.Set(obj);
+        this.Reviewer.Set(obj);
         this.FarmerId.Set(obj);
         this.Phone.Set(obj);
         this.FarmerName.Set(obj);
@@ -136,6 +140,24 @@ var SurveyHelper = {
         this.Lack.Set(obj);
         this.Note.Set(obj);
         this.Second.Set(obj);
+    },
+    Investigator: {
+        Container: $('#panel1 input[name="investigator"]'),
+        Set: function(obj) {
+            this.Container.val(obj.investigator);
+        },
+        Reset: function(){
+            this.Container.val('');
+        },
+    },
+    Reviewer: {
+        Container: $('#panel1 input[name="reviewer"]'),
+        Set: function(obj) {
+            this.Container.val(obj.reviewer);
+        },
+        Reset: function(){
+            this.Container.val('');
+        },
     },
     FarmerId: {
         Container: $('#panel1 input[name="farmerid"]'),
@@ -1433,7 +1455,7 @@ var CropMarketingHelper = {
 
                 var minMsgs = [];
                 var maxMsgs = [];
-                
+
                 /* Count from crops */
 
                 CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
@@ -1481,7 +1503,7 @@ var CropMarketingHelper = {
                     }
 
                 })
-                
+
                 /* Count from livestocks */
 
                 LivestockMarketingHelper.LivestockMarketing.Container.find('tr').each(function(){
