@@ -4,7 +4,7 @@
     name: 稻作
     code: 101
     min_hour:
-    max_hour: 
+    max_hour:
     display: True
     type: 1
     management_type: 1
@@ -14,8 +14,8 @@
   fields:
     name: 一期稻作
     code: 102
-    min_hour: 110
-    max_hour: 133
+    min_hour: 91
+    max_hour: 166
     display: True
     type: 1
     management_type: 1
@@ -25,8 +25,8 @@
   fields:
     name: 二期稻作
     code: 103
-    min_hour: 105
-    max_hour: 144
+    min_hour: 92
+    max_hour: 173
     display: True
     type: 1
     management_type: 1
@@ -357,8 +357,8 @@
   fields:
     name: 茶（手採）
     code: 317
-    min_hour: 1631
-    max_hour: 2158
+    min_hour: 3262
+    max_hour: 4316
     display: True
     type: 1
     management_type: 4
@@ -368,8 +368,8 @@
   fields:
     name: 茶（機採）
     code: 318
-    min_hour: 370
-    max_hour: 530
+    min_hour: 740
+    max_hour: 1060
     display: True
     type: 1
     management_type: 4
@@ -1736,7 +1736,7 @@
     max_hour: 3
     display: True
     type: 2
-    management_type: 12  
+    management_type: 12
 
 - model: surveys19.Product
   pk: 158
@@ -1747,7 +1747,7 @@
     max_hour: 3
     display: True
     type: 2
-    management_type: 12  
+    management_type: 12
 
 - model: surveys19.Product
   pk: 159
@@ -1758,7 +1758,7 @@
     max_hour: 3
     display: True
     type: 2
-    management_type: 12  
+    management_type: 12
 
 - model: surveys19.Product
   pk: 160
