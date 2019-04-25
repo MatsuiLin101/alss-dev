@@ -366,7 +366,7 @@ var Helper = {
     BindIntegerOnly: function($obj){
         $obj.keydown(function (event) {
             var keycode = event.which;
-            if (!(event.shiftKey == false && (keycode == 46 || keycode == 8 || keycode == 37 || keycode == 39 || (keycode >= 48 && keycode <= 57)))) {
+            if (!(event.shiftKey == false && (keycode == 46 || keycode == 8 || keycode == 37 || keycode == 39 || (keycode >= 48 && keycode <= 57) || (keycode >= 96 && keycode <= 105) || keycode == 9 || keycode == 13 || keycode == 108 ))) {
                 event.preventDefault();
             }
         });
