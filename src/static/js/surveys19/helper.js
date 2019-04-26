@@ -1218,7 +1218,7 @@ var ManagementTypeHelper = {
 
                 if(highestObj){
                     var con = checkedManagementType.length == 1 && highestObj['id'] != checkedManagementTypeId;
-                    var msg = '全年主要經營型態應與【問項1.5及1.6】各作物代碼對應的經營類別銷售額總計最高者({0})相符'.format(highestObj['name']);
+                    var msg = '全年主要經營型態應與【問項1.5及1.6】各作物(畜禽)代碼對應的經營類別銷售額總計最高者({0})相符'.format(highestObj['name']);
                     Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guids[0]);
                 }
             },
@@ -1508,6 +1508,7 @@ var CropMarketingHelper = {
                             minHour = $(this).data('minHour');
                             maxHour = $(this).data('maxHour');
                             matchingRate = mr;
+                            productName = name;
                         }
                     })
 
