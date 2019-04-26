@@ -1486,7 +1486,7 @@ var CropMarketingHelper = {
                         var skip = CropMarketingHelper.CropMarketing.Container.find('tr').filter(
                             function() { return $(this).find('[name="landnumber"]').val() == landNumber; }
                         ).filter(
-                            function() { return $(this).find('[name="product"] > option:selected').data('managementtypeId') == managementTypeId; }
+                            function() { return $(this).find('[name="product"] > option:selected').data('name') == productName; }
                         ).filter(
                             function() { return $(this).find('[name="landarea"]').val() > landArea; }
                         ).length > 0;
