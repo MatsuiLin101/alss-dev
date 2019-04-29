@@ -2034,3 +2034,14 @@
     display: True
     type: 2
     management_type: 14
+
+- model: surveys19.Product
+  pk: 185
+  fields:
+    name: 柳丁
+    code: 503
+    min_hour: 987
+    max_hour: 1149
+    display: False
+    type: 1
+    management_type: 6

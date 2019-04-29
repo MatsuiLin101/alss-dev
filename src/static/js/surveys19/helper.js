@@ -1574,9 +1574,9 @@ var CropMarketingHelper = {
                 workHourMsg = workHourMsg.format(selfWorkHour, longTermWorkHour, shortTermWorkHour,
                                                  workHours,
                                                  minMsgs.join(' + '),
-                                                 reasonableWorkHourMin,
+                                                 Helper.Round(reasonableWorkHourMin, 1),
                                                  maxMsgs.join(' + '),
-                                                 reasonableWorkHourMax)
+                                                 Helper.Round(reasonableWorkHourMax, 1))
                 Helper.LogHandler.Log(con, SurveyHelper.Hire.Info, msg + workHourMsg, this.Guids[0], null, false);
 
                 msg = '很好！填列之自家工與僱工工作時數「符合」合理工作時數區間：</br>';
