@@ -920,7 +920,7 @@ var LandAreaHelper = {
                     var landTypeId = $(this).data('landtype-id');
                     var value = parseInt($(this).val());
                     if(Helper.NumberValidate(value)) {
-                        if(landTypeId == 2) value = Helper.Round(value * 0.03306, 1);
+                        if(landTypeId == 2) value = Helper.Round(value * 0.034, 1);
                         landAreaSum += value;
                     }
                 })
