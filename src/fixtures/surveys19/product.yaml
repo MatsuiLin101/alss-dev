@@ -3,8 +3,8 @@
   fields:
     name: 稻作
     code: 101
-    min_hour:
-    max_hour:
+    min_hour: 91
+    max_hour: 173
     display: True
     type: 1
     management_type: 1
