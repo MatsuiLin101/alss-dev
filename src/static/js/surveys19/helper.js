@@ -1523,8 +1523,8 @@ var CropMarketingHelper = {
                     }
 
                     if(landArea > 0 && plantTimes > 0){
-                        var resultMin = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseInt(minHour), 1);
-                        var resultMax = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseInt(maxHour), 1);
+                        var resultMin = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(minHour), 1);
+                        var resultMax = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(maxHour), 1);
 
                         if(minHour > 0) reasonableWorkHourMin += resultMin;
                         if(maxHour > 0) reasonableWorkHourMax += resultMax;
@@ -1554,8 +1554,8 @@ var CropMarketingHelper = {
                     }
 
                     if(raisingNumber > 0){
-                        var resultMin = Helper.Round(parseFloat(raisingNumber) * parseInt(minHour), 1);
-                        var resultMax = Helper.Round(parseFloat(raisingNumber) * parseInt(maxHour), 1);
+                        var resultMin = Helper.Round(parseFloat(raisingNumber) * parseFloat(minHour), 1);
+                        var resultMax = Helper.Round(parseFloat(raisingNumber) * parseFloat(maxHour), 1);
 
                         if(minHour > 0) reasonableWorkHourMin += resultMin;
                         if(maxHour > 0) reasonableWorkHourMax += resultMax;
