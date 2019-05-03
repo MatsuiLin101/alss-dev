@@ -108,3 +108,7 @@ div[data-partial=datatable] {
    max-height: 600px;
    overflow-y: scroll;
 }
+
+#panel4 > div > div > div > div > div > div > input.form-control {
+    width: 100% !important;
+}
