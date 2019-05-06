@@ -924,6 +924,7 @@ var LandAreaHelper = {
                         landAreaSum += value;
                     }
                 })
+                landAreaSum = Math.ceil(landAreaSum);
 
                 var cropMarketingAreaMap = {};
                 CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
