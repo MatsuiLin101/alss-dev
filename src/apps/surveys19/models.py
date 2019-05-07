@@ -577,7 +577,7 @@ class Product(Model):
     code = CharField(max_length=50, verbose_name=_("Code"))
     min_hour = FloatField(null=True, blank=True, verbose_name=_("Min Hour"))
     max_hour = FloatField(null=True, blank=True, verbose_name=_("Max Hour"))
-    display = BooleanField(default=False, verbose_name=_("Display"))
+    parent = ForeignKey('self', null=True, blank=True, on_delete=CASCADE, verbose_name=_('Parent Product'))
     type = ForeignKey(
         "surveys19.ProductType",
         null=True,
@@ -605,6 +605,9 @@ class Product(Model):
 
     def __str__(self):
         return str(self.name)
+
+    def display(self):
+        return self.parent is None
 
 
 class Unit(Model):

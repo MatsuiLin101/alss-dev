@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 03:11+0800\n"
+"POT-Creation-Date: 2019-05-07 14:28+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgid "Logs"
 msgstr "紀錄及日誌"
 
 #: apps/logs/models.py:37 apps/surveys18/models.py:62
-#: apps/surveys19/models.py:1481 apps/users/models.py:67
+#: apps/surveys19/models.py:1484 apps/users/models.py:67
 msgid "User"
 msgstr "使用者"
 
@@ -63,20 +63,20 @@ msgstr "目前錯誤數量"
 #: apps/surveys19/models.py:347 apps/surveys19/models.py:374
 #: apps/surveys19/models.py:398 apps/surveys19/models.py:462
 #: apps/surveys19/models.py:532 apps/surveys19/models.py:556
-#: apps/surveys19/models.py:598 apps/surveys19/models.py:630
-#: apps/surveys19/models.py:661 apps/surveys19/models.py:685
-#: apps/surveys19/models.py:726 apps/surveys19/models.py:749
-#: apps/surveys19/models.py:774 apps/surveys19/models.py:798
-#: apps/surveys19/models.py:840 apps/surveys19/models.py:908
-#: apps/surveys19/models.py:933 apps/surveys19/models.py:957
-#: apps/surveys19/models.py:982 apps/surveys19/models.py:1008
-#: apps/surveys19/models.py:1032 apps/surveys19/models.py:1077
-#: apps/surveys19/models.py:1122 apps/surveys19/models.py:1158
-#: apps/surveys19/models.py:1197 apps/surveys19/models.py:1221
-#: apps/surveys19/models.py:1266 apps/surveys19/models.py:1323
-#: apps/surveys19/models.py:1347 apps/surveys19/models.py:1379
-#: apps/surveys19/models.py:1415 apps/surveys19/models.py:1439
-#: apps/surveys19/models.py:1462
+#: apps/surveys19/models.py:598 apps/surveys19/models.py:633
+#: apps/surveys19/models.py:664 apps/surveys19/models.py:688
+#: apps/surveys19/models.py:729 apps/surveys19/models.py:752
+#: apps/surveys19/models.py:777 apps/surveys19/models.py:801
+#: apps/surveys19/models.py:843 apps/surveys19/models.py:911
+#: apps/surveys19/models.py:936 apps/surveys19/models.py:960
+#: apps/surveys19/models.py:985 apps/surveys19/models.py:1011
+#: apps/surveys19/models.py:1035 apps/surveys19/models.py:1080
+#: apps/surveys19/models.py:1125 apps/surveys19/models.py:1161
+#: apps/surveys19/models.py:1200 apps/surveys19/models.py:1224
+#: apps/surveys19/models.py:1269 apps/surveys19/models.py:1326
+#: apps/surveys19/models.py:1350 apps/surveys19/models.py:1382
+#: apps/surveys19/models.py:1418 apps/surveys19/models.py:1442
+#: apps/surveys19/models.py:1465
 msgid "Updated"
 msgstr "上次更新"
 
@@ -107,14 +107,14 @@ msgstr "106年勞動力調查"
 #: apps/surveys19/models.py:40 apps/surveys19/models.py:222
 #: apps/surveys19/models.py:245 apps/surveys19/models.py:366
 #: apps/surveys19/models.py:392 apps/surveys19/models.py:550
-#: apps/surveys19/models.py:576 apps/surveys19/models.py:617
-#: apps/surveys19/models.py:648 apps/surveys19/models.py:679
-#: apps/surveys19/models.py:743 apps/surveys19/models.py:766
-#: apps/surveys19/models.py:791 apps/surveys19/models.py:927
-#: apps/surveys19/models.py:951 apps/surveys19/models.py:975
-#: apps/surveys19/models.py:1000 apps/surveys19/models.py:1026
-#: apps/surveys19/models.py:1214 apps/surveys19/models.py:1341
-#: apps/surveys19/models.py:1432 apps/surveys19/models.py:1455
+#: apps/surveys19/models.py:576 apps/surveys19/models.py:620
+#: apps/surveys19/models.py:651 apps/surveys19/models.py:682
+#: apps/surveys19/models.py:746 apps/surveys19/models.py:769
+#: apps/surveys19/models.py:794 apps/surveys19/models.py:930
+#: apps/surveys19/models.py:954 apps/surveys19/models.py:978
+#: apps/surveys19/models.py:1003 apps/surveys19/models.py:1029
+#: apps/surveys19/models.py:1217 apps/surveys19/models.py:1344
+#: apps/surveys19/models.py:1435 apps/surveys19/models.py:1458
 msgid "Name"
 msgstr "名稱"
 
@@ -123,20 +123,20 @@ msgstr "名稱"
 msgid "BuilderFileType"
 msgstr "資料匯入類型"
 
-#: apps/surveys18/models.py:55 apps/surveys19/models.py:1474
+#: apps/surveys18/models.py:55 apps/surveys19/models.py:1477
 msgid "Create Time"
 msgstr "新增時間"
 
-#: apps/surveys18/models.py:64 apps/surveys19/models.py:1483
+#: apps/surveys18/models.py:64 apps/surveys19/models.py:1486
 msgid "Token String"
 msgstr "匯入字串"
 
-#: apps/surveys18/models.py:69 apps/surveys19/models.py:1488
+#: apps/surveys18/models.py:69 apps/surveys19/models.py:1491
 msgid "DataFile"
 msgstr "檔案"
 
 #: apps/surveys18/models.py:80 apps/surveys18/models.py:81
-#: apps/surveys19/models.py:1492 apps/surveys19/models.py:1493
+#: apps/surveys19/models.py:1495 apps/surveys19/models.py:1496
 msgid "BuilderFile"
 msgstr "匯入檔案"
 
@@ -166,7 +166,7 @@ msgstr "無外僱人力"
 
 #: apps/surveys18/models.py:105 apps/surveys18/models.py:1249
 #: apps/surveys18/models.py:1250 apps/surveys19/models.py:50
-#: apps/surveys19/models.py:1225 apps/surveys19/models.py:1226
+#: apps/surveys19/models.py:1228 apps/surveys19/models.py:1229
 msgid "Lack"
 msgstr "農業人力短缺情形"
 
@@ -215,83 +215,83 @@ msgstr "調查期間"
 #: apps/surveys19/models.py:128 apps/surveys19/models.py:187
 #: apps/surveys19/models.py:286 apps/surveys19/models.py:331
 #: apps/surveys19/models.py:421 apps/surveys19/models.py:486
-#: apps/surveys19/models.py:705 apps/surveys19/models.py:818
-#: apps/surveys19/models.py:860 apps/surveys19/models.py:1052
-#: apps/surveys19/models.py:1098 apps/surveys19/models.py:1143
-#: apps/surveys19/models.py:1243 apps/surveys19/models.py:1289
-#: apps/surveys19/models.py:1367
+#: apps/surveys19/models.py:708 apps/surveys19/models.py:821
+#: apps/surveys19/models.py:863 apps/surveys19/models.py:1055
+#: apps/surveys19/models.py:1101 apps/surveys19/models.py:1146
+#: apps/surveys19/models.py:1246 apps/surveys19/models.py:1292
+#: apps/surveys19/models.py:1370
 msgid "Survey"
 msgstr "調查表"
 
 #: apps/surveys18/models.py:165 apps/surveys18/models.py:854
 #: apps/surveys18/models.py:1003 apps/surveys18/models.py:1004
 #: apps/surveys19/models.py:494 apps/surveys19/models.py:602
-#: apps/surveys19/models.py:603 apps/surveys19/models.py:1297
+#: apps/surveys19/models.py:603 apps/surveys19/models.py:1300
 msgid "Product"
 msgstr "產品名稱"
 
 #: apps/surveys18/models.py:173 apps/surveys18/models.py:214
-#: apps/surveys18/models.py:413 apps/surveys19/models.py:1061
-#: apps/surveys19/models.py:1251 apps/surveys19/models.py:1305
+#: apps/surveys18/models.py:413 apps/surveys19/models.py:1064
+#: apps/surveys19/models.py:1254 apps/surveys19/models.py:1308
 msgid "Work Type"
 msgstr "工作類型"
 
 #: apps/surveys18/models.py:175 apps/surveys18/models.py:216
 #: apps/surveys18/models.py:256 apps/surveys18/models.py:453
-#: apps/surveys19/models.py:1152 apps/surveys19/models.py:1253
-#: apps/surveys19/models.py:1310 apps/surveys19/models.py:1371
+#: apps/surveys19/models.py:1155 apps/surveys19/models.py:1256
+#: apps/surveys19/models.py:1313 apps/surveys19/models.py:1374
 msgid "Number Of People"
 msgstr "人數"
 
 #: apps/surveys18/models.py:180 apps/surveys18/models.py:221
-#: apps/surveys18/models.py:419 apps/surveys19/models.py:1067
-#: apps/surveys19/models.py:1258 apps/surveys19/models.py:1315
+#: apps/surveys18/models.py:419 apps/surveys19/models.py:1070
+#: apps/surveys19/models.py:1261 apps/surveys19/models.py:1318
 msgid "Months"
 msgstr "月份"
 
 #: apps/surveys18/models.py:191 apps/surveys18/models.py:192
-#: apps/surveys19/models.py:1327 apps/surveys19/models.py:1328
+#: apps/surveys19/models.py:1330 apps/surveys19/models.py:1331
 msgid "ShortTermLack"
 msgstr "短缺臨時或季節性員工"
 
 #: apps/surveys18/models.py:232 apps/surveys18/models.py:233
-#: apps/surveys19/models.py:1270 apps/surveys19/models.py:1271
+#: apps/surveys19/models.py:1273 apps/surveys19/models.py:1274
 msgid "LongTermLack"
 msgstr "短缺常僱員工"
 
 #: apps/surveys18/models.py:254 apps/surveys18/models.py:368
 #: apps/surveys18/models.py:1386 apps/surveys18/models.py:1387
-#: apps/surveys19/models.py:1106 apps/surveys19/models.py:1150
-#: apps/surveys19/models.py:1466 apps/surveys19/models.py:1467
+#: apps/surveys19/models.py:1109 apps/surveys19/models.py:1153
+#: apps/surveys19/models.py:1469 apps/surveys19/models.py:1470
 msgid "Month"
 msgstr "月份"
 
 #: apps/surveys18/models.py:266 apps/surveys18/models.py:267
-#: apps/surveys19/models.py:1162 apps/surveys19/models.py:1163
+#: apps/surveys19/models.py:1165 apps/surveys19/models.py:1166
 msgid "NoSalaryHire"
 msgstr "不支薪人員"
 
 #: apps/surveys18/models.py:289 apps/surveys18/models.py:760
-#: apps/surveys19/models.py:832 apps/surveys19/models.py:1189
+#: apps/surveys19/models.py:835 apps/surveys19/models.py:1192
 msgid "Age Scope"
 msgstr "年齡範圍"
 
 #: apps/surveys18/models.py:291 apps/surveys18/models.py:762
-#: apps/surveys19/models.py:834 apps/surveys19/models.py:1191
+#: apps/surveys19/models.py:837 apps/surveys19/models.py:1194
 msgid "Count"
 msgstr "人數"
 
 #: apps/surveys18/models.py:301 apps/surveys18/models.py:302
-#: apps/surveys19/models.py:1201 apps/surveys19/models.py:1202
+#: apps/surveys19/models.py:1204 apps/surveys19/models.py:1205
 msgid "NumberWorkers"
 msgstr "人數"
 
-#: apps/surveys18/models.py:313 apps/surveys19/models.py:792
+#: apps/surveys18/models.py:313 apps/surveys19/models.py:795
 msgid "Group"
 msgstr "群組"
 
 #: apps/surveys18/models.py:323 apps/surveys18/models.py:324
-#: apps/surveys19/models.py:802 apps/surveys19/models.py:803
+#: apps/surveys19/models.py:805 apps/surveys19/models.py:806
 msgid "AgeScope"
 msgstr "年齡範圍"
 
@@ -303,51 +303,51 @@ msgstr "年齡範圍"
 #: apps/surveys18/models.py:1036 apps/surveys18/models.py:1087
 #: apps/surveys19/models.py:160 apps/surveys19/models.py:197
 #: apps/surveys19/models.py:365 apps/surveys19/models.py:391
-#: apps/surveys19/models.py:577 apps/surveys19/models.py:616
-#: apps/surveys19/models.py:647 apps/surveys19/models.py:678
-#: apps/surveys19/models.py:926 apps/surveys19/models.py:950
-#: apps/surveys19/models.py:974 apps/surveys19/models.py:999
-#: apps/surveys19/models.py:1025 apps/surveys19/models.py:1340
+#: apps/surveys19/models.py:577 apps/surveys19/models.py:619
+#: apps/surveys19/models.py:650 apps/surveys19/models.py:681
+#: apps/surveys19/models.py:929 apps/surveys19/models.py:953
+#: apps/surveys19/models.py:977 apps/surveys19/models.py:1002
+#: apps/surveys19/models.py:1028 apps/surveys19/models.py:1343
 msgid "Code"
 msgstr "代碼"
 
 #: apps/surveys18/models.py:345 apps/surveys18/models.py:346
-#: apps/surveys19/models.py:1351 apps/surveys19/models.py:1352
+#: apps/surveys19/models.py:1354 apps/surveys19/models.py:1355
 msgid "WorkType"
 msgstr "工作型態"
 
 #: apps/surveys18/models.py:362 apps/surveys18/models.py:406
-#: apps/surveys19/models.py:1054 apps/surveys19/models.py:1100
+#: apps/surveys19/models.py:1057 apps/surveys19/models.py:1103
 msgid "Average Work Day"
 msgstr "平均每月工作日數"
 
-#: apps/surveys18/models.py:374 apps/surveys19/models.py:1112
+#: apps/surveys18/models.py:374 apps/surveys19/models.py:1115
 msgid "Work Types"
 msgstr "工作型態"
 
 #: apps/surveys18/models.py:388 apps/surveys18/models.py:389
-#: apps/surveys19/models.py:1126 apps/surveys19/models.py:1127
+#: apps/surveys19/models.py:1129 apps/surveys19/models.py:1130
 msgid "ShortTermHire"
 msgstr "臨時或季節性員工"
 
 #: apps/surveys18/models.py:433 apps/surveys18/models.py:434
-#: apps/surveys19/models.py:1081 apps/surveys19/models.py:1082
+#: apps/surveys19/models.py:1084 apps/surveys19/models.py:1085
 msgid "LongTermHire"
 msgstr "常僱員工"
 
-#: apps/surveys18/models.py:451 apps/surveys19/models.py:1369
+#: apps/surveys18/models.py:451 apps/surveys19/models.py:1372
 msgid "Has Subsidy"
 msgstr "有補助"
 
-#: apps/surveys18/models.py:452 apps/surveys19/models.py:1370
+#: apps/surveys18/models.py:452 apps/surveys19/models.py:1373
 msgid "None Subsidy"
 msgstr "無補助"
 
-#: apps/surveys18/models.py:454 apps/surveys19/models.py:1372
+#: apps/surveys18/models.py:454 apps/surveys19/models.py:1375
 msgid "Month Delta"
 msgstr "月"
 
-#: apps/surveys18/models.py:455 apps/surveys19/models.py:1373
+#: apps/surveys18/models.py:455 apps/surveys19/models.py:1376
 msgid "Day Delta"
 msgstr "日"
 
@@ -356,58 +356,58 @@ msgid "Hour Delta"
 msgstr "小時"
 
 #: apps/surveys18/models.py:466 apps/surveys18/models.py:467
-#: apps/surveys18/models.py:481 apps/surveys19/models.py:1383
-#: apps/surveys19/models.py:1384 apps/surveys19/models.py:1399
+#: apps/surveys18/models.py:481 apps/surveys19/models.py:1386
+#: apps/surveys19/models.py:1387 apps/surveys19/models.py:1402
 msgid "Subsidy"
 msgstr "補助"
 
 #: apps/surveys18/models.py:489 apps/surveys18/models.py:501
-#: apps/surveys18/models.py:502 apps/surveys19/models.py:1407
-#: apps/surveys19/models.py:1419 apps/surveys19/models.py:1420
+#: apps/surveys18/models.py:502 apps/surveys19/models.py:1410
+#: apps/surveys19/models.py:1422 apps/surveys19/models.py:1423
 msgid "Refuse"
 msgstr "無補助"
 
 #: apps/surveys18/models.py:491 apps/surveys18/models.py:1072
-#: apps/surveys19/models.py:341 apps/surveys19/models.py:1409
+#: apps/surveys19/models.py:341 apps/surveys19/models.py:1412
 msgid "Extra"
 msgstr "補充內容"
 
 #: apps/surveys18/models.py:513 apps/surveys18/models.py:1089
-#: apps/surveys19/models.py:367 apps/surveys19/models.py:1433
+#: apps/surveys19/models.py:367 apps/surveys19/models.py:1436
 msgid "Has Extra"
 msgstr "有補充內容"
 
 #: apps/surveys18/models.py:523 apps/surveys18/models.py:524
-#: apps/surveys19/models.py:1443 apps/surveys19/models.py:1444
+#: apps/surveys19/models.py:1446 apps/surveys19/models.py:1447
 msgid "RefuseReason"
 msgstr "無補助原因"
 
 #: apps/surveys18/models.py:546 apps/surveys18/models.py:664
-#: apps/surveys18/models.py:665 apps/surveys19/models.py:868
-#: apps/surveys19/models.py:937 apps/surveys19/models.py:938
+#: apps/surveys18/models.py:665 apps/surveys19/models.py:871
+#: apps/surveys19/models.py:940 apps/surveys19/models.py:941
 msgid "Relationship"
 msgstr "與經濟戶長關係"
 
 #: apps/surveys18/models.py:554 apps/surveys18/models.py:731
 #: apps/surveys18/models.py:732 apps/surveys18/models.py:750
-#: apps/surveys19/models.py:822 apps/surveys19/models.py:876
-#: apps/surveys19/models.py:961 apps/surveys19/models.py:962
+#: apps/surveys19/models.py:825 apps/surveys19/models.py:879
+#: apps/surveys19/models.py:964 apps/surveys19/models.py:965
 msgid "Gender"
 msgstr "性別"
 
-#: apps/surveys18/models.py:556 apps/surveys19/models.py:878
+#: apps/surveys18/models.py:556 apps/surveys19/models.py:881
 msgid "Birth Year"
 msgstr "出生年"
 
-#: apps/surveys18/models.py:563 apps/surveys19/models.py:885
+#: apps/surveys18/models.py:563 apps/surveys19/models.py:888
 msgid "Education Level"
 msgstr "教育程度"
 
-#: apps/surveys18/models.py:571 apps/surveys19/models.py:893
+#: apps/surveys18/models.py:571 apps/surveys19/models.py:896
 msgid "Farmer Work Day"
 msgstr "自家農牧業工作日數"
 
-#: apps/surveys18/models.py:579 apps/surveys19/models.py:901
+#: apps/surveys18/models.py:579 apps/surveys19/models.py:904
 msgid "Life Style"
 msgstr "主要生活型態"
 
@@ -416,12 +416,12 @@ msgid "Other Farm Work"
 msgstr "是否從事農牧業外工作"
 
 #: apps/surveys18/models.py:598 apps/surveys18/models.py:599
-#: apps/surveys19/models.py:912 apps/surveys19/models.py:913
+#: apps/surveys19/models.py:915 apps/surveys19/models.py:916
 msgid "Population"
 msgstr "戶內人口組成狀況"
 
 #: apps/surveys18/models.py:621 apps/surveys18/models.py:622
-#: apps/surveys19/models.py:1012 apps/surveys19/models.py:1013
+#: apps/surveys19/models.py:1015 apps/surveys19/models.py:1016
 msgid "FarmerWorkDay"
 msgstr "自家農牧業工作日數"
 
@@ -429,22 +429,22 @@ msgstr "自家農牧業工作日數"
 msgid "OtherFarmWork"
 msgstr "是否從事農牧業外工作"
 
-#: apps/surveys18/models.py:677 apps/surveys19/models.py:976
+#: apps/surveys18/models.py:677 apps/surveys19/models.py:979
 msgid "Age"
 msgstr "年齡"
 
 #: apps/surveys18/models.py:687 apps/surveys18/models.py:688
-#: apps/surveys19/models.py:986 apps/surveys19/models.py:987
+#: apps/surveys19/models.py:989 apps/surveys19/models.py:990
 msgid "EducationLevel"
 msgstr "教育程度"
 
 #: apps/surveys18/models.py:709 apps/surveys18/models.py:710
-#: apps/surveys19/models.py:1036 apps/surveys19/models.py:1037
+#: apps/surveys19/models.py:1039 apps/surveys19/models.py:1040
 msgid "LifeStyle"
 msgstr "主要生活型態"
 
 #: apps/surveys18/models.py:772 apps/surveys18/models.py:773
-#: apps/surveys19/models.py:844 apps/surveys19/models.py:845
+#: apps/surveys19/models.py:847 apps/surveys19/models.py:848
 msgid "PopulationAge"
 msgstr "戶內人口數"
 
@@ -455,7 +455,7 @@ msgstr "產品代碼"
 #: apps/surveys18/models.py:803 apps/surveys18/models.py:862
 #: apps/surveys18/models.py:924 apps/surveys18/models.py:925
 #: apps/surveys19/models.py:437 apps/surveys19/models.py:502
-#: apps/surveys19/models.py:665 apps/surveys19/models.py:666
+#: apps/surveys19/models.py:668 apps/surveys19/models.py:669
 msgid "Loss"
 msgstr "災害"
 
@@ -463,7 +463,7 @@ msgstr "災害"
 #: apps/surveys18/models.py:953 apps/surveys18/models.py:954
 #: apps/surveys18/models.py:1145 apps/surveys19/models.py:258
 #: apps/surveys19/models.py:445 apps/surveys19/models.py:510
-#: apps/surveys19/models.py:634 apps/surveys19/models.py:635
+#: apps/surveys19/models.py:637 apps/surveys19/models.py:638
 msgid "Unit"
 msgstr "計價單位"
 
@@ -497,7 +497,7 @@ msgid "CropMarketing"
 msgstr "農作物及其製品產銷情形"
 
 #: apps/surveys18/models.py:878 apps/surveys19/models.py:518
-#: apps/surveys19/models.py:689 apps/surveys19/models.py:690
+#: apps/surveys19/models.py:692 apps/surveys19/models.py:693
 msgid "Contract"
 msgstr "契約飼養"
 
@@ -513,7 +513,7 @@ msgstr "畜禽產品及其產銷情形"
 #: apps/surveys18/models.py:913 apps/surveys18/models.py:942
 #: apps/surveys18/models.py:974 apps/surveys18/models.py:975
 #: apps/surveys18/models.py:992 apps/surveys19/models.py:586
-#: apps/surveys19/models.py:623 apps/surveys19/models.py:654
+#: apps/surveys19/models.py:626 apps/surveys19/models.py:657
 msgid "Product Type"
 msgstr "產品類型"
 
@@ -585,7 +585,7 @@ msgstr "年底耕作地面積"
 msgid "Phone"
 msgstr "電話"
 
-#: apps/surveys18/models.py:1239 apps/surveys19/models.py:1215
+#: apps/surveys18/models.py:1239 apps/surveys19/models.py:1218
 msgid "Is Lack"
 msgstr "有缺工"
 
@@ -606,43 +606,43 @@ msgstr "地址"
 msgid "AddressMatch"
 msgstr "地址與調查名冊相同"
 
-#: apps/surveys18/models.py:1292 apps/surveys19/models.py:767
+#: apps/surveys18/models.py:1292 apps/surveys19/models.py:770
 msgid "Minimum Income"
 msgstr "區間最小值"
 
-#: apps/surveys18/models.py:1293 apps/surveys19/models.py:768
+#: apps/surveys18/models.py:1293 apps/surveys19/models.py:771
 msgid "Maximum Income"
 msgstr "區間最大值"
 
-#: apps/surveys18/models.py:1303 apps/surveys19/models.py:778
+#: apps/surveys18/models.py:1303 apps/surveys19/models.py:781
 msgid "IncomeRange"
 msgstr "銷售額區間"
 
-#: apps/surveys18/models.py:1304 apps/surveys19/models.py:779
+#: apps/surveys18/models.py:1304 apps/surveys19/models.py:782
 msgid "IncomeRanges"
 msgstr "銷售額區間"
 
-#: apps/surveys18/models.py:1324 apps/surveys19/models.py:753
+#: apps/surveys18/models.py:1324 apps/surveys19/models.py:756
 msgid "MarketType"
 msgstr "銷售類型"
 
-#: apps/surveys18/models.py:1325 apps/surveys19/models.py:754
+#: apps/surveys18/models.py:1325 apps/surveys19/models.py:757
 msgid "MarketTypes"
 msgstr "銷售類型"
 
-#: apps/surveys18/models.py:1346 apps/surveys19/models.py:712
+#: apps/surveys18/models.py:1346 apps/surveys19/models.py:715
 msgid "Market Type"
 msgstr "銷售類型"
 
-#: apps/surveys18/models.py:1353 apps/surveys19/models.py:719
+#: apps/surveys18/models.py:1353 apps/surveys19/models.py:722
 msgid "Income Range"
 msgstr "銷售額區間"
 
-#: apps/surveys18/models.py:1364 apps/surveys19/models.py:730
+#: apps/surveys18/models.py:1364 apps/surveys19/models.py:733
 msgid "AnnualIncome"
 msgstr "全年銷售額"
 
-#: apps/surveys18/models.py:1365 apps/surveys19/models.py:731
+#: apps/surveys18/models.py:1365 apps/surveys19/models.py:734
 msgid "AnnualIncomes"
 msgstr "全年銷售額"
 
@@ -676,7 +676,7 @@ msgid "FarmLocation"
 msgstr "可耕作地或畜牧用地（場址）所在地區"
 
 #: apps/surveys19/models.py:448 apps/surveys19/models.py:521
-#: apps/surveys19/models.py:1308
+#: apps/surveys19/models.py:1311
 msgid "Product Name"
 msgstr "產品名稱"
 
@@ -697,22 +697,22 @@ msgid "Max Hour"
 msgstr "最大工時"
 
 #: apps/surveys19/models.py:580
-msgid "Display"
-msgstr "顯示"
+msgid "Parent Product"
+msgstr "父產品"
 
 #: apps/surveys19/models.py:591
 msgid "Management Type"
 msgstr "主要經營型態"
 
-#: apps/surveys19/models.py:1001
+#: apps/surveys19/models.py:1004
 msgid "Min Day"
 msgstr "最小日數"
 
-#: apps/surveys19/models.py:1002
+#: apps/surveys19/models.py:1005
 msgid "Max Day"
 msgstr "最大日數"
 
-#: apps/surveys19/models.py:1260 apps/surveys19/models.py:1317
+#: apps/surveys19/models.py:1263 apps/surveys19/models.py:1320
 msgid "Average Lack Day"
 msgstr "平均每月短缺日數"
 
@@ -775,3 +775,6 @@ msgstr "確認"
 #: templates/admin/base.html:5
 msgid "Welcome,"
 msgstr "哈囉，"
+
+#~ msgid "Display"
+#~ msgstr "顯示"

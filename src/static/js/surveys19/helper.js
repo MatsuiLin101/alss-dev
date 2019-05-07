@@ -1461,6 +1461,10 @@ var CropMarketingHelper = {
                     }
                 })
 
+                selfWorkHour = Helper.Round(selfWorkHour);
+                longTermWorkHour = Helper.Round(longTermWorkHour);
+                shortTermWorkHour = Helper.Round(shortTermWorkHour);
+
                 var workHours = selfWorkHour + longTermWorkHour + shortTermWorkHour;
 
                 var reasonableWorkHourMin = 0;
@@ -1482,6 +1486,7 @@ var CropMarketingHelper = {
                     var minHour = $product.data('minHour');
                     var maxHour = $product.data('maxHour');
                     var productName = $product.data('name');
+                    var productId = $product.val();
                     var managementTypeId = $product.data('managementtypeId');
                     var userInputProductName = $(this).find('[name="name"]').val();
 
@@ -1502,9 +1507,10 @@ var CropMarketingHelper = {
 
                     /* Replace min, max if user input product name match sub-product */
                     /* Sub-product not display in dropdown UI */
-                    $(this).find('[name="product"] > option[style="display:none;"]').each(function(){
+                    $(this).find('[name="product"] > option[data-parent-id="{0}"]'.format(productId)).each(function(){
                         var name = $(this).data('name');
                         if(!name) return;
+
                         mr = compareTwoStrings(Helper.ClearString(name), Helper.ClearString(userInputProductName));
 
                         if(mr > matchingRate){
@@ -1567,6 +1573,9 @@ var CropMarketingHelper = {
 
                 })
 
+                reasonableWorkHourMin = Helper.Round(reasonableWorkHourMin, 1);
+                reasonableWorkHourMax = Helper.Round(reasonableWorkHourMax, 1);
+
                 var con = reasonableWorkHourMin > workHours || reasonableWorkHourMax < workHours;
 
                 var workHourMsg = '\
@@ -1578,9 +1587,9 @@ var CropMarketingHelper = {
                 workHourMsg = workHourMsg.format(selfWorkHour, longTermWorkHour, shortTermWorkHour,
                                                  workHours,
                                                  minMsgs.join(' + '),
-                                                 Helper.Round(reasonableWorkHourMin, 1),
+                                                 reasonableWorkHourMin,
                                                  maxMsgs.join(' + '),
-                                                 Helper.Round(reasonableWorkHourMax, 1))
+                                                 reasonableWorkHourMax)
                 Helper.LogHandler.Log(con, SurveyHelper.Hire.Info, msg + workHourMsg, this.Guids[0], null, false);
 
                 msg = '很好！填列之自家工與僱工工作時數「符合」合理工作時數區間：</br>';

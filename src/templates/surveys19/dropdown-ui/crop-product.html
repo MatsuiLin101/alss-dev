@@ -6,6 +6,7 @@
             data-name="{{ product.name }}"
             {% if product.min_hour %}data-min-hour="{{ product.min_hour }}"{% endif %}
             {% if product.max_hour %}data-max-hour="{{ product.max_hour }}"{% endif %}
+            {% if product.parent %}data-parent-id="{{ product.parent.id }}"{% endif %}
             {% if not product.display %}style="display:none;"{% endif %}>
         {{ product.code }}.{{ product.name }}
     </option>
