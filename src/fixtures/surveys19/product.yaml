@@ -1890,3 +1890,38 @@
     parent: 141
     type: 1
     management_type: 8
+
+- model: surveys19.Product
+  pk: 187
+  fields:
+    name: 蝴蝶蘭
+    code: 704
+    min_hour: 0.061
+    max_hour: 0.167
+    parent: 141
+    type: 1
+    unit: 5
+    management_type: 8
+
+- model: surveys19.Product
+  pk: 188
+  fields:
+    name: 蝴蝶蘭
+    code: 704
+    min_hour: 0.042
+    max_hour: 0.194
+    parent: 141
+    type: 1
+    unit: 10
+    management_type: 8
+
+- model: surveys19.Product
+  pk: 189
+  fields:
+    name: 蝴蝶蘭
+    code: 704
+    min_hour:
+    max_hour:
+    parent: 141
+    type: 1
+    management_type: 8
