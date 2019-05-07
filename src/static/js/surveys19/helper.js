@@ -1482,6 +1482,7 @@ var CropMarketingHelper = {
                     var landNumber = $(this).find('[name="landnumber"]').val();
                     var landArea = $(this).find('[name="landarea"]').val();
                     var plantTimes = $(this).find('[name="planttimes"]').val();
+                    var unit = $(this).find('[name="unit"] > option:selected').val();
 
                     var minHour = $product.data('minHour');
                     var maxHour = $product.data('maxHour');
@@ -1515,10 +1516,23 @@ var CropMarketingHelper = {
 
                         if(mr > matchingRate){
                             console.log('Find sub product {0} for {1}'.format(userInputProductName, name));
-                            minHour = $(this).data('minHour');
-                            maxHour = $(this).data('maxHour');
-                            matchingRate = mr;
-                            productName = name;
+                            var con = $(this).data('unit') !== undefined;
+                            if (con) {
+                                if (String($(this).data('unit')) === unit) {
+                                    minHour = $(this).data('minHour');
+                                    maxHour = $(this).data('maxHour');
+                                    matchingRate = mr;
+                                    productName = name;
+                                } else {
+                                    minHour = 0;
+                                    maxHour = 0;
+                                }
+                            } else {
+                                minHour = $(this).data('minHour');
+                                maxHour = $(this).data('maxHour');
+                                matchingRate = mr;
+                                productName = name;
+                            }
                         }
                     })
 
@@ -1530,8 +1544,14 @@ var CropMarketingHelper = {
                     }
 
                     if(landArea > 0 && plantTimes > 0){
-                        var resultMin = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(minHour), 1);
-                        var resultMax = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(maxHour), 1);
+                        var con = $(this).find('[name="product"] > option[data-unit="{0}"]'.format(unit)).length > 0;
+                        if (con) {
+                            var resultMin = Helper.Round(parseFloat(landArea) * parseFloat(plantTimes) * parseFloat(minHour), 1);
+                            var resultMax = Helper.Round(parseFloat(landArea) * parseFloat(plantTimes) * parseFloat(maxHour), 1);
+                        } else {
+                            var resultMin = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(minHour), 1);
+                            var resultMax = Helper.Round(parseFloat(landArea)/100 * parseFloat(plantTimes) * parseFloat(maxHour), 1);
+                        }
 
                         if(minHour > 0) reasonableWorkHourMin += resultMin;
                         if(maxHour > 0) reasonableWorkHourMax += resultMax;
