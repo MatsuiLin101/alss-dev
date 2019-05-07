@@ -5,7 +5,6 @@
     code: 101
     min_hour: 91
     max_hour: 173
-    display: True
     type: 1
     management_type: 1
 
@@ -16,7 +15,6 @@
     code: 102
     min_hour: 91
     max_hour: 166
-    display: True
     type: 1
     management_type: 1
 
@@ -27,7 +25,6 @@
     code: 103
     min_hour: 92
     max_hour: 173
-    display: True
     type: 1
     management_type: 1
 
@@ -38,7 +35,6 @@
     code: 201
     min_hour: 36
     max_hour: 118
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -50,7 +46,6 @@
     code: 202
     min_hour: 324
     max_hour: 379
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -62,7 +57,6 @@
     code: 203
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -74,7 +68,6 @@
     code: 204
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -86,7 +79,6 @@
     code: 205
     min_hour: 72
     max_hour: 72
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -98,7 +90,6 @@
     code: 206
     min_hour: 111
     max_hour: 111
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -110,7 +101,6 @@
     code: 207
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -122,7 +112,6 @@
     code: 208
     min_hour: 92
     max_hour: 119
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -134,7 +123,6 @@
     code: 209
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -146,7 +134,6 @@
     code: 210
     min_hour: 480
     max_hour: 486
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -158,7 +145,6 @@
     code: 211
     min_hour: 244
     max_hour: 261
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -170,7 +156,6 @@
     code: 212
     min_hour: 143
     max_hour: 223
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -182,7 +167,6 @@
     code: 213
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 2
     management_type: 1
@@ -194,7 +178,6 @@
     code: 301
     min_hour: 1930
     max_hour: 1944
-    display: True
     type: 1
     management_type: 3
 
@@ -205,7 +188,6 @@
     code: 302
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -216,7 +198,6 @@
     code: 304
     min_hour: 951
     max_hour: 951
-    display: True
     type: 1
     management_type: 3
 
@@ -227,7 +208,6 @@
     code: 305
     min_hour: 421
     max_hour: 530
-    display: True
     type: 1
     management_type: 3
 
@@ -238,7 +218,6 @@
     code: 306
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -249,7 +228,6 @@
     code: 307
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -260,7 +238,6 @@
     code: 308
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -271,7 +248,6 @@
     code: 309
     min_hour: 6352
     max_hour: 6352
-    display: True
     type: 1
     management_type: 3
 
@@ -282,7 +258,6 @@
     code: 310
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -293,7 +268,6 @@
     code: 311
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -304,7 +278,6 @@
     code: 312
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -315,7 +288,6 @@
     code: 313
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 3
 
@@ -326,7 +298,6 @@
     code: 314
     min_hour: 1264
     max_hour: 1834
-    display: True
     type: 1
     management_type: 3
 
@@ -337,7 +308,6 @@
     code: 315
     min_hour: 2855
     max_hour: 2855
-    display: True
     type: 1
     management_type: 3
 
@@ -348,7 +318,6 @@
     code: 316
     min_hour: 1104
     max_hour: 1114
-    display: True
     type: 1
     management_type: 3
 
@@ -359,7 +328,6 @@
     code: 317
     min_hour: 3262
     max_hour: 4316
-    display: True
     type: 1
     management_type: 4
 
@@ -370,7 +338,6 @@
     code: 318
     min_hour: 740
     max_hour: 1060
-    display: True
     type: 1
     management_type: 4
 
@@ -381,7 +348,6 @@
     code: 401
     min_hour: 323
     max_hour: 425
-    display: True
     type: 1
     management_type: 5
 
@@ -392,7 +358,6 @@
     code: 402
     min_hour: 645
     max_hour: 787
-    display: True
     type: 1
     management_type: 5
 
@@ -403,7 +368,6 @@
     code: 403
     min_hour: 1454
     max_hour: 3011
-    display: True
     type: 1
     management_type: 5
 
@@ -414,7 +378,6 @@
     code: 404
     min_hour: 654
     max_hour: 678
-    display: True
     type: 1
     management_type: 5
 
@@ -425,7 +388,6 @@
     code: 405
     min_hour: 354
     max_hour: 438
-    display: True
     type: 1
     management_type: 5
 
@@ -436,7 +398,6 @@
     code: 406
     min_hour: 561
     max_hour: 661
-    display: True
     type: 1
     management_type: 5
 
@@ -447,7 +408,6 @@
     code: 407
     min_hour: 1182
     max_hour: 1952
-    display: True
     type: 1
     management_type: 5
 
@@ -458,7 +418,6 @@
     code: 408
     min_hour: 866
     max_hour: 972
-    display: True
     type: 1
     management_type: 5
 
@@ -469,7 +428,6 @@
     code: 409
     min_hour: 770
     max_hour: 1057
-    display: True
     type: 1
     management_type: 5
 
@@ -480,7 +438,6 @@
     code: 410
     min_hour: 926
     max_hour: 1099
-    display: True
     type: 1
     management_type: 5
 
@@ -491,7 +448,6 @@
     code: 411
     min_hour: 799
     max_hour: 869
-    display: True
     type: 1
     management_type: 5
 
@@ -502,7 +458,6 @@
     code: 412
     min_hour: 866
     max_hour: 972
-    display: True
     type: 1
     management_type: 5
 
@@ -513,7 +468,6 @@
     code: 413
     min_hour: 6491
     max_hour: 7270
-    display: True
     type: 1
     management_type: 5
 
@@ -524,7 +478,6 @@
     code: 414
     min_hour: 512
     max_hour: 572
-    display: True
     type: 1
     management_type: 5
 
@@ -535,7 +488,6 @@
     code: 415
     min_hour: 1751
     max_hour: 1859
-    display: True
     type: 1
     management_type: 5
 
@@ -546,7 +498,6 @@
     code: 416
     min_hour: 2144
     max_hour: 3384
-    display: True
     type: 1
     management_type: 5
 
@@ -557,7 +508,6 @@
     code: 417
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -568,7 +518,6 @@
     code: 418
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -579,7 +528,6 @@
     code: 419
     min_hour: 1402
     max_hour: 1402
-    display: True
     type: 1
     management_type: 5
 
@@ -590,7 +538,6 @@
     code: 420
     min_hour: 815
     max_hour: 815
-    display: True
     type: 1
     management_type: 5
 
@@ -601,7 +548,6 @@
     code: 421
     min_hour: 663
     max_hour: 697
-    display: True
     type: 1
     management_type: 5
 
@@ -612,7 +558,6 @@
     code: 422
     min_hour: 864
     max_hour: 864
-    display: True
     type: 1
     management_type: 5
 
@@ -623,7 +568,6 @@
     code: 423
     min_hour: 548
     max_hour: 549
-    display: True
     type: 1
     management_type: 5
 
@@ -634,7 +578,6 @@
     code: 424
     min_hour: 476
     max_hour: 599
-    display: True
     type: 1
     management_type: 5
 
@@ -645,7 +588,6 @@
     code: 425
     min_hour: 897
     max_hour: 897
-    display: True
     type: 1
     management_type: 5
 
@@ -656,7 +598,6 @@
     code: 426
     min_hour: 608
     max_hour: 694
-    display: True
     type: 1
     management_type: 5
 
@@ -667,7 +608,6 @@
     code: 427
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -678,7 +618,6 @@
     code: 428
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -689,7 +628,6 @@
     code: 429
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -700,7 +638,6 @@
     code: 430
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -711,7 +648,6 @@
     code: 431
     min_hour: 1698
     max_hour: 1808
-    display: True
     type: 1
     management_type: 5
 
@@ -722,7 +658,6 @@
     code: 432
     min_hour: 1158
     max_hour: 1249
-    display: True
     type: 1
     management_type: 5
 
@@ -733,7 +668,6 @@
     code: 433
     min_hour: 1791
     max_hour: 1926
-    display: True
     type: 1
     management_type: 5
 
@@ -744,7 +678,6 @@
     code: 434
     min_hour: 644
     max_hour: 700
-    display: True
     type: 1
     management_type: 5
 
@@ -755,7 +688,6 @@
     code: 435
     min_hour: 1860
     max_hour: 1882
-    display: True
     type: 1
     management_type: 5
 
@@ -766,7 +698,6 @@
     code: 436
     min_hour: 1651
     max_hour: 1786
-    display: True
     type: 1
     management_type: 5
 
@@ -777,7 +708,6 @@
     code: 437
     min_hour: 2946
     max_hour: 3395
-    display: True
     type: 1
     management_type: 5
 
@@ -788,7 +718,6 @@
     code: 438
     min_hour: 751
     max_hour: 10109
-    display: True
     type: 1
     management_type: 5
 
@@ -799,7 +728,6 @@
     code: 439
     min_hour: 1656
     max_hour: 1710
-    display: True
     type: 1
     management_type: 5
 
@@ -810,7 +738,6 @@
     code: 440
     min_hour: 146
     max_hour: 159
-    display: True
     type: 1
     management_type: 5
 
@@ -821,7 +748,6 @@
     code: 441
     min_hour: 1351
     max_hour: 1575
-    display: True
     type: 1
     management_type: 5
 
@@ -832,7 +758,6 @@
     code: 442
     min_hour: 2107
     max_hour: 2341
-    display: True
     type: 1
     management_type: 5
 
@@ -843,7 +768,6 @@
     code: 443
     min_hour: 502
     max_hour: 520
-    display: True
     type: 1
     management_type: 5
 
@@ -854,7 +778,6 @@
     code: 444
     min_hour: 647
     max_hour: 773
-    display: True
     type: 1
     management_type: 5
 
@@ -865,7 +788,6 @@
     code: 445
     min_hour: 647
     max_hour: 773
-    display: True
     type: 1
     management_type: 5
 
@@ -876,7 +798,6 @@
     code: 446
     min_hour: 647
     max_hour: 773
-    display: True
     type: 1
     management_type: 5
 
@@ -887,7 +808,6 @@
     code: 447
     min_hour: 3384
     max_hour: 3512
-    display: True
     type: 1
     management_type: 5
 
@@ -898,7 +818,6 @@
     code: 448
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -909,7 +828,6 @@
     code: 449
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -920,7 +838,6 @@
     code: 450
     min_hour: 1158
     max_hour: 1249
-    display: True
     type: 1
     management_type: 5
 
@@ -931,7 +848,6 @@
     code: 451
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -942,7 +858,6 @@
     code: 452
     min_hour: 866
     max_hour: 972
-    display: True
     type: 1
     management_type: 5
 
@@ -953,7 +868,6 @@
     code: 453
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -964,7 +878,6 @@
     code: 454
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -975,7 +888,6 @@
     code: 455
     min_hour: 1122
     max_hour: 1271
-    display: True
     type: 1
     management_type: 5
 
@@ -986,7 +898,6 @@
     code: 456
     min_hour: 702
     max_hour: 896
-    display: True
     type: 1
     management_type: 5
 
@@ -997,7 +908,6 @@
     code: 457
     min_hour: 812
     max_hour: 831
-    display: True
     type: 1
     management_type: 5
 
@@ -1008,7 +918,6 @@
     code: 458
     min_hour: 718
     max_hour: 748
-    display: True
     type: 1
     management_type: 5
 
@@ -1019,7 +928,6 @@
     code: 459
     min_hour: 984
     max_hour: 1066
-    display: True
     type: 1
     management_type: 5
 
@@ -1030,7 +938,6 @@
     code: 501
     min_hour: 954
     max_hour: 1119
-    display: True
     type: 1
     management_type: 6
 
@@ -1041,7 +948,6 @@
     code: 502
     min_hour: 1171
     max_hour: 1278
-    display: True
     type: 1
     management_type: 6
 
@@ -1052,7 +958,6 @@
     code: 503
     min_hour: 775
     max_hour: 1230
-    display: True
     type: 1
     management_type: 6
 
@@ -1063,7 +968,6 @@
     code: 504
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 6
 
@@ -1074,7 +978,6 @@
     code: 505
     min_hour: 428
     max_hour: 701
-    display: True
     type: 1
     management_type: 6
 
@@ -1085,7 +988,6 @@
     code: 506
     min_hour: 718
     max_hour: 1081
-    display: True
     type: 1
     management_type: 6
 
@@ -1096,7 +998,6 @@
     code: 507
     min_hour: 2629
     max_hour: 2753
-    display: True
     type: 1
     management_type: 6
 
@@ -1107,7 +1008,6 @@
     code: 508
     min_hour: 2626
     max_hour: 3054
-    display: True
     type: 1
     management_type: 6
 
@@ -1118,7 +1018,6 @@
     code: 509
     min_hour: 2148
     max_hour: 3386
-    display: True
     type: 1
     management_type: 6
 
@@ -1129,7 +1028,6 @@
     code: 510
     min_hour: 1351
     max_hour: 2474
-    display: True
     type: 1
     management_type: 6
 
@@ -1140,7 +1038,6 @@
     code: 511
     min_hour: 814
     max_hour: 814
-    display: True
     type: 1
     management_type: 6
 
@@ -1151,7 +1048,6 @@
     code: 512
     min_hour: 1327
     max_hour: 1832
-    display: True
     type: 1
     management_type: 6
 
@@ -1162,7 +1058,6 @@
     code: 513
     min_hour: 1621
     max_hour: 1924
-    display: True
     type: 1
     management_type: 6
 
@@ -1173,7 +1068,6 @@
     code: 514
     min_hour: 224
     max_hour: 744
-    display: True
     type: 1
     management_type: 6
 
@@ -1184,7 +1078,6 @@
     code: 515
     min_hour: 577
     max_hour: 1177
-    display: True
     type: 1
     management_type: 6
 
@@ -1195,7 +1088,6 @@
     code: 516
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 6
 
@@ -1206,7 +1098,6 @@
     code: 517
     min_hour: 2262
     max_hour: 3131
-    display: True
     type: 1
     management_type: 6
 
@@ -1217,7 +1108,6 @@
     code: 518
     min_hour: 1736
     max_hour: 2142
-    display: True
     type: 1
     management_type: 6
 
@@ -1228,7 +1118,6 @@
     code: 519
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 6
 
@@ -1239,7 +1128,6 @@
     code: 520
     min_hour: 1849
     max_hour: 2292
-    display: True
     type: 1
     management_type: 6
 
@@ -1250,7 +1138,6 @@
     code: 521
     min_hour: 1763
     max_hour: 2037
-    display: True
     type: 1
     management_type: 6
 
@@ -1261,7 +1148,6 @@
     code: 522
     min_hour: 1036
     max_hour: 1259
-    display: True
     type: 1
     management_type: 6
 
@@ -1272,7 +1158,6 @@
     code: 523
     min_hour: 1351
     max_hour: 1496
-    display: True
     type: 1
     management_type: 6
 
@@ -1283,7 +1168,6 @@
     code: 524
     min_hour: 267
     max_hour: 696
-    display: True
     type: 1
     management_type: 6
 
@@ -1294,7 +1178,6 @@
     code: 525
     min_hour: 591
     max_hour: 621
-    display: True
     type: 1
     management_type: 6
 
@@ -1305,7 +1188,6 @@
     code: 526
     min_hour: 1891
     max_hour: 2348
-    display: True
     type: 1
     management_type: 6
 
@@ -1316,7 +1198,6 @@
     code: 527
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 6
 
@@ -1327,7 +1208,6 @@
     code: 528
     min_hour: 1082
     max_hour: 1168
-    display: True
     type: 1
     management_type: 6
 
@@ -1338,7 +1218,6 @@
     code: 529
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 6
 
@@ -1349,7 +1228,7 @@
     code: 504
     min_hour: 745
     max_hour: 914
-    display: False
+    parent: 96
     type: 1
     management_type: 6
 
@@ -1360,7 +1239,7 @@
     code: 503
     min_hour: 1158
     max_hour: 1230
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1371,7 +1250,7 @@
     code: 503
     min_hour: 987
     max_hour: 1149
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1382,7 +1261,7 @@
     code: 503
     min_hour: 1151
     max_hour: 1230
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1393,7 +1272,7 @@
     code: 503
     min_hour: 775
     max_hour: 886
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1404,7 +1283,7 @@
     code: 503
     min_hour: 907
     max_hour: 975
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1415,7 +1294,7 @@
     code: 503
     min_hour: 1326
     max_hour: 1388
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1426,7 +1305,7 @@
     code: 503
     min_hour: 782
     max_hour: 809
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1437,7 +1316,7 @@
     code: 503
     min_hour: 1274
     max_hour: 1777
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1448,7 +1327,7 @@
     code: 503
     min_hour: 1473
     max_hour: 1605
-    display: False
+    parent: 95
     type: 1
     management_type: 6
 
@@ -1459,7 +1338,6 @@
     code: 601
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 7
 
@@ -1470,7 +1348,6 @@
     code: 602
     min_hour: 7320
     max_hour: 11313
-    display: True
     type: 1
     management_type: 7
 
@@ -1481,7 +1358,6 @@
     code: 603
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 7
 
@@ -1492,7 +1368,6 @@
     code: 604
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 7
 
@@ -1503,7 +1378,6 @@
     code: 605
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 7
 
@@ -1514,7 +1388,6 @@
     code: 606
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 7
 
@@ -1525,7 +1398,6 @@
     code: 701
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 8
 
@@ -1536,7 +1408,6 @@
     code: 702
     min_hour: 990
     max_hour: 1151
-    display: True
     type: 1
     management_type: 8
 
@@ -1547,7 +1418,6 @@
     code: 703
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 8
 
@@ -1556,9 +1426,8 @@
   fields:
     name: 蘭花
     code: 704
-    min_hour: 2611
-    max_hour: 5323
-    display: True
+    min_hour:
+    max_hour:
     type: 1
     management_type: 8
 
@@ -1569,7 +1438,6 @@
     code: 705
     min_hour: 907
     max_hour: 1648
-    display: True
     type: 1
     management_type: 8
 
@@ -1580,7 +1448,7 @@
     code: 701
     min_hour: 2505
     max_hour: 3174
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1591,7 +1459,7 @@
     code: 701
     min_hour: 1202
     max_hour: 1582
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1602,7 +1470,7 @@
     code: 701
     min_hour: 4665
     max_hour: 4811
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1613,7 +1481,7 @@
     code: 701
     min_hour: 3633
     max_hour: 4947
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1624,7 +1492,7 @@
     code: 701
     min_hour: 5243
     max_hour: 5679
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1635,7 +1503,7 @@
     code: 701
     min_hour: 5630
     max_hour: 6837
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1646,7 +1514,7 @@
     code: 701
     min_hour: 2666
     max_hour: 2666
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1657,7 +1525,7 @@
     code: 701
     min_hour: 2845
     max_hour: 3038
-    display: False
+    parent: 138
     type: 1
     management_type: 8
 
@@ -1668,7 +1536,6 @@
     code: 802
     min_hour: 1500
     max_hour: 1700
-    display: True
     type: 1
     management_type: 9
 
@@ -1679,7 +1546,6 @@
     code: 803
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 9
 
@@ -1690,7 +1556,6 @@
     code: 804
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 9
 
@@ -1701,7 +1566,6 @@
     code: 805
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 9
 
@@ -1712,7 +1576,6 @@
     code: 801
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 10
 
@@ -1723,7 +1586,6 @@
     code: 806
     min_hour:
     max_hour:
-    display: True
     type: 1
     management_type: 10
 
@@ -1734,7 +1596,6 @@
     code: F01
     min_hour: 0.5
     max_hour: 3
-    display: True
     type: 2
     management_type: 12
 
@@ -1745,7 +1606,6 @@
     code: F02
     min_hour: 0.5
     max_hour: 3
-    display: True
     type: 2
     management_type: 12
 
@@ -1756,7 +1616,6 @@
     code: F04
     min_hour: 0.5
     max_hour: 3
-    display: True
     type: 2
     management_type: 12
 
@@ -1767,7 +1626,6 @@
     code: J01
     min_hour: 30
     max_hour: 100
-    display: True
     type: 2
     management_type: 11
 
@@ -1778,7 +1636,6 @@
     code: J03
     min_hour: 30
     max_hour: 100
-    display: True
     type: 2
     management_type: 11
 
@@ -1789,7 +1646,6 @@
     code: J07
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 11
 
@@ -1800,7 +1656,6 @@
     code: G01
     min_hour: 0.1
     max_hour: 0.25
-    display: True
     type: 2
     management_type: 13
 
@@ -1811,7 +1666,6 @@
     code: G02
     min_hour: 0.01
     max_hour: 0.06
-    display: True
     type: 2
     management_type: 13
 
@@ -1822,7 +1676,6 @@
     code: G03
     min_hour: 0.01
     max_hour: 0.06
-    display: True
     type: 2
     management_type: 13
 
@@ -1833,7 +1686,6 @@
     code: G04
     min_hour: 0.01
     max_hour: 0.06
-    display: True
     type: 2
     management_type: 13
 
@@ -1844,7 +1696,6 @@
     code: G05
     min_hour: 0.1
     max_hour: 0.25
-    display: True
     type: 2
     management_type: 13
 
@@ -1855,7 +1706,6 @@
     code: G10
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 13
 
@@ -1866,7 +1716,6 @@
     code: J04
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 11
 
@@ -1877,7 +1726,6 @@
     code: H09
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1888,7 +1736,6 @@
     code: H10
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1899,7 +1746,6 @@
     code: H11
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1910,7 +1756,6 @@
     code: H13
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1921,7 +1766,6 @@
     code: H01
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1932,7 +1776,6 @@
     code: H02
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1943,7 +1786,6 @@
     code: H05
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1954,7 +1796,6 @@
     code: H07
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1965,7 +1806,6 @@
     code: H08
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1976,7 +1816,6 @@
     code: H14
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1987,7 +1826,6 @@
     code: H15
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -1998,7 +1836,6 @@
     code: H16
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -2009,7 +1846,6 @@
     code: H17
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -2020,7 +1856,6 @@
     code: H18
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -2031,7 +1866,6 @@
     code: H99
     min_hour:
     max_hour:
-    display: True
     type: 2
     management_type: 14
 
@@ -2042,6 +1876,17 @@
     code: 503
     min_hour: 987
     max_hour: 1149
-    display: False
+    parent: 95
     type: 1
     management_type: 6
+
+- model: surveys19.Product
+  pk: 186
+  fields:
+    name: 文心蘭
+    code: 704
+    min_hour: 2611
+    max_hour: 5323
+    parent: 141
+    type: 1
+    management_type: 8
