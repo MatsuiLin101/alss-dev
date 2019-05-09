@@ -2291,7 +2291,7 @@
   pk: 328
   fields:
     city: 臺南
-    town: 新
+    town: 新市
     code: 6720
 
 - model: surveys19.CityTownCode
