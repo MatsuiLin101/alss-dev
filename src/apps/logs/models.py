@@ -85,11 +85,18 @@ def query_by_args(request, **kwargs):
     total = queryset.count()
 
     if search_value:
-        queryset = queryset.filter(
-            Q(survey__farmer_id__icontains=search_value)
-            | Q(user__full_name__icontains=search_value)
-            | Q(user__email__icontains=search_value)
-        )
+        if app_label == 'surveys18':
+            queryset = queryset.filter(
+                Q(surveys18__farmer_id__icontains=search_value)
+                | Q(user__full_name__icontains=search_value)
+                | Q(user__email__icontains=search_value)
+            )
+        if app_label == 'surveys19':
+            queryset = queryset.filter(
+                Q(surveys19__farmer_id__icontains=search_value)
+                | Q(user__full_name__icontains=search_value)
+                | Q(user__email__icontains=search_value)
+            )
 
     count = queryset.count()
     queryset = queryset.order_by(order_column)[start: start + length]

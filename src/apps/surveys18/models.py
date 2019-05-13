@@ -136,7 +136,7 @@ class Survey(Model):
         verbose_name=_("Updated"),
     )
 
-    review_logs = GenericRelation(ReviewLog, related_query_name="survey")
+    review_logs = GenericRelation(ReviewLog, related_query_name="surveys18")
 
     class Meta:
         verbose_name = _("Survey")
