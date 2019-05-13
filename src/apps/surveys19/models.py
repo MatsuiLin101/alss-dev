@@ -20,6 +20,7 @@ from django.db.models import (
     FileField,
     Q,
 )
+from apps.logs.models import ReviewLog
 
 
 YES_NO_CHOICES = ((0, "No"), (1, "Yes"))
@@ -79,6 +80,8 @@ class Survey(Model):
         blank=True,
         verbose_name=_("Updated"),
     )
+
+    review_logs = GenericRelation(ReviewLog, related_query_name="surveys19")
 
     class Meta:
         verbose_name = _("Survey")
