@@ -2297,7 +2297,7 @@ var PopulationHelper = {
                 PopulationHelper.Population.Container.find('tr').each(function(){
                     var birthYear = $(this).find('[name="birthyear"]').val();
                     var farmerWorkdayId = $(this).find('[name="farmerworkday"]').val();
-                    if(birthYear <= 92 && birthYear >= 41 && Helper.NumberValidate(birthYear) && farmerWorkdayId > 1){
+                    if(birthYear <= 92 && birthYear >= 42 && Helper.NumberValidate(birthYear) && farmerWorkdayId > 1){
                         con = false;
                     }
                 })
