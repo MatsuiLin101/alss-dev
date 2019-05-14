@@ -1479,6 +1479,7 @@ var CropMarketingHelper = {
                     var $product = $(this).find('[name="product"] > option[data-name]:selected');
                     if($product.length == 0) return;
 
+                    var index = parseInt($(this).find('[name="index"]').text());
                     var landNumber = $(this).find('[name="landnumber"]').val();
                     var landArea = $(this).find('[name="landarea"]').val();
                     var plantTimes = $(this).find('[name="planttimes"]').val();
@@ -1499,6 +1500,31 @@ var CropMarketingHelper = {
                         ).filter(
                             function() { return $(this).find('[name="landarea"]').val() > landArea; }
                         ).length > 0;
+
+                        var duplicate = CropMarketingHelper.CropMarketing.Container.find('tr').filter(
+                            function() { return $(this).find('[name="landnumber"]').val() == landNumber; }
+                        ).filter(
+                            function() { return $(this).find('[name="product"] > option:selected').data('name') == productName; }
+                        ).filter(
+                            function() { return $(this).find('[name="landarea"]').val() == landArea; }
+                        ).length > 1;
+
+                        if(duplicate){
+                            var con = CropMarketingHelper.CropMarketing.Container.find('tr').filter(
+                                function() { return $(this).find('[name="landnumber"]').val() == landNumber; }
+                            ).filter(
+                                function() { return $(this).find('[name="product"] > option:selected').data('name') == productName; }
+                            ).filter(
+                                function() { return $(this).find('[name="landarea"]').val() == landArea; }
+                            ).filter(
+                                function() { return parseInt($(this).find('[name="index"]').text()) > index; }
+                            ).length > 0;
+                            if(con){
+                                skip = true;
+                            } else {
+                                skip = false;
+                            }
+                        }
 
                         if(skip) return;
                     }
