@@ -2333,7 +2333,7 @@
   pk: 334
   fields:
     city: 臺南
-    town: 左
+    town: 左鎮
     code: 6726
 
 - model: surveys19.CityTownCode
