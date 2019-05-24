@@ -107,6 +107,7 @@ from .serializers import (
     RefuseReasonSerializer,
     MonthSerializer,
     BuilderFileSerializer,
+    SurveySimpleSerializer,
 )
 
 logger = logging.getLogger('django.request')
@@ -235,6 +236,10 @@ class SurveyViewSet(ModelViewSet):
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
+
+    @action(methods=["GET"], detail=False, serializer_class=SurveySimpleSerializer)
+    def simple_list(self, request):
+        return super().list(request)
 
     @action(methods=["PATCH"], detail=False)
     def patch(self, request):
