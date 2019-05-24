@@ -394,6 +394,13 @@ class MonthSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class SurveySimpleSerializer(ModelSerializer):
+
+    class Meta:
+        model = Survey
+        fields = "__all__"
+
+
 class SurveySerializer(ModelSerializer):
     app_label = SerializerMethodField(read_only=True)
     model = SerializerMethodField(read_only=True)

@@ -179,6 +179,10 @@ class SurveyViewSet(ModelViewSet):
     def get_object(self, pk):
         return Survey.objects.get(id=pk)
 
+    @action(methods=["GET"], detail=False, serializer_class=serializers.SurveySimpleSerializer)
+    def simple_list(self, request):
+        return super().list(request)
+
     @action(methods=["PATCH"], detail=False)
     def patch(self, request):
         try:
