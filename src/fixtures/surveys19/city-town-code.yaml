@@ -2480,7 +2480,7 @@
   pk: 355
   fields:
     city: 桃園
-    town: 平
+    town: 平鎮
     code: 6810
 
 - model: surveys19.CityTownCode
