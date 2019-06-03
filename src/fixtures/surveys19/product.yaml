@@ -1704,7 +1704,7 @@
     min_hour:
     max_hour:
     type: 2
-    management_type: 11
+    management_type: 14
 
 - model: surveys19.Product
   pk: 170
