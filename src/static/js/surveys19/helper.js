@@ -1,4 +1,4 @@
-/* rendered ui */
+﻿/* rendered ui */
 var GlobalUI = $.parseJSON($('#ui').val());
 var FarmerIds = $.parseJSON($('#fid').val());
 
@@ -703,7 +703,7 @@ var FarmLocationHelper = {
             Guids: Helper.Guid.CreateMulti(2),
             Validate: function(){
                 var city = FarmLocationHelper.Container.City.val().replace('台', '臺');
-                var town = FarmLocationHelper.Container.Town.val();
+                var town = FarmLocationHelper.Container.Town.val().replace('台', '臺');
                 var selectedData = FarmLocationHelper.Container.CityTownCode.find('option:selected').data();
 
                 var con = !$.isEmptyObject(selectedData) && (city != selectedData.cityName || town != selectedData.townName);
