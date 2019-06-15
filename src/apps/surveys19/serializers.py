@@ -441,6 +441,7 @@ class SurveySimpleSerializer(ModelSerializer):
     class Meta:
         model = Survey
         fields = "__all__"
+        ref_name = None
 
 
 class SurveySerializer(ModelSerializer):
