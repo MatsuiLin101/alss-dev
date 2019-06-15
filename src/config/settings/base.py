@@ -248,7 +248,15 @@ SUIT_CONFIG = {
 # DRF YASG
 LOGIN_URL = 'users:login'
 LOGOUT_URL = 'users:logout'
-REDOC_SETTINGS = {
-    'PATH_IN_MIDDLE': True,
-    'REQUIRED_PROPS_FIRST': True,
+SWAGGER_SETTINGS = {
+    'DEFAULT_FIELD_INSPECTORS': [
+        'drf_yasg.inspectors.CamelCaseJSONFilter',
+        'drf_yasg.inspectors.InlineSerializerInspector',
+        'drf_yasg.inspectors.RelatedFieldInspector',
+        'drf_yasg.inspectors.ChoiceFieldInspector',
+        'drf_yasg.inspectors.FileFieldInspector',
+        'drf_yasg.inspectors.DictFieldInspector',
+        'drf_yasg.inspectors.SimpleFieldInspector',
+        'drf_yasg.inspectors.StringDefaultFieldInspector',
+    ],
 }

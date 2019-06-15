@@ -29,7 +29,7 @@ schema_view = get_schema_view(
       title="農業勞動力調查平台應用程式介面",
       default_version='v1',
    ),
-   public=True,
+   public=False,  # Do not set to True
    permission_classes=(permissions.IsAuthenticated,),
 )
 
