@@ -1493,16 +1493,16 @@ var CropMarketingHelper = {
                     /* Only count max land area */
                     if(managementTypeId == 6){
                         var nextAllRowHasEqual = $(this).nextAll().filter(function(){
-                            return $(this).find('[name="landnumber"]').val() == landNumber &&
+                            return parseInt($(this).find('[name="landnumber"]').val()) == landNumber &&
                                    $(this).find('[name="product"] > option:selected').data('name') == productName &&
-                                   $(this).find('[name="landarea"]').val() == landArea;
+                                   parseInt($(this).find('[name="landarea"]').val()) == landArea;
                         }).length > 0;
                         if (nextAllRowHasEqual) return;
 
                         var anyRowHasGreater = CropMarketingHelper.CropMarketing.Container.find('tr').filter(function(){
-                            return $(this).find('[name="landnumber"]').val() == landNumber &&
+                            return parseInt($(this).find('[name="landnumber"]').val()) == landNumber &&
                                    $(this).find('[name="product"] > option:selected').data('name') == productName &&
-                                   $(this).find('[name="landarea"]').val() > landArea;
+                                   parseInt($(this).find('[name="landarea"]').val()) > landArea;
                         }).length > 0;
                         if (anyRowHasGreater) return;
                     }
