@@ -125,7 +125,8 @@ class SurveyExportGeneratorFactory:
         counter = 0
         key = 'surveys__farmer_id' if many_to_many else 'survey__farmer_id'
         filters = {
-            key: self.survey.farmer_id
+            key: self.survey.farmer_id,
+            'survey__readonly': False,
         }
         for item in getattr(self.survey, related_name).model.objects.filter(**filters)\
                 .values_list(*values_list).iterator():
