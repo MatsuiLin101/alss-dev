@@ -123,10 +123,11 @@ class SurveyExportGeneratorFactory:
 
     def simple_generate(self, related_name, values_list, many_to_many=False):
         counter = 0
-        key = 'surveys__farmer_id' if many_to_many else 'survey__farmer_id'
+        farmer_id = 'surveys__farmer_id' if many_to_many else 'survey__farmer_id'
+        readonly = 'surveys__readonly' if many_to_many else 'survey__readonly'
         filters = {
-            key: self.survey.farmer_id,
-            'survey__readonly': False,
+            farmer_id: self.survey.farmer_id,
+            readonly: False,
         }
         for item in getattr(self.survey, related_name).model.objects.filter(**filters)\
                 .values_list(*values_list).iterator():
