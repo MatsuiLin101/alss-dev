@@ -468,7 +468,7 @@ class SurveyViewSet(ModelViewSet):
                 lacks = factory.lacks()
                 try:
                     for i in range(factory.max_iter_count):
-                        values1_ = values1 if i == 0 else [''] * len(values1)
+                        values1_ = values1 if i == 0 else [values1[0]] + [''] * (len(values1) - 1)
                         values2_ = values2 if i == 0 else [''] * len(values2)
                         row = \
                             values1_ + next(land_areas) + next(businesses) + next(management_types) + \
