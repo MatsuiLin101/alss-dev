@@ -141,7 +141,7 @@ class SurveyRelationGeneratorFactory:
             "short_term_lacks",
         ]
         self.relation_count_mapping = self.get_relations_count_mapping()
-        self.age_scopes = AgeScope.objects.filter(group=1).order_by("-id").all()
+        self.age_scopes = AgeScope.objects.filter(group=1).order_by("id").all()
 
         self.land_areas = self.ExportRelation(
             self.relation_generate(LandArea, ["type__name", "status__name", "value"]), 3
