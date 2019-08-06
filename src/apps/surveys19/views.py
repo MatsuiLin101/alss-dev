@@ -591,7 +591,7 @@ class SurveyViewSet(ModelViewSet):
             factory = SurveyRelationGeneratorFactory()
             errors = []
             yield headers
-            for survey in Survey.objects.filter(readonly=False, page=1).order_by('farmer_id'):
+            for survey in Survey.objects.filter(Q(readonly=False, page=1) & ~Q(note__icontains='無效戶')).order_by('farmer_id'):
                 values1 = [
                     survey.farmer_id,
                     survey.farmer_name,
