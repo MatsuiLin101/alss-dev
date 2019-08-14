@@ -1250,6 +1250,7 @@ var CropMarketingHelper = {
                 CropMarketingHelper.Validation.Required.Validate($(this));
                 CropMarketingHelper.Validation.GreaterThanZero.Validate($(this));
                 LandAreaHelper.Validation.SumAreaCheck.Validate();
+                ManagementTypeHelper.Validation.MostValuedType.Validate();
             })
             CropMarketingHelper.Validation.WorkHourRange.Validate();
         }
