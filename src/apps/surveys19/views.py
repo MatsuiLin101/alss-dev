@@ -167,7 +167,7 @@ class SurveyRelationGeneratorFactory:
                 CropMarketing,
                 [
                     "product__code",
-                    "product__name",
+                    "name",
                     "land_number",
                     "land_area",
                     "plant_times",
@@ -184,7 +184,7 @@ class SurveyRelationGeneratorFactory:
                 LivestockMarketing,
                 [
                     "product__code",
-                    "product__name",
+                    "name",
                     "unit__name",
                     "raising_number",
                     "year_sales",
