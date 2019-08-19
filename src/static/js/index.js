@@ -78,6 +78,8 @@ $(document).ready(function() {
     /* get farmer data*/
     $('.js-get-survey').click(function () {
 
+        Setup(GlobalUI);
+
         var $btn = $(this);
 
         var farmerId = $('#farmerId').val().trim();
@@ -263,5 +265,3 @@ var SetLogData = function (data) {
         }
     })
 }
-
-
