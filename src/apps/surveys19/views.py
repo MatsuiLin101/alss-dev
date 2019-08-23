@@ -247,11 +247,15 @@ class SurveyViewSet(ModelViewSet):
         return Survey.objects.get(id=pk)
 
     def get_permissions(self):
-        if self.request.method in ["GET", "PUT", "PATCH"]:
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
+        permissions = [IsAdminUser]  # default
+        if self.request.method == 'GET':
+            permissions = [IsAuthenticated]
+        if getattr(self, 'action'):
+            if self.action == 'patch':
+                permissions = [IsAuthenticated]
+            if self.action == 'export':
+                permissions = [IsAdminUser]
+        return [permission() for permission in permissions]
 
     @action(methods=["GET"], detail=False, serializer_class=SurveySimpleSerializer)
     def simple_list(self, request):
@@ -280,7 +284,7 @@ class SurveyViewSet(ModelViewSet):
             )
             return JsonResponse(data=e.message_dict, safe=False)
 
-    @action(methods=["GET"], detail=False, permission_classes=[IsAdminUser])
+    @action(methods=["GET"], detail=False)
     def export(self, request):
         """A view that streams a large CSV file."""
         # Generate a sequence of rows. The range is based on the maximum number of
@@ -293,7 +297,7 @@ class SurveyViewSet(ModelViewSet):
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)
         response = StreamingHttpResponse(
-            (writer.writerow(row) for row in row_generator()), content_type="text/csv"
+            (writer.writerow(row) for row in row_generator), content_type="text/csv"
         )
         response["Content-Disposition"] = 'attachment; filename="107_export.csv"'
         return response
