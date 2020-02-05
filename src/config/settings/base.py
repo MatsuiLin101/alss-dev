@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "date_range_filter",
     "rest_framework.authtoken",
     "drf_yasg",
+    "captcha",
     # local
     "apps.users",
     "apps.logs",
@@ -260,3 +261,8 @@ SWAGGER_SETTINGS = {
         'drf_yasg.inspectors.StringDefaultFieldInspector',
     ],
 }
+
+# Django SImple Captcha
+CAPTCHA_CHALLENGE_FUNCT = 'config.utils.random_number_challenge'
+CAPTCHA_FONT_SIZE = 36
+CAPTCHA_IMAGE_SIZE = (130, 40)

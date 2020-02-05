@@ -20,6 +20,7 @@
                 <div class="panel-body">
                     <form method="POST" action="">{% csrf_token %}
                         {{ form|crispy }}
+                        <button class='js-captcha-refresh btn btn-default'>更換驗證碼</button>
                         <input type="submit" class="btn btn-primary btn-block prevent-double-click" value="登入">
                     </form>
                 </div>
@@ -28,4 +29,28 @@
     </div>
 </div>
 
+<style>
+
+.js-captcha-refresh {
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+</style>
+
 {% endblock content %}
+
+{% block external_js %}
+
+<script>
+
+$('.js-captcha-refresh').click(function () {
+    $.getJSON("/captcha/refresh/", function (result) {
+        $('.captcha').attr('src', result['image_url']);
+        $('#id_captcha_0').val(result['key'])
+    });
+});
+
+</script>
+
+{% endblock external_js %}
