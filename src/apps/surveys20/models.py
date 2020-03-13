@@ -45,6 +45,8 @@ class Survey(Model):
     origin_class = IntegerField(null=True, blank=True, verbose_name=_("Origin Class"))
     second = BooleanField(default=False, verbose_name=_("Second"))
     non_second = BooleanField(default=False, verbose_name=_("Non Second"))
+    mainincome_farmer = BooleanField(default=False, verbose_name=_("Main Income Farmer"))
+    mainincome_not_farmer = BooleanField(default=False, verbose_name=_("Main Income Not Farmer"))
     hire = BooleanField(default=False, verbose_name=_("Hire"))
     non_hire = BooleanField(default=False, verbose_name=_("Non Hire"))
     lacks = ManyToManyField(
@@ -788,31 +790,6 @@ class IncomeRange(Model):
         return self.name
 
 
-class MainIncome(Model):
-    """
-    New of 108, surveys20
-    Table 1.8
-    Has yaml
-    """
-
-    name = CharField(max_length=50, verbose_name=_("Name"))
-    income = BooleanField(default=False, verbose_name=_("Income"))
-    update_time = DateTimeField(
-        auto_now=True,
-        auto_now_add=False,
-        null=True,
-        blank=True,
-        verbose_name=_("Updated"),
-    )
-
-    class Meta:
-        verbose_name = _("MainIncome")
-        verbose_name_plural = _("MainIncome")
-
-    def __str__(self):
-        return self.name
-
-
 class AgeScope(Model):
     """
     Table 2.1, 3.1.2, 3.1.3
@@ -1398,8 +1375,8 @@ class KnownSubsidy(Model):
         on_delete=CASCADE,
         verbose_name=_("Survey"),
     )
-    name = CharField(max_length=50, verbose_name=_("Name"))
-    known = BooleanField(default=False, verbose_name=_("known"))
+    known = BooleanField(default=False, verbose_name=_("Known"))
+    unknown = BooleanField(default=False, verbose_name=_("Unknown"))
 
     class Meta:
         verbose_name = _("KnownSubsidy")
@@ -1421,6 +1398,7 @@ class Subsidy(Model):
         verbose_name=_("Survey"),
     )
     has_subsidy = BooleanField(default=False, verbose_name=_("Has Subsidy"))
+    none_subsidy = BooleanField(default=False, verbose_name=_("None Subsidy"))
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,

@@ -24,7 +24,6 @@ from .models import (
     AnnualIncome,
     MarketType,
     IncomeRange,
-    MainIncome,
     AgeScope,
     PopulationAge,
     Population,
@@ -153,7 +152,6 @@ admin.site.register(Contract)
 admin.site.register(AnnualIncome)
 admin.site.register(MarketType)
 admin.site.register(IncomeRange)
-admin.site.register(MainIncome)
 admin.site.register(AgeScope)
 admin.site.register(PopulationAge)
 admin.site.register(Population)

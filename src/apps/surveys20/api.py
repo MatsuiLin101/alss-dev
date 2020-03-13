@@ -23,7 +23,6 @@ from .views import (
     AnnualIncomeViewSet,
     MarketTypeViewSet,
     IncomeRangeViewSet,
-    MainIncomeViewSet,
     AgeScopeViewSet,
     PopulationAgeViewSet,
     PopulationViewSet,
@@ -72,7 +71,6 @@ api.register(r"contract", ContractViewSet)
 api.register(r"annualincome", AnnualIncomeViewSet)
 api.register(r"markettype", MarketTypeViewSet)
 api.register(r"incomerange", IncomeRangeViewSet)
-api.register(r"mainincome", MainIncomeViewSet)
 api.register(r"agescope", AgeScopeViewSet)
 api.register(r"populationage", PopulationAgeViewSet)
 api.register(r"population", PopulationViewSet)

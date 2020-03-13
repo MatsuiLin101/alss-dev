@@ -30,7 +30,6 @@ from apps.surveys20.models import (
     AnnualIncome,
     MarketType,
     IncomeRange,
-    MainIncome,
     AgeScope,
     PopulationAge,
     Population,
@@ -270,13 +269,6 @@ class IncomeRangeSerializer(ModelSerializer):
         model = IncomeRange
         fields = "__all__"
         ref_name = '108/IncomeRange'
-
-
-class MainIncomeSerializer(ModelSerializer):
-    class Meta:
-        model = MainIncome
-        fields = "__all__"
-        ref_name = '108/MainIncome'
 
 
 class AgeScopeSerializer(ModelSerializer):

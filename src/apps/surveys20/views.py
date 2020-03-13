@@ -42,7 +42,6 @@ from apps.surveys20.models import (
     AnnualIncome,
     MarketType,
     IncomeRange,
-    MainIncome,
     AgeScope,
     PopulationAge,
     Population,
@@ -89,7 +88,6 @@ from apps.surveys20.serializers import (
     AnnualIncomeSerializer,
     MarketTypeSerializer,
     IncomeRangeSerializer,
-    MainIncomeSerializer,
     AgeScopeSerializer,
     PopulationAgeSerializer,
     PopulationSerializer,
@@ -403,11 +401,6 @@ class MarketTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
 class IncomeRangeViewSet(ReadOnlyModelViewSet, StandardViewSet):
     queryset = IncomeRange.objects.all()
     serializer_class = IncomeRangeSerializer
-
-
-class MainIncomeViewSet(ReadOnlyModelViewSet, StandardViewSet):
-    queryset = MainIncome.objects.all()
-    serializer_class = MainIncomeSerializer
 
 
 class AgeScopeViewSet(ReadOnlyModelViewSet, StandardViewSet):
