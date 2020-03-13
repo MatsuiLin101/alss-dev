@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "apps.logs",
     "apps.surveys18",
     "apps.surveys19",
+    "apps.surveys20",
 ]
 
 # MIDDLEWARE CONFIGURATION
