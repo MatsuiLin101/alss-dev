@@ -1437,22 +1437,25 @@ class Subsidy(Model):
         return str(self.survey)
 
 
-class SubsidyOption(Model):
+class Refuse(Model):
     """
-    New of 108, surveys20
-    Table 3.3.2 none subsidy option
-    Has yaml
+    Table 3.3.2
     """
 
     subsidy = ForeignKey(
         "surveys20.Subsidy",
-        related_name="subsidy_option",
+        related_name="refuses",
         on_delete=CASCADE,
         verbose_name=_("Subsidy"),
     )
-    name = CharField(max_length=50, verbose_name=_("Name"))
-    check = BooleanField(default=False, verbose_name=("Check"))
-    has_extra = BooleanField(default=False, verbose_name=("Has Extra"))
+    reason = ForeignKey(
+        "surveys20.RefuseReason",
+        related_name="refuse",
+        on_delete=CASCADE,
+        null=True,
+        blank=True,
+        verbose_name=_("Refuse"),
+    )
     extra = CharField(max_length=100, null=True, blank=True, verbose_name=_("Extra"))
     update_time = DateTimeField(
         auto_now=True,
@@ -1463,8 +1466,32 @@ class SubsidyOption(Model):
     )
 
     class Meta:
-        verbose_name = _("SubsidyOption")
-        verbose_name_plural = _("SubsidyOption")
+        verbose_name = _("Refuse")
+        verbose_name_plural = _("Refuse")
+
+    def __str__(self):
+        return str(self.reason)
+
+
+class RefuseReason(Model):
+    """
+    Table 3.3.2
+    Has yaml
+    """
+
+    name = CharField(max_length=20, null=True, blank=True, verbose_name=_("Name"))
+    has_extra = BooleanField(default=False, verbose_name=_("Has Extra"))
+    update_time = DateTimeField(
+        auto_now=True,
+        auto_now_add=False,
+        null=True,
+        blank=True,
+        verbose_name=_("Updated"),
+    )
+
+    class Meta:
+        verbose_name = _("RefuseReason")
+        verbose_name_plural = _("RefuseReason")
 
     def __str__(self):
         return str(self.name)
