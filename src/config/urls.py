@@ -40,6 +40,7 @@ urlpatterns = [
     path("users/", include("apps.users.urls", namespace="users")),
     path("106/", include("apps.surveys18.urls", namespace="surveys18")),
     path("107/", include("apps.surveys19.urls", namespace="surveys19")),
+    path("108/", include("apps.surveys20.urls", namespace="surveys20")),
     path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name='swagger'),
     path("captcha/", include("captcha.urls")),
 ]

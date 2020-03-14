@@ -294,6 +294,9 @@ window.onload = function() {
         {% if perms.surveys19.view_survey %}
         <a href="{% url 'surveys19:surveys19_index' %}">107年</a>
         {% endif %}
+        {% if perms.surveys20.view_survey %}
+        <a href="{% url 'surveys20:surveys20_index' %}">108年</a>
+        {% endif %}
       </div>
   </div>
   <div id="clouds"></div>

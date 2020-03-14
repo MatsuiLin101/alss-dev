@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "apps.logs",
     "apps.surveys18",
     "apps.surveys19",
+    "apps.surveys20",
 ]
 
 # MIDDLEWARE CONFIGURATION
@@ -174,6 +175,8 @@ FIXTURE_DIRS = [
     os.path.join(BASE_DIR, "fixtures/surveys18/test"),
     os.path.join(BASE_DIR, "fixtures/surveys19"),
     os.path.join(BASE_DIR, "fixtures/surveys19/test"),
+    os.path.join(BASE_DIR, "fixtures/surveys20"),
+    os.path.join(BASE_DIR, "fixtures/surveys20/test"),
 ]
 
 # Logging

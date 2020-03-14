@@ -1,0 +1,25 @@
+- model: surveys20.RefuseReason
+  pk: 1
+  fields:
+    name: 不好申請
+
+- model: surveys20.RefuseReason
+  pk: 2
+  fields:
+    name: 不好用(經驗不足、態度不好等)
+
+- model: surveys20.RefuseReason
+  pk: 3
+  fields:
+    name: 太貴
+
+- model: surveys20.RefuseReason
+  pk: 4
+  fields:
+    name: 時間不彈性
+
+- model: surveys20.RefuseReason
+  pk: 5
+  fields:
+    name: 其他
+    has_extra: True

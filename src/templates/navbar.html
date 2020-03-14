@@ -17,6 +17,9 @@
                 {% if perms.surveys19.view_survey %}
                 <li><a class="nav-link" href="{% url 'surveys19:surveys19_index' %}">107年</a></li>
                 {% endif %}
+                {% if perms.surveys20.view_survey %}
+                <li><a class="nav-link" href="{% url 'surveys20:surveys20_index' %}">108年</a></li>
+                {% endif %}
                 {% if user.is_staff %}
                 <li><a class="nav-link" href="{% url 'admin:index' %}">後台</a></li>
                 <li class="dropdown">
@@ -53,6 +56,3 @@
         </div>
     <!--/.container-fluid -->
 </nav>
-
-
-
