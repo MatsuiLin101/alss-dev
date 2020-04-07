@@ -172,10 +172,13 @@ class Builder(object):
             farmer_id = string[0:12]
             total_pages = int(string[12:14])
             page = int(string[14:16])
-            if len(self.string[0]) > 16:
+            if len(self.string[0]) > 16 or string.count('/') == 2:
                 self.is_first_page = False
                 name = string[16:23].replace("#", "")
-                ori_class = int(string[44:46])
+                interviewee_relationship_str = string.split('/')[1]
+                interviewee_relationship = interviewee_relationship_str.split('#')[0]
+                ori_class_str = string.split('/')[2]
+                ori_class = int(ori_class_str[10:12])
                 string = self.string[-1]
                 note = string.split("#")[0]
                 investigator = string.split("#")[1]
@@ -222,6 +225,7 @@ class Builder(object):
                     page=page,
                     total_pages=total_pages,
                     farmer_name=name,
+                    interviewee_relationship=interviewee_relationship,
                     origin_class=ori_class,
                     second=second,
                     non_second=non_second,
@@ -245,7 +249,9 @@ class Builder(object):
         if self.is_first_page is False:
             try:
                 string = self.string[0]
-                phones = string[23:44].replace("#", "").split("/")
+                phones = string.split("/")[1:]
+                phones[0] = phones[0][-10:].replace("#", "")
+                phones[1] = phones[1][0:10].replace("#", "")
             except ValueError as e:
                 raise StringLengthError(model_name="Phone", msg=e)
             else:
@@ -265,9 +271,10 @@ class Builder(object):
         if self.is_first_page is False:
             try:
                 string = self.string[0]
-                match_str = string[46:47]
-                mismatch_str = string[47:48]
-                address = string[48:].split("#")[0]
+                string = string.split("/")[2]
+                match_str = string[12:13]
+                mismatch_str = string[13:14]
+                address = string[14:].split("#")[0]
                 if match_str == "1":
                     match = True
                 if mismatch_str == "1":
