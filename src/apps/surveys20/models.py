@@ -40,6 +40,9 @@ class Survey(Model):
     farmer_name = CharField(
         null=True, blank=True, max_length=10, verbose_name=_("Name")
     )
+    interviewee_relationship = CharField(
+        null=True, blank=True, max_length=10, verbose_name=_("Interviewee Relationship")
+    )
     total_pages = IntegerField(verbose_name=_("Total Pages"))
     page = IntegerField(verbose_name=_("Page"))
     origin_class = IntegerField(null=True, blank=True, verbose_name=_("Origin Class"))

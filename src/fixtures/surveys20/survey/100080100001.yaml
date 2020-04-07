@@ -3,6 +3,7 @@
   fields:
     farmer_id: 100080100001
     farmer_name: 陳菘永
+    interviewee_relationship: 本人
     total_pages: 1
     page: 1
     origin_class: 67

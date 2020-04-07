@@ -479,6 +479,7 @@ class SurveySerializer(ModelSerializer):
     def update(self, instance, validated_data):
         # Update the instance
         instance.farmer_name = validated_data["farmer_name"]
+        instance.interviewee_relationship = validated_data["interviewee_relationship"]
         instance.note = validated_data["note"]
         instance.hire = validated_data["hire"]
         instance.non_hire = validated_data["non_hire"]

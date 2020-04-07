@@ -111,6 +111,7 @@ var SurveyHelper = {
         this.KnownSubsidy.Setup();
 
         this.FarmerName.Bind();
+        this.IntervieweeRelationship.Bind();
         this.Phone.Bind();
         this.AddressMatch.Bind();
         this.Address.Bind();
@@ -127,6 +128,7 @@ var SurveyHelper = {
         this.Reviewer.Reset();
         this.FarmerId.Reset();
         this.FarmerName.Reset();
+        this.IntervieweeRelationship.Reset();
         this.Phone.Reset();
         this.AddressMatch.Reset();
         this.Address.Reset();
@@ -143,6 +145,7 @@ var SurveyHelper = {
         this.FarmerId.Set(obj);
         this.Phone.Set(obj);
         this.FarmerName.Set(obj);
+        this.IntervieweeRelationship.Set(obj);
         this.AddressMatch.Set(obj);
         this.Address.Set(obj);
         this.Hire.Set(obj);
@@ -207,6 +210,39 @@ var SurveyHelper = {
                 Validate: function(){
                     var empty = CloneData[MainSurveyId].farmer_name == '';
                     var msg = '受訪人不可漏填';
+                    Helper.LogHandler.Log(empty, SurveyHelper.Alert, msg, this.Guids[0], null, false);
+                },
+            },
+        },
+    },
+    IntervieweeRelationship: {
+        Container: $('#panel1 input[name="intervieweerelationship"]'),
+        Bind: function(){
+            this.Container.change(function(){
+                if(CloneData) {
+                    CloneData[MainSurveyId].interviewee_relationship = $(this).val();
+
+                    if(Helper.LogHandler.ValidationActive){
+                        SurveyHelper.IntervieweeRelationship.Validation.Empty.Validate();
+                    }
+                }
+            })
+        },
+        Set: function(obj){
+            this.Container.val(obj.interviewee_relationship);
+            if(Helper.LogHandler.ValidationActive){
+                SurveyHelper.IntervieweeRelationship.Validation.Empty.Validate();
+            }
+        },
+        Reset: function(){
+            this.Container.val('');
+        },
+        Validation: {
+            Empty: {
+                Guids: Helper.Guid.CreateMulti(),
+                Validate: function(){
+                    var empty = CloneData[MainSurveyId].interviewee_relationship == '';
+                    var msg = '受訪者與名冊戶長關係不可漏填';
                     Helper.LogHandler.Log(empty, SurveyHelper.Alert, msg, this.Guids[0], null, false);
                 },
             },
@@ -2371,7 +2407,7 @@ var PopulationHelper = {
         BirthYear: {
             Guids: Helper.Guid.CreateMulti(),
             Validate: function($row){
-                var guid = $row.da出生年次ta('guid');
+                var guid = $row.data('guid');
                 var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
                 var year = $row.find('[name="birthyear"]').val();
                 if(year == '') return;
