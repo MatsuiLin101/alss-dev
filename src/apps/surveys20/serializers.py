@@ -7,7 +7,7 @@ from rest_framework.serializers import (
     ValidationError,
 )
 
-# from apps.surveys20.builder.tokenizer import Builder
+from apps.surveys20.builder.tokenizer import Builder
 from apps.surveys20.models import (
     Survey,
     Phone,
@@ -54,49 +54,49 @@ from apps.surveys20.models import (
 )
 
 
-# class BuilderFileSerializer(HyperlinkedModelSerializer):
-#     class Meta:
-#         model = BuilderFile
-#         fields = ["token", "datafile", "delete_exist"]
-#         ref_name = '108/BuilderFile'
-#
-#     def create(self, validated_data):
-#         return BuilderFile.objects.create(**validated_data)
-#
-#     def validate(self, data):
-#         """
-#         Validate via build
-#         """
-#         try:
-#             errors = dict()
-#             file = data.get("datafile")
-#             token = data.get("token")
-#             delete_exist = data.get("delete_exist", False)
-#             if token:
-#                 content = [token.strip()]
-#
-#             if file:
-#                 content = file.read().decode("utf-8-sig").splitlines()
-#
-#             if file and token:
-#                 raise ValidationError(
-#                     "Not Allow To Provide Upload File And Single Token At Same Time"
-#                 )
-#
-#             for i, string in enumerate(content):
-#                 try:
-#                     builder = Builder(string=string)
-#
-#                     builder.build(delete_exist=delete_exist)
-#                     builder.build(readonly=False, delete_exist=delete_exist)
-#
-#                 except Exception as e:
-#                     errors[i] = e
-#             if errors:
-#                 raise ValidationError(errors)
-#             return data
-#         except Exception as e:
-#             raise ValidationError(e)
+class BuilderFileSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = BuilderFile
+        fields = ["token", "datafile", "delete_exist"]
+        ref_name = '109/BuilderFile'
+
+    def create(self, validated_data):
+        return BuilderFile.objects.create(**validated_data)
+
+    def validate(self, data):
+        """
+        Validate via build
+        """
+        try:
+            errors = dict()
+            file = data.get("datafile")
+            token = data.get("token")
+            delete_exist = data.get("delete_exist", False)
+            if token:
+                content = [token.strip()]
+
+            if file:
+                content = file.read().decode("utf-8-sig").splitlines()
+
+            if file and token:
+                raise ValidationError(
+                    "Not Allow To Provide Upload File And Single Token At Same Time"
+                )
+
+            for i, string in enumerate(content):
+                try:
+                    builder = Builder(string=string)
+
+                    builder.build(delete_exist=delete_exist)
+                    builder.build(readonly=False, delete_exist=delete_exist)
+
+                except Exception as e:
+                    errors[i] = e
+            if errors:
+                raise ValidationError(errors)
+            return data
+        except Exception as e:
+            raise ValidationError(e)
 
 
 class ContentTypeSerializer(ModelSerializer):

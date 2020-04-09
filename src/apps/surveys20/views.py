@@ -1,6 +1,5 @@
 import json
 import logging
-import csv
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,6 +17,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 from config.viewsets import StandardViewSet
 
+from apps.users.models import User
 from apps.surveys20.models import (
     Survey,
     Phone,
@@ -106,21 +106,11 @@ from apps.surveys20.serializers import (
     RefuseSerializer,
     RefuseReasonSerializer,
     MonthSerializer,
-    # BuilderFileSerializer,
+    BuilderFileSerializer,
     SurveySimpleSerializer,
 )
 
 logger = logging.getLogger(__file__)
-
-
-class Echo:
-    """An object that implements just the write method of the file-like
-    interface.
-    """
-
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
 
 
 class Surveys2020Index(LoginRequiredMixin, TemplateView):
@@ -196,22 +186,22 @@ class Surveys2020Index(LoginRequiredMixin, TemplateView):
         return context
 
 
-# class BuilderFileViewSet(StandardViewSet):
-#     queryset = BuilderFile.objects.all()
-#     serializer_class = BuilderFileSerializer
-#
-#     def perform_create(self, serializer):
-#         try:
-#             if serializer.is_valid():
-#                 datafile = self.request.data.get("datafile")
-#                 token = self.request.data.get("token")
-#                 user = self.request.user
-#                 if not isinstance(user, User):
-#                     user = None
-#
-#                 serializer.save(user=user, datafile=datafile, token=token)
-#         except Exception as e:
-#             raise ValidationError(e)
+class BuilderFileViewSet(StandardViewSet):
+    serializer_class = BuilderFileSerializer
+    queryset = BuilderFile.objects.all()
+
+    def perform_create(self, serializer):
+        try:
+            if serializer.is_valid():
+                datafile = self.request.data.get("datafile")
+                token = self.request.data.get("token")
+                user = self.request.user
+                if not isinstance(user, User):
+                    user = None
+
+                serializer.save(user=user, datafile=datafile, token=token)
+        except Exception as e:
+            raise ValidationError(e)
 
 
 class ContentTypeViewSet(ReadOnlyModelViewSet, StandardViewSet):
@@ -281,24 +271,6 @@ class SurveyViewSet(ModelViewSet):
                 extra={"status_code": 400, "request": request},
             )
             return JsonResponse(data=e.message_dict, safe=False)
-
-    # @action(methods=["GET"], detail=False)
-    # def export(self, request):
-    #     """A view that streams a large CSV file."""
-        # Generate a sequence of rows. The range is based on the maximum number of
-        # rows that can be handled by a single sheet in most spreadsheet
-        # applications.
-
-        # factory = SurveyRelationGeneratorFactory(excludes={'note__icontains': '無效戶'})
-        # row_generator = factory.export_generator()
-
-        # pseudo_buffer = Echo()
-        # writer = csv.writer(pseudo_buffer)
-        # response = StreamingHttpResponse(
-        #     (writer.writerow(row) for row in row_generator), content_type="text/csv"
-        # )
-        # response["Content-Disposition"] = 'attachment; filename="107_export.csv"'
-        # return response
 
 
 class PhoneViewSet(StandardViewSet):
