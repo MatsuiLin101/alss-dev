@@ -590,6 +590,7 @@ var SurveyHelper = {
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.MainIncomeSource.Validation.Empty.Validate();
                         SurveyHelper.MainIncomeSource.Validation.Duplicate.Validate();
+                        PopulationHelper.Validation.MainIncomeSource.Validate();
                     }
                 }
             })
@@ -717,6 +718,7 @@ var SurveyHelper = {
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.KnownSubsidy.Validation.Empty.Validate();
                         SurveyHelper.KnownSubsidy.Validation.Duplicate.Validate();
+                        SubsidyHelper.Validation.Empty.Validate();
                     }
                 }
             })
@@ -728,6 +730,7 @@ var SurveyHelper = {
             if(Helper.LogHandler.ValidationActive){
                 SurveyHelper.KnownSubsidy.Validation.Empty.Validate();
                 SurveyHelper.KnownSubsidy.Validation.Duplicate.Validate();
+                SubsidyHelper.Validation.Empty.Validate();
             }
         },
         Reset: function(){
@@ -2256,11 +2259,13 @@ var PopulationHelper = {
                 PopulationHelper.Validation.Required.Validate($(this));
                 PopulationHelper.Validation.BirthYear.Validate($(this));
                 PopulationHelper.Validation.FarmerWorkDay.Validate($(this));
+                PopulationHelper.Validation.RelationShip.Validate($(this));
             })
             PopulationHelper.Validation.AtLeastOne65Worker.Validate();
             PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
             CropMarketingHelper.Validation.WorkHourRange.Validate();
             SurveyHelper.Second.Validation.SecondExist.Validate();
+            PopulationHelper.Validation.MainIncomeSource.Validate();
         }
     },
     Population: {
@@ -2321,6 +2326,7 @@ var PopulationHelper = {
                             PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
                             SurveyHelper.Second.Validation.SecondExist.Validate();
                             CropMarketingHelper.Validation.WorkHourRange.Validate();
+                            PopulationHelper.Validation.MainIncomeSource.Validate();
                         }
                     })
                 }
@@ -2346,12 +2352,14 @@ var PopulationHelper = {
                         PopulationHelper.Validation.Required.Validate($tr);
                         PopulationHelper.Validation.BirthYear.Validate($tr);
                         PopulationHelper.Validation.FarmerWorkDay.Validate($tr);
+                        PopulationHelper.Validation.RelationShip.Validate($tr);
                         PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                         PopulationHelper.Validation.MarketType3Checked.Validate();
                         PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
                         PopulationAgeHelper.Validation.MemberCount.Validate();
                         SurveyHelper.Second.Validation.SecondExist.Validate();
                         CropMarketingHelper.Validation.WorkHourRange.Validate();
+                        PopulationHelper.Validation.MainIncomeSource.Validate();
                     }
                 }
             })
@@ -2414,6 +2422,35 @@ var PopulationHelper = {
                 var con = parseInt(year) < 1 || parseInt(year) > 93 || !Helper.NumberValidate(year);
                 var msg = '第<i class="row-index">{0}</i>列出生年次應介於1年至93年之間（實足年齡滿15歲）'.format(index);
                 Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guids[0], guid);
+            },
+        },
+        RelationShip: {
+            Guids: Helper.Guid.CreateMulti(3),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = PopulationHelper.Population.Container.find('tr').index($row) + 1;
+                var $hosts = $row.siblings().find('[name="relationship"] > option[value="1"]:selected').parents('tr');
+                if($hosts.length == 1){
+                    var relationship = $row.find('[name="relationship"]').val();
+                    var gender = $row.find('[name="gender"]').val();
+                    var year = $row.find('[name="birthyear"]').val();
+
+                    $host = $hosts.first();
+                    var hostGender = $host.find('[name="gender"]').val();
+                    var hostYear = $host.find('[name="birthyear"]').val();
+
+                    var con = relationship == 2 && gender == hostGender;
+                    var msg = '第<i class="row-index">{0}</i>列與經濟戶長關係代號為2者，性別應與經濟戶長不同'.format(index);
+                    Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guids[0], guid);
+
+                    var con = (relationship == 3 || relationship == 7) && year && hostYear && year > hostYear;
+                    var msg = '第<i class="row-index">{0}</i>列與經濟戶長關係代號為3或7者，出生年次應小於經濟戶長出生年次'.format(index);
+                    Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guids[1], guid, false);
+
+                    var con = (relationship == 5 || relationship == 6) && year && hostYear && year < hostYear;
+                   var msg = '第<i class="row-index">{0}</i>列與經濟戶長關係代號為5或6者，出生年次應大於經濟戶長出生年次'.format(index);
+                    Helper.LogHandler.Log(con, PopulationHelper.Alert, msg, this.Guids[2], guid, false);
+                }
             },
         },
         FarmerWorkDay: {
@@ -2485,6 +2522,32 @@ var PopulationHelper = {
                 var msg = '全年從事自家農牧業工作日數達150日以上，請確認經營類型及規模之合理性';
                 Helper.LogHandler.Log(con, PopulationHelper.Info, msg, this.Guids[0], null, false);
             },
+        },
+        MainIncomeSource: {
+            Guids: Helper.Guid.CreateMulti(2),
+            Validate: function(){
+                var mainIncomeSourceChecked = SurveyHelper.MainIncomeSource.Container.filter(
+                    '[data-field=mainincomesource]:checked'
+                ).length > 0;
+                var lifeStyle1Seleted = PopulationHelper.Population.Container.find(
+                    '[name="lifestyle"] > option[value="1"]:selected'
+                ).length > 0;
+                var con = mainIncomeSourceChecked && !lifeStyle1Seleted;
+                var msg = '勾選「以自家農牧業淨收入為主」，則【問項2.2】應至少有一位勾選「1.自營農牧業工作」';
+                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[0], null, false);
+
+                var nonMainIncomeSourceChecked = SurveyHelper.MainIncomeSource.Container.filter(
+                    '[data-field=nonmainincomesource]:checked'
+                ).length > 0;
+                var lifeStyle2345Seleted = [2,3,4,5].some(function(value, index, array){
+                    return PopulationHelper.Population.Container.find(
+                        '[name="lifestyle"] > option[value="{0}"]:selected'.format(value),
+                    ).length > 0;
+                })
+                var con = nonMainIncomeSourceChecked && !lifeStyle2345Seleted;
+                var msg = '勾選「以自家農牧業外淨收入為主」，則【問項2.2】應至少有一位勾選「2.受僱農牧業工作」或「3. 受託提供農事及畜牧服務」或「4.自營農牧業外工作」或「5.受僱農牧業外工作」';
+                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[1], null, false);
+            }
         },
     },
 }
@@ -3516,6 +3579,15 @@ var SubsidyHelper = {
                     SubsidyHelper.Validation.Empty.Validate();
                 }
             }
+            var refuseReasonId = $(this).data('refusereason-id');
+            var noneSubsidyChecked = SubsidyHelper.Container.NoneSubsidy.prop('checked');
+            var reasonChecked = SubsidyHelper.Container.RefuseReason
+                          .filter('[data-refusereason-id="{0}"]'.format(refuseReasonId))
+                          .prop('checked');
+            if(!noneSubsidyChecked && reasonChecked){
+                Helper.Dialog.ShowAlert('您尚未勾選無申請');
+                e.preventDefault();
+            }
         })
         this.Container.Extra.change(function(e){
             /* make sure checked before change textbox value */
@@ -3567,13 +3639,23 @@ var SubsidyHelper = {
     },
     Validation: {
         Empty: {
-            Guids: Helper.Guid.CreateMulti(1),
+            Guids: Helper.Guid.CreateMulti(2),
             Validate: function(){
+                var knownSubsidy = SurveyHelper.KnownSubsidy.Container.filter('[data-field=knownsubsidy]:checked').length > 0;
+                var nonKnownSubsidy = SurveyHelper.KnownSubsidy.Container.filter('[data-field=nonknownsubsidy]:checked').length > 0;
                 var hasSubsidy = SubsidyHelper.Container.HasSubsidy.prop('checked');
                 var noneSubsidy = SubsidyHelper.Container.NoneSubsidy.prop('checked');
-                var con = !hasSubsidy && !noneSubsidy;
-                var msg = '不可漏填此問項';
+                var con = knownSubsidy && (!hasSubsidy &&!noneSubsidy);
+                var msg = '【問項3.3.1】勾選「有聽過」，不可漏填此問項';
                 Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
+
+                var con = nonKnownSubsidy && (hasSubsidy || noneSubsidy);
+                var msg = '【問項3.3.1】勾選「沒有聽過」，此問項應為空白';
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
+
+                var con = noneSubsidy && SubsidyHelper.Container.RefuseReason.filter(':checked').length == 0;
+                var msg = '勾選「沒有申請」，未申請原因不可為空白'
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[2], null, false);
             },
         },
         Duplicate: {
@@ -3584,7 +3666,7 @@ var SubsidyHelper = {
                 var refuseReasons = SubsidyHelper.Container.RefuseReason.prop('checked');
                 var con = hasSubsidy && (noneSubsidy || refuseReasons);
                 var msg = '有申請及無申請不得重複勾選';
-               Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
             },
         },
     },
