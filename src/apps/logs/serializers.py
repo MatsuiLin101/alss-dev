@@ -6,9 +6,9 @@ from rest_framework.serializers import (
     RelatedField,
 )
 from apps.logs.models import ReviewLog
-from logging import INFO
 from apps.surveys18.models import Survey as Survey18
 from apps.surveys19.models import Survey as Survey19
+from apps.surveys20.models import Survey as Survey20
 
 
 class ContentObjectRelatedField(RelatedField):
@@ -20,9 +20,7 @@ class ContentObjectRelatedField(RelatedField):
         """
         Serialize content objects to a simple textual representation.
         """
-        if isinstance(value, Survey18):
-            return value.farmer_id
-        if isinstance(value, Survey19):
+        if isinstance(value, Survey18) or isinstance(value, Survey19) or isinstance(value, Survey20):
             return value.farmer_id
         raise Exception("Unexpected type of content object")
 
