@@ -194,8 +194,8 @@ class Builder(object):
                 non_main_income_source = string[1] == "1"
 
                 string = self.string[10][0:2]
-                known_subsidy = string[0] == "1"
-                non_known_subsidy = string[1] == "1"
+                non_known_subsidy = string[0] == "1"
+                known_subsidy = string[1] == "1"
 
         except ValueError as e:
             raise StringLengthError(model_name="Survey", msg=e)
