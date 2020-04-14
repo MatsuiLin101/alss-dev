@@ -2111,7 +2111,7 @@ var AnnualIncomeHelper = {
                 var checkedMin = checkedTotal.data('min') * 10000;
                 var checkedMax = checkedTotal.data('max') * 10000 - 1;
 
-                var con = countTotal < checkedMin || countTotal >= checkedMax;
+                var con = countTotal < checkedMin || countTotal > checkedMax;
                 var msg = '【問項1.5】農作物產銷情形之全年銷售額總計({0}元)與勾選農作物之全年銷售額區間不符'.format(Helper.NumberWithCommas(countTotal));
                 Helper.LogHandler.Log(checkedTotal.length == 1 && con, AnnualIncomeHelper.Alert, msg, this.Guids[0]);
                 // show total
@@ -3642,20 +3642,15 @@ var SubsidyHelper = {
             Guids: Helper.Guid.CreateMulti(2),
             Validate: function(){
                 var knownSubsidy = SurveyHelper.KnownSubsidy.Container.filter('[data-field=knownsubsidy]:checked').length > 0;
-                var nonKnownSubsidy = SurveyHelper.KnownSubsidy.Container.filter('[data-field=nonknownsubsidy]:checked').length > 0;
                 var hasSubsidy = SubsidyHelper.Container.HasSubsidy.prop('checked');
                 var noneSubsidy = SubsidyHelper.Container.NoneSubsidy.prop('checked');
                 var con = knownSubsidy && (!hasSubsidy &&!noneSubsidy);
                 var msg = '【問項3.3.1】勾選「有聽過」，不可漏填此問項';
                 Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
 
-                var con = nonKnownSubsidy && (hasSubsidy || noneSubsidy);
-                var msg = '【問項3.3.1】勾選「沒有聽過」，此問項應為空白';
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
-
                 var con = noneSubsidy && SubsidyHelper.Container.RefuseReason.filter(':checked').length == 0;
                 var msg = '勾選「沒有申請」，未申請原因不可為空白'
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[2], null, false);
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
             },
         },
         Duplicate: {

@@ -106,7 +106,7 @@ var Helper = {
         UI: '\
             <p data-guid="" data-group-guid="" style="line-height:30px; padding: 5px;">\
                 <span></span>\
-                <button type="button" class="btn btn-warning btn-sm pull-right">\
+                <button type="button" class="hide-alert btn btn-warning btn-sm pull-right">\
                     <i class="fa fa-remove" aria-hidden="true"></i>例外\
                 </button>\
             </p>\
@@ -118,17 +118,22 @@ var Helper = {
             $ui.attr('data-group-guid', groupGuid);
             $ui.find('span').html(msg);
             $ui[0].Alert = alert;
-            $ui.find('.btn')[0].click = function(){
+            // The UI is not yet bind to DOM, therefore we bind event on body
+            $('body').on('click', 'p[data-guid={0}] > .hide-alert'.format(guid), function(){
                 var $ui = $(this).parent();
                 var guid = $ui.data('guid');
+                var msg = $.trim($ui.text());
                 var alert =  $ui[0].Alert;
                 $ui.remove();
-                alert.skippedErrorGuids.push(guid);
+                alert.skippedErrorGuids.push({
+                    'guid': guid,
+                    'msg': msg,
+                });
                 alert.alert();
                 alert.count();
-            }
+            })
             if(!removeAble){
-                $ui.find('.btn').remove();
+                $ui.find('.hide-alert').remove();
             }
             return $ui;
         },
@@ -243,7 +248,7 @@ var Helper = {
                 var errorCount = $('#{0} .alert-danger p[data-guid]'.format(panelId)).length;
                 $ui.trigger('set', errorCount);
             }
-        },
+        }
         this.$object[0].alert = this;
         this.$object.hide();
     },
