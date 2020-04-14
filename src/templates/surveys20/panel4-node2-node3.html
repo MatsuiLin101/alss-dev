@@ -43,9 +43,7 @@
                         {{ refuse_reason.name }}
                     </label>
                     {% if refuse_reason.has_extra %}
-                    <label>
-                        <input class="form-control" type="text" data-refusereason-id="{{ refuse_reason.id }}" name="extra">
-                    </label>
+                    <input class="form-control" type="text" style="width: 100%!important;" data-refusereason-id="{{ refuse_reason.id }}" name="extra">
                     {% endif %}
                 </div>
                 {% endfor %}
