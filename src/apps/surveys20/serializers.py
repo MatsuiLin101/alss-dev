@@ -836,7 +836,7 @@ class SurveySerializer(ModelSerializer):
                                 else None,
                                 count=obj["count"] if "count" in obj else None,
                                 content_type=ContentType.objects.get(
-                                    app_label="surveys19", model="longtermhire"
+                                    app_label="surveys20", model="longtermhire"
                                 ),
                                 object_id=item["id"],
                             )
@@ -858,7 +858,7 @@ class SurveySerializer(ModelSerializer):
                             age_scope=obj["age_scope"] if "age_scope" in obj else None,
                             count=obj["count"] if "count" in obj else None,
                             content_type=ContentType.objects.get(
-                                app_label="surveys19", model="longtermhire"
+                                app_label="surveys20", model="longtermhire"
                             ),
                             object_id=content_object.id,
                         )
@@ -917,7 +917,7 @@ class SurveySerializer(ModelSerializer):
                                 else None,
                                 count=obj["count"] if "count" in obj else None,
                                 content_type=ContentType.objects.get(
-                                    app_label="surveys19", model="shorttermhire"
+                                    app_label="surveys20", model="shorttermhire"
                                 ),
                                 object_id=item["id"],
                             )
@@ -939,7 +939,7 @@ class SurveySerializer(ModelSerializer):
                             age_scope=obj["age_scope"] if "age_scope" in obj else None,
                             count=obj["count"] if "count" in obj else None,
                             content_type=ContentType.objects.get(
-                                app_label="surveys19", model="shorttermhire"
+                                app_label="surveys20", model="shorttermhire"
                             ),
                             object_id=content_object.id,
                         )
