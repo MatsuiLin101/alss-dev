@@ -235,15 +235,11 @@ class SurveyViewSet(ModelViewSet):
         return Survey.objects.get(id=pk)
 
     def get_permissions(self):
-        permissions = [IsAdminUser]  # default
-        if self.request.method == 'GET':
-            permissions = [IsAuthenticated]
-        if getattr(self, 'action'):
-            if self.action == 'patch':
-                permissions = [IsAuthenticated]
-            if self.action == 'export':
-                permissions = [IsAdminUser]
-        return [permission() for permission in permissions]
+        if self.request.method in ['GET', 'PUT', 'PATCH']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     @action(methods=["GET"], detail=False, serializer_class=SurveySimpleSerializer)
     def simple_list(self, request):
