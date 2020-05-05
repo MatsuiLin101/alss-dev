@@ -2534,7 +2534,7 @@ var PopulationHelper = {
                 ).length > 0;
                 var con = mainIncomeSourceChecked && !lifeStyle1Seleted;
                 var msg = '勾選「以自家農牧業淨收入為主」，則【問項2.2】應至少有一位勾選「1.自營農牧業工作」';
-                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[0], null, false);
+                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[0], null, true);
 
                 var nonMainIncomeSourceChecked = SurveyHelper.MainIncomeSource.Container.filter(
                     '[data-field=nonmainincomesource]:checked'
