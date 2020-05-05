@@ -97,7 +97,7 @@ class ReviewLogUpdateSerializer(ModelSerializer):
             instance.current_errors = validated_data["current_errors"]
         if "exception_errors" in validated_data:
             instance.exception_errors = validated_data["exception_errors"]
-        instance.save(update_fields=['current_errors', 'exception_errors'])
+        instance.save()
         return instance
 
 
