@@ -21,6 +21,7 @@ $(document).ready(function () {
 })
 
 var Reset = function () {
+    $('#survey-wrapper').off();
     SurveyHelper.Reset();
     FarmLocationHelper.Reset();
     LandAreaHelper.Reset();

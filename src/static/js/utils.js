@@ -109,33 +109,36 @@ var Helper = {
             </p>\
         ',
         Create: function(alert, msg, guid, groupGuid, removeAble){
-            removeAble = removeAble !== false;
             $ui = $(this.UI);
             $ui.attr('data-guid', guid);
             $ui.attr('data-group-guid', groupGuid);
             $ui.find('span').html(msg);
             $ui[0].Alert = alert;
-            // The UI is not yet bind to DOM, therefore we bind event on body
-            $('body').one('click', 'p[data-guid={0}] > .hide-alert'.format(guid), function(){
-                var $ui = $(this).parent();
-                var guid = $ui.data('guid');
-                var msg = $.trim($ui.text());
-                var alert =  $ui[0].Alert;
-                $ui.remove();
-                alert.skippedErrorGuids.push({
-                    'guid': guid,
-                    'msg': msg,
-                });
-                alert.alert();
-                alert.count();
-            })
-            if(!removeAble){
+            if(!removeAble) {
                 $ui.find('.hide-alert').remove();
+            }else {
+                // The UI is not yet bind to DOM, therefore we bind event on root dom
+                var eventName = 'click.{0}{1}'.format(guid, groupGuid);
+                var query = groupGuid ? 'p[data-guid={0}][data-group-guid={1}] > .hide-alert'.format(guid, groupGuid) : 'p[data-guid={0}] > .hide-alert'.format(guid);
+                $('#survey-wrapper').off(eventName).on(eventName, query, function(){
+                    var $ui = $(this).parent();
+                    var guid = $ui.data('guid');
+                    var msg = $.trim($ui.text());
+                    var alert =  $ui[0].Alert;
+                    $ui.remove();
+                    alert.skippedErrorGuids.push({
+                        'guid': guid,
+                        'msg': msg,
+                    });
+                    alert.alert();
+                    alert.count();
+                })
             }
             return $ui;
         },
         Log: function (condition, alert, msg, guid, groupGuid, removeAble) {
             if(!this.ValidationActive) return;
+            removeAble = removeAble !== false;
             var guid = guid || '';
             var groupGuid = groupGuid || ''
             var $ui = this.Create(alert, msg, guid, groupGuid, removeAble);
