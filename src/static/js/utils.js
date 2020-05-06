@@ -55,7 +55,6 @@ var Helper = {
                                 {
                                     title: '原始錯誤數',
                                     data: 'initial_errors',
-                                    sortable: false,
                                 },
                                 {
                                     title: '例外錯誤數',
@@ -70,7 +69,7 @@ var Helper = {
                                     data: 'update_time',
                                 },
                             ],
-                            order: [[ 4, "desc" ]],
+                            order: [[ 5, "desc" ]],
                         });
 
                     }else $(this).DataTable().ajax.reload();

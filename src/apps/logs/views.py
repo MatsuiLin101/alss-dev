@@ -20,11 +20,11 @@ logger = logging.getLogger("django.request")
 
 
 ORDER_COLUMN_CHOICES = Choices(
-    ("0", "id"),
-    ("1", "user"),
-    ("2", "content_object"),
-    ("3", "current_errors"),
-    ("4", "exception_errors"),
+    ("0", "user"),
+    ("1", "content_object"),
+    ("2", "initial_errors"),
+    ("3", "exception_errors"),
+    ("4", "current_errors"),
     ("5", "update_time"),
 )
 

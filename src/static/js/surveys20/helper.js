@@ -2546,7 +2546,7 @@ var PopulationHelper = {
                 })
                 var con = nonMainIncomeSourceChecked && !lifeStyle2345Seleted;
                 var msg = '勾選「以自家農牧業外淨收入為主」，則【問項2.2】應至少有一位勾選「2.受僱農牧業工作」或「3. 受託提供農事及畜牧服務」或「4.自營農牧業外工作」或「5.受僱農牧業外工作」';
-                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[1], null, false);
+                Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[1], null, true);
             }
         },
     },
