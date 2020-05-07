@@ -458,14 +458,15 @@ var SurveyHelper = {
                 Guids: Helper.Guid.CreateMulti(1),
                 Validate: function(){
                     var checked = SurveyHelper.Lack.Container.filter('input:checked');
+                    var text = checked.parent().text().trim();
                     var exists = LongTermLackHelper.LongTermLack.Container.find('tr').length +
                                  ShortTermLackHelper.ShortTermLack.Container.find('tr').length > 0;
-                    var con = checked.length == 1 && checked.data('lackId') == 3 && !exists;
-                    msg = '若勾選「107年有缺工」，【問項3.2.2及3.2.3】不應為空白';
+                    var con = checked.length == 1 && [1, 2, 3].indexOf(checked.data('lackId')) != -1 && !exists;
+                    msg = '若勾選「{0}」，【問項3.2.2及3.2.3】不應為空白'.format(text);
                     Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[0]);
 
                     var con = checked.length == 1 && checked.data('lackId') == 4 && exists;
-                    msg = '若勾選「107年人力已足」，【問項3.2.2及3.2.3】應為空白';
+                    msg = '若勾選「{0}」，【問項3.2.2及3.2.3】應為空白'.format(text);
                     Helper.LogHandler.Log(con, SurveyHelper.Lack.Alert, msg, this.Guids[1]);
                 },
             },
