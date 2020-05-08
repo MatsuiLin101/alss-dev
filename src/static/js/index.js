@@ -78,7 +78,6 @@ $(document).ready(function() {
     /* get farmer data*/
     $('.js-get-survey').click(function () {
 
-        Reset();
         Setup(GlobalUI);
 
         var $btn = $(this);
@@ -224,14 +223,6 @@ var SetFarmerData = function (url, data) {
         type: 'PATCH',
         data: {
             data: data
-        },
-        success: function (data) {
-            if ('id' in data) {
-                CloneData[data.id] = data;
-            }
-            else{
-                console.log(data);
-            }
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
