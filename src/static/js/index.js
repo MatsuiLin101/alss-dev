@@ -170,12 +170,22 @@ $(document).ready(function() {
                                 model: CloneData[MainSurveyId].model,
                             }
                             SetLogData(JSON.stringify(data));
-                            Helper.DataTable.ReviewLogRetrieve.Reload();
-                            Helper.Dialog.ShowInfo('成功更新調查表！');
                             $btn.data('ajax-sending', false);
                         })
                     }).done(function(){
                         Loading.close();
+                        BootstrapDialog.show({
+                            title: '訊息',
+                            message: '成功更新調查表！',
+                            type: BootstrapDialog.TYPE_INFO,
+                            buttons: [{
+                                label: '確定',
+                                action: function (dialogRef) {
+                                    dialogRef.close();
+                                    location.reload();
+                                }
+                            }]
+                        });
                     })
                 })
             }
