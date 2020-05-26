@@ -186,7 +186,7 @@ var SurveyHelper = {
     FarmerName: {
         Container: $('#panel1 input[name="farmername"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     CloneData[MainSurveyId].farmer_name = $(this).val();
 
@@ -219,7 +219,7 @@ var SurveyHelper = {
     IntervieweeRelationship: {
         Container: $('#panel1 input[name="intervieweerelationship"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     CloneData[MainSurveyId].interviewee_relationship = $(this).val();
 
@@ -267,15 +267,21 @@ var SurveyHelper = {
         },
         Container: $('#panel1 input[name="phone"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     var id = $(this).data('phone-id');
                     var obj = SurveyHelper.Phone.Object.Filter(id);
                     if(!obj){
-                        obj = SurveyHelper.Phone.Object.New(MainSurveyId);
-                        CloneData[MainSurveyId].phones.push(obj);
+                        // cannot locate which obj should remove, so reset all 2 phones
+                        CloneData[MainSurveyId].phones = [];
+                        SurveyHelper.Phone.Container.each(function(){
+                            var new_obj = SurveyHelper.Phone.Object.New(MainSurveyId);
+                            new_obj.phone = $(this).val();
+                            CloneData[MainSurveyId].phones.push(new_obj);
+                        })
+                    }else {
+                        obj.phone = $(this).val();
                     }
-                    obj.phone = $(this).val();
                     if(Helper.LogHandler.ValidationActive){
                         SurveyHelper.Phone.Validation.Empty.Validate();
                     }
@@ -323,7 +329,7 @@ var SurveyHelper = {
         },
         Container: $('#panel4 input[name="hire"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'hire')
@@ -396,7 +402,7 @@ var SurveyHelper = {
         },
         Container: $('#panel4 input[name="lack"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 var id = $(this).data('lack-id');
                 if(CloneData){
                     /* make it radio */
@@ -475,7 +481,7 @@ var SurveyHelper = {
     Note: {
         Container: $('#panel1 textarea[name="note"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     CloneData[MainSurveyId].note = $(this).val();
                 }
@@ -491,7 +497,7 @@ var SurveyHelper = {
     AddressMatch: {
         Container: $('#panel1 input[name="addressmatch"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     var field = $(this).data('field');
                     if(field == 'match')
@@ -541,7 +547,7 @@ var SurveyHelper = {
     Address: {
         Container: $('#panel1 input[name="address"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     CloneData[MainSurveyId].address_match.address = $(this).val();
                 }
@@ -581,7 +587,7 @@ var SurveyHelper = {
         },
         Container: $('#panel2 input[name="mainincomesource"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'mainincomesource')
@@ -636,7 +642,7 @@ var SurveyHelper = {
         },
         Container: $('#panel2 input[name="second"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'second')
@@ -709,7 +715,7 @@ var SurveyHelper = {
         },
         Container: $('#panel4 input[name="knownsubsidy"]'),
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData) {
                     var field = $(this).data('field');
                     if(field == 'knownsubsidy')
@@ -811,7 +817,7 @@ var FarmLocationHelper = {
         this.Container.CityTownCode.selectpicker('val', '');
     },
     Bind: function(){
-        this.Container.City.change(function(){
+        this.Container.City.unbind('change').change(function(){
             if(CloneData){
                 CloneData[MainSurveyId].farm_location.city = $(this).val();
                 if(Helper.LogHandler.ValidationActive){
@@ -820,7 +826,7 @@ var FarmLocationHelper = {
                 }
             }
         })
-        this.Container.Town.change(function(){
+        this.Container.Town.unbind('change').change(function(){
             if(CloneData){
                 CloneData[MainSurveyId].farm_location.town = $(this).val();
                 if(Helper.LogHandler.ValidationActive){
@@ -829,7 +835,7 @@ var FarmLocationHelper = {
                 }
             }
         })
-        this.Container.CityTownCode.change(function(){
+        this.Container.CityTownCode.unbind('change').change(function(){
             if(CloneData){
                 CloneData[MainSurveyId].farm_location.code = parseInt($(this).val());
                 if(Helper.LogHandler.ValidationActive){
@@ -907,7 +913,7 @@ var LandAreaHelper = {
             this.Container.prop('checked', false);
         },
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 var checked = $(this).prop('checked');
                 var type = $(this).data('landtype-id');
                 if(!checked){
@@ -960,7 +966,7 @@ var LandAreaHelper = {
                     e.preventDefault();
                 }
             })
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     LandAreaHelper.Object.Collect();
                     if(Helper.LogHandler.ValidationActive){
@@ -1138,7 +1144,7 @@ var BusinessHelper = {
             this.Container.prop('checked', false);
         },
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 var checked = $(this).prop('checked');
                 var farmRelatedBusinessId = $(this).data('farmrelatedbusiness-id');
                 if(!checked){
@@ -1183,7 +1189,7 @@ var BusinessHelper = {
                     e.preventDefault();
                 }
             })
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     BusinessHelper.Object.Collect();
                     if(Helper.LogHandler.ValidationActive){
@@ -1308,7 +1314,7 @@ var ManagementTypeHelper = {
             this.Container.prop('checked', false);
         },
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     managementTypes = [];
                     ManagementTypeHelper.ManagementType.Container
@@ -1482,7 +1488,7 @@ var CropMarketingHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -1518,7 +1524,7 @@ var CropMarketingHelper = {
     Adder: {
         Container: $('.js-add-row[name="cropmarketing"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = CropMarketingHelper.CropMarketing.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].crop_marketings.push(obj);
@@ -1851,7 +1857,7 @@ var LivestockMarketingHelper = {
                 }
 
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -1884,7 +1890,7 @@ var LivestockMarketingHelper = {
     Adder: {
         Container: $('.js-add-row[name="livestockmarketing"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = LivestockMarketingHelper.LivestockMarketing.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].livestock_marketings.push(obj);
@@ -1994,7 +2000,7 @@ var AnnualIncomeHelper = {
             this.Container.attr('data-annualincome-id', '')
         },
         Bind: function(){
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 if(CloneData){
                     var annualIncomes = []
 
@@ -2185,7 +2191,7 @@ var PopulationAgeHelper = {
         },
         Bind: function(){
             Helper.BindIntegerOnly(this.Container);
-            this.Container.change(function(){
+            this.Container.unbind('change').change(function(){
                 /* display sum */
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="populationage"]').map(function(){
@@ -2333,7 +2339,7 @@ var PopulationHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -2371,7 +2377,7 @@ var PopulationHelper = {
     Adder: {
         Container: $('.js-add-row[name="population"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = PopulationHelper.Population.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].populations.push(obj);
@@ -2630,7 +2636,7 @@ var LongTermHireHelper = {
         Bind: function($row){
             Helper.BindIntegerOnly($row.find('[name="numberworker"]'));
             Helper.BindFloatOnly($row.find('[name="avgworkday"]'));
-            $row.find('input[name="numberworker"]').change(function(){
+            $row.find('input[name="numberworker"]').unbind('change').change(function(){
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="numberworker"]').map(function(){
                     var parse = parseInt($(this).val());
@@ -2666,7 +2672,7 @@ var LongTermHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -2697,7 +2703,7 @@ var LongTermHireHelper = {
     Adder: {
         Container: $('.js-add-row[name="longtermhire"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = LongTermHireHelper.LongTermHire.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].long_term_hires.push(obj);
@@ -2844,7 +2850,7 @@ var ShortTermHireHelper = {
         },
         Bind: function($row){
             Helper.BindFloatOnly($row.find('[name="avgworkday"]'));
-            $row.find('input[name="numberworker"]').change(function(){
+            $row.find('input[name="numberworker"]').unbind('change').change(function(){
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="numberworker"]').map(function(){
                     var parse = parseInt($(this).val());
@@ -2880,7 +2886,7 @@ var ShortTermHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var guid = $tr.data('guid');
@@ -2909,7 +2915,7 @@ var ShortTermHireHelper = {
     Adder: {
         Container: $('.js-add-row[name="shorttermhire"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = ShortTermHireHelper.ShortTermHire.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].short_term_hires.push(obj);
@@ -3059,7 +3065,7 @@ var NoSalaryHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var guid = $tr.data('guid');
@@ -3084,7 +3090,7 @@ var NoSalaryHireHelper = {
     Adder: {
         Container: $('.js-add-row[name="nosalaryhire"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = NoSalaryHireHelper.NoSalaryHire.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].no_salary_hires.push(obj);
@@ -3205,7 +3211,7 @@ var LongTermLackHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -3235,7 +3241,7 @@ var LongTermLackHelper = {
     Adder: {
         Container: $('.js-add-row[name="longtermlack"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = LongTermLackHelper.LongTermLack.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].long_term_lacks.push(obj);
@@ -3401,7 +3407,7 @@ var ShortTermLackHelper = {
                     })
                 }
             })
-            $row.find('select, input').change(function(){
+            $row.find('select, input').unbind('change').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -3433,7 +3439,7 @@ var ShortTermLackHelper = {
     Adder: {
         Container: $('.js-add-row[name="shorttermlack"]'),
         Bind: function(){
-            this.Container.unbind().click(function(){
+            this.Container.unbind('click').click(function(){
                 if(CloneData && MainSurveyId){
                     obj = ShortTermLackHelper.ShortTermLack.Object.New(MainSurveyId);
                     CloneData[MainSurveyId].short_term_lacks.push(obj);
@@ -3550,7 +3556,7 @@ var SubsidyHelper = {
         this.Container.Extra.attr('data-refuse-id', '');
     },
     Bind: function(){
-        this.Container.HasSubsidy.change(function(){
+        this.Container.HasSubsidy.unbind('change').change(function(){
             if(CloneData){
                 var checked = $(this).prop('checked');
                 CloneData[MainSurveyId].subsidy.has_subsidy = checked;
@@ -3560,7 +3566,7 @@ var SubsidyHelper = {
                 }
             }
         })
-        this.Container.NoneSubsidy.change(function(){
+        this.Container.NoneSubsidy.unbind('change').change(function(){
             if(CloneData){
                 var checked = $(this).prop('checked');
                 CloneData[MainSurveyId].subsidy.none_subsidy = checked;
@@ -3574,7 +3580,7 @@ var SubsidyHelper = {
                 }
             }
         })
-        this.Container.RefuseReason.change(function(){
+        this.Container.RefuseReason.unbind('change').change(function(){
             SubsidyHelper.Object.Refuse.Collect();
             if(CloneData){
                 if(Helper.LogHandler.ValidationActive){
@@ -3591,7 +3597,7 @@ var SubsidyHelper = {
                 e.preventDefault();
             }
         })
-        this.Container.Extra.change(function(e){
+        this.Container.Extra.unbind('change').change(function(e){
             /* make sure checked before change textbox value */
             var refuseReasonId = $(this).data('refusereason-id');
             var noneSubsidyChecked = SubsidyHelper.Container.NoneSubsidy.prop('checked');
