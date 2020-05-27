@@ -38,10 +38,10 @@ class Survey(Model):
 
     farmer_id = CharField(max_length=12, verbose_name=_("Farmer Id"), db_index=True)
     farmer_name = CharField(
-        null=True, blank=True, max_length=10, verbose_name=_("Name")
+        null=True, blank=True, max_length=30, verbose_name=_("Name")
     )
     interviewee_relationship = CharField(
-        null=True, blank=True, max_length=10, verbose_name=_("Interviewee Relationship")
+        null=True, blank=True, max_length=30, verbose_name=_("Interviewee Relationship")
     )
     total_pages = IntegerField(verbose_name=_("Total Pages"))
     page = IntegerField(verbose_name=_("Page"))
