@@ -2636,7 +2636,7 @@ var LongTermHireHelper = {
         Bind: function($row){
             Helper.BindIntegerOnly($row.find('[name="numberworker"]'));
             Helper.BindFloatOnly($row.find('[name="avgworkday"]'));
-            $row.find('input[name="numberworker"]').unbind('change').change(function(){
+            $row.find('input[name="numberworker"]').change(function(){
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="numberworker"]').map(function(){
                     var parse = parseInt($(this).val());
@@ -2672,7 +2672,7 @@ var LongTermHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').unbind('change').change(function(){
+            $row.find('select, input').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -2850,7 +2850,7 @@ var ShortTermHireHelper = {
         },
         Bind: function($row){
             Helper.BindFloatOnly($row.find('[name="avgworkday"]'));
-            $row.find('input[name="numberworker"]').unbind('change').change(function(){
+            $row.find('input[name="numberworker"]').change(function(){
                 var sumCount = 0;
                 $(this).closest('tr').find('input[name="numberworker"]').map(function(){
                     var parse = parseInt($(this).val());
@@ -2886,7 +2886,7 @@ var ShortTermHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').unbind('change').change(function(){
+            $row.find('select, input').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var guid = $tr.data('guid');
@@ -3065,7 +3065,7 @@ var NoSalaryHireHelper = {
                     })
                 }
             })
-            $row.find('select, input').unbind('change').change(function(){
+            $row.find('select, input').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var guid = $tr.data('guid');
@@ -3211,7 +3211,7 @@ var LongTermLackHelper = {
                     })
                 }
             })
-            $row.find('select, input').unbind('change').change(function(){
+            $row.find('select, input').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
@@ -3407,7 +3407,7 @@ var ShortTermLackHelper = {
                     })
                 }
             })
-            $row.find('select, input').unbind('change').change(function(){
+            $row.find('select, input').change(function(){
                 if(CloneData){
                     $tr = $(this).closest('tr');
                     var surveyId = $tr.data('survey-id');
