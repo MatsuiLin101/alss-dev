@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-26 03:42+0800\n"
+"POT-Creation-Date: 2020-05-31 16:25+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,29 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: apps/logs/apps.py:7
-msgid "Logs"
-msgstr "紀錄及日誌"
+#: apps/logs/admin.py:15 apps/surveys18/models.py:93
+#: apps/surveys19/models.py:39 apps/surveys20/models.py:39
+msgid "Farmer Id"
+msgstr "農戶編號"
 
-#: apps/logs/models.py:29 apps/surveys18/models.py:60
+#: apps/logs/admin.py:17 apps/logs/models.py:29 apps/surveys18/models.py:60
 #: apps/surveys19/models.py:1487 apps/surveys20/models.py:1491
 #: apps/users/models.py:67
 msgid "User"
 msgstr "使用者"
 
-#: apps/logs/models.py:37
+#: apps/logs/admin.py:18 apps/logs/models.py:37
 msgid "Initialed Error Count"
 msgstr "原始錯誤數量"
 
-#: apps/logs/models.py:40
+#: apps/logs/admin.py:19 apps/logs/models.py:40
 msgid "Current Error Count"
 msgstr "目前錯誤數量"
 
-#: apps/logs/models.py:43
+#: apps/logs/admin.py:20 apps/logs/models.py:43
 msgid "Exception Error Count"
 msgstr "例外錯誤數量"
 
-#: apps/logs/models.py:50 apps/surveys18/models.py:38
+#: apps/logs/admin.py:21 apps/logs/models.py:50 apps/surveys18/models.py:38
 #: apps/surveys18/models.py:134 apps/surveys18/models.py:185
 #: apps/surveys18/models.py:226 apps/surveys18/models.py:260
 #: apps/surveys18/models.py:295 apps/surveys18/models.py:317
@@ -104,6 +105,10 @@ msgstr "例外錯誤數量"
 #: apps/surveys20/models.py:1449 apps/surveys20/models.py:1472
 msgid "Updated"
 msgstr "上次更新"
+
+#: apps/logs/apps.py:7
+msgid "Logs"
+msgstr "紀錄及日誌"
 
 #: apps/logs/models.py:54
 msgid "ReviewLog"
@@ -179,11 +184,6 @@ msgstr "檔案"
 #: apps/surveys20/models.py:1503 apps/surveys20/models.py:1504
 msgid "BuilderFile"
 msgstr "匯入檔案"
-
-#: apps/surveys18/models.py:93 apps/surveys19/models.py:39
-#: apps/surveys20/models.py:39
-msgid "Farmer Id"
-msgstr "農戶編號"
 
 #: apps/surveys18/models.py:97 apps/surveys19/models.py:43
 #: apps/surveys20/models.py:46

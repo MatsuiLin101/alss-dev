@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     "captcha",
+    "import_export",
     # local
-    "apps.users",
-    "apps.logs",
-    "apps.surveys18",
-    "apps.surveys19",
-    "apps.surveys20",
+    "apps.users.apps.UsersConfig",
+    "apps.logs.apps.LogsConfig",
+    "apps.surveys18.apps.Surveys18Config",
+    "apps.surveys19.apps.Surveys19Config",
+    "apps.surveys20.apps.Surveys20Config",
 ]
 
 # MIDDLEWARE CONFIGURATION

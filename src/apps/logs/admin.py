@@ -1,10 +1,44 @@
 from django.contrib import admin
-
 from django.contrib.admin import SimpleListFilter
+from django.utils.translation import ugettext_lazy as _
+
+from import_export.resources import ModelResource
+from import_export.admin import ExportMixin
+from import_export.fields import Field
 
 from date_range_filter import DateRangeFilter
 
 from .models import ReviewLog
+
+
+class ReviewLogResource(ModelResource):
+    farmer_id = Field(column_name=_('Farmer Id'))
+    year = Field(column_name='年份')
+    user = Field(column_name=_('User'))
+    initial_errors = Field(attribute='initial_errors', column_name=_('Initialed Error Count'))
+    current_errors = Field(attribute='current_errors', column_name=_('Current Error Count'))
+    exception_errors = Field(attribute='exception_errors', column_name=_('Exception Error Count'))
+    update_time = Field(attribute='update_time', column_name=_('Updated'))
+
+    class Meta:
+        model = ReviewLog
+        exclude = ('id', 'content_type', 'content_object', 'object_id')
+
+    def dehydrate_user(self, obj):
+        return obj.user.full_name
+
+    def dehydrate_farmer_id(self, obj):
+        if obj.content_object:
+            return obj.content_object.farmer_id
+        return '此調查表已經被刪除'
+
+    def dehydrate_year(self, obj):
+        if obj.content_type.app_label == 'surveys18':
+            return '106'
+        if obj.content_type.app_label == 'surveys19':
+            return '107'
+        if obj.content_type.app_label == 'surveys20':
+            return '108'
 
 
 class YearFilter(SimpleListFilter):
@@ -37,26 +71,27 @@ class YearFilter(SimpleListFilter):
             return queryset
 
 
-class ReviewLogAdmin(admin.ModelAdmin):
+class ReviewLogAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ReviewLogResource
     list_display = (
-        "id",
-        "user",
-        "year",
-        "farmer_id",
-        "initial_errors",
-        "exception_errors",
-        "current_errors",
-        "update_time",
+        'id',
+        'user',
+        'year',
+        'farmer_id',
+        'initial_errors',
+        'exception_errors',
+        'current_errors',
+        'update_time',
     )
     list_filter = (
-        "user",
+        'user',
         YearFilter,
-        "initial_errors",
-        "exception_errors",
-        "current_errors",
-        ("update_time", DateRangeFilter),
+        'initial_errors',
+        'exception_errors',
+        'current_errors',
+        ('update_time', DateRangeFilter),
     )
-    search_fields = ("user__full_name",)
+    search_fields = ('user__full_name',)
 
     def farmer_id(self, obj):
         if obj.content_object:
