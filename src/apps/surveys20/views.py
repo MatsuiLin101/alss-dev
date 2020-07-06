@@ -1,12 +1,13 @@
 import json
 import logging
+import csv
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 
 from django.contrib.contenttypes.models import ContentType
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse, HttpResponse
 from django.db.models import Q
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -18,6 +19,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from config.viewsets import StandardViewSet
 
 from apps.users.models import User
+from apps.surveys20.tasks import async_export_108
+from apps.surveys20.export import SurveyRelationGeneratorFactory
 from apps.surveys20.models import (
     Survey,
     Phone,
@@ -111,6 +114,16 @@ from apps.surveys20.serializers import (
 )
 
 logger = logging.getLogger('django.request')
+
+
+class Echo:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
 
 class Surveys2020Index(LoginRequiredMixin, TemplateView):
@@ -256,6 +269,16 @@ class SurveyViewSet(ModelViewSet):
         except (ValidationError, Exception):
             logger.exception('Update survey data failed.', exc_info=True)
             raise
+
+    @action(methods=["GET"], detail=False)
+    def export(self, request):
+        """A view that streams a large CSV file."""
+        # Generate a sequence of rows. The range is based on the maximum number of
+        # rows that can be handled by a single sheet in most spreadsheet
+        # applications.
+
+        async_export_108.delay(request.user.email)
+        return HttpResponse('ok')
 
 
 class PhoneViewSet(StandardViewSet):
