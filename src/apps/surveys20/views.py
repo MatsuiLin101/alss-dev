@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 
 from django.contrib.contenttypes.models import ContentType
-from django.http import JsonResponse, StreamingHttpResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -20,7 +20,6 @@ from config.viewsets import StandardViewSet
 
 from apps.users.models import User
 from apps.surveys20.tasks import async_export_108
-from apps.surveys20.export import SurveyRelationGeneratorFactory
 from apps.surveys20.models import (
     Survey,
     Phone,

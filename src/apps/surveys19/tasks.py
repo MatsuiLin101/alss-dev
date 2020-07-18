@@ -1,6 +1,3 @@
-from celery.decorators import task
-from celery.task.schedules import crontab
-
 import csv
 import io
 import zipfile
@@ -8,10 +5,11 @@ import zipfile
 from django.conf import settings
 from django.core.mail import EmailMessage
 
+from config import celery_app as app
 from apps.surveys19.export import SurveyRelationGeneratorFactory
 
 
-@task(name="AsyncExport107")
+@app.task
 def async_export_107(email):
     try:
         factory = SurveyRelationGeneratorFactory(excludes={'note__icontains': '無效戶'})
