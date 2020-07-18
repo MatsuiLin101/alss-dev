@@ -252,7 +252,6 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_IMPORTS = (
     'apps.surveys19.tasks',
     'apps.surveys20.tasks',
-
 )
 
 # DJANGO SUIT
