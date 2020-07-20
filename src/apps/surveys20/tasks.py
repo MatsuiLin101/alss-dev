@@ -21,17 +21,13 @@ def async_export_108(email):
         for row in row_generator:
             writer.writerow(row)
 
-        bio = io.BytesIO()
-        zf = zipfile.ZipFile(bio, 'w')
-        zf.writestr('108調查表.csv', sio.getvalue())
-
         email = EmailMessage(
             '108調查表匯出完成',
             '請下載附件後解壓縮查看調查表',
             settings.DEFAULT_FROM_EMAIL,
             [email]
         )
-        email.attach('108調查表.zip', bio.getvalue(), 'application/zip')
+        email.attach('108調查表.csv', sio.getvalue(), 'text/csv')
         email.send()
     except Exception as e:
         email = EmailMessage(
