@@ -34,6 +34,8 @@ PRODUCT_TYPE_CHOICES = Choices((1, 'crop', _('Crop')), (2, 'animal', _('Animal')
 
 STRATIFY_WITH_CHOICES = Choices((1, 'field', _('Field')), (2, 'revenue', _('Revenue')))
 
+REGION_CHOICES = Choices((1, _("North")), (2, _('Central')), (3, _('South')), (4, _('East')))
+
 NUMBER_WORKERS_CHOICES = Q(app_label="surveys20", model="longtermhire") | Q(
     app_label="surveys20", model="shorttermhire"
 )
@@ -177,6 +179,7 @@ class CityTownCode(Model):
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_("City"))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_("Town"))
     code = CharField(max_length=20, null=True, blank=True, verbose_name=_("Code"))
+    region = PositiveIntegerField(null=True, blank=True, choices=REGION_CHOICES, verbose_name=_('Region'))
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,
