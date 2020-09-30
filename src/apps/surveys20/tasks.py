@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 
 from config import celery_app as app
 from apps.surveys20.models import FarmerStat, Survey
-from apps.surveys20.export import SurveyRelationGeneratorFactory
+from apps.surveys20.export import SurveyRelationGeneratorFactory, StatisticsExporter
 
 
 @app.task
@@ -23,7 +23,7 @@ def async_export_108(email):
 
         email = EmailMessage(
             '108調查表匯出完成',
-            '請下載附件後解壓縮查看調查表',
+            '匯出結果如附件',
             settings.DEFAULT_FROM_EMAIL,
             [email]
         )
@@ -32,6 +32,31 @@ def async_export_108(email):
     except Exception as e:
         email = EmailMessage(
             '108調查表匯出失敗',
+            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            settings.DEFAULT_FROM_EMAIL,
+            [email]
+        )
+        email.send()
+
+
+@app.task
+def async_export_108_statistics(email):
+    try:
+        bio = io.BytesIO()
+        exporter = StatisticsExporter()
+        exporter(bio)
+
+        email = EmailMessage(
+            '108平台統計結果表式匯出完成',
+            '匯出結果如附件',
+            settings.DEFAULT_FROM_EMAIL,
+            [email]
+        )
+        email.attach('108平台統計結果表式.xlsx', bio.getvalue(), 'application/vnd.ms-excel')
+        email.send()
+    except Exception as e:
+        email = EmailMessage(
+            '108平台統計結果表式匯出失敗',
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
             [email]

@@ -7,11 +7,6 @@ Pace.options = {
 $.loading.default.tip = '請稍後';
 $.loading.default.imgPath = '../static/vendor/ajax-loading/img/ajax-loading.gif';
 
-/* BootstrapDialog settings */
-BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
-BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
-BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '確認';
-
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection

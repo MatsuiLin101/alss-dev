@@ -14,11 +14,12 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import status
 
 from config.viewsets import StandardViewSet
 
 from apps.users.models import User
-from apps.surveys20.tasks import async_export_108
+from apps.surveys20.tasks import async_export_108, async_export_108_statistics
 from apps.surveys20.models import (
     Survey,
     Phone,
@@ -269,13 +270,13 @@ class SurveyViewSet(ModelViewSet):
 
     @action(methods=["GET"], detail=False)
     def export(self, request):
-        """A view that streams a large CSV file."""
-        # Generate a sequence of rows. The range is based on the maximum number of
-        # rows that can be handled by a single sheet in most spreadsheet
-        # applications.
-
         async_export_108.delay(request.user.email)
-        return HttpResponse('ok')
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=["GET"], detail=False)
+    def export_statistics(self, request):
+        async_export_108_statistics.delay(request.user.email)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 class PhoneViewSet(StandardViewSet):

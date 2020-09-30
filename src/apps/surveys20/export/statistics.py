@@ -210,7 +210,6 @@ class StatisticsExporter:
                     cell_value = self.sheet4[f'J{row}'].value or 0
                     self.sheet4[f'J{row}'] = cell_value + sum_workers
 
-
     def process_no_salary_hires(self):
         """Modify sheet 1 column I"""
 

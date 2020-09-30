@@ -61,9 +61,34 @@
     {% endblock external_js %}
 
     <script type="text/javascript">
+        /* BootstrapDialog settings */
+        BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
+        BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
+        BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '確認';
+        $(document).ready(function(){
+            $('.export').click(function(){
+                $.ajax({
+                    url: $(this).data('url'),
+                    method: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
+                BootstrapDialog.show({
+                    title: '已排程您的匯出工作',
+                    message: '匯出結果將稍後寄至信箱您的信箱。',
+                    type: BootstrapDialog.TYPE_INFO,
+                    buttons: [{
+                        label: '確定',
+                        action: function (dialogRef) {
+                            dialogRef.close();
+                        }
+                    }]
+                });
+            })
+        })
         {% block internal_js %}
         {% endblock internal_js %}
     </script>
-    <script src="{% static 'js/export.js' %}"></script>
 </body>
 </html>
