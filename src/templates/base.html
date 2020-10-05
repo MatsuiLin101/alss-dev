@@ -71,19 +71,31 @@
                     url: $(this).data('url'),
                     method: 'GET',
                     success: function(response) {
-                        console.log(response);
-                    }
-                });
-                BootstrapDialog.show({
-                    title: '已排程您的匯出工作',
-                    message: '匯出結果將稍後寄至信箱您的信箱。',
-                    type: BootstrapDialog.TYPE_INFO,
-                    buttons: [{
-                        label: '確定',
-                        action: function (dialogRef) {
-                            dialogRef.close();
-                        }
-                    }]
+                        BootstrapDialog.show({
+                            title: '已排程您的匯出工作',
+                            message: '匯出結果將稍後寄至信箱您的信箱。',
+                            type: BootstrapDialog.TYPE_INFO,
+                            buttons: [{
+                                label: '確定',
+                                action: function (dialogRef) {
+                                    dialogRef.close();
+                                }
+                            }]
+                        });
+                    },
+                    error: function () {
+                        BootstrapDialog.show({
+                            title: '無法排程匯出工作',
+                            message: '系統發生錯誤，請通知管理員處理。',
+                            type: BootstrapDialog.TYPE_DANGER,
+                            buttons: [{
+                                label: '確定',
+                                action: function (dialogRef) {
+                                    dialogRef.close();
+                                }
+                            }]
+                        });
+					}
                 });
             })
         })
