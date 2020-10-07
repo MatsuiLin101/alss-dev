@@ -67,14 +67,15 @@ def async_export_108_statistics(email):
 @app.task
 def async_update_stratify(survey_id):
     survey = Survey.objects.get(id=survey_id)
-    stratify = FarmerStat.get_stratify(survey)
-    if '無效戶' not in survey.note:
+    if '無效戶' in survey.note:
+        FarmerStat.objects.filter(survey=survey).delete()
+        return f"Delete {survey} FarmerStat, it's been mark as invalid farmer."
+    else:
+        stratify = FarmerStat.get_stratify(survey)
         FarmerStat.objects.update_or_create(
             survey=survey,
             defaults={
                 'stratify': stratify
             }
         )
-    else:
-        FarmerStat.objects.filter(survey=survey).delete()
-    return f'Classify survey {survey} to stratify {stratify}.'
+        return f'Classify survey {survey} to stratify {stratify}.'

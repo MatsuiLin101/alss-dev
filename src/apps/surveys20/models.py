@@ -1551,7 +1551,7 @@ class FarmerStat(Model):
         verbose_name_plural = _("Farmer Stat")
 
     def __str__(self):
-        return str(self.farmer_id)
+        return str(self.survey)
 
     @classmethod
     @atomic
