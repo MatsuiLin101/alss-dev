@@ -58,7 +58,7 @@ from .models import (
 class StratifyResource(ModelResource):
     management_type = Field(attribute='management_type', column_name=_('Management Type'))
     code = Field(attribute='code', column_name=_('Code'))
-    population = Field(column_name=_('Population(Statistic)'))
+    population = Field(attribute='population', column_name=_('Population(Statistic)'))
     sample_count = Field(column_name=_('Sample Count'))
     magnification_factor = Field(column_name=_('Magnification Factor'))
 
@@ -66,7 +66,7 @@ class StratifyResource(ModelResource):
         model = Stratify
         fields = ('management_type', 'code', 'population', 'sample_count', 'magnification_factor', 'note')
 
-    def derate_sample_count(self, obj):
+    def dehydrate_sample_count(self, obj):
         return obj.sample_count
 
     def dehydrate_magnification_factor(self, obj):
