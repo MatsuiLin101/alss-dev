@@ -26,14 +26,14 @@ class LongTermLackTestCase(TestCase):
         new_longtermlack.save()
 
         longtermlack_list_after_size = len(LongTermLack.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             longtermlack_list_after_size, longtermlack_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         longtermlack_list = LongTermLack.objects.filter(survey=1)
-        self.assertEquals(longtermlack_list.count(), 0)
+        self.assertEqual(longtermlack_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
@@ -41,5 +41,5 @@ class LongTermLackTestCase(TestCase):
         longtermlack_list = LongTermLack.objects.all()
         month_list_after_size = len(Month.objects.all())
 
-        self.assertEquals(len(longtermlack_list), 0)
-        self.assertEquals(month_list_before_size, month_list_after_size)
+        self.assertEqual(len(longtermlack_list), 0)
+        self.assertEqual(month_list_before_size, month_list_after_size)

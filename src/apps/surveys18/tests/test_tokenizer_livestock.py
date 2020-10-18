@@ -28,4 +28,4 @@ class ModelTestCase(TestCase):
 
     def test_build_livestock_marketing(self):
         survey = Survey.objects.filter(farmer_id="640240014040").first()
-        self.assertEquals(survey.livestock_marketings.all().count(), 10)
+        self.assertEqual(survey.livestock_marketings.all().count(), 10)

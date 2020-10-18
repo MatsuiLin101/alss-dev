@@ -21,12 +21,12 @@ class ModelTestCase(TestCase):
         new_business.save()
 
         business_list_after_size = len(Business.objects.all())
-        self.assertEquals(business_list_after_size, business_list_before_size + 1)
+        self.assertEqual(business_list_after_size, business_list_before_size + 1)
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         business_list = Business.objects.filter(survey__id=1)
-        self.assertEquals(business_list.count(), 0)
+        self.assertEqual(business_list.count(), 0)
 
     def test_survey_delete_all(self):
         relatedbusiness_list_before = FarmRelatedBusiness.objects.all()
@@ -34,7 +34,7 @@ class ModelTestCase(TestCase):
         business_list = Business.objects.all()
         relatedbusiness_list_after = FarmRelatedBusiness.objects.all()
 
-        self.assertEquals(len(business_list), 0)
-        self.assertEquals(
+        self.assertEqual(len(business_list), 0)
+        self.assertEqual(
             len(relatedbusiness_list_before), len(relatedbusiness_list_after)
         )

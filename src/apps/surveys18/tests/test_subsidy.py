@@ -18,14 +18,14 @@ class ModelTestCase(TestCase):
         new_subsidy.save()
 
         subsidy_list_after_size = Subsidy.objects.count()
-        self.assertEquals(subsidy_list_after_size, subsidy_list_before_size + 1)
+        self.assertEqual(subsidy_list_after_size, subsidy_list_before_size + 1)
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         subsidy_list = Subsidy.objects.filter(survey__id=1)
-        self.assertEquals(subsidy_list.count(), 0)
+        self.assertEqual(subsidy_list.count(), 0)
 
     def test_survey_delete_all(self):
         Survey.objects.all().delete()
-        self.assertEquals(Subsidy.objects.count(), 0)
-        self.assertEquals(Refuse.objects.count(), 0)
+        self.assertEqual(Subsidy.objects.count(), 0)
+        self.assertEqual(Refuse.objects.count(), 0)

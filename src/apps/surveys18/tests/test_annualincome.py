@@ -31,14 +31,14 @@ class ModelTestCase(TestCase):
         )
 
         annual_income_list_after_size = AnnualIncome.objects.count()
-        self.assertEquals(
+        self.assertEqual(
             annual_income_list_after_size, annual_income_list_before_size + 3
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         annual_income_list = AnnualIncome.objects.filter(survey__id=1)
-        self.assertEquals(annual_income_list.count(), 0)
+        self.assertEqual(annual_income_list.count(), 0)
 
     def test_survey_delete_all(self):
         market_type_list_before_size = MarketType.objects.count()
@@ -48,6 +48,6 @@ class ModelTestCase(TestCase):
         market_type_list_after_size = MarketType.objects.count()
         income_range_list_after_size = len(IncomeRange.objects.all())
 
-        self.assertEquals(len(annual_income_list), 0)
-        self.assertEquals(market_type_list_after_size, market_type_list_before_size)
-        self.assertEquals(income_range_list_after_size, income_range_list_before_size)
+        self.assertEqual(len(annual_income_list), 0)
+        self.assertEqual(market_type_list_after_size, market_type_list_before_size)
+        self.assertEqual(income_range_list_after_size, income_range_list_before_size)

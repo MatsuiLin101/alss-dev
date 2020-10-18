@@ -38,12 +38,12 @@ class PopulationTestCase(TestCase):
         )
 
         population_list_after_size = len(Population.objects.all())
-        self.assertEquals(population_list_after_size, population_list_before_size + 1)
+        self.assertEqual(population_list_after_size, population_list_before_size + 1)
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         population_list = Population.objects.filter(survey=1)
-        self.assertEquals(population_list.count(), 0)
+        self.assertEqual(population_list.count(), 0)
 
     def test_survey_delete_all(self):
         farmer_work_day_list_before_size = len(FarmerWorkDay.objects.all())
@@ -51,7 +51,7 @@ class PopulationTestCase(TestCase):
         population_list = Population.objects.all()
         farmer_work_day_list_after_size = len(FarmerWorkDay.objects.all())
 
-        self.assertEquals(len(population_list), 0)
-        self.assertEquals(
+        self.assertEqual(len(population_list), 0)
+        self.assertEqual(
             farmer_work_day_list_before_size, farmer_work_day_list_after_size
         )

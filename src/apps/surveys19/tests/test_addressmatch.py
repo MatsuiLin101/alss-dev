@@ -18,11 +18,11 @@ class AddressMatchTestCase(TestCase):
         )
 
         address_match_list_after_size = len(AddressMatch.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             address_match_list_after_size, address_match_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         address_match_list = AddressMatch.objects.filter(survey__id=1)
-        self.assertEquals(address_match_list.count(), 0)
+        self.assertEqual(address_match_list.count(), 0)

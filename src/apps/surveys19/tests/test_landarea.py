@@ -33,12 +33,12 @@ class LandAreaTestCase(TestCase):
         )
 
         land_area_list_after_size = len(LandArea.objects.all())
-        self.assertEquals(land_area_list_after_size, land_area_list_before_size + 1)
+        self.assertEqual(land_area_list_after_size, land_area_list_before_size + 1)
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         land_area_list = LandArea.objects.filter(survey__id=1)
-        self.assertEquals(land_area_list.count(), 0)
+        self.assertEqual(land_area_list.count(), 0)
 
     def test_survey_delete_all(self):
         land_type_list_before_size = len(LandType.objects.all())
@@ -48,6 +48,6 @@ class LandAreaTestCase(TestCase):
         land_type_list_after_size = len(LandType.objects.all())
         land_status_list_after_size = len(LandStatus.objects.all())
 
-        self.assertEquals(len(land_area_list), 0)
-        self.assertEquals(land_type_list_after_size, land_type_list_before_size)
-        self.assertEquals(land_status_list_after_size, land_status_list_before_size)
+        self.assertEqual(len(land_area_list), 0)
+        self.assertEqual(land_type_list_after_size, land_type_list_before_size)
+        self.assertEqual(land_status_list_after_size, land_status_list_before_size)

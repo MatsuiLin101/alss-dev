@@ -20,14 +20,14 @@ class ModelTestCase(TestCase):
         )
 
         longtermhire_list_after_size = len(LongTermHire.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             longtermhire_list_after_size, longtermhire_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         longtermhire_list = LongTermHire.objects.filter(survey__id=1)
-        self.assertEquals(longtermhire_list.count(), 0)
+        self.assertEqual(longtermhire_list.count(), 0)
 
     def test_survey_delete_all(self):
         work_type_list_before_size = len(WorkType.objects.all())
@@ -35,5 +35,5 @@ class ModelTestCase(TestCase):
         longtermhire_list = LongTermHire.objects.all()
         work_type_list_after_size = len(WorkType.objects.all())
 
-        self.assertEquals(len(longtermhire_list), 0)
-        self.assertEquals(work_type_list_before_size, work_type_list_after_size)
+        self.assertEqual(len(longtermhire_list), 0)
+        self.assertEqual(work_type_list_before_size, work_type_list_after_size)

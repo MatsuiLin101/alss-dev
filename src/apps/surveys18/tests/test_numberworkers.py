@@ -29,6 +29,6 @@ class ModelTestCase(TestCase):
         )
 
         numberworkers_list_after_size = len(NumberWorkers.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             numberworkers_list_after_size, numberworkers_list_before_size + 1
         )

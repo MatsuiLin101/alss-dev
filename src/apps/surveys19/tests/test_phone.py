@@ -16,9 +16,9 @@ class PhoneTestCase(TestCase):
         Phone.objects.create(survey=survey_id, phone=22222222)
 
         phone_list_after_size = len(Phone.objects.all())
-        self.assertEquals(phone_list_after_size, phone_list_before_size + 1)
+        self.assertEqual(phone_list_after_size, phone_list_before_size + 1)
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         phone_list = Phone.objects.filter(survey__id=1)
-        self.assertEquals(phone_list.count(), 0)
+        self.assertEqual(phone_list.count(), 0)

@@ -18,14 +18,14 @@ class ModelTestCase(TestCase):
         NoSalaryHire.objects.create(survey=survey_id, count=15, month=month)
 
         nosalaryhire_list_after_size = len(NoSalaryHire.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             nosalaryhire_list_after_size, nosalaryhire_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         nosalaryhire_list = NoSalaryHire.objects.filter(survey=1)
-        self.assertEquals(nosalaryhire_list.count(), 0)
+        self.assertEqual(nosalaryhire_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
@@ -33,5 +33,5 @@ class ModelTestCase(TestCase):
         nosalaryhire_list = NoSalaryHire.objects.all()
         month_list_after_size = len(Month.objects.all())
 
-        self.assertEquals(len(nosalaryhire_list), 0)
-        self.assertEquals(month_list_before_size, month_list_after_size)
+        self.assertEqual(len(nosalaryhire_list), 0)
+        self.assertEqual(month_list_before_size, month_list_after_size)

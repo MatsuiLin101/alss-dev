@@ -37,7 +37,7 @@ class LivestockMarketingTestCase(TestCase):
         LivestockMarketing.objects.create(survey=survey_id, product=product_b)
 
         livestock_marketing_list_after_size = LivestockMarketing.objects.count()
-        self.assertEquals(
+        self.assertEqual(
             livestock_marketing_list_after_size,
             livestock_marketing_list_before_size + 2,
         )
@@ -45,7 +45,7 @@ class LivestockMarketingTestCase(TestCase):
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         livestock__marketing_list = LivestockMarketing.objects.filter(survey__id=1)
-        self.assertEquals(livestock__marketing_list.count(), 0)
+        self.assertEqual(livestock__marketing_list.count(), 0)
 
     def test_survey_delete_all(self):
         product_list_before_size = Product.objects.count()
@@ -58,8 +58,8 @@ class LivestockMarketingTestCase(TestCase):
         unit_list_after_size = Unit.objects.count()
         contract_list_after_size = Contract.objects.count()
 
-        self.assertEquals(LivestockMarketing.objects.count(), 0)
-        self.assertEquals(product_list_before_size, product_list_after_size)
-        self.assertEquals(loss_list_before_size, loss_list_after_size)
-        self.assertEquals(unit_list_before_size, unit_list_after_size)
-        self.assertEquals(contract_list_before_size, contract_list_after_size)
+        self.assertEqual(LivestockMarketing.objects.count(), 0)
+        self.assertEqual(product_list_before_size, product_list_after_size)
+        self.assertEqual(loss_list_before_size, loss_list_after_size)
+        self.assertEqual(unit_list_before_size, unit_list_after_size)
+        self.assertEqual(contract_list_before_size, contract_list_after_size)

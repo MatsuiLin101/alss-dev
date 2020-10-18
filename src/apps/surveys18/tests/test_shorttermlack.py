@@ -33,14 +33,14 @@ class ModelTestCase(TestCase):
         new_shorttermlack.save()
 
         shorttermlack_list_after_size = len(ShortTermLack.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             shorttermlack_list_after_size, shorttermlack_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         shorttermlack_list = ShortTermLack.objects.filter(survey=1)
-        self.assertEquals(shorttermlack_list.count(), 0)
+        self.assertEqual(shorttermlack_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
@@ -48,5 +48,5 @@ class ModelTestCase(TestCase):
         shorttermlack_list = ShortTermLack.objects.all()
         month_list_after_size = len(Month.objects.all())
 
-        self.assertEquals(len(shorttermlack_list), 0)
-        self.assertEquals(month_list_before_size, month_list_after_size)
+        self.assertEqual(len(shorttermlack_list), 0)
+        self.assertEqual(month_list_before_size, month_list_after_size)

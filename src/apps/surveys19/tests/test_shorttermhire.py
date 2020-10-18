@@ -23,14 +23,14 @@ class ShortTermHireTestCase(TestCase):
         new_shorttermhire.save()
 
         shorttermhire_list_after_size = len(ShortTermHire.objects.all())
-        self.assertEquals(
+        self.assertEqual(
             shorttermhire_list_after_size, shorttermhire_list_before_size + 1
         )
 
     def test_survey_delete(self):
         Survey.objects.filter(id=1).delete()
         shorttermhire_list = ShortTermHire.objects.filter(survey=1)
-        self.assertEquals(shorttermhire_list.count(), 0)
+        self.assertEqual(shorttermhire_list.count(), 0)
 
     def test_survey_delete_all(self):
         month_list_before_size = len(Month.objects.all())
@@ -38,5 +38,5 @@ class ShortTermHireTestCase(TestCase):
         shorttermhire_list = ShortTermHire.objects.all()
         month_list_after_size = len(Month.objects.all())
 
-        self.assertEquals(len(shorttermhire_list), 0)
-        self.assertEquals(month_list_before_size, month_list_after_size)
+        self.assertEqual(len(shorttermhire_list), 0)
+        self.assertEqual(month_list_before_size, month_list_after_size)
