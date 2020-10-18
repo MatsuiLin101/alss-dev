@@ -60,7 +60,7 @@ class StatisticsExporter:
     def get_sheet_2_4_rows(self, sheet_idx, farmer_id):
         survey = self.survey_map.get(farmer_id)
         management_type = survey.management_types.first()
-        crop_mapping = {1: 8, 2: 9, 3: 10, 4: 11, 5: 12, 6: 13, 7: 14, 8: 16, 9: 16, 10: 15}
+        crop_mapping = {1: 8, 2: 9, 3: 11, 4: 10, 5: 12, 6: 13, 7: 14, 8: 16, 9: 16, 10: 15}
         animal_mapping = {11: 18, 12: 19, 13: 20, 14: 21}
         if management_type.id in crop_mapping.keys():
             rows = [7, crop_mapping.get(management_type.id)]
@@ -92,7 +92,7 @@ class StatisticsExporter:
                 cell_value = self.sheet3[f'{column}{row}'].value or 0
                 self.sheet3[f'{column}{row}'] = cell_value + 1 * factor
             # sheet 4
-            is_lack_column_map = {1: 'DF', 2: 'EF', 3: 'F', 4: 'C'}
+            is_lack_column_map = {1: 'DC', 2: 'EC', 3: 'F', 4: 'C'}
             for column in is_lack_column_map.get(lack.id):
                 for row in self.get_sheet_2_4_rows(4, farmer_id):
                     cell_value = self.sheet4[f'{column}{row}'].value or 0
