@@ -21,22 +21,21 @@ def async_export_108(email):
         for row in row_generator:
             writer.writerow(row)
 
-        email = EmailMessage(
+        mail = EmailMessage(
             '108調查表匯出完成',
             '匯出結果如附件',
             settings.DEFAULT_FROM_EMAIL,
             [email]
         )
-        email.attach('108調查表.csv', sio.getvalue(), 'text/csv')
-        email.send()
+        mail.attach('108調查表.csv', sio.getvalue(), 'text/csv')
+        mail.send()
     except Exception as e:
-        email = EmailMessage(
+        EmailMessage(
             '108調查表匯出失敗',
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
             [email]
-        )
-        email.send()
+        ).send()
 
 
 @app.task
@@ -46,22 +45,21 @@ def async_export_108_statistics(email):
         exporter = StatisticsExporter()
         exporter(bio)
 
-        email = EmailMessage(
+        mail = EmailMessage(
             '108平台統計結果表式匯出完成',
             '匯出結果如附件',
             settings.DEFAULT_FROM_EMAIL,
             [email]
         )
-        email.attach('108平台統計結果表式.xlsx', bio.getvalue(), 'application/vnd.ms-excel')
-        email.send()
+        mail.attach('108平台統計結果表式.xlsx', bio.getvalue(), 'application/vnd.ms-excel')
+        mail.send()
     except Exception as e:
-        email = EmailMessage(
+        EmailMessage(
             '108平台統計結果表式匯出失敗',
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
             [email]
-        )
-        email.send()
+        ).send()
 
 
 @app.task

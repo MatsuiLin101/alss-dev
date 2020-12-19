@@ -22,6 +22,7 @@ from apps.surveys19.models import (
     Lack,
     LongTermLack,
     ShortTermLack,
+    Refuse,
 )
 
 logging.getLogger(__file__).setLevel(logging.INFO)
@@ -39,7 +40,12 @@ class SurveyRelationGeneratorFactory:
         self.excludes = excludes
 
         self.surveys = (
-            self.get_queryset(Survey.objects.all(), filter_by_farmer_ids=False)
+            self.get_queryset(
+                Survey.objects.prefetch_related(
+                    "phones", "address_match", "farm_location"
+                ),
+                filter_by_farmer_ids=False,
+            )
             .filter(page=1)
             .all()
         )
@@ -60,15 +66,23 @@ class SurveyRelationGeneratorFactory:
             "no_salary_hires",
             "long_term_lacks",
             "short_term_lacks",
+            "subsidy__refuses",
         ]
         self.relation_count_mapping = self.get_relations_count_mapping()
         self.age_scopes = AgeScope.objects.filter(group=1).order_by("id").all()
 
         self.land_areas = self.ExportRelation(
-            self.relation_generate(LandArea, ["type__name", "status__name", "value"]), 3
+            self.relation_generate(
+                LandArea, ["type__name", "status__name", "value"], ["type", "status"]
+            ),
+            3,
         )
         self.businesses = self.ExportRelation(
-            self.relation_generate(Business, ["farm_related_business__name", "extra"]),
+            self.relation_generate(
+                Business,
+                ["farm_related_business__name", "extra"],
+                ["farm_related_business"],
+            ),
             2,
         )
         self.management_types = self.ExportRelation(
@@ -88,6 +102,7 @@ class SurveyRelationGeneratorFactory:
                     "has_facility",
                     "loss__name",
                 ],
+                ["product", "unit", "loss"],
             ),
             9,
         )
@@ -103,12 +118,15 @@ class SurveyRelationGeneratorFactory:
                     "contract__name",
                     "loss__name",
                 ],
+                ["product", "unit", "contract", "loss"],
             ),
             7,
         )
         self.annual_incomes = self.ExportRelation(
             self.relation_generate(
-                AnnualIncome, ["market_type__name", "income_range__name"]
+                AnnualIncome,
+                ["market_type__name", "income_range__name"],
+                ["market_type", "income_range"],
             ),
             2,
         )
@@ -123,11 +141,13 @@ class SurveyRelationGeneratorFactory:
                     "farmer_work_day",
                     "life_style__name",
                 ],
+                ["relationship", "gender", "education_level", "life_style"],
             ),
             6,
         )
         self.no_salary_hires = self.ExportRelation(
-            self.relation_generate(NoSalaryHire, ["month__value", "count"]), 2
+            self.relation_generate(NoSalaryHire, ["month__value", "count"], ["month"]),
+            2,
         )
         self.lacks = self.ExportRelation(
             self.relation_generate(Lack, ["name"], many_to_many=True), 1
@@ -140,6 +160,7 @@ class SurveyRelationGeneratorFactory:
         )
         self.long_term_lacks = self.ExportRelation(self.long_term_lacks_generate(), 4)
         self.short_term_lacks = self.ExportRelation(self.short_term_lacks_generate(), 6)
+        self.subsidy__refuses = self.ExportRelation(self.refuses_generate(), 1)
 
     def check_exhausted(self):
         return all(
@@ -181,10 +202,14 @@ class SurveyRelationGeneratorFactory:
             )
         ).order_by(_default_order_by)
 
-    def relation_generate(self, model, values_list, many_to_many=False):
+    def relation_generate(
+        self, model, values_list, prefetch_relates=[], many_to_many=False
+    ):
         """ Get the iterator of relation object values """
         prefix = "surveys__" if many_to_many else "survey__"
-        qs = self.get_queryset(model.objects.all(), prefix=prefix)
+        qs = self.get_queryset(
+            model.objects.prefetch_related(*prefetch_relates).all(), prefix=prefix
+        )
         return qs.values_list(*values_list).iterator()
 
     def get_sliced_relation_generator(self, farmer_id, relate_name):
@@ -244,6 +269,13 @@ class SurveyRelationGeneratorFactory:
                 obj.avg_lack_day,
                 ",".join(map(str, obj.months.values_list("value", flat=True))),
             )
+
+    def refuses_generate(self):
+        qs = self.get_queryset(
+            Refuse.objects.prefetch_related("reason").all(), prefix="subsidy__survey__"
+        )
+        for obj in qs.iterator():
+            yield (f"{obj.reason.name}({obj.extra})" if obj.extra else obj.reason.name,)
 
     def get_relations_count_mapping(self):
         """ Lazy pre-calculate relation counts for each farmer id """
@@ -361,7 +393,7 @@ class SurveyRelationGeneratorFactory:
         yield headers
 
         for survey in self.surveys:
-            values1 = [
+            block1 = [
                 survey.farmer_id,
                 survey.farmer_name,
                 survey.phones.first().phone,
@@ -371,13 +403,12 @@ class SurveyRelationGeneratorFactory:
                 survey.farm_location.city + survey.farm_location.town,
                 survey.second,
             ]
-            values2 = [
+            block2 = [
                 survey.subsidy.has_subsidy,
                 survey.subsidy.count,
                 survey.subsidy.day_delta,
-                survey.subsidy.refuses.first().reason
-                if survey.subsidy.refuses.first()
-                else "",
+            ]
+            block3 = [
                 survey.investigator,
                 survey.reviewer,
             ]
@@ -418,17 +449,21 @@ class SurveyRelationGeneratorFactory:
                 survey.farmer_id, "short_term_lacks"
             )
             lacks = self.get_sliced_relation_generator(survey.farmer_id, "lacks")
+            refuses = self.get_sliced_relation_generator(
+                survey.farmer_id, "subsidy__refuses"
+            )
 
             max_iter_count = max(self.relation_count_mapping[survey.farmer_id].values())
 
             try:
                 for i in range(max_iter_count):
-                    values1_ = (
-                        values1 if i == 0 else [values1[0]] + [""] * (len(values1) - 1)
+                    block1_ = (
+                        block1 if i == 0 else [block1[0]] + [""] * (len(block1) - 1)
                     )
-                    values2_ = values2 if i == 0 else [""] * len(values2)
+                    block2_ = block2 if i == 0 else [""] * len(block2)
+                    block3_ = block3 if i == 0 else [""] * len(block3)
                     row = (
-                        values1_
+                        block1_
                         + list(next(land_areas))
                         + list(next(businesses))
                         + list(next(management_types))
@@ -442,7 +477,9 @@ class SurveyRelationGeneratorFactory:
                         + list(next(lacks))
                         + list(next(long_term_lacks))
                         + list(next(short_term_lacks))
-                        + values2_
+                        + block2_
+                        + list(next(refuses))
+                        + block3_
                     )
                     yield [output_formatter(item) for item in row]
             except Exception as e:

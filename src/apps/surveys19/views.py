@@ -116,16 +116,6 @@ from apps.surveys19.serializers import (
 logger = logging.getLogger('django.request')
 
 
-class Echo:
-    """An object that implements just the write method of the file-like
-    interface.
-    """
-
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
-
-
 class Surveys2019Index(LoginRequiredMixin, TemplateView):
     login_url = "/users/login/"
     redirect_field_name = "redirect_to"
