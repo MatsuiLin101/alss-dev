@@ -1,6 +1,7 @@
+import os
 import csv
-import io
-import zipfile
+import pyminizip
+from datetime import datetime
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -15,20 +16,26 @@ def async_export_107(email):
         factory = SurveyRelationGeneratorFactory(excludes={'note__icontains': '無效戶'})
         row_generator = factory.export_generator()
 
-        sio = io.StringIO()
-        writer = csv.writer(sio)
+        file_name = f"107_Full_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        csv_path = f'{file_name}.csv'
+        zip_path = f'{file_name}.zip'
 
-        for row in row_generator:
-            writer.writerow(row)
+        with open(csv_path, 'w+') as file:
+            writer = csv.writer(file)
+            for row in row_generator:
+                writer.writerow(row)
 
-        mail = EmailMessage(
-            '107調查表匯出完成',
-            '請下載附件後解壓縮查看調查表',
-            settings.DEFAULT_FROM_EMAIL,
-            [email]
-        )
-        mail.attach('107調查表.csv', sio.getvalue(), 'text/csv')
-        mail.send()
+        pyminizip.compress(csv_path, "", zip_path, settings.ZIP_PROTECT_SECRET, 5)
+
+        with open(zip_path, 'rb') as zip_file:
+            mail = EmailMessage(
+                '107調查表匯出完成',
+                '請下載附件後解壓縮查看調查表',
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
+            mail.attach('107調查表.zip', zip_file.read(), 'application/zip')
+            mail.send()
     except Exception as e:
         EmailMessage(
             '107調查表匯出失敗',
@@ -36,3 +43,9 @@ def async_export_107(email):
             settings.DEFAULT_FROM_EMAIL,
             [email]
         ).send()
+    finally:
+        try:
+            os.remove(csv_path)
+            os.remove(zip_path)
+        except Exception:
+            pass

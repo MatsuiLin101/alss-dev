@@ -18,3 +18,4 @@ django-import-export==2.1.0
 pandas==1.1.2
 celery==4.4.6
 django-redis==4.11.0
+pyminizip==0.2.4

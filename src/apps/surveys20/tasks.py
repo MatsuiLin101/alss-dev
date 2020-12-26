@@ -1,5 +1,7 @@
+import os
 import csv
-import io
+import pyminizip
+from datetime import datetime
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -15,20 +17,26 @@ def async_export_108(email):
         factory = SurveyRelationGeneratorFactory(excludes={'note__icontains': '無效戶'})
         row_generator = factory.export_generator()
 
-        sio = io.StringIO()
-        writer = csv.writer(sio)
+        file_name = f"108_Full_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        file_path = f'{file_name}.csv'
+        zip_path = f'{file_name}.zip'
 
-        for row in row_generator:
-            writer.writerow(row)
+        with open(file_path, 'w+') as file:
+            writer = csv.writer(file)
+            for row in row_generator:
+                writer.writerow(row)
 
-        mail = EmailMessage(
-            '108調查表匯出完成',
-            '匯出結果如附件',
-            settings.DEFAULT_FROM_EMAIL,
-            [email]
-        )
-        mail.attach('108調查表.csv', sio.getvalue(), 'text/csv')
-        mail.send()
+        pyminizip.compress(file_path, "", zip_path, settings.ZIP_PROTECT_SECRET, 5)
+
+        with open(zip_path, 'rb') as zip_file:
+            mail = EmailMessage(
+                '108調查表匯出完成',
+                '請下載附件後解壓縮查看調查表',
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
+            mail.attach('108調查表.zip', zip_file.read(), 'application/zip')
+            mail.send()
     except Exception as e:
         EmailMessage(
             '108調查表匯出失敗',
@@ -36,23 +44,37 @@ def async_export_108(email):
             settings.DEFAULT_FROM_EMAIL,
             [email]
         ).send()
+    finally:
+        try:
+            os.remove(file_path)
+            os.remove(zip_path)
+        except Exception:
+            pass
 
 
 @app.task
 def async_export_108_statistics(email):
     try:
-        bio = io.BytesIO()
         exporter = StatisticsExporter()
-        exporter(bio)
 
-        mail = EmailMessage(
-            '108平台統計結果表式匯出完成',
-            '匯出結果如附件',
-            settings.DEFAULT_FROM_EMAIL,
-            [email]
-        )
-        mail.attach('108平台統計結果表式.xlsx', bio.getvalue(), 'application/vnd.ms-excel')
-        mail.send()
+        file_name = f"108_Statistic_Report_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+
+        file_path = f'{file_name}.xlsx'
+        zip_path = f'{file_name}.zip'
+
+        exporter(file_path)
+
+        pyminizip.compress(file_path, "", zip_path, settings.ZIP_PROTECT_SECRET, 5)
+
+        with open(zip_path, 'rb') as zip_file:
+            mail = EmailMessage(
+                '108平台統計結果表式匯出完成',
+                '匯出結果如附件',
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
+            mail.attach('108平台統計結果表式.zip', zip_file.read(), 'application/zip')
+            mail.send()
     except Exception as e:
         EmailMessage(
             '108平台統計結果表式匯出失敗',
@@ -60,6 +82,12 @@ def async_export_108_statistics(email):
             settings.DEFAULT_FROM_EMAIL,
             [email]
         ).send()
+    finally:
+        try:
+            os.remove(file_path)
+            os.remove(zip_path)
+        except Exception:
+            pass
 
 
 @app.task
