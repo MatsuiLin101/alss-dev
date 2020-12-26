@@ -20,7 +20,7 @@ def async_export_107(email):
         csv_path = f'{file_name}.csv'
         zip_path = f'{file_name}.zip'
 
-        with open(csv_path, 'w+') as file:
+        with open(csv_path, 'w+', encoding="utf-8") as file:
             writer = csv.writer(file)
             for row in row_generator:
                 writer.writerow(row)
