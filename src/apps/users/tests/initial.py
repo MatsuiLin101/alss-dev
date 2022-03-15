@@ -1,5 +1,5 @@
 import logging
-
+import abc
 from django.contrib.auth.models import Group, Permission
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
@@ -18,43 +18,30 @@ def create_groups():
         for permission in Permission.objects.filter(content_type__app_label='users'):
             admin.permissions.add(permission)
 
-    if not Group.objects.filter(name='106年審表員').exists():
-        auditor106 = Group.objects.create(name='106年審表員')
-        for permission in Permission.objects.filter(
-                content_type__app_label='surveys18',
-                content_type__model='survey'
-        ).exclude(Q(codename='delete_survey') | Q(codename='add_survey')):
-            auditor106.permissions.add(permission)
+        logger.info(f"""User groups have been created: '後台管理員'.""")
 
-    if not Group.objects.filter(name='107年審表員').exists():
-        auditor107 = Group.objects.create(name='107年審表員')
-        for permission in Permission.objects.filter(
-                content_type__app_label='surveys19',
-                content_type__model='survey'
-        ).exclude(Q(codename='delete_survey') | Q(codename='add_survey')):
-            auditor107.permissions.add(permission)
+    for year, app in zip((106, 107, 108, 110), ('surveys18', 'surveys19', 'surveys20', 'surveys22')):
 
-    if not Group.objects.filter(name='僅能檢視106年調查表').exists():
-        viewer106 = Group.objects.create(name='僅能檢視106年調查表')
-        viewer106.permissions.add(
-            Permission.objects.get(content_type__app_label='surveys18',
-                                   content_type__model='survey',
-                                   codename='view_survey'))
+        editor_group_name = f'{year}年審表員'
 
-    if not Group.objects.filter(name='僅能檢視107年調查表').exists():
-        viewer107 = Group.objects.create(name='僅能檢視107年調查表')
-        viewer107.permissions.add(
-            Permission.objects.get(content_type__app_label='surveys19',
-                                   content_type__model='survey',
-                                   codename='view_survey'))
+        if not Group.objects.filter(name=editor_group_name).exists():
+            editor_group = Group.objects.create(name=editor_group_name)
+            for permission in Permission.objects.filter(
+                    content_type__app_label=app,
+                    content_type__model='survey'
+            ).exclude(Q(codename='delete_survey') | Q(codename='add_survey')):
+                editor_group.permissions.add(permission)
 
-        logger.info(
-            f"""
+        viewer_group_name = f'僅能檢視{year}年調查表'
 
-These user groups have been created: '後台管理員', '106年審表員', '107年審表員', '僅能檢視106年調查表', '僅能檢視107年調查表'...
+        if not Group.objects.filter(name=viewer_group_name).exists():
+            viewer_group = Group.objects.create(name=viewer_group_name)
+            viewer_group.permissions.add(
+                Permission.objects.get(content_type__app_label=app,
+                                       content_type__model='survey',
+                                       codename='view_survey'))
 
-"""
-        )
+            logger.info(f"""User groups have been created: {editor_group_name}, {viewer_group_name}.""")
 
 
 def create_superuser():
@@ -105,13 +92,17 @@ def create_staff():
             is_staff=True,
             is_superuser=False,
         )
-        for group in Group.objects.filter(Q(name='後台管理員') | Q(name='106年審表員') | Q(name='107年審表員')):
+
+        group_names = []
+
+        for group in Group.objects.filter(Q(name='後台管理員') | Q(name__icontains='審表員')):
             user.groups.add(group)
+            group_names.append(group.name)
 
         logger.info(
             f"""
 
-An staff has been create, grant to groups: '後台管理員', '106年審表員', '107年審表員':
+An staff has been create, grant to groups: {','.join(group_names)}:
 
     Email: {email}
     Password: {password}
@@ -119,63 +110,15 @@ An staff has been create, grant to groups: '後台管理員', '106年審表員',
         )
 
 
-def create_auditor106():
-    """Initial fake auditor only for testing. Use in docker-compose."""
-
-    email = "auditor106@test.test"
-    password = "123456"
-    mobile = "0900000002"
-
+def create_test_user(email, password, assign_groups):
     if not User.objects.filter(email=email).exists():
-
         user = User.objects.create_user(
-            email=email,
-            password=password,
-            full_name="106年測試審表員",
-            mobile=mobile,
+            email=self.email,
+            password=self.password,
+            full_name=f"TestUser_{self.group}",
             is_staff=False,
             is_superuser=False,
         )
-        for group in Group.objects.filter(Q(name='106年審表員')):
+        for name in groups:
+            group = Group.objects.get(name=name)
             user.groups.add(group)
-
-        logger.info(
-            f"""
-
-An auditor has been create, grant to groups: '106年審表員':
-
-    Email: {email}
-    Password: {password}
-"""
-        )
-
-
-def create_auditor107():
-    """Initial fake auditor only for testing. Use in docker-compose."""
-
-    email = "auditor107@test.test"
-    password = "123456"
-    mobile = "0900000003"
-
-    if not User.objects.filter(email=email).exists():
-
-        user = User.objects.create_user(
-            email=email,
-            password=password,
-            full_name="107年測試審表員",
-            mobile=mobile,
-            is_staff=False,
-            is_superuser=False,
-        )
-        for group in Group.objects.filter(Q(name='107年審表員')):
-            user.groups.add(group)
-
-        logger.info(
-            f"""
-
-An auditor has been create, grant to groups: '107年審表員':
-
-    Email: {email}
-    Password: {password}
-"""
-        )
