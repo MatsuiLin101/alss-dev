@@ -1,0 +1,35 @@
+- model: surveys22.RefuseReason
+  pk: 1
+  fields:
+    name: 無需求
+
+- model: surveys22.RefuseReason
+  pk: 2
+  fields:
+    name: 需要工的時候常申請不到
+
+- model: surveys22.RefuseReason
+  pk: 3
+  fields:
+    name: 需要再教一段時間
+
+- model: surveys22.RefuseReason
+  pk: 4
+  fields:
+    name: 工資高於預期
+
+- model: surveys22.RefuseReason
+  pk: 5
+  fields:
+    name: 工作時間無法配合農場作業時間
+
+- model: surveys22.RefuseReason
+  pk: 6
+  fields:
+    name: 無法指定使用熟悉的人員
+
+- model: surveys22.RefuseReason
+  pk: 7
+  fields:
+    name: 其他
+    has_extra: True
