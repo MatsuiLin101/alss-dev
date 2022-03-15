@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "apps.surveys18.apps.Surveys18Config",
     "apps.surveys19.apps.Surveys19Config",
     "apps.surveys20.apps.Surveys20Config",
+    "apps.surveys22.apps.Surveys22Config",
 ]
 
 # MIDDLEWARE CONFIGURATION
