@@ -60,6 +60,31 @@
     {% block external_js %}
     {% endblock external_js %}
 
+    {% block session_timeout_js %}
+    <!-- Disable this default functionality by empty this block in the extended templates if needed. -->
+    <script src="{% static 'vendor/session-timeout/session-timeout.min.js' %}"></script>
+    <script type="text/javascript">
+        /* SessionTimeout settings */
+        SessionMaxAge = {{ session_cookie_age }} * 1000;
+        SessionMaxAgeMinute = SessionMaxAge / 1000 / 60;
+        $.sessionTimeout({
+            title: '工作階段即將到期',
+            message: '為了保障資訊安全，系統將在剩餘時間內將您登出，您希望延後登出嗎？',
+            keepAliveButton: '延後 ' + SessionMaxAgeMinute +' 分鐘',
+            logoutButton: '立刻登出',
+            keepAliveUrl: "{% url 'session-keep-alive' %}",
+            logoutUrl: "{% url 'users:logout' %}",
+            redirUrl: "{% url 'sessiontimeout' %}",
+            warnAfter: SessionMaxAge > 600000 ? SessionMaxAge - 600000 : SessionMaxAge / 2,
+            redirAfter: SessionMaxAge,
+            ajaxType: "GET",
+            ignoreUserActivity: true,
+            countdownBar: true,
+            countdownSmart: true
+        });
+    </script>
+    {% endblock session_timeout_js %}
+
     <script type="text/javascript">
         /* BootstrapDialog settings */
         BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';

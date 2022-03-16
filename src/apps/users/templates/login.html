@@ -1,9 +1,29 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}
-勞動力調查平台
-{% endblock head_title%}
+{% block session_timeout_js %}
+{% endblock session_timeout_js %}
+
+{% block internal_css %}
+
+.js-captcha-refresh {
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+{% endblock internal_css %}
+
+{% block internal_js %}
+
+$('.js-captcha-refresh').click(function () {
+    $.getJSON("/captcha/refresh/", function (result) {
+        $('.captcha').attr('src', result['image_url']);
+        $('#id_captcha_0').val(result['key'])
+    });
+});
+
+{% endblock internal_js %}
+
 
 {% block content %}
 
@@ -29,28 +49,4 @@
     </div>
 </div>
 
-<style>
-
-.js-captcha-refresh {
-    margin-top: -5px;
-    margin-bottom: 10px;
-}
-
-</style>
-
 {% endblock content %}
-
-{% block external_js %}
-
-<script>
-
-$('.js-captcha-refresh').click(function () {
-    $.getJSON("/captcha/refresh/", function (result) {
-        $('.captcha').attr('src', result['image_url']);
-        $('#id_captcha_0').val(result['key'])
-    });
-});
-
-</script>
-
-{% endblock external_js %}
