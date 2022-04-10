@@ -108,17 +108,3 @@ An staff has been create, grant to groups: {','.join(group_names)}:
     Password: {password}
 """
         )
-
-
-def create_test_user(email, password, assign_groups):
-    if not User.objects.filter(email=email).exists():
-        user = User.objects.create_user(
-            email=self.email,
-            password=self.password,
-            full_name=f"TestUser_{self.group}",
-            is_staff=False,
-            is_superuser=False,
-        )
-        for name in groups:
-            group = Group.objects.get(name=name)
-            user.groups.add(group)

@@ -1404,6 +1404,7 @@ class Apply(Model):
     def __str__(self):
         return str(self.result)
 
+
 class ApplyResult(Model):
     """
     Table 3.3.2
@@ -1425,6 +1426,7 @@ class ApplyResult(Model):
 
     def __str__(self):
         return str(self.name)
+
 
 class Refuse(Model):
     """
@@ -1460,6 +1462,7 @@ class Refuse(Model):
 
     def __str__(self):
         return str(self.reason)
+
 
 class RefuseReason(Model):
     """
