@@ -1,7 +1,8 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from rest_framework.permissions import IsAdminUser
+from django.conf import settings
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from rest_framework import status
@@ -18,6 +19,21 @@ class Index(LoginRequiredMixin, TemplateView):
     login_url = "/users/login/"
     redirect_field_name = "redirect_to"
     template_name = "index.html"
+
+
+class SessionTimeout(TemplateView):
+    template_name = "session-timeout.html"
+
+
+class SessionViewSet(ViewSet):
+    http_method_names = ['get']
+    permission_classes = [IsAuthenticated]
+
+    @action(methods=['GET'], detail=False)
+    def keep_alive(self, request):
+        """Extend session by reset the max age."""
+        request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 class ExportViewSet(ViewSet):

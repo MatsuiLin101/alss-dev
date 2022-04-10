@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "apps.surveys18.apps.Surveys18Config",
     "apps.surveys19.apps.Surveys19Config",
     "apps.surveys20.apps.Surveys20Config",
+    "apps.surveys22.apps.Surveys22Config",
 ]
 
 # MIDDLEWARE CONFIGURATION
@@ -73,6 +74,11 @@ ROOT_URLCONF = "config.urls"
 
 SITE_ID = 1
 
+# COOKIE BASED SESSION
+# ------------------------------------------------------------------------------
+# Default 2 hour. Please do not override.
+SESSION_COOKIE_AGE = 60 * 60 * 2
+
 # AUTHENTICATION CONFIGURATION
 # ------------------------------------------------------------------------------
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
@@ -92,6 +98,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # custom processors
+                "config.context_processors.get_session_cookie_age",
+                "config.context_processors.get_environment",
             ]
         },
     }
@@ -113,7 +122,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
@@ -126,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
-
 LANGUAGE_CODE = "zh-hant"
 
 # Local time zone for this installation. All choices can be found here:

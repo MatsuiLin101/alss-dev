@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import Index
+from .views import Index, SessionTimeout
 from .api import api
 
 schema_view = get_schema_view(
@@ -43,8 +43,10 @@ urlpatterns = [
     path("106/", include("apps.surveys18.urls", namespace="surveys18")),
     path("107/", include("apps.surveys19.urls", namespace="surveys19")),
     path("108/", include("apps.surveys20.urls", namespace="surveys20")),
+    path("110/", include("apps.surveys22.urls", namespace="surveys22")),
     path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name='swagger'),
     path("captcha/", include("captcha.urls")),
+    path("session-timeout/", SessionTimeout.as_view(), name="sessiontimeout"),
 ]
 
 if settings.DEBUG:
