@@ -606,7 +606,7 @@ class Builder(object):
                             life_style_str
                         )
 
-                        if farmer_work_day_cnt != 1:
+                        if life_style_cnt != 1:
                             life_style = None
                         else:
                             life_style = LifeStyle.objects.filter(
