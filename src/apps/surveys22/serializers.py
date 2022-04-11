@@ -60,7 +60,7 @@ class BuilderFileSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = BuilderFile
         fields = ["token", "datafile", "delete_exist"]
-        ref_name = '109/BuilderFile'
+        ref_name = '110/BuilderFile'
 
     def create(self, validated_data):
         return BuilderFile.objects.create(**validated_data)
@@ -1098,7 +1098,5 @@ class SurveySerializer(ModelSerializer):
                         extra=item["extra"] if "extra" in item else None,
                     )
             instance.subsidy.save()
-
-        async_update_stratify.delay(instance.id)
 
         return instance
