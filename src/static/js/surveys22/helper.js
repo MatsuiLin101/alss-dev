@@ -1538,7 +1538,7 @@ var CropMarketingHelper = {
 
                     if(Helper.LogHandler.ValidationActive){
                         CropMarketingHelper.Validation.Required.Validate($row);
-                        CropMarketingHelper.Validation.GreaterThanZero.Validate($(row));
+                        CropMarketingHelper.Validation.GreaterThanZero.Validate($row);
                         CropMarketingHelper.Validation.IncomeChecked.Validate();
                     }
                 }
