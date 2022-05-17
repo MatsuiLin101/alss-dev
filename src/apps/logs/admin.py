@@ -11,6 +11,13 @@ from date_range_filter import DateRangeFilter
 from .models import ReviewLog
 
 
+YEAR_APP_MAP = {}
+APP_YEAR_MAP = {}
+for year, app in zip(('106', '107', '108', '110'), ('surveys18', 'surveys19', 'surveys20', 'surveys22')):
+    YEAR_APP_MAP[year] = app
+    APP_YEAR_MAP[app] = year
+
+
 class ReviewLogResource(ModelResource):
     farmer_id = Field(column_name=_('Farmer Id'))
     year = Field(column_name='年份')
@@ -33,12 +40,7 @@ class ReviewLogResource(ModelResource):
         return '此調查表已經被刪除'
 
     def dehydrate_year(self, obj):
-        if obj.content_type.app_label == 'surveys18':
-            return '106'
-        if obj.content_type.app_label == 'surveys19':
-            return '107'
-        if obj.content_type.app_label == 'surveys20':
-            return '108'
+        return APP_YEAR_MAP[obj.content_type.app_label]
 
 
 class YearFilter(SimpleListFilter):
@@ -53,7 +55,7 @@ class YearFilter(SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        return [('106', '106'), ('107', '107'), ('108', '108')]
+        return [(y, y) for y in YEAR_APP_MAP.keys()]
 
     def queryset(self, request, queryset):
         """
@@ -61,12 +63,8 @@ class YearFilter(SimpleListFilter):
         provided in the query string and retrievable via
         `self.value()`.
         """
-        if self.value() == '106':
-            return queryset.filter(content_type__app_label='surveys18')
-        if self.value() == '107':
-            return queryset.filter(content_type__app_label='surveys19')
-        if self.value() == '108':
-            return queryset.filter(content_type__app_label='surveys20')
+        if self.value() in YEAR_APP_MAP:
+            return queryset.filter(content_type__app_label=YEAR_APP_MAP[self.value()])
         else:
             return queryset
 
@@ -100,12 +98,8 @@ class ReviewLogAdmin(ExportMixin, admin.ModelAdmin):
     farmer_id.short_description = '農戶編號'
 
     def year(self, obj):
-        if obj.content_type.app_label == 'surveys18':
-            return '106'
-        if obj.content_type.app_label == 'surveys19':
-            return '107'
-        if obj.content_type.app_label == 'surveys20':
-            return '108'
+        return APP_YEAR_MAP[obj.content_type.app_label]
+
     year.short_description = '年份'
 
     class Media:
