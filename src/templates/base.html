@@ -93,6 +93,18 @@
           dsn: "https://2e878ab38ea0468f870435702d667330@o1194684.ingest.sentry.io/6317549",
           environment: "{{ environment }}",
         });
+        $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+          Sentry.captureMessage(thrownError || jqXHR.statusText, {
+            extra: {
+              type: ajaxSettings.type,
+              url: ajaxSettings.url,
+              data: ajaxSettings.data,
+              status: jqXHR.status,
+              error: thrownError || jqXHR.statusText,
+              response: jqXHR.responseText.substring(0, 100),
+            },
+          });
+        });
         /* BootstrapDialog settings */
         BootstrapDialog.DEFAULT_TEXTS['OK'] = '確定';
         BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消';
