@@ -43,7 +43,7 @@ services:
     ports: []
     command: ["celery", "worker", "--app=config", "--loglevel=info"]
 
-  jupter:
+  jupyter:
     <<: *web
     container_name: jupyter
     ports:
