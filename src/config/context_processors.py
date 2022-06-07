@@ -10,5 +10,6 @@ def get_session_cookie_age(request):
 
 def get_environment(request):
     return {
-        'environment': "debug" if settings.DEBUG else "production"
+        'environment': "debug" if settings.DEBUG else "production",
+        "sentry_dsn": settings.SENTRY_DSN,
     }

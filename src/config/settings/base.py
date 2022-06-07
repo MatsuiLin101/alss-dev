@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sentry_sdk
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -226,6 +227,11 @@ LOGGING = {
         },
     },
 }
+
+# Sentry
+
+SENTRY_DSN = 'https://2e878ab38ea0468f870435702d667330@o1194684.ingest.sentry.io/6317549'
+sentry_sdk.init(SENTRY_DSN, traces_sample_rate=1.0,)
 
 
 # Crispy

@@ -90,7 +90,7 @@
     <script type="text/javascript">
         /* Sentry settings */
         Sentry.init({
-          dsn: "https://2e878ab38ea0468f870435702d667330@o1194684.ingest.sentry.io/6317549",
+          dsn: "{{ sentry_dsn }}",
           environment: "{{ environment }}",
         });
         $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
