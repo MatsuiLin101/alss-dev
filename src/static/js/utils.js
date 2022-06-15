@@ -51,6 +51,7 @@ var Helper = {
                                 {
                                     title: '農戶編號',
                                     data: 'content_object',
+                                    orderable: false,
                                 },
                                 {
                                     title: '原始錯誤數',
