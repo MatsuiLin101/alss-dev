@@ -8,16 +8,15 @@ from django.core.mail import EmailMessage
 from django.utils.crypto import get_random_string
 
 from config import celery_app as app
-from .yearly_compare_statistics import YearlyCompareStatisticsExporter
-from .statistics import StatisticsExporter106, StatisticsExporter107, StatisticsExporter108
-from .full_data import SurveyRelationGeneratorFactory107, SurveyRelationGeneratorFactory108
+from . import full_data, statistics, yearly_compare_statistics
 
 
 @app.task
 def async_export_full_data(year, email):
     factory_map = {
-        107: SurveyRelationGeneratorFactory107,
-        108: SurveyRelationGeneratorFactory108
+        107: full_data.SurveyRelationGeneratorFactory107,
+        108: full_data.SurveyRelationGeneratorFactory108,
+        110: full_data.SurveyRelationGeneratorFactory110
     }
     try:
         factory = factory_map.get(year)(excludes={'note__icontains': '無效戶'})
@@ -62,9 +61,9 @@ def async_export_full_data(year, email):
 @app.task
 def async_export_statistics(year, email):
     exporter_map = {
-        106: StatisticsExporter106,
-        107: StatisticsExporter107,
-        108: StatisticsExporter108,
+        106: statistics.StatisticsExporter106,
+        107: statistics.StatisticsExporter107,
+        108: statistics.StatisticsExporter108,
     }
     try:
         exporter = exporter_map.get(year)()
@@ -105,7 +104,7 @@ def async_export_statistics(year, email):
 @app.task
 def async_export_yearly_compare_statistics(y1, y2, email):
     try:
-        exporter = YearlyCompareStatisticsExporter(y1, y2)
+        exporter = yearly_compare_statistics.YearlyCompareStatisticsExporter(y1, y2)
 
         file_name = f"{y1}_{y2}_Compare_Statistic_Report_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
 
