@@ -570,7 +570,7 @@ class SurveyRelationGeneratorFactory110:
                     )
                     yield [output_formatter(item) for item in row]
             except Exception as e:
-                logging.exception(e)
+                logging.warning(e, exc_info=True)
                 errors.append(survey.farmer_id)
         if errors:
             yield ["未匯出成功的調查表：", ",".join(errors)]
