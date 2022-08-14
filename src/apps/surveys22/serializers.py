@@ -1099,4 +1099,6 @@ class SurveySerializer(ModelSerializer):
                     )
             instance.subsidy.save()
 
+        async_update_stratify.delay(instance.id)
+
         return instance

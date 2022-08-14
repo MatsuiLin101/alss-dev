@@ -16,7 +16,7 @@ def async_export_full_data(year, email):
     factory_map = {
         107: full_data.SurveyRelationGeneratorFactory107,
         108: full_data.SurveyRelationGeneratorFactory108,
-        110: full_data.SurveyRelationGeneratorFactory110
+        110: full_data.SurveyRelationGeneratorFactory110,
     }
     try:
         factory = factory_map.get(year)(excludes={'note__icontains': '無效戶'})
@@ -64,6 +64,7 @@ def async_export_statistics(year, email):
         106: statistics.StatisticsExporter106,
         107: statistics.StatisticsExporter107,
         108: statistics.StatisticsExporter108,
+        110: statistics.StatisticsExporter110,
     }
     try:
         exporter = exporter_map.get(year)()
