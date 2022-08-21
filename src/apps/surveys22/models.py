@@ -1,3 +1,4 @@
+import operator
 from django.conf import settings
 from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
@@ -39,6 +40,8 @@ REGION_CHOICES = Choices((1, _("North")), (2, _('Central')), (3, _('South')), (4
 NUMBER_WORKERS_CHOICES = Q(app_label="surveys22", model="longtermhire") | Q(
     app_label="surveys22", model="shorttermhire"
 )
+
+MANAGEMENT_LEVEL = Choices((1, 'small', _('Small')), (2, 'middle', _('Middle')), (3, 'large', _('Large')))
 
 
 class Survey(Model):
@@ -1555,6 +1558,8 @@ class Stratify(Model):
     max_revenue = PositiveIntegerField(null=True, blank=True, verbose_name=_('Max Revenue'))
     code = PositiveIntegerField(db_index=True, verbose_name=_('Code'))
     population = PositiveIntegerField(verbose_name=_('Population(Statistic)'))
+    # 110 新增，併層邏輯複雜化
+    level = PositiveIntegerField(choices=MANAGEMENT_LEVEL, verbose_name=_('Management Level'))
 
     class Meta:
         verbose_name = _("Stratify")
@@ -1565,7 +1570,6 @@ class Stratify(Model):
 
     @property
     def sibling(self):
-        import operator
         return Stratify.objects.get(
             management_type=self.management_type,
             min_field=self.min_field,
@@ -1575,6 +1579,26 @@ class Stratify(Model):
             is_hire=operator.not_(self.is_hire),
         )
 
+    @property
+    def upper_sibling(self):
+        if self.level >= MANAGEMENT_LEVEL.large:
+            raise ValueError('No upper management level for this stratify.')
+        return Stratify.objects.get(
+            management_type=self.management_type,
+            is_hire=self.is_hire,
+            level=self.level + 1,
+        )
+
+    @property
+    def lower_sibling(self):
+        if self.level <= MANAGEMENT_LEVEL.small:
+            raise ValueError('No lower management level for this stratify.')
+        return Stratify.objects.get(
+            management_type=self.management_type,
+            is_hire=self.is_hire,
+            level=self.level - 1,
+        )
+
     @cached_property
     def sample_count(self):
         return self.farmer_stats.count()
@@ -1582,9 +1606,18 @@ class Stratify(Model):
     @cached_property
     def magnification_factor(self):
         # 各層母體數 / 各層樣本數
-        if self.sibling.sample_count == 0:
-            # 檢查同一規模是否有樣本數，若無須併層
-            return (self.population + self.sibling.population) / (self.sample_count + self.sibling.sample_count)
+        # case1: 同規模有/無僱合併
+        if self.sibling.sample_count == 0 and self.sample_count > 0:
+            return (self.population + self.sibling.population) / self.sample_count
+        elif self.level == MANAGEMENT_LEVEL.middle:
+            population, sample_count = self.population, self.sample_count
+            # case2: 小型併入中型
+            if self.lower_sibling.sample_count == 0:
+                population += self.lower_sibling.population
+            # case3: 大型併入中型
+            if self.upper_sibling.sample_count == 0:
+                population += self.upper_sibling.population
+            return population / sample_count
         return self.population / self.sample_count
 
 

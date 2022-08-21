@@ -53,8 +53,8 @@ from .models import (
     CityTownCode,
     Stratify,
     FarmerStat,
+    MANAGEMENT_LEVEL,
 )
-
 
 class StratifyResource(ModelResource):
     management_type = Field(attribute='management_type', column_name=_('Management Type'))
@@ -78,7 +78,14 @@ class StratifyResource(ModelResource):
 
     def dehydrate_note(self, obj):
         if obj.sample_count == 0:
-            return f'併入{obj.sibling.code}層'
+            if obj.sibling.sample_count > 0:
+                return f'併入{obj.sibling.code}層'
+            elif obj.level == MANAGEMENT_LEVEL.small:
+                return f'併入{obj.upper_sibling.code}層'
+            elif obj.level == MANAGEMENT_LEVEL.large:
+                return f'併入{obj.lower_sibling.code}層'
+            else:
+                return f'特殊情況須額外處理'
         return ''
 
 
@@ -200,7 +207,14 @@ class StratifyAdmin(ExportMixin, admin.ModelAdmin):
 
     def note(self, obj):
         if obj.sample_count == 0:
-            return f'併入{obj.sibling.code}層'
+            if obj.sibling.sample_count > 0:
+                return f'併入{obj.sibling.code}層'
+            elif obj.level == MANAGEMENT_LEVEL.small:
+                return f'併入{obj.upper_sibling.code}層'
+            elif obj.level == MANAGEMENT_LEVEL.large:
+                return f'併入{obj.lower_sibling.code}層'
+            else:
+                return f'特殊情況須額外處理'
         return ''
 
     sample_count.short_description = _('Sample Count')
