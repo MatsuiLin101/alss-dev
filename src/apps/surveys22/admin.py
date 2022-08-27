@@ -56,6 +56,7 @@ from .models import (
     MANAGEMENT_LEVEL,
 )
 
+
 class StratifyResource(ModelResource):
     management_type = Field(attribute='management_type', column_name=_('Management Type'))
     code = Field(attribute='code', column_name=_('Code'))

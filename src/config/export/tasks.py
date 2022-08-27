@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage
 from django.utils.crypto import get_random_string
 
 from config import celery_app as app
-from . import full_data, statistics, yearly_compare_statistics
+from . import full_data, statistics, yearly_compare_statistics, examinations
 
 
 @app.task
@@ -136,6 +136,56 @@ def async_export_yearly_compare_statistics(y1, y2, email):
     finally:
         try:
             os.remove(file_path)
+            os.remove(zip_path)
+        except Exception:
+            pass
+
+
+@app.task
+def async_export_examination_work_hours(year, email):
+    import apps.surveys19.models
+    import apps.surveys20.models
+    import apps.surveys22.models
+    models_map = {
+        107: apps.surveys19.models,
+        108: apps.surveys20.models,
+        110: apps.surveys22.models,
+    }
+    try:
+        models = models_map.get(year)
+        row_generator = examinations.WorkHourExaminationExporter(models.Survey, models.Product)()
+
+        file_name = f"{year}_WorkHour_Examination_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        csv_path = f'{file_name}.csv'
+        zip_path = f'{file_name}.zip'
+
+        with open(csv_path, 'w+', encoding="utf-8") as file:
+            writer = csv.writer(file)
+            for row in row_generator:
+                writer.writerow(row)
+
+        password = get_random_string(length=24)
+        pyminizip.compress(csv_path, "", zip_path, password, 5)
+
+        with open(zip_path, 'rb') as zip_file:
+            mail = EmailMessage(
+                f'{year}工時檢誤匯出完成',
+                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
+            mail.attach(f'{year}調查表.zip', zip_file.read(), 'application/zip')
+            mail.send()
+    except Exception as e:
+        EmailMessage(
+            f'{year}工時檢誤匯出失敗',
+            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            settings.DEFAULT_FROM_EMAIL,
+            [email]
+        ).send()
+    finally:
+        try:
+            os.remove(csv_path)
             os.remove(zip_path)
         except Exception:
             pass

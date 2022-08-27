@@ -1,28 +1,34 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
             <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand js-partial-control" href="/" id="nav-brand">勞動力調查平台</a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand js-partial-control" href="/" id="nav-brand">勞動力調查平台</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                {% if perms.surveys18.view_survey %}
-                <li><a class="nav-link" href="{% url 'surveys18:surveys18_index' %}">106年</a></li>
-                {% endif %}
-                {% if perms.surveys19.view_survey %}
-                <li><a class="nav-link" href="{% url 'surveys19:surveys19_index' %}">107年</a></li>
-                {% endif %}
-                {% if perms.surveys20.view_survey %}
-                <li><a class="nav-link" href="{% url 'surveys20:surveys20_index' %}">108年</a></li>
-                {% endif %}
-                {% if perms.surveys22.view_survey %}
-                <li><a class="nav-link" href="{% url 'surveys22:surveys22_index' %}">110年</a></li>
-                {% endif %}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">年度
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if perms.surveys18.view_survey %}
+                        <li><a class="nav-link" href="{% url 'surveys18:surveys18_index' %}">106年</a></li>
+                        {% endif %}
+                        {% if perms.surveys19.view_survey %}
+                        <li><a href="{% url 'surveys19:surveys19_index' %}">107年</a></li>
+                        {% endif %}
+                        {% if perms.surveys20.view_survey %}
+                        <li><a href="{% url 'surveys20:surveys20_index' %}">108年</a></li>
+                        {% endif %}
+                        {% if perms.surveys22.view_survey %}
+                        <li><a href="{% url 'surveys22:surveys22_index' %}">110年</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
                 {% if user.is_staff %}
                 <li><a class="nav-link" href="{% url 'admin:index' %}">後台</a></li>
                 <li class="dropdown">
@@ -48,6 +54,15 @@
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-statistic-compare' %}?y1=108&y2=107">108-107年</a></li>
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-statistic-compare' %}?y1=108&y2=106">108-106年</a></li>
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-statistic-compare' %}?y1=107&y2=106">107-106年</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">匯出工時檢誤
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-work-hours-examination' %}?year=107">107年</a></li>
+                        <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-work-hours-examination' %}?year=108">108年</a></li>
+                        <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-work-hours-examination' %}?year=110">110年</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
