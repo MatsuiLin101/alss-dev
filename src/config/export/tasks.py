@@ -174,7 +174,7 @@ def async_export_examination_work_hours(year, email):
                 settings.DEFAULT_FROM_EMAIL,
                 [email]
             )
-            mail.attach(f'{year}調查表.zip', zip_file.read(), 'application/zip')
+            mail.attach(f'{year}工時檢誤.zip', zip_file.read(), 'application/zip')
             mail.send()
     except Exception as e:
         EmailMessage(
