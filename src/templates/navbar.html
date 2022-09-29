@@ -32,7 +32,7 @@
                 {% if user.is_staff %}
                 <li><a class="nav-link" href="{% url 'admin:index' %}">後台</a></li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">匯出調查表
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">匯出大表
                     <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-full-data' %}?year=107">107年</a>
@@ -40,6 +40,14 @@
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-full-data' %}?year=108">108年</a>
                         </li>
                         <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-full-data' %}?year=110">110年</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">匯出原始資料
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0)" class="export" data-url="{% url 'export-raw-data' %}?year=110">110年</a>
                         </li>
                     </ul>
                 </li>
