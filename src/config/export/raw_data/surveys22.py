@@ -9,6 +9,7 @@ from django.conf import settings
 
 from apps.surveys22.models import (
     Survey,
+    LandArea,
     ManagementType,
     Lack,
     ApplyResult,
@@ -47,33 +48,19 @@ class RawDataExporter110:
         apply_results = ApplyResult.objects.filter(apply__subsidy__survey__page=1,
                                                    apply__subsidy__survey__readonly=False,
                                                    apply__subsidy__survey=OuterRef('pk'))
+        land_areas = LandArea.objects.filter(survey__page=1, survey__readonly=False, survey=OuterRef('pk'))
 
         qs = self.survey_qs.filter(page=1).prefetch_related(
-            'land_areas', 'farm_location', 'population_ages', 'subsidy',
+            'land_areas', 'farm_location__code', 'population_ages', 'subsidy',
         ).values('farmer_id').annotate(
             field_a=F('farmer_id'),
-            field_b=F('farm_location__code'),
-            field_c=Concat('farm_location__city', 'farm_location__town', output_field=CharField()),
-            field_d=Case(
-                When(land_areas__type=1, land_areas__status=1, then='land_areas__value'),
-                default=Value(0)
-            ),
-            field_e=Case(
-                When(land_areas__type=1, land_areas__status=2, then='land_areas__value'),
-                default=Value(0)
-            ),
-            field_f=Case(
-                When(land_areas__type=1, land_areas__status=3, then='land_areas__value'),
-                default=Value(0)
-            ),
-            field_g=Case(
-                When(land_areas__type=2, land_areas__status=1, then='land_areas__value'),
-                default=Value(0)
-            ),
-            field_h=Case(
-                When(land_areas__type=2, land_areas__status=2, then='land_areas__value'),
-                default=Value(0)
-            ),
+            field_b=F('farm_location__code__code'),
+            field_c=Concat('farm_location__code__city', 'farm_location__code__town', output_field=CharField()),
+            field_d=Coalesce(Subquery(land_areas.filter(type=1, status=1).values('value')), 0),
+            field_e=Coalesce(Subquery(land_areas.filter(type=1, status=2).values('value')), 0),
+            field_f=Coalesce(Subquery(land_areas.filter(type=1, status=3).values('value')), 0),
+            field_g=Coalesce(Subquery(land_areas.filter(type=2, status=1).values('value')), 0),
+            field_h=Coalesce(Subquery(land_areas.filter(type=2, status=2).values('value')), 0),
             field_i=Subquery(management_types.values('code')[:1]),
             field_j=Case(
                 When(second=True, non_second=False, then=Value(1)),
@@ -134,13 +121,11 @@ class RawDataExporter110:
         self.write_rows_by_queryset(sheet_name='戶檔', column_counts=25, queryset=qs)
 
     def process_sheet2(self):
-        farm_related_businesses = FarmRelatedBusiness.objects.filter(business__survey__page=1,
-                                                                     business__survey__readonly=False,
-                                                                     business__survey=OuterRef('pk'))
-
-        qs = self.survey_qs.filter(page=1).values('farmer_id').annotate(
+        qs = self.survey_qs.filter(page=1).prefetch_related(
+            'businesses__farm_related_business'
+        ).values('farmer_id', 'businesses__farm_related_business').annotate(
             field_a=F('farmer_id'),
-            field_b=Coalesce(Subquery(farm_related_businesses.values('pk')[:1]), 0),
+            field_b=F('businesses__farm_related_business'),
         ).order_by('farmer_id')
 
         self.write_rows_by_queryset(sheet_name='兼營農業相關事業', column_counts=2, queryset=qs)
@@ -345,8 +330,8 @@ class RawDataExporter110:
             'no_salary_hires'
         ).values('farmer_id', 'no_salary_hires').annotate(
             field_a=F('farmer_id'),
-            field_b=F('no_salary_hires__month'),
-            field_c=Sum('no_salary_hires__count'),
+            field_b=Sum('no_salary_hires__count'),
+            field_c=F('no_salary_hires__month'),
             count=Count('no_salary_hires')
         ).filter(count__gt=0).order_by('farmer_id')
 
@@ -503,9 +488,9 @@ class RawDataExporter110:
     def process_sheet11(self):
         qs = self.survey_qs.filter(page=1).prefetch_related(
             'subsidy__refuses', 'subsidy__refuses__reason'
-        ).values('farmer_id').annotate(
+        ).values('farmer_id', 'subsidy__refuses__reason').annotate(
             field_a=F('farmer_id'),
-            field_b=StringAgg(Cast('subsidy__refuses__reason', CharField()), delimiter=',', distinct=True),
+            field_b=F('subsidy__refuses__reason'),
             count=Count('subsidy__refuses'),
         ).filter(count__gt=0).order_by('farmer_id')
 
