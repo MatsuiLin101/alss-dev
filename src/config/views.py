@@ -14,6 +14,7 @@ from config.export.tasks import (
     async_export_yearly_compare_statistics,
     async_export_examination_work_hours,
     async_export_raw_data,
+    async_export_farmer_stat,
 )
 
 
@@ -71,4 +72,10 @@ class ExportViewSet(ViewSet):
     def raw_data(self, request):
         year = int(request.query_params.get('year'))
         async_export_raw_data.delay(year, request.user.email)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['GET'], detail=False)
+    def farmer_stat(self, request):
+        year = int(request.query_params.get('year'))
+        async_export_farmer_stat.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
