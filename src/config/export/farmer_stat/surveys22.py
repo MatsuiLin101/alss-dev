@@ -14,7 +14,7 @@ class FarmerStatExporter110:
     def get_stratify_df():
         df = pandas.DataFrame(columns=['id', 'stratify', 'magnification_factor'])
         for i, obj in enumerate(Stratify.objects.all()):
-            df.loc[i] = [obj.pk, obj.code, round(obj.magnification_factor, 2) if obj.sample_count > 0 else '-']
+            df.loc[i] = [obj.pk, obj.code, obj.magnification_factor if obj.sample_count > 0 else '-']
         return df
 
     def get_farmer_df(self):
@@ -78,7 +78,7 @@ class FarmerStatExporter110:
             'crop_year_sales': '農耕銷售額',
             'livestock_year_sales': '畜禽銷售額',
             'total_year_sales': '銷售額總計',
-            'land_area': '耕地面積（公頃）'
+            'land_area': '耕地面積（公畝）'
         }, axis=1, inplace=True)
 
         # Export dataframe
