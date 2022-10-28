@@ -283,19 +283,26 @@ class RawDataExporter110:
             count=Count('long_term_hires')
         ).filter(count__gt=0).order_by('farmer_id')
 
-        df1 = pandas.DataFrame(qs1)
-        df2 = pandas.DataFrame(qs2)
-        df = df1.join(df2, lsuffix='long_term_hires', rsuffix='long_term_hires').sort_values('field_a')
+        df1 = pandas.DataFrame(qs1).set_index('long_term_hires')
+        df2 = pandas.DataFrame(qs2).set_index('long_term_hires')
+        df = df1.join(df2, lsuffix='l', rsuffix='r').sort_values('field_a').reset_index()
 
         self.write_rows_by_dataframe(sheet_name='常僱', column_counts=19, dataframe=df)
 
     def process_sheet7(self):
-        qs = self.survey_qs.prefetch_related(
-            'short_term_hires', 'short_term_hires__avg_workday', 'short_term_hires__work_types',
-            'short_term_hires__number_workers'
+        qs1 = self.survey_qs.prefetch_related(
+            'short_term_hires', 'short_term_hires__avg_workday'
         ).values('farmer_id', 'short_term_hires').annotate(
             field_a=F('farmer_id'),
             field_b=Sum('short_term_hires__number_workers__count'),
+            field_g=Coalesce(F('short_term_hires__avg_work_day'), -1),
+            field_h=F('short_term_hires__month'),
+            count=Count('short_term_hires')
+        ).filter(count__gt=0)
+
+        qs2 = self.survey_qs.prefetch_related(
+            'short_term_hires', 'short_term_hires__number_workers'
+        ).values('farmer_id', 'short_term_hires').annotate(
             field_c=Sum(
                 Case(
                     When(short_term_hires__number_workers__age_scope=1, then='short_term_hires__number_workers__count'),
@@ -317,13 +324,23 @@ class RawDataExporter110:
                     output_field=IntegerField()
                 )
             ),
-            field_f=StringAgg(Cast('short_term_hires__work_types__code', CharField()), delimiter=',', distinct=True),
-            field_g=Cast(F('short_term_hires__avg_work_day'), IntegerField()),
-            field_h=F('short_term_hires__month'),
             count=Count('short_term_hires')
-        ).filter(count__gt=0).order_by('farmer_id')
+        ).filter(count__gt=0)
 
-        self.write_rows_by_queryset(sheet_name='臨僱', column_counts=8, queryset=qs)
+        qs3 = self.survey_qs.prefetch_related(
+            'short_term_hires', 'short_term_hires__work_types',
+        ).values('farmer_id', 'short_term_hires').annotate(
+            field_f=StringAgg(Cast('short_term_hires__work_types__code', CharField()), delimiter=',', distinct=True),
+            count=Count('short_term_hires')
+        ).filter(count__gt=0)
+
+        df = pandas.DataFrame(qs1).set_index('short_term_hires')
+        df2 = pandas.DataFrame(qs2).set_index('short_term_hires')
+        df3 = pandas.DataFrame(qs3).set_index('short_term_hires')
+        df = df.join(df2, lsuffix='l', rsuffix='r')
+        df = df.join(df3, lsuffix='l', rsuffix='r').sort_values('field_a').reset_index()
+
+        self.write_rows_by_dataframe(sheet_name='臨僱', column_counts=8, dataframe=df)
 
     def process_sheet8(self):
         qs = self.survey_qs.prefetch_related(
