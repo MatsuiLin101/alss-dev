@@ -12,7 +12,7 @@ DATABASES = {
     },
 }
 
-INSTALLED_APPS += ['django_extensions']
+# INSTALLED_APPS += ['django_extensions']
 
 NOTEBOOK_ARGUMENTS = [
     # exposes IP and port

@@ -1,0 +1,67 @@
+<h4>3.3 農委會「改善農業缺工措施」推動情形</h4>
+
+<div class="form-group">
+    <label class="control-label">1. 貴戶是否有聽過可透過農會申請人力團(例如農業師傅或農耕士)的服務？</label>
+    <div name="knownsubsidy" class="alert alert-danger"></div>
+    <div class="form-group">
+        <div class="form-group col-md-12">
+            <label>
+                <input type="checkbox" name="knownsubsidy" data-field="nonknownsubsidy">沒有聽過
+            </label>
+        </div>
+        <div class="form-group col-md-12">
+            <label>
+                <input type="checkbox" name="knownsubsidy" data-field="knownsubsidy">有聽過
+                <small class="text-muted">(請續填)</small>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label">2. 貴戶111年是否有申請人力團(例如農業師傅或農耕士)之協助？</label>
+    <div name="subsidy" class="alert alert-danger"></div>
+    <div class="form-group">
+        <div class="form-group col-md-2">
+            <label>
+                <input type="checkbox" name="hassubsidy">有申請，續填：
+            </label>
+        </div>
+        <div class="form-group col-md-10">
+            <div class="form-inline">
+                {% for apply_result in apply_reasons %}
+                <div class="form-inline">
+                    <label class="fw-400">
+                        <input type="checkbox"  data-applyresult-id="{{ apply_result.id }}" name="applyresult">
+                        {{ apply_result.name }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-group col-md-2">
+            <label>
+                <input type="checkbox" name="nonesubsidy">無申請，原因：
+                <small class="text-muted">（可複選）</small>
+            </label>
+        </div>
+        <div class="form-group col-md-10">
+            <div class="form-inline">
+                {% for refuse_reason in refuse_reasons %}
+                <div class="form-inline">
+                    <label class="fw-400">
+                        <input type="checkbox"  data-refusereason-id="{{ refuse_reason.id }}" name="refusereason">
+                        {{ refuse_reason.name }}
+                    </label>
+                    {% if refuse_reason.has_extra %}
+                    <input class="form-control" type="text" style="width: 100%!important;" data-refusereason-id="{{ refuse_reason.id }}" name="extra">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
