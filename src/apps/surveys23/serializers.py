@@ -966,6 +966,7 @@ class SurveySerializer(ModelSerializer):
                     no_salary_hire_qs.update(
                         month=item["month"] if "month" in item else None,
                         count=item["count"] if "count" in item else None,
+                        avg_work_day=item["avg_work_day"] if "avg_work_day" in item else None,
                     )
             else:
                 # Create
@@ -973,6 +974,7 @@ class SurveySerializer(ModelSerializer):
                     survey=instance,
                     month=item["month"] if "month" in item else None,
                     count=item["count"] if "count" in item else None,
+                    avg_work_day=item["avg_work_day"] if "avg_work_day" in item else None,
                 )
 
         """LongTermLack"""
@@ -1051,8 +1053,8 @@ class SurveySerializer(ModelSerializer):
         if validated_data["subsidy"]:
             subsidy = validated_data["subsidy"]
             # Update
-            instance.subsidy.has_subsidy = subsidy["has_subsidy"]
-            instance.subsidy.none_subsidy = subsidy["none_subsidy"]
+            instance.subsidy.heard_app = subsidy["heard_app"]
+            instance.subsidy.none_heard_app = subsidy["none_heard_app"]
             """Apply"""
             apply_ids = [item["id"] for item in subsidy["applies"] if "id" in item]
             # Delete not included in the request
@@ -1066,12 +1068,14 @@ class SurveySerializer(ModelSerializer):
                     if apply_qs:
                         apply_qs.update(
                             result=item["result"] if "result" in item else None,
+                            method=item["method"] if "method" in item else None,
                         )
                 else:
                     # Create
                     Apply.objects.create(
                         subsidy=instance.subsidy,
                         result=item["result"] if "result" in item else None,
+                        method=item["method"] if "method" in item else None,
                     )
             """Refuse"""
             refuse_ids = [item["id"] for item in subsidy["refuses"] if "id" in item]
@@ -1086,6 +1090,7 @@ class SurveySerializer(ModelSerializer):
                     if refuse_qs:
                         refuse_qs.update(
                             reason=item["reason"] if "reason" in item else None,
+                            method=item["method"] if "method" in item else None,
                             extra=item["extra"] if "extra" in item else None,
                         )
                 else:
@@ -1093,10 +1098,12 @@ class SurveySerializer(ModelSerializer):
                     Refuse.objects.create(
                         subsidy=instance.subsidy,
                         reason=item["reason"] if "reason" in item else None,
+                        method=item["method"] if "method" in item else None,
                         extra=item["extra"] if "extra" in item else None,
                     )
             instance.subsidy.save()
 
-        async_update_stratify.delay(instance.id)
+        # TODO: enable stratify after validation.
+        # async_update_stratify.delay(instance.id)
 
         return instance

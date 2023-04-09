@@ -20,8 +20,10 @@ def create_groups():
 
         logger.info(f"""User groups have been created: '後台管理員'.""")
 
-    for year, app in zip((106, 107, 108, 110), ('surveys18', 'surveys19', 'surveys20', 'surveys22')):
-
+    for year, app in zip(
+            (106, 107, 108, 110, 111),
+            ('surveys18', 'surveys19', 'surveys20', 'surveys22', 'surveys23')
+    ):
         editor_group_name = f'{year}年審表員'
 
         if not Group.objects.filter(name=editor_group_name).exists():

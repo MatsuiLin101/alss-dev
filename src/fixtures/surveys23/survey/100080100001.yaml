@@ -7,7 +7,6 @@
     total_pages: 1
     page: 1
     origin_class: 67
-    second: True
     main_income_source: True
     non_known_subsidy: True
     hire: True
@@ -431,6 +430,7 @@
     survey: 1
     count: 1
     month: 2
+    avg_work_day: 15
 
 - model: surveys23.NoSalaryHire
   pk: 2
@@ -438,6 +438,7 @@
     survey: 1
     count: 1
     month: 3
+    avg_work_day: 1
 
 - model: surveys23.LongTermLack
   pk: 1
@@ -463,20 +464,22 @@
   pk: 1
   fields:
     survey: 1
-    has_subsidy: False
-    none_subsidy: True
+    heard_app: False
+    none_heard_app: True
 
 - model: surveys23.Refuse
   pk: 1
   fields:
     subsidy: 1
     reason: 2
+    method: 3
 
 - model: surveys23.Refuse
   pk: 2
   fields:
     subsidy: 1
-    reason: 7
+    reason: 10
+    method: 2
     extra: 測試其他理由
 
 - model: surveys23.Apply
@@ -484,9 +487,11 @@
   fields:
     subsidy: 1
     result: 2
+    method: 1
 
 - model: surveys23.Apply
   pk: 2
   fields:
     subsidy: 1
     result: 3
+    method: 1

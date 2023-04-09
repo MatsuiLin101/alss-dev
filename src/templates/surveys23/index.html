@@ -15,8 +15,8 @@
 {% block external_js %}
 <script src="{% static 'js/utils.js' %}"></script>
 <script src="{% static 'js/index.js' %}"></script>
-{% if perms.surveys22.view_survey %}
-<script src="{% static 'js/surveys22/helper.js' %}"></script>
+{% if perms.surveys23.view_survey %}
+<script src="{% static 'js/surveys23/helper.js' %}"></script>
 {% endif %}
 {% endblock external_js %}
 
@@ -31,7 +31,7 @@
     {% include 'navbar.html' %}
     <!-- Page Content -->
     <div class="row">
-        {% if perms.surveys22.view_survey %}
+        {% if perms.surveys23.view_survey %}
         <div class="col-md-3 col-lg-2" id="affix-wrapper">
             <div class="affix" data-spy="affix">
                 <div>
@@ -41,9 +41,9 @@
                                placeholder="請輸入農戶編號" autocomplete="off">
                         <div class="btn-group-vertical flex mt-1" role="group" aria-label="" style="width:100%;">
                             <button type="button" class="btn btn-success btn-lg js-get-survey"
-                                    data-readonly="false" data-url="{% url 'surveys22:survey-list' %}">查詢</button>
+                                    data-readonly="false" data-url="{% url 'surveys23:survey-list' %}">查詢</button>
                             <button type="button" class="btn btn-success btn-lg js-get-survey"
-                                    data-readonly="true" data-url="{% url 'surveys22:survey-list' %}">查詢原始資料</button>
+                                    data-readonly="true" data-url="{% url 'surveys23:survey-list' %}">查詢原始資料</button>
                         </div>
                     </div>
                 </div>
@@ -57,9 +57,9 @@
                         <a href="#" class="list-group-item js-tabs-control small" data-target="#panel2">農業經營型態</a>
                         <a href="#" class="list-group-item js-tabs-control small" data-target="#panel3">戶內人口組成狀況</a>
                         <a href="#" class="list-group-item js-tabs-control small" data-target="#panel4">農業外僱人力</a>
-                        {% if perms.surveys22.change_survey %}
+                        {% if perms.surveys23.change_survey %}
                         <button type="button" class="btn btn-info btn-lg btn-block mt-1 js-set-survey"
-                                    data-url="{% url 'surveys22:survey-list' %}">更新調查表</button>
+                                    data-url="{% url 'surveys23:survey-list' %}">更新調查表</button>
                         {% else %}
                         <div class="alert alert-warning">您沒有更新調查表的權限</div>
                         {% endif %}
@@ -78,16 +78,16 @@
         </div>
         <div class="col-md-9 col-lg-10 js-panel-contents" id="survey-wrapper">
             <div data-partial="about">
-                {% include 'surveys22/about.html' %}
+                {% include 'surveys23/about.html' %}
             </div>
             <div data-partial="survey">
-                {% include 'surveys22/panel1.html' %}
-                {% include 'surveys22/panel2.html' %}
-                {% include 'surveys22/panel3.html' %}
-                {% include 'surveys22/panel4.html' %}
+                {% include 'surveys23/panel1.html' %}
+                {% include 'surveys23/panel2.html' %}
+                {% include 'surveys23/panel3.html' %}
+                {% include 'surveys23/panel4.html' %}
             </div>
             <div data-partial="datatable">
-                {% include 'reviewlog.html' with year="110" app_label="surveys22" %}
+                {% include 'reviewlog.html' with year="111" app_label="surveys23" %}
             </div>
         </div>
         <!-- /.col-lg-9 -->

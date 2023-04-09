@@ -27,6 +27,9 @@
                         {% if perms.surveys22.view_survey %}
                         <li><a href="{% url 'surveys22:surveys22_index' %}">110年</a></li>
                         {% endif %}
+                        {% if perms.surveys23.view_survey %}
+                        <li><a href="{% url 'surveys23:surveys23_index' %}">111年</a></li>
+                        {% endif %}
                     </ul>
                 </li>
                 {% if user.is_staff %}
@@ -89,6 +92,7 @@
                         <li><a href="{% url 'surveys19:builderfile-list' %}?limit=5" target="_blank">107年</a></li>
                         <li><a href="{% url 'surveys20:builderfile-list' %}?limit=5" target="_blank">108年</a></li>
                         <li><a href="{% url 'surveys22:builderfile-list' %}?limit=5" target="_blank">110年</a></li>
+                        <li><a href="{% url 'surveys23:builderfile-list' %}?limit=5" target="_blank">111年</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link js-partial-control" data-target="about" href="{% url 'swagger' %}" target="_blank">API介接</a></li>

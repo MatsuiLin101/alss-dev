@@ -60,6 +60,7 @@ from apps.surveys23.models import (
     RefuseReason,
     Apply,
     ApplyResult,
+    ApplyMethod,
     Month,
     BuilderFile,
     PRODUCT_TYPE_CHOICES
@@ -114,7 +115,7 @@ from apps.surveys23.serializers import (
 logger = logging.getLogger('django.request')
 
 
-class Surveys2022Index(LoginRequiredMixin, TemplateView):
+class Surveys2023Index(LoginRequiredMixin, TemplateView):
     login_url = "/users/login/"
     redirect_field_name = "redirect_to"
     template_name = "surveys23/index.html"
@@ -149,7 +150,8 @@ class Surveys2022Index(LoginRequiredMixin, TemplateView):
         context["work_types"] = WorkType.objects.all()
         context["refuse_reasons"] = RefuseReason.objects.all()
         context["citytowncodes"] = CityTownCode.objects.all()
-        context["apply_reasons"] = ApplyResult.objects.all()
+        context["apply_results"] = ApplyResult.objects.all()
+        context["apply_methods"] = ApplyMethod.objects.all()
 
         # ui elements
         ui = {

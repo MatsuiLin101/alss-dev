@@ -10,6 +10,7 @@ from apps.surveys18.models import Survey as Survey18
 from apps.surveys19.models import Survey as Survey19
 from apps.surveys20.models import Survey as Survey20
 from apps.surveys22.models import Survey as Survey22
+from apps.surveys23.models import Survey as Survey23
 
 
 class ContentObjectRelatedField(RelatedField):
@@ -21,7 +22,7 @@ class ContentObjectRelatedField(RelatedField):
         """
         Serialize content objects to a simple textual representation.
         """
-        if any(isinstance(value, cls) for cls in (Survey18, Survey19, Survey20, Survey22)):
+        if any(isinstance(value, cls) for cls in (Survey18, Survey19, Survey20, Survey22, Survey23)):
             return value.farmer_id
         raise Exception("Unexpected type of content object")
 
