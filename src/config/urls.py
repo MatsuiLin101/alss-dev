@@ -44,6 +44,7 @@ urlpatterns = [
     path("107/", include("apps.surveys19.urls", namespace="surveys19")),
     path("108/", include("apps.surveys20.urls", namespace="surveys20")),
     path("110/", include("apps.surveys22.urls", namespace="surveys22")),
+    path("111/", include("apps.surveys23.urls", namespace="surveys23")),
     path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name='swagger'),
     path("captcha/", include("captcha.urls")),
     path("session-timeout/", SessionTimeout.as_view(), name="sessiontimeout"),

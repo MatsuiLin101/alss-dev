@@ -288,17 +288,14 @@ window.onload = function() {
         <h2 style="padding: 15px;">歡迎來到</h2>
         <h1>勞動力</h1>
         <h1>調查平台</h1>
-        {% if perms.surveys18.view_survey %}
-        <a href="{% url 'surveys18:surveys18_index' %}">106年</a>
-        {% endif %}
-        {% if perms.surveys19.view_survey %}
-        <a href="{% url 'surveys19:surveys19_index' %}">107年</a>
-        {% endif %}
         {% if perms.surveys20.view_survey %}
         <a href="{% url 'surveys20:surveys20_index' %}">108年</a>
         {% endif %}
         {% if perms.surveys22.view_survey %}
         <a href="{% url 'surveys22:surveys22_index' %}">110年</a>
+        {% endif %}
+        {% if perms.surveys22.view_survey %}
+        <a href="{% url 'surveys23:surveys23_index' %}">111年</a>
         {% endif %}
       </div>
   </div>

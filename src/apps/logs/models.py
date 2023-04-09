@@ -17,6 +17,7 @@ SURVEY_CHOICES = (
     | Q(app_label="surveys19", model="survey")
     | Q(app_label="surveys20", model="survey")
     | Q(app_label="surveys22", model="survey")
+    | Q(app_label="surveys23", model="survey")
 )
 
 
