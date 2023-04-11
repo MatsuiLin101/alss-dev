@@ -74,7 +74,6 @@ var Set = function (data, surveyId) {
         PopulationHelper.Validation.MarketType3Checked.Validate();
         SurveyHelper.Hire.Validation.HireExist.Validate();
         SurveyHelper.Lack.Validation.LackExist.Validate();
-        SurveyHelper.Second.Validation.SecondExist.Validate();
     }
 }
 
@@ -107,7 +106,6 @@ var SurveyHelper = {
         this.Alert = new Helper.Alert($('.alert-danger[name="survey"]'));
         this.Hire.Setup();
         this.Lack.Setup();
-        this.Second.Setup();
         this.MainIncomeSource.Setup();
         this.HeardApp.Setup();
 
@@ -119,7 +117,6 @@ var SurveyHelper = {
         this.Hire.Bind();
         this.Lack.Bind();
         this.Note.Bind();
-        this.Second.Bind();
         this.MainIncomeSource.Bind();
         this.HeardApp.Bind();
     },
@@ -136,7 +133,6 @@ var SurveyHelper = {
         this.Hire.Reset();
         this.Lack.Reset();
         this.Note.Reset();
-        this.Second.Reset();
         this.MainIncomeSource.Reset();
         this.HeardApp.Reset();
     },
@@ -152,7 +148,6 @@ var SurveyHelper = {
         this.Hire.Set(obj);
         this.Lack.Set(obj);
         this.Note.Set(obj);
-        this.Second.Set(obj);
         this.MainIncomeSource.Set(obj);
         this.HeardApp.Set(obj);
     },
@@ -631,79 +626,6 @@ var SurveyHelper = {
                     var con = SurveyHelper.MainIncomeSource.Container.filter(':checked').length > 1;
                     var msg = '全年主要淨收入來源情形不得重複勾選';
                     Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[0], null, false);
-                },
-            },
-        },
-    },
-    Second: {
-        Alert: null,
-        Setup: function(){
-            this.Alert = new Helper.Alert($('.alert-danger[name="second"]'));
-        },
-        Container: $('#panel2 input[name="second"]'),
-        Bind: function(){
-            this.Container.unbind('change.ns1').on('change.ns1', function(){
-                if(CloneData) {
-                    var field = $(this).data('field');
-                    if(field == 'second')
-                        CloneData[MainSurveyId].second = this.checked;
-                    else if(field == 'nonsecond')
-                        CloneData[MainSurveyId].non_second = this.checked;
-
-                    if(Helper.LogHandler.ValidationActive){
-                        SurveyHelper.Second.Validation.Empty.Validate();
-                        SurveyHelper.Second.Validation.Duplicate.Validate();
-                        SurveyHelper.Second.Validation.SecondExist.Validate();
-                    }
-                }
-            })
-        },
-        Set: function (obj) {
-            this.Container.filter('[data-field="second"]').prop('checked', obj.second);
-            this.Container.filter('[data-field="nonsecond"]').prop('checked', obj.non_second);
-
-            if(Helper.LogHandler.ValidationActive){
-                SurveyHelper.Second.Validation.Empty.Validate();
-                SurveyHelper.Second.Validation.Duplicate.Validate();
-                SurveyHelper.Second.Validation.SecondExist.Validate();
-            }
-        },
-        Reset: function(){
-            if (this.Alert) { this.Alert.reset(); }
-            this.Container.prop('checked', false);
-        },
-        Validation: {
-            Empty: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var con = SurveyHelper.Second.Container.filter(':checked').length == 0;
-                    var msg = '不可漏填此問項';
-                    Helper.LogHandler.Log(con, SurveyHelper.Second.Alert, msg, this.Guids[0], null, false);
-                },
-            },
-            Duplicate: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var con = SurveyHelper.Second.Container.filter(':checked').length > 1;
-                    var msg = '戶內是否有二代青農不得重複勾選';
-                    Helper.LogHandler.Log(con, SurveyHelper.Second.Alert, msg, this.Guids[0], null, false);
-                },
-            },
-            SecondExist: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var checked = SurveyHelper.Second.Container.filter('[data-field="second"]').prop('checked');
-                    var exists = false;
-                    PopulationHelper.Population.Container.find('tr').each(function(){
-                        var birthYear = $(this).find('[name="birthyear"]').val();
-                        var lifeStyleId = $(this).find('[name="lifestyle"]').val();
-                        if(birthYear <= 92 && birthYear >= 65 && Helper.NumberValidate(birthYear) && lifeStyleId == 1){
-                            exists = true;
-                        }
-                    })
-                    var con = checked && !exists;
-                    var msg = '勾選「有」者，【問項2.2】戶內人口應有「出生年次」介於65年至92年之間且「主要生活型態」勾選「自營農牧業工作」';
-                    Helper.LogHandler.Log(con, SurveyHelper.Second.Alert, msg, this.Guids[0]);
                 },
             },
         },
@@ -1597,6 +1519,7 @@ var CropMarketingHelper = {
                 var selfWorkHour = 0;
                 var longTermWorkHour = 0;
                 var shortTermWorkHour = 0;
+                var noSalaryWorkHour = 0;
 
                 PopulationHelper.Population.Container.find('tr').each(function(){
                     var farmerWorkday = $(this).find('[name="farmerworkday"] > option:selected').data('minDay');
@@ -1624,10 +1547,20 @@ var CropMarketingHelper = {
                         shortTermWorkHour += result;
                     }
                 })
+                NoSalaryHireHelper.NoSalaryHire.Container.find('tr').each(function(){
+                    var avgWorkDay = $(this).find('[name="avgworkday"]').val();
+
+                    if(avgWorkDay > 0){
+                        result = parseFloat(avgWorkDay) * 8;
+                        noSalaryWorkHour += result;
+                    }
+                })
+
 
                 selfWorkHour = Helper.Round(selfWorkHour);
                 longTermWorkHour = Helper.Round(longTermWorkHour);
                 shortTermWorkHour = Helper.Round(shortTermWorkHour);
+                noSalaryWorkHour = Helper.Round(noSalaryWorkHour);
 
                 var workHours = selfWorkHour + longTermWorkHour + shortTermWorkHour;
 
@@ -1746,12 +1679,15 @@ var CropMarketingHelper = {
                 var con = reasonableWorkHourMin > workHours || reasonableWorkHourMax < workHours;
 
                 var workHourMsg = '\
-                    自家工與僱工工作時數：自家工({0}) + 常僱工({1}) + 臨時工({2}) = {3}小時</br>\
-                    合理工作時數下限：{4} = {5}小時</br>\
-                    合理工作時數上限：{6} = {7}小時</br>\
+                    自家工與僱工工作時數：自家工({0}) + 常僱工({1}) + 臨時工({2}) + 不支薪({3}) = {4}小時</br>\
+                    合理工作時數下限：{5} = {6}小時</br>\
+                    合理工作時數上限：{7} = {8}小時</br>\
                 ';
                 var msg = '填列之自家工與僱工工作時數不在合理工作時數區間，請確認：</br>'
-                workHourMsg = workHourMsg.format(selfWorkHour, longTermWorkHour, shortTermWorkHour,
+                workHourMsg = workHourMsg.format(selfWorkHour,
+                                                 longTermWorkHour,
+                                                 shortTermWorkHour,
+                                                 noSalaryWorkHour,
                                                  workHours,
                                                  minMsgs.join(' + '),
                                                  reasonableWorkHourMin,
@@ -2272,7 +2208,6 @@ var PopulationHelper = {
             PopulationHelper.Validation.AtLeastOne65Worker.Validate();
             PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
             CropMarketingHelper.Validation.WorkHourRange.Validate();
-            SurveyHelper.Second.Validation.SecondExist.Validate();
             PopulationHelper.Validation.MainIncomeSource.Validate();
         }
     },
@@ -2332,7 +2267,6 @@ var PopulationHelper = {
                             PopulationAgeHelper.Validation.MemberCount.Validate();
                             PopulationHelper.Validation.AtLeastOne65Worker.Validate();
                             PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
-                            SurveyHelper.Second.Validation.SecondExist.Validate();
                             CropMarketingHelper.Validation.WorkHourRange.Validate();
                             PopulationHelper.Validation.MainIncomeSource.Validate();
                         }
@@ -2365,7 +2299,6 @@ var PopulationHelper = {
                         PopulationHelper.Validation.MarketType3Checked.Validate();
                         PopulationHelper.Validation.FarmerWorkDayOver150.Validate();
                         PopulationAgeHelper.Validation.MemberCount.Validate();
-                        SurveyHelper.Second.Validation.SecondExist.Validate();
                         CropMarketingHelper.Validation.WorkHourRange.Validate();
                         PopulationHelper.Validation.MainIncomeSource.Validate();
                     }
