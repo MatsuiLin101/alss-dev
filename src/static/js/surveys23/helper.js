@@ -3476,6 +3476,7 @@ var SubsidyHelper = {
         Apply: $('#panel4 input[name="apply"'),
         Refuse: $('#panel4 input[name="refuse"]'),
         Extra: $('#panel4 input[name="extra"]'),
+        ApplyMethod: $('#panel4 .apply-method'),
     },
     Set: function(obj){
         obj.applies.forEach(function(apply, i){
@@ -3526,6 +3527,7 @@ var SubsidyHelper = {
             if(CloneData){
                 if(Helper.LogHandler.ValidationActive){
                     SubsidyHelper.Validation.Empty.Validate();
+                    SubsidyHelper.Validation.Duplicate.Validate();
                 }
             }
         })
@@ -3610,20 +3612,33 @@ var SubsidyHelper = {
     },
     Validation: {
         Empty: {
-            Guids: Helper.Guid.CreateMulti(2),
+            Guids: Helper.Guid.CreateMulti(4),
             Validate: function(){
+                // check refuse reason.id=0
+                SubsidyHelper.Container.ApplyMethod.each(function(i, element){
+                    var methodId = $(this).data("method-id");
+                    var name = $(this).text();
+                    var hasReason0Refuse = SubsidyHelper.Container.Refuse
+                                           .filter('[data-method-id="{0}"]'.format(methodId))
+                                           .filter('[data-reason-id="0"]')
+                                           .filter(':checked').length > 0;
+                    var hasOtherRefuse = SubsidyHelper.Container.Refuse
+                                         .filter('[data-method-id="{0}"]'.format(methodId))
+                                         .not('[data-reason-id="0"]')
+                                         .filter(':checked').length > 0;
+                    var hasApply = SubsidyHelper.Container.Apply
+                                   .filter('[data-method-id="{0}"]'.format(methodId))
+                                   .filter(':checked').length > 0;
+                    var con = (hasReason0Refuse && hasOtherRefuse) || (hasReason0Refuse && hasApply);
+                    var msg = '{0}: 勾選「沒聽過」，有聽過處應為空白'.format(name);
+                    Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, SubsidyHelper.Validation.Empty.Guids[i], null, false);
+                })
                 // check all empty
                 var hasApply = SubsidyHelper.Container.Apply.filter(':checked').length > 0;
                 var hasRefuse = SubsidyHelper.Container.Refuse.filter(':checked').length > 0;
                 var con = !hasApply && !hasRefuse;
                 var msg = "不可漏填此問項"
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
-                // check reason0 refuse
-                var hasReason0Refuse = SubsidyHelper.Container.Refuse.filter('[data-reason-id="0"]').filter(':checked').length > 0;
-                var hasOtherRefuse = SubsidyHelper.Container.Refuse.not('[data-reason-id="0"]').filter(':checked').length > 0;
-                var con = (hasReason0Refuse && hasOtherRefuse) || (hasReason0Refuse && hasApply);
-                var msg = '勾選「沒聽過」，有聽過處應為空白';
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[3], null, false);
                 // check extra
                 var con = false;
                 SubsidyHelper.Container.Extra.each(function() {
@@ -3639,29 +3654,37 @@ var SubsidyHelper = {
                     }
                 });
                 var msg = '「沒有申請」原因不可為空白';
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[2], null, false);
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[4], null, false);
             },
         },
         Duplicate: {
-            Guids: Helper.Guid.CreateMulti(1),
+            Guids: Helper.Guid.CreateMulti(5),
             Validate: function(){
                 // check apply and refuse duplicate
-                var hasApply = SubsidyHelper.Container.Apply.filter(':checked').length > 0;
-                var hasRefuse = SubsidyHelper.Container.Refuse.filter(':checked').not('[data-reason-id="0"]').length > 0;
-                con = hasApply && hasRefuse;
-                var msg = '「有申請」、「沒有申請」不得重複勾選';
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
-                // check apply result distinct
-                var distinctApplyResults = [];
-                SubsidyHelper.Container.Apply.filter(':checked').each(function() {
-                    var result = $(this).data('result-id');
-                    if ($.inArray(result, distinctApplyResults) === -1) {
-                        distinctApplyResults.push(result);
-                    }
+                SubsidyHelper.Container.ApplyMethod.each(function(i, element){
+                    var methodId = $(this).data("method-id");
+                    var name = $(this).text();
+                    var hasApply = SubsidyHelper.Container.Apply
+                                   .filter('[data-method-id="{0}"]'.format(methodId))
+                                   .filter(':checked').length > 0;
+                    var hasRefuse = SubsidyHelper.Container.Refuse
+                                    .filter('[data-method-id="{0}"]'.format(methodId))
+                                    .filter(':checked').not('[data-reason-id="0"]').length > 0;
+                    con = hasApply && hasRefuse;
+                    var msg = '{0}:「有申請」、「沒有申請」不得重複勾選'.format(name);
+                    Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, SubsidyHelper.Validation.Duplicate.Guids[i], null, false);
                 });
-                var con = distinctApplyResults.length > 1;
-                var msg = '「有申請」情形限註記一項';
-                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
+                // check apply result distinct
+                SubsidyHelper.Container.ApplyMethod.each(function(i, element){
+                    var methodId = $(this).data("method-id");
+                    var name = $(this).text();
+                    var con = SubsidyHelper.Container.Apply
+                              .filter('[data-method-id="{0}"]'.format(methodId))
+                              .filter(':checked').length > 1;
+                     var msg = '{0}:「有申請」情形限註記一項'.format(name);
+                    Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg,
+                                          SubsidyHelper.Validation.Duplicate.Guids[i + 3], null, false);
+                });
             },
         },
     },
