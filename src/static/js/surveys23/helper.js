@@ -1548,14 +1548,14 @@ var CropMarketingHelper = {
                     }
                 })
                 NoSalaryHireHelper.NoSalaryHire.Container.find('tr').each(function(){
+                    var count = $(this).find('[name="count"]').val();
                     var avgWorkDay = $(this).find('[name="avgworkday"]').val();
 
-                    if(avgWorkDay > 0){
-                        result = parseFloat(avgWorkDay) * 8;
+                    if(count > 0 && avgWorkDay > 0){
+                        result = parseInt(count) * parseFloat(avgWorkDay) * 8;
                         noSalaryWorkHour += result;
                     }
                 })
-
 
                 selfWorkHour = Helper.Round(selfWorkHour);
                 longTermWorkHour = Helper.Round(longTermWorkHour);
@@ -3019,6 +3019,7 @@ var NoSalaryHireHelper = {
                         NoSalaryHireHelper.Validation.Required.Validate($tr);
                         NoSalaryHireHelper.Validation.AvgWorkDay.Validate($tr);
                         SurveyHelper.Hire.Validation.HireExist.Validate();
+                        CropMarketingHelper.Validation.WorkHourRange.Validate();
                     }
                 }
             })
