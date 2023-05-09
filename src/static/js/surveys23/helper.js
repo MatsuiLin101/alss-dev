@@ -1562,7 +1562,7 @@ var CropMarketingHelper = {
                 shortTermWorkHour = Helper.Round(shortTermWorkHour);
                 noSalaryWorkHour = Helper.Round(noSalaryWorkHour);
 
-                var workHours = selfWorkHour + longTermWorkHour + shortTermWorkHour;
+                var workHours = selfWorkHour + longTermWorkHour + shortTermWorkHour + noSalaryWorkHour;
 
                 var reasonableWorkHourMin = 0;
                 var reasonableWorkHourMax = 0;
