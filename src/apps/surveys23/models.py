@@ -1137,7 +1137,7 @@ class NoSalaryHire(Model):
         verbose_name=_("Month"),
     )
     count = IntegerField(null=True, blank=True, verbose_name=_("Number Of People"))
-    avg_work_day = IntegerField(null=True, blank=True, verbose_name=_("Average Work Day"))
+    avg_work_day = FloatField(null=True, blank=True, verbose_name=_("Average Work Day"))
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,
