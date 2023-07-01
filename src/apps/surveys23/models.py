@@ -62,6 +62,7 @@ class Survey(Model):
     origin_class = IntegerField(null=True, blank=True, verbose_name=_("Origin Class"))
     main_income_source = BooleanField(default=False, verbose_name=_("Main Income Source"))
     non_main_income_source = BooleanField(default=False, verbose_name=_("Non Main Income Source"))
+    # TODO: known_subsidy, non_known_subsidy should be removed and use virtual property to decide.
     known_subsidy = BooleanField(default=False, verbose_name=_("Known Subsidy"))
     non_known_subsidy = BooleanField(default=False, verbose_name=_("Non Known Subsidy"))
     hire = BooleanField(default=False, verbose_name=_("Hire"))
@@ -1372,6 +1373,19 @@ class Subsidy(Model):
 
     def __str__(self):
         return str(self.survey)
+
+    @property
+    def has_subsidy(self):
+        return self.subsidy.applies.count() > 0
+
+    @property
+    def non_known_subsidy(self):
+        # 沒聽過視為理由(reason)為0的沒申請(refuse)
+        return self.refuses.filter(reason=0).count() > 0
+
+    @property
+    def known_subsidy(self):
+        return self.refuses.exclude(reason=0).count() > 0 or self.has_subsidy
 
 
 class ApplyMethod(Model):

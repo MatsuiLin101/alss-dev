@@ -182,6 +182,7 @@ class Builder(object):
                 non_main_income_source = string[1] == "1"
 
                 string = self.string[10][0:2]
+                # TODO: known_subsidy, non_known_subsidy should be removed and use virtual property to decide.
                 non_known_subsidy = string[0] == "1"
                 known_subsidy = string[1] == "1"
 
