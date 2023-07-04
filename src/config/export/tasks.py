@@ -17,6 +17,7 @@ def async_export_full_data(year, email):
         107: full_data.SurveyRelationGeneratorFactory107,
         108: full_data.SurveyRelationGeneratorFactory108,
         110: full_data.SurveyRelationGeneratorFactory110,
+        111: full_data.SurveyRelationGeneratorFactory111,
     }
     try:
         factory = factory_map.get(year)(excludes={'note__icontains': '無效戶'})
@@ -26,7 +27,7 @@ def async_export_full_data(year, email):
         csv_path = f'{file_name}.csv'
         zip_path = f'{file_name}.zip'
 
-        with open(csv_path, 'w+', encoding="utf-8") as file:
+        with open(csv_path, 'w', encoding="utf-8", newline="") as file:
             writer = csv.writer(file)
             for row in row_generator:
                 writer.writerow(row)
