@@ -125,7 +125,7 @@ FIELDS = [
 class SurveyRelationGeneratorFactory111:
     """A highlevel class controls how to export all surveys."""
 
-    def __init__(self, filters={}, excludes={}, limit=10):
+    def __init__(self, filters={}, excludes={}, limit=None):
         self.surveys = (
             Survey.objects.filter(readonly=False)
             .order_by("farmer_id", "page")
@@ -490,7 +490,7 @@ class SurveyExportor:
             self.survey.address_match.match,
             self.survey.address_match.address,
             self.survey.farm_location.city + self.survey.farm_location.town,
-            self.survey.farm_location.code.code,
+            self.survey.farm_location.code.code if self.survey.farm_location.code else "",
         ]
 
     def main_income_source_generate(self):
