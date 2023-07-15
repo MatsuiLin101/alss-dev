@@ -73,7 +73,7 @@
     management_type: 2
     is_hire: True
     min_field: 0
-    max_field: 150
+    max_field: 125
     code: 7
     population: 1767
     level: 1
@@ -84,7 +84,7 @@
     management_type: 2
     is_hire: False
     min_field: 0
-    max_field: 150
+    max_field: 125
     code: 8
     population: 2991
     level: 1
@@ -94,7 +94,7 @@
   fields:
     management_type: 2
     is_hire: True
-    min_field: 150
+    min_field: 125
     max_field: 500
     code: 9
     population: 1291
@@ -105,7 +105,7 @@
   fields:
     management_type: 2
     is_hire: False
-    min_field: 150
+    min_field: 125
     max_field: 500
     code: 10
     population: 1432
@@ -139,7 +139,7 @@
     management_type: 3
     is_hire: True
     min_field: 0
-    max_field: 150
+    max_field: 125
     code: 13
     population: 1512
     level: 1
@@ -150,7 +150,7 @@
     management_type: 3
     is_hire: False
     min_field: 0
-    max_field: 150
+    max_field: 125
     code: 14
     population: 3133
     level: 1
@@ -160,8 +160,8 @@
   fields:
     management_type: 3
     is_hire: True
-    min_field: 150
-    max_field: 500
+    min_field: 125
+    max_field: 300
     code: 15
     population: 396
     level: 2
@@ -171,8 +171,8 @@
   fields:
     management_type: 3
     is_hire: False
-    min_field: 150
-    max_field: 500
+    min_field: 125
+    max_field: 300
     code: 16
     population: 587
     level: 2
@@ -182,7 +182,7 @@
   fields:
     management_type: 3
     is_hire: True
-    min_field: 500
+    min_field: 300
     max_field: 999999999
     code: 17
     population: 175
@@ -193,7 +193,7 @@
   fields:
     management_type: 3
     is_hire: False
-    min_field: 500
+    min_field: 300
     max_field: 999999999
     code: 18
     population: 182
