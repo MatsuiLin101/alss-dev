@@ -6,7 +6,7 @@
     min_field: 0
     max_field: 175
     code: 1
-    population: 3711
+    population: 2581
     level: 1
 
 
@@ -18,7 +18,7 @@
     min_field: 0
     max_field: 175
     code: 2
-    population: 18638
+    population: 15338
     level: 1
 
 
@@ -30,7 +30,7 @@
     min_field: 175
     max_field: 500
     code: 3
-    population: 1798
+    population: 1819
     level: 2
 
 
@@ -42,7 +42,7 @@
     min_field: 175
     max_field: 500
     code: 4
-    population: 5931
+    population: 6636
     level: 2
 
 - model: surveys23.Stratify
@@ -53,7 +53,7 @@
     min_field: 500
     max_field: 999999999
     code: 5
-    population: 718
+    population: 947
     level: 3
 
 - model: surveys23.Stratify
@@ -64,7 +64,7 @@
     min_field: 500
     max_field: 999999999
     code: 6
-    population: 1107
+    population: 1497
     level: 3
 
 - model: surveys23.Stratify
@@ -75,7 +75,7 @@
     min_field: 0
     max_field: 150
     code: 7
-    population: 2091
+    population: 1767
     level: 1
 
 - model: surveys23.Stratify
@@ -86,7 +86,7 @@
     min_field: 0
     max_field: 150
     code: 8
-    population: 4645
+    population: 2991
     level: 1
 
 - model: surveys23.Stratify
@@ -97,7 +97,7 @@
     min_field: 150
     max_field: 500
     code: 9
-    population: 956
+    population: 1291
     level: 2
 
 - model: surveys23.Stratify
@@ -108,7 +108,7 @@
     min_field: 150
     max_field: 500
     code: 10
-    population: 1410
+    population: 1432
     level: 2
 
 - model: surveys23.Stratify
@@ -119,7 +119,7 @@
     min_field: 500
     max_field: 999999999
     code: 11
-    population: 158
+    population: 248
     level: 3
 
 - model: surveys23.Stratify
@@ -130,7 +130,7 @@
     min_field: 500
     max_field: 999999999
     code: 12
-    population: 148
+    population: 194
     level: 3
 
 - model: surveys23.Stratify
@@ -141,7 +141,7 @@
     min_field: 0
     max_field: 150
     code: 13
-    population: 1720
+    population: 1512
     level: 1
 
 - model: surveys23.Stratify
@@ -152,7 +152,7 @@
     min_field: 0
     max_field: 150
     code: 14
-    population: 3862
+    population: 3133
     level: 1
 
 - model: surveys23.Stratify
@@ -163,7 +163,7 @@
     min_field: 150
     max_field: 500
     code: 15
-    population: 473
+    population: 396
     level: 2
 
 - model: surveys23.Stratify
@@ -174,7 +174,7 @@
     min_field: 150
     max_field: 500
     code: 16
-    population: 573
+    population: 587
     level: 2
 
 - model: surveys23.Stratify
@@ -185,7 +185,7 @@
     min_field: 500
     max_field: 999999999
     code: 17
-    population: 88
+    population: 175
     level: 3
 
 - model: surveys23.Stratify
@@ -196,7 +196,7 @@
     min_field: 500
     max_field: 999999999
     code: 18
-    population: 70
+    population: 182
     level: 3
 
 - model: surveys23.Stratify
@@ -207,7 +207,7 @@
     min_field: 0
     max_field: 100
     code: 19
-    population: 1848
+    population: 1532
     level: 1
 
 - model: surveys23.Stratify
@@ -218,7 +218,7 @@
     min_field: 0
     max_field: 100
     code: 20
-    population: 1004
+    population: 1143
     level: 1
 
 - model: surveys23.Stratify
@@ -229,7 +229,7 @@
     min_field: 100
     max_field: 300
     code: 21
-    population: 1941
+    population: 1589
     level: 2
 
 - model: surveys23.Stratify
@@ -240,7 +240,7 @@
     min_field: 100
     max_field: 300
     code: 22
-    population: 496
+    population: 603
     level: 2
 
 - model: surveys23.Stratify
@@ -251,7 +251,7 @@
     min_field: 300
     max_field: 999999999
     code: 23
-    population: 452
+    population: 383
     level: 3
 
 - model: surveys23.Stratify
@@ -262,7 +262,7 @@
     min_field: 300
     max_field: 999999999
     code: 24
-    population: 37
+    population: 84
     level: 3
 
 - model: surveys23.Stratify
@@ -273,7 +273,7 @@
     min_field: 0
     max_field: 100
     code: 25
-    population: 9537
+    population: 13303
     level: 1
 
 - model: surveys23.Stratify
@@ -284,7 +284,7 @@
     min_field: 0
     max_field: 100
     code: 26
-    population: 23882
+    population: 21646
     level: 1
 
 - model: surveys23.Stratify
@@ -295,7 +295,7 @@
     min_field: 100
     max_field: 250
     code: 27
-    population: 5923
+    population: 6686
     level: 2
 
 - model: surveys23.Stratify
@@ -306,7 +306,7 @@
     min_field: 100
     max_field: 250
     code: 28
-    population: 6819
+    population: 5820
     level: 2
 
 - model: surveys23.Stratify
@@ -317,7 +317,7 @@
     min_field: 250
     max_field: 999999999
     code: 29
-    population: 1897
+    population: 2478
     level: 3
 
 - model: surveys23.Stratify
@@ -339,7 +339,7 @@
     min_field: 0
     max_field: 100
     code: 31
-    population: 17145
+    population: 22122
     level: 1
 
 - model: surveys23.Stratify
@@ -350,7 +350,7 @@
     min_field: 0
     max_field: 100
     code: 32
-    population: 41998
+    population: 38785
     level: 1
 
 - model: surveys23.Stratify
@@ -361,7 +361,7 @@
     min_field: 100
     max_field: 250
     code: 33
-    population: 13482
+    population: 14324
     level: 2
 
 - model: surveys23.Stratify
@@ -372,7 +372,7 @@
     min_field: 100
     max_field: 250
     code: 34
-    population: 15952
+    population: 13744
     level: 2
 
 - model: surveys23.Stratify
@@ -383,7 +383,7 @@
     min_field: 250
     max_field: 999999999
     code: 35
-    population: 4621
+    population: 4462
     level: 3
 
 - model: surveys23.Stratify
@@ -394,7 +394,7 @@
     min_field: 250
     max_field: 999999999
     code: 36
-    population: 2753
+    population: 2572
     level: 3
 
 - model: surveys23.Stratify
@@ -405,7 +405,7 @@
     min_revenue: 0
     max_revenue: 70
     code: 37
-    population: 43
+    population: 61
     level: 1
 
 - model: surveys23.Stratify
@@ -416,7 +416,7 @@
     min_revenue: 0
     max_revenue: 70
     code: 38
-    population: 107
+    population: 67
     level: 1
 
 - model: surveys23.Stratify
@@ -427,7 +427,7 @@
     min_revenue: 70
     max_revenue: 180
     code: 39
-    population: 143
+    population: 151
     level: 2
 
 - model: surveys23.Stratify
@@ -438,7 +438,7 @@
     min_revenue: 70
     max_revenue: 180
     code: 40
-    population: 105
+    population: 60
     level: 2
 
 - model: surveys23.Stratify
@@ -449,7 +449,7 @@
     min_revenue: 180
     max_revenue: 999999999
     code: 41
-    population: 630
+    population: 525
     level: 3
 
 - model: surveys23.Stratify
@@ -460,7 +460,7 @@
     min_revenue: 180
     max_revenue: 999999999
     code: 42
-    population: 76
+    population: 79
     level: 3
 
 - model: surveys23.Stratify
@@ -471,7 +471,7 @@
     min_revenue: 0
     max_revenue: 70
     code: 43
-    population: 298
+    population: 471
     level: 1
 
 - model: surveys23.Stratify
@@ -482,7 +482,7 @@
     min_revenue: 0
     max_revenue: 70
     code: 44
-    population: 1308
+    population: 987
     level: 1
 
 - model: surveys23.Stratify
@@ -493,7 +493,7 @@
     min_revenue: 70
     max_revenue: 180
     code: 45
-    population: 448
+    population: 575
     level: 2
 
 - model: surveys23.Stratify
@@ -504,7 +504,7 @@
     min_revenue: 70
     max_revenue: 180
     code: 46
-    population: 705
+    population: 523
     level: 2
 
 - model: surveys23.Stratify
@@ -515,7 +515,7 @@
     min_revenue: 180
     max_revenue: 999999999
     code: 47
-    population: 498
+    population: 564
     level: 3
 
 - model: surveys23.Stratify
@@ -526,7 +526,7 @@
     min_revenue: 180
     max_revenue: 999999999
     code: 48
-    population: 268
+    population: 161
     level: 3
 
 - model: surveys23.Stratify
@@ -537,7 +537,7 @@
     min_field: 0
     max_field: 50
     code: 49
-    population: 188
+    population: 259
     level: 1
 
 - model: surveys23.Stratify
@@ -548,7 +548,7 @@
     min_field: 0
     max_field: 50
     code: 50
-    population: 1194
+    population: 675
     level: 1
 
 - model: surveys23.Stratify
@@ -559,7 +559,7 @@
     min_field: 50
     max_field: 100
     code: 51
-    population: 269
+    population: 236
     level: 2
 
 - model: surveys23.Stratify
@@ -570,7 +570,7 @@
     min_field: 50
     max_field: 100
     code: 52
-    population: 840
+    population: 420
     level: 2
 
 - model: surveys23.Stratify
@@ -581,7 +581,7 @@
     min_field: 100
     max_field: 999999999
     code: 53
-    population: 474
+    population: 423
     level: 3
 
 - model: surveys23.Stratify
@@ -592,7 +592,7 @@
     min_field: 100
     max_field: 999999999
     code: 54
-    population: 546
+    population: 259
     level: 3
 
 - model: surveys23.Stratify
@@ -603,7 +603,7 @@
     min_field: 0
     max_field: 50
     code: 55
-    population: 15
+    population: 62
     level: 1
 
 - model: surveys23.Stratify
@@ -614,7 +614,7 @@
     min_field: 0
     max_field: 50
     code: 56
-    population: 203
+    population: 265
     level: 1
 
 - model: surveys23.Stratify
@@ -625,7 +625,7 @@
     min_field: 50
     max_field: 100
     code: 57
-    population: 52
+    population: 73
     level: 2
 
 - model: surveys23.Stratify
@@ -636,7 +636,7 @@
     min_field: 50
     max_field: 100
     code: 58
-    population: 258
+    population: 180
     level: 2
 
 - model: surveys23.Stratify
@@ -647,7 +647,7 @@
     min_field: 100
     max_field: 999999999
     code: 59
-    population: 86
+    population: 72
     level: 3
 
 - model: surveys23.Stratify
@@ -658,7 +658,7 @@
     min_field: 100
     max_field: 999999999
     code: 60
-    population: 216
+    population: 102
     level: 3
 
 - model: surveys23.Stratify
@@ -669,7 +669,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 61
-    population: 8
+    population: 10
     level: 1
 
 - model: surveys23.Stratify
@@ -680,7 +680,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 62
-    population: 16
+    population: 10
     level: 1
 
 - model: surveys23.Stratify
@@ -702,7 +702,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 64
-    population: 43
+    population: 29
     level: 2
 
 - model: surveys23.Stratify
@@ -713,7 +713,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 65
-    population: 188
+    population: 278
     level: 3
 
 - model: surveys23.Stratify
@@ -724,7 +724,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 66
-    population: 146
+    population: 53
     level: 3
 
 - model: surveys23.Stratify
@@ -735,7 +735,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 67
-    population: 140
+    population: 208
     level: 1
 
 - model: surveys23.Stratify
@@ -746,7 +746,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 68
-    population: 1060
+    population: 610
     level: 1
 
 - model: surveys23.Stratify
@@ -757,7 +757,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 69
-    population: 293
+    population: 330
     level: 2
 
 - model: surveys23.Stratify
@@ -768,7 +768,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 70
-    population: 929
+    population: 641
     level: 2
 
 - model: surveys23.Stratify
@@ -779,7 +779,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 71
-    population: 633
+    population: 779
     level: 3
 
 - model: surveys23.Stratify
@@ -790,7 +790,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 72
-    population: 1013
+    population: 849
     level: 3
 
 - model: surveys23.Stratify
@@ -801,7 +801,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 73
-    population: 205
+    population: 210
     level: 1
 
 - model: surveys23.Stratify
@@ -812,7 +812,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 74
-    population: 727
+    population: 423
     level: 1
 
 - model: surveys23.Stratify
@@ -823,7 +823,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 75
-    population: 281
+    population: 270
     level: 2
 
 - model: surveys23.Stratify
@@ -834,7 +834,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 76
-    population: 486
+    population: 297
     level: 2
 
 - model: surveys23.Stratify
@@ -845,7 +845,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 77
-    population: 684
+    population: 1025
     level: 3
 
 - model: surveys23.Stratify
@@ -856,7 +856,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 78
-    population: 536
+    population: 706
     level: 3
 
 - model: surveys23.Stratify
@@ -867,7 +867,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 79
-    population: 223
+    population: 278
     level: 1
 
 - model: surveys23.Stratify
@@ -878,7 +878,7 @@
     min_revenue: 0
     max_revenue: 150
     code: 80
-    population: 1215
+    population: 814
     level: 1
 
 - model: surveys23.Stratify
@@ -889,7 +889,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 81
-    population: 167
+    population: 539
     level: 2
 
 - model: surveys23.Stratify
@@ -900,7 +900,7 @@
     min_revenue: 150
     max_revenue: 500
     code: 82
-    population: 512
+    population: 594
     level: 2
 
 - model: surveys23.Stratify
@@ -911,7 +911,7 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 83
-    population: 97
+    population: 182
     level: 3
 
 - model: surveys23.Stratify
@@ -922,5 +922,5 @@
     min_revenue: 500
     max_revenue: 999999999
     code: 84
-    population: 147
+    population: 155
     level: 3
