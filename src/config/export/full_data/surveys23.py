@@ -7,23 +7,7 @@ from django.db.models import Q
 
 from apps.surveys23.models import (
     Survey,
-    LandArea,
-    Business,
-    ManagementType,
-    CropMarketing,
-    LivestockMarketing,
-    AnnualIncome,
-    AgeScope,
-    PopulationAge,
-    Population,
-    LongTermHire,
-    ShortTermHire,
-    NoSalaryHire,
-    Lack,
-    LongTermLack,
-    ShortTermLack,
-    Refuse,
-    Apply,
+    AgeScope
 )
 
 logging.getLogger(__file__).setLevel(logging.INFO)
@@ -118,7 +102,7 @@ FIELDS = [
     "無申請外籍青農原因",
     "是否使用人力平台或好幫手APP",
     "調查員",
-    "複審員",
+    "初審員",
 ]
 
 
@@ -470,6 +454,7 @@ class SurveyExportor:
     def __call__(self, to_tuple=True):
         while not self.is_exhausted:
             row = Row()
+            row[0] = self.survey.farmer_id
             for block in self.blocks:
                 block.write(row=row)
             # Last row must be empty, check one more time
