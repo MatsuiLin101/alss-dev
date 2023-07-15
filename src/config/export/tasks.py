@@ -147,10 +147,12 @@ def async_export_examination_work_hours(year, email):
     import apps.surveys19.models
     import apps.surveys20.models
     import apps.surveys22.models
+    import apps.surveys23.models
     models_map = {
         107: apps.surveys19.models,
         108: apps.surveys20.models,
         110: apps.surveys22.models,
+        111: apps.surveys23.models,
     }
     try:
         models = models_map.get(year)
