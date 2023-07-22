@@ -236,6 +236,19 @@ class FarmerStatAdmin(ExportMixin, admin.ModelAdmin):
     ordering = ('stratify__code',)
 
 
+class BuilderFileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'short_token',
+        'create_time',
+    )
+    search_fields = ("token",)
+
+    def short_token(self, obj):
+        return (obj.token[:100] + '...') if len(obj.token) > 100 else obj.token
+    short_token.short_description = 'Token'
+
+
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Phone)
 admin.site.register(AddressMatch)
@@ -275,7 +288,7 @@ admin.site.register(Subsidy)
 admin.site.register(Refuse)
 admin.site.register(RefuseReason)
 admin.site.register(Month)
-admin.site.register(BuilderFile)
+admin.site.register(BuilderFile, BuilderFileAdmin)
 admin.site.register(CityTownCode)
 admin.site.register(FarmerStat, FarmerStatAdmin)
 admin.site.register(Stratify, StratifyAdmin)
