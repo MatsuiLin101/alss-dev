@@ -110,8 +110,11 @@ class SurveyRelationGeneratorFactory111:
     """A highlevel class controls how to export all surveys."""
 
     def __init__(self, filters={}, excludes={}, limit=None):
+        farmer_ids = Survey.objects.filter(readonly=False, page=1).filter(
+            reduce(operator.and_, [Q(**filters), ~Q(**excludes)])
+        ).values("farmer_id").distinct()
         self.surveys = (
-            Survey.objects.filter(readonly=False)
+            Survey.objects.filter(readonly=False, farmer_id__in=farmer_ids)
             .order_by("farmer_id", "page")
             .prefetch_related(
                 "address_match",
@@ -163,13 +166,12 @@ class SurveyRelationGeneratorFactory111:
                 "subsidy__applies",
                 "subsidy__refuses",
                 "subsidy__applies__result",
+                "subsidy__applies__method",
                 "subsidy__refuses__reason",
+                "subsidy__refuses__method",
             )
         )
         self.age_scopes = AgeScope.objects.filter(group=1).order_by("id").all()
-        self.surveys = self.surveys.filter(
-            reduce(operator.and_, [Q(**filters), ~Q(**excludes)])
-        )
         # Limit the output for performance test purpose.
         if limit:
             self.surveys = self.surveys[:limit]
@@ -562,7 +564,7 @@ class SurveyExportor:
             "1"
             if list(
                 filter(
-                    lambda refuse: refuse.method == method_id and refuse.reason.id == 0,
+                    lambda refuse: refuse.method.id == method_id and refuse.reason.id == 0,
                     self.survey.subsidy.refuses.all(),
                 )
             )
@@ -570,7 +572,7 @@ class SurveyExportor:
             "1"
             if list(
                 filter(
-                    lambda apply: apply.method == method_id,
+                    lambda apply: apply.method.id == method_id,
                     self.survey.subsidy.applies.all(),
                 )
             )
@@ -581,13 +583,13 @@ class SurveyExportor:
         # qs => self.survey.subsidy.applies.filter(method=method_id)
         # In order to prevent a new query, use python instead
         for apply in self.survey.subsidy.applies.all():
-            if apply.method == method_id:
-                yield [apply.result]
+            if apply.method.id == method_id:
+                yield [apply.result.name]
 
     def refuses_generate(self, method_id):
         # qs => self.survey.subsidy.refuses.filter(method=method_id)
         # In order to prevent a new query, use python instead
         for refuse in self.survey.subsidy.refuses.all():
             # reason=0 represent "not heard", already display in other fields.
-            if refuse.method == method_id and refuse.reason != 0:
-                yield [refuse.reason]
+            if refuse.method.id == method_id and refuse.reason.id != 0:
+                yield [refuse.reason.name]
