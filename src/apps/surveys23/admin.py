@@ -57,6 +57,25 @@ from .models import (
 )
 
 
+def display_note(obj):
+    if obj.sample_count == 0:
+        if obj.sibling.sample_count > 0:
+            return f'併入{obj.sibling.code}層'
+        elif obj.level == MANAGEMENT_LEVEL.small:
+            if obj.upper_sibling.sample_count == 0:
+                # 連上層都沒有就併入上層的 sibling
+                return f'併入{obj.upper_sibling.sibling.code}層'
+            return f'併入{obj.upper_sibling.code}層'
+        elif obj.level == MANAGEMENT_LEVEL.large:
+            if obj.lower_sibling.sample_count == 0:
+                # 連下層都沒有就併入下層的 sibling
+                return f'併入{obj.lower_sibling.sibling.code}層'
+            return f'併入{obj.lower_sibling.code}層'
+        else:
+            return f'特殊情況須額外處理'
+    return ''
+
+
 class StratifyResource(ModelResource):
     management_type = Field(attribute='management_type', column_name=_('Management Type'))
     code = Field(attribute='code', column_name=_('Code'))
@@ -78,16 +97,7 @@ class StratifyResource(ModelResource):
             return '-'
 
     def dehydrate_note(self, obj):
-        if obj.sample_count == 0:
-            if obj.sibling.sample_count > 0:
-                return f'併入{obj.sibling.code}層'
-            elif obj.level == MANAGEMENT_LEVEL.small:
-                return f'併入{obj.upper_sibling.code}層'
-            elif obj.level == MANAGEMENT_LEVEL.large:
-                return f'併入{obj.lower_sibling.code}層'
-            else:
-                return f'特殊情況須額外處理'
-        return ''
+        return display_note(obj)
 
 
 class FarmerStatResource(ModelResource):
@@ -191,6 +201,7 @@ class StratifyAdmin(ExportMixin, admin.ModelAdmin):
         'code',
         'population',
         'sample_count',
+        'level',
         'magnification_factor',
         'note',
     )
@@ -207,16 +218,7 @@ class StratifyAdmin(ExportMixin, admin.ModelAdmin):
             return '-'
 
     def note(self, obj):
-        if obj.sample_count == 0:
-            if obj.sibling.sample_count > 0:
-                return f'併入{obj.sibling.code}層'
-            elif obj.level == MANAGEMENT_LEVEL.small:
-                return f'併入{obj.upper_sibling.code}層'
-            elif obj.level == MANAGEMENT_LEVEL.large:
-                return f'併入{obj.lower_sibling.code}層'
-            else:
-                return f'特殊情況須額外處理'
-        return ''
+        return display_note(obj)
 
     sample_count.short_description = _('Sample Count')
     magnification_factor.short_description = _('Magnification Factor')

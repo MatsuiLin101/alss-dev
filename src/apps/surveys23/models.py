@@ -1659,17 +1659,27 @@ class Stratify(Model):
     @cached_property
     def magnification_factor(self):
         # 各層母體數 / 各層樣本數
-        # case1: 同規模有/無僱合併
-        if self.sibling.sample_count == 0 and self.sample_count > 0:
+        # case a: 小/大型同規模有/無僱合併
+        if self.level != MANAGEMENT_LEVEL.middle and self.sibling.sample_count == 0 and self.sample_count > 0:
             return (self.population + self.sibling.population) / self.sample_count
+        # case b: 中型要考量更多情況
         elif self.level == MANAGEMENT_LEVEL.middle:
             population, sample_count = self.population, self.sample_count
-            # case2: 小型併入中型
+            # case b.1: 同規模有/無僱合併
+            if self.sibling.sample_count == 0:
+                population += self.sibling.population
+            # case b.2: 小型併入中型
             if self.lower_sibling.sample_count == 0:
                 population += self.lower_sibling.population
-            # case3: 大型併入中型
+                # case b.2-1: 小型有/無僱皆為0
+                if self.lower_sibling.sibling.sample_count == 0:
+                    population += self.lower_sibling.sibling.population
+            # case b.3: 大型併入中型
             if self.upper_sibling.sample_count == 0:
                 population += self.upper_sibling.population
+                # case b.3-1: 大型有/無僱皆為0
+                if self.upper_sibling.sibling.sample_count == 0:
+                    population += self.upper_sibling.sibling.population
             return population / sample_count
         return self.population / self.sample_count
 
