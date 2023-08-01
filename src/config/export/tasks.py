@@ -156,7 +156,11 @@ def async_export_examination_work_hours(year, email):
     }
     try:
         models = models_map.get(year)
-        row_generator = examinations.WorkHourExaminationExporter(models.Survey, models.Product)()
+        if year < 111:
+            exporter = examinations.WorkHourExaminationExporterV1
+        else:
+            exporter = examinations.WorkHourExaminationExporterV2
+        row_generator = exporter(models.Survey, models.Product)()
 
         file_name = f"{year}_WorkHour_Examination_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         csv_path = f'{file_name}.csv'

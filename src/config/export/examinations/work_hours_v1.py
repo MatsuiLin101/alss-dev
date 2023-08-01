@@ -7,7 +7,7 @@ from django.db.models.functions import Coalesce, Cast
 from django.conf import settings
 
 
-class WorkHourExaminationExporter:
+class WorkHourExaminationExporterV1:
     def __init__(self, survey_model, product_model):
         self.survey_model = survey_model
         self.product_model = product_model

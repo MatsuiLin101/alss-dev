@@ -1,5 +1,7 @@
-from .work_hours import WorkHourExaminationExporter
+from .work_hours_v1 import WorkHourExaminationExporterV1
+from .work_hours_v2 import WorkHourExaminationExporterV2
 
 __all__ = [
-    'WorkHourExaminationExporter'
+    'WorkHourExaminationExporterV1',
+    'WorkHourExaminationExporterV2',
 ]
