@@ -34,7 +34,7 @@ class ModelTestCase(TestCase):
 
     def test_build_phone(self):
         self.builder.build_phone()
-        phones = Phone.objects.filter(survey=self.builder.survey).order_by('id').all()
+        phones = Phone.objects.filter(survey=self.builder.survey).order_by("id").all()
 
         self.assertEqual(phones[0].phone, "0912308329")
         self.assertEqual(phones[1].phone, "55989438")

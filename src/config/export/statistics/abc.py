@@ -2,7 +2,6 @@ import abc
 
 
 class BaseStatisticsQueryHelper(metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     def get_survey_qs(self):
         pass

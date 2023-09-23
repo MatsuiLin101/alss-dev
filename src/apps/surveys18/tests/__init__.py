@@ -9,11 +9,14 @@ class TestCase(TestCase):
 
 def setup_fixtures():
     from django.core.management import call_command
+
     call_command("loaddata", "fixtures/surveys18/product-type.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/unit.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/land-status.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/land-type.yaml", verbosity=0)
-    call_command("loaddata", "fixtures/surveys18/farm-related-business.yaml", verbosity=0)
+    call_command(
+        "loaddata", "fixtures/surveys18/farm-related-business.yaml", verbosity=0
+    )
     call_command("loaddata", "fixtures/surveys18/management-type.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/product.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/loss.yaml", verbosity=0)
@@ -40,7 +43,9 @@ def setup_fixtures():
     call_command("loaddata", "fixtures/surveys18/test/business.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/test/cropmarketing.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/test/landarea.yaml", verbosity=0)
-    call_command("loaddata", "fixtures/surveys18/test/livestockmarketing.yaml", verbosity=0)
+    call_command(
+        "loaddata", "fixtures/surveys18/test/livestockmarketing.yaml", verbosity=0
+    )
     call_command("loaddata", "fixtures/surveys18/test/longtermhire.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/test/longtermlack.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys18/test/nosalaryhire.yaml", verbosity=0)

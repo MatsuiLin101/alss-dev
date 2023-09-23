@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('surveys20', '0009_farmerstat'),
+        ("surveys20", "0009_farmerstat"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='citytowncode',
-            name='region',
-            field=models.PositiveIntegerField(blank=True, choices=[(1, 'North'), (2, 'Central'), (3, 'South'), (4, 'East')], null=True, verbose_name='Region'),
+            model_name="citytowncode",
+            name="region",
+            field=models.PositiveIntegerField(
+                blank=True,
+                choices=[(1, "North"), (2, "Central"), (3, "South"), (4, "East")],
+                null=True,
+                verbose_name="Region",
+            ),
         ),
     ]

@@ -111,7 +111,7 @@ from apps.surveys19.serializers import (
     SurveySimpleSerializer,
 )
 
-logger = logging.getLogger('django.request')
+logger = logging.getLogger("django.request")
 
 
 class Surveys2019Index(LoginRequiredMixin, TemplateView):
@@ -237,12 +237,12 @@ class SurveyViewSet(ModelViewSet):
 
     def get_permissions(self):
         permissions = [IsAdminUser]  # default
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             permissions = [IsAuthenticated]
-        if getattr(self, 'action'):
-            if self.action == 'patch':
+        if getattr(self, "action"):
+            if self.action == "patch":
                 permissions = [IsAuthenticated]
-            if self.action == 'export':
+            if self.action == "export":
                 permissions = [IsAdminUser]
         return [permission() for permission in permissions]
 
@@ -263,7 +263,7 @@ class SurveyViewSet(ModelViewSet):
             serializer.save()
             return JsonResponse(data=serializer.data)
         except (ValidationError, Exception):
-            logger.exception('Update survey data failed.', exc_info=True)
+            logger.exception("Update survey data failed.", exc_info=True)
             raise
 
 

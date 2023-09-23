@@ -9,11 +9,14 @@ class TestCase(TestCase):
 
 def setup_fixtures():
     from django.core.management import call_command
+
     call_command("loaddata", "fixtures/surveys20/age-scope.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys20/city-town-code.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys20/contract.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys20/education-level.yaml", verbosity=0)
-    call_command("loaddata", "fixtures/surveys20/farm-related-business.yaml", verbosity=0)
+    call_command(
+        "loaddata", "fixtures/surveys20/farm-related-business.yaml", verbosity=0
+    )
     call_command("loaddata", "fixtures/surveys20/farmer-work-day.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys20/gender.yaml", verbosity=0)
     call_command("loaddata", "fixtures/surveys20/income-range.yaml", verbosity=0)

@@ -1,4 +1,9 @@
-from .exceptions import SignError, StringLengthError, CreateModelError, SurveyAlreadyExists
+from .exceptions import (
+    SignError,
+    StringLengthError,
+    CreateModelError,
+    SurveyAlreadyExists,
+)
 from django.contrib.contenttypes.models import ContentType
 
 from apps.surveys23.models import (
@@ -143,10 +148,10 @@ class Builder(object):
         str_ch = ""
         for x in string:
             if (
-                    (ord(x) > 47 and ord(x) < 58)
-                    or (ord(x) > 64 and ord(x) < 91)
-                    or (ord(x) > 96 and ord(x) < 123)
-               ):
+                (ord(x) > 47 and ord(x) < 58)
+                or (ord(x) > 64 and ord(x) < 91)
+                or (ord(x) > 96 and ord(x) < 123)
+            ):
                 cnt = cnt + 1
                 str_en_num += x
             else:
@@ -165,12 +170,12 @@ class Builder(object):
             else:
                 self.is_first_page = True
 
-            if len(string) > 16 or string.count('/') == 2:
+            if len(string) > 16 or string.count("/") == 2:
                 self.is_first_page = False
                 name = string[16:23].replace("#", "")
-                interviewee_relationship_str = string.split('/')[1]
-                interviewee_relationship = interviewee_relationship_str.split('#')[0]
-                ori_class_str = string.split('/')[2]
+                interviewee_relationship_str = string.split("/")[1]
+                interviewee_relationship = interviewee_relationship_str.split("#")[0]
+                ori_class_str = string.split("/")[2]
                 ori_class = int(ori_class_str[10:12])
                 string = self.string[-1]
                 note = string.split("#")[0]
@@ -191,7 +196,9 @@ class Builder(object):
 
         # dup
         exists = Survey.objects.filter(
-            page=page, farmer_id=farmer_id, readonly=readonly,
+            page=page,
+            farmer_id=farmer_id,
+            readonly=readonly,
         ).all()
 
         if exists:
@@ -313,7 +320,7 @@ class Builder(object):
                 try:
                     cnt = 0
                     for i in range(5, len(area_str), 5):
-                        if int(area_str[cnt * 5: i]) > 0:
+                        if int(area_str[cnt * 5 : i]) > 0:
                             land_type = 1 if cnt < 3 else 2
                             status = int(i / 5) - 3 if i / 5 > 3 else int(i / 5)
 
@@ -324,7 +331,7 @@ class Builder(object):
                                 survey=self.survey,
                                 type=land_type,
                                 status=land_status,
-                                value=int(area_str[cnt * 5: i]),
+                                value=int(area_str[cnt * 5 : i]),
                             )
                             self.land_area.append(land_area)
                         cnt = cnt + 1
@@ -406,7 +413,7 @@ class Builder(object):
                 try:
                     num = int(len(str_en_num) / 25)
                     for i in range(0, num):
-                        crop_marketing = str_en_num[i * 25: i * 25 + 25]
+                        crop_marketing = str_en_num[i * 25 : i * 25 + 25]
                         product_str = crop_marketing[0:3]
                         name = str_ch.split("#")[i]
                         product = Product.objects.filter(code=product_str).first()
@@ -463,7 +470,7 @@ class Builder(object):
                 try:
                     num = int(cnt / 24)
                     for i in range(0, num):
-                        livestock = str_en_num[i * 24: i * 24 + 24]
+                        livestock = str_en_num[i * 24 : i * 24 + 24]
                         product_str = livestock[0:3]
                         name = str_ch.split("#")[i]
                         product = Product.objects.filter(code=product_str).first()
@@ -499,7 +506,7 @@ class Builder(object):
             else:
                 try:
                     for i in range(0, 10, 2):
-                        value = int(annual_income_str[i: i + 2])
+                        value = int(annual_income_str[i : i + 2])
                         if value > 0:
                             num = i / 2 + 1
                             market_type = MarketType.objects.get(id=num)
@@ -524,7 +531,7 @@ class Builder(object):
                 try:
                     for j in range(0, len(population_age_str), 6):
                         for i in range(0, 6, 2):
-                            value = int(population_age_str[i + j: i + j + 2])
+                            value = int(population_age_str[i + j : i + j + 2])
                             age_scope = AgeScope.objects.get(id=int(j / 4 + 4))
                             if i / 2 == 1 and value > 0:
                                 population_age = PopulationAge.objects.create(
@@ -557,7 +564,7 @@ class Builder(object):
             if len(string) > 0:
                 try:
                     for i in range(0, len(string), 24):
-                        population_str = string[i: i + 24]
+                        population_str = string[i : i + 24]
                         relationship_str = int(population_str[2:3])
 
                         relationship = Relationship.objects.filter(
@@ -634,7 +641,7 @@ class Builder(object):
             if len(string) > 0:
                 try:
                     for i in range(0, len(string), 30):
-                        long_term_hire_str = string[i: i + 30]
+                        long_term_hire_str = string[i : i + 30]
                         work_type_str = int(long_term_hire_str[0:2])
                         work_type = WorkType.objects.filter(code=work_type_str).first()
 
@@ -657,7 +664,7 @@ class Builder(object):
                         for j in range(0, len(age_str), 3):
                             num = j / 3 + 1
                             age_scope = AgeScope.objects.get(id=num)
-                            count = int(age_str[j: j + 3])
+                            count = int(age_str[j : j + 3])
 
                             if count > 0:
                                 NumberWorkers.objects.create(
@@ -681,7 +688,7 @@ class Builder(object):
             else:
                 try:
                     for i in range(0, len(string), 32):
-                        short_term_hire_str = string[i: i + 32]
+                        short_term_hire_str = string[i : i + 32]
                         month_str = int(short_term_hire_str[0:2])
 
                         month = Month.objects.filter(value=month_str).first()
@@ -696,7 +703,7 @@ class Builder(object):
 
                             work_types_str = short_term_hire_str[14:28]
                             for j in range(0, len(work_types_str), 2):
-                                code = int(work_types_str[j: j + 2])
+                                code = int(work_types_str[j : j + 2])
                                 work_type = WorkType.objects.filter(code=code).first()
                                 if work_type:
                                     short_term_hire.work_types.add(work_type)
@@ -704,7 +711,7 @@ class Builder(object):
                             number_workers_str = short_term_hire_str[5:14]
                             for j in range(0, len(number_workers_str), 3):
                                 age_scope = AgeScope.objects.get(id=j / 3 + 1)
-                                count = int(number_workers_str[j: j + 3])
+                                count = int(number_workers_str[j : j + 3])
 
                                 if count > 0:
                                     NumberWorkers.objects.create(
@@ -729,14 +736,17 @@ class Builder(object):
             else:
                 try:
                     for i in range(0, (len(string) - 4), 9):
-                        no_salary_str = string[i: i + 9]
+                        no_salary_str = string[i : i + 9]
                         month_str = no_salary_str[0:2]
                         month = Month.objects.filter(value=month_str).first()
                         count = int(no_salary_str[2:5])
                         avg_work_day = int(no_salary_str[5:]) / 10
                         if month:
                             no_salary_hire = NoSalaryHire.objects.create(
-                                survey=self.survey, month=month, count=count, avg_work_day=avg_work_day
+                                survey=self.survey,
+                                month=month,
+                                count=count,
+                                avg_work_day=avg_work_day,
                             )
                             self.no_salary_hire.append(no_salary_hire)
 
@@ -765,7 +775,7 @@ class Builder(object):
             if len(string) > 0:
                 try:
                     for i in range(0, len(string), 21):
-                        long_term_lack_str = string[i: i + 21]
+                        long_term_lack_str = string[i : i + 21]
                         work_type_str = long_term_lack_str[0:2]
                         work_type = WorkType.objects.filter(code=work_type_str).first()
                         count = int(long_term_lack_str[2:5])
@@ -800,7 +810,7 @@ class Builder(object):
                 try:
                     num = int(cnt / 24)
                     for i in range(0, num):
-                        token = str_en_num[i * 24: i * 24 + 24]
+                        token = str_en_num[i * 24 : i * 24 + 24]
                         product_str = token[0:3]
                         name = str_ch.split("#")[i]
                         product = Product.objects.filter(code=product_str).first()
@@ -823,9 +833,7 @@ class Builder(object):
                         for j, value in enumerate(months_str):
                             if value != "1":
                                 continue
-                            short_term_lack.months.add(
-                                Month.objects.get(value=j + 1)
-                            )
+                            short_term_lack.months.add(Month.objects.get(value=j + 1))
 
                         self.short_term_lack.append(short_term_lack)
 
@@ -861,7 +869,7 @@ class Builder(object):
                         apply = Apply.objects.create(
                             subsidy=self.subsidy,
                             result=ApplyResult.objects.get(id=i // 3 + 1),
-                            method=ApplyMethod.objects.get(id=i % 3 + 1)
+                            method=ApplyMethod.objects.get(id=i % 3 + 1),
                         )
                         self.apply.append(apply)
 
@@ -873,7 +881,7 @@ class Builder(object):
                             subsidy=self.subsidy,
                             reason=RefuseReason.objects.get(id=reason_id),
                             method=ApplyMethod.objects.get(id=method_id),
-                            extra=extra
+                            extra=extra,
                         )
                         self.refuse.append(refuse)
 

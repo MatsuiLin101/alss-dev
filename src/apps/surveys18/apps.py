@@ -4,4 +4,4 @@ from django.utils.translation import ugettext_lazy as _
 
 class Surveys18Config(AppConfig):
     name = "apps.surveys18"
-    verbose_name = _('Surveys18')
+    verbose_name = _("Surveys18")

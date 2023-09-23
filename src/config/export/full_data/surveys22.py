@@ -31,12 +31,12 @@ logging.getLogger(__file__).setLevel(logging.INFO)
 
 
 class SurveyRelationGeneratorFactory110:
-    """ Generator Factory of Survey Relations. """
+    """Generator Factory of Survey Relations."""
 
     ExportRelation = namedtuple("ExportRelation", ("generator", "column_count"))
 
     def __init__(self, readonly=False, filters={}, excludes={}):
-        """ Make the necessary query, initial the relations in constrains and ordering by farmer_id """
+        """Make the necessary query, initial the relations in constrains and ordering by farmer_id"""
         self.readonly = readonly
         self.filters = filters
         self.excludes = excludes
@@ -215,7 +215,7 @@ class SurveyRelationGeneratorFactory110:
         return True
 
     def get_queryset(self, qs, prefix="", filter_by_farmer_ids=True):
-        """ Apply common filter and ordering for relation querysets """
+        """Apply common filter and ordering for relation querysets"""
         _default_filters = {f"{prefix}readonly": self.readonly}
         if filter_by_farmer_ids:
             # Single survey is split into multiple Survey objects and share same farmer_id
@@ -234,7 +234,7 @@ class SurveyRelationGeneratorFactory110:
     def relation_generate(
         self, model, values_list, prefetch_relates=[], many_to_many=False
     ):
-        """ Get the iterator of relation object values """
+        """Get the iterator of relation object values"""
         prefix = "surveys__" if many_to_many else "survey__"
         qs = self.get_queryset(
             model.objects.prefetch_related(*prefetch_relates).all(), prefix=prefix
@@ -242,7 +242,7 @@ class SurveyRelationGeneratorFactory110:
         return qs.values_list(*values_list).iterator()
 
     def get_sliced_relation_generator(self, farmer_id, relate_name):
-        """ Consume the generator on at a time, base on the relation count mapping """
+        """Consume the generator on at a time, base on the relation count mapping"""
         mapping_info = self.relation_count_mapping[farmer_id]
         relation_count = mapping_info[relate_name]
         max_relation_count = max(mapping_info.values())
@@ -335,7 +335,7 @@ class SurveyRelationGeneratorFactory110:
             yield (obj.result.name,)
 
     def get_relations_count_mapping(self):
-        """ Lazy pre-calculate relation counts for each farmer id """
+        """Lazy pre-calculate relation counts for each farmer id"""
         result = {}
         qs = self.get_queryset(Survey.objects.all())
 
@@ -365,7 +365,7 @@ class SurveyRelationGeneratorFactory110:
         return result
 
     def export_generator(self):
-        """ Main generator for exporting """
+        """Main generator for exporting"""
 
         def output_formatter(value):
             if isinstance(value, bool):

@@ -14,25 +14,31 @@ from .models import ReviewLog
 YEAR_APP_MAP = {}
 APP_YEAR_MAP = {}
 for year, app in zip(
-        ('106', '107', '108', '110', '111'),
-        ('surveys18', 'surveys19', 'surveys20', 'surveys22', 'surveys23')
+    ("106", "107", "108", "110", "111"),
+    ("surveys18", "surveys19", "surveys20", "surveys22", "surveys23"),
 ):
     YEAR_APP_MAP[year] = app
     APP_YEAR_MAP[app] = year
 
 
 class ReviewLogResource(ModelResource):
-    farmer_id = Field(column_name=_('Farmer Id'))
-    year = Field(column_name='年份')
-    user = Field(column_name=_('User'))
-    initial_errors = Field(attribute='initial_errors', column_name=_('Initialed Error Count'))
-    current_errors = Field(attribute='current_errors', column_name=_('Current Error Count'))
-    exception_errors = Field(attribute='exception_errors', column_name=_('Exception Error Count'))
-    update_time = Field(attribute='update_time', column_name=_('Updated'))
+    farmer_id = Field(column_name=_("Farmer Id"))
+    year = Field(column_name="年份")
+    user = Field(column_name=_("User"))
+    initial_errors = Field(
+        attribute="initial_errors", column_name=_("Initialed Error Count")
+    )
+    current_errors = Field(
+        attribute="current_errors", column_name=_("Current Error Count")
+    )
+    exception_errors = Field(
+        attribute="exception_errors", column_name=_("Exception Error Count")
+    )
+    update_time = Field(attribute="update_time", column_name=_("Updated"))
 
     class Meta:
         model = ReviewLog
-        exclude = ('id', 'content_type', 'content_object', 'object_id')
+        exclude = ("id", "content_type", "content_object", "object_id")
 
     def dehydrate_user(self, obj):
         return obj.user.full_name
@@ -40,15 +46,15 @@ class ReviewLogResource(ModelResource):
     def dehydrate_farmer_id(self, obj):
         if obj.content_object:
             return obj.content_object.farmer_id
-        return '此調查表已經被刪除'
+        return "此調查表已經被刪除"
 
     def dehydrate_year(self, obj):
         return APP_YEAR_MAP[obj.content_type.app_label]
 
 
 class YearFilter(SimpleListFilter):
-    title = 'year'
-    parameter_name = 'y'
+    title = "year"
+    parameter_name = "y"
 
     def lookups(self, request, model_admin):
         """
@@ -75,39 +81,41 @@ class YearFilter(SimpleListFilter):
 class ReviewLogAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ReviewLogResource
     list_display = (
-        'id',
-        'user',
-        'year',
-        'farmer_id',
-        'initial_errors',
-        'exception_errors',
-        'current_errors',
-        'update_time',
+        "id",
+        "user",
+        "year",
+        "farmer_id",
+        "initial_errors",
+        "exception_errors",
+        "current_errors",
+        "update_time",
     )
     list_filter = (
-        'user',
+        "user",
         YearFilter,
-        'initial_errors',
-        'exception_errors',
-        'current_errors',
-        ('update_time', DateRangeFilter),
+        "initial_errors",
+        "exception_errors",
+        "current_errors",
+        ("update_time", DateRangeFilter),
     )
-    search_fields = ('user__full_name',)
+    search_fields = ("user__full_name",)
 
     def farmer_id(self, obj):
         if obj.content_object:
             return obj.content_object.farmer_id
-        return '此調查表已經被刪除'
-    farmer_id.short_description = '農戶編號'
+        return "此調查表已經被刪除"
+
+    farmer_id.short_description = "農戶編號"
 
     def year(self, obj):
         return APP_YEAR_MAP[obj.content_type.app_label]
 
-    year.short_description = '年份'
+    year.short_description = "年份"
 
     class Media:
-        """Django suit 的 DateFilter 需要引用的外部資源 """
-        js = ['/admin/jsi18n/']
+        """Django suit 的 DateFilter 需要引用的外部資源"""
+
+        js = ["/admin/jsi18n/"]
 
 
 admin.site.register(ReviewLog, ReviewLogAdmin)

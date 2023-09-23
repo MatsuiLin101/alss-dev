@@ -8,13 +8,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('surveys18', '0001_initial'),
+        ("surveys18", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='builderfile',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='surveys18_files', to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            model_name="builderfile",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="surveys18_files",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="User",
+            ),
         ),
     ]

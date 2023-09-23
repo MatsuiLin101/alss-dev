@@ -8,13 +8,17 @@ class ExportTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # load fixtures
-        call_command("loaddata", "fixtures/surveys19/test/export-sample.yaml", verbosity=0)
+        call_command(
+            "loaddata", "fixtures/surveys19/test/export-sample.yaml", verbosity=0
+        )
 
     def testFilter(self):
         factory = SurveyRelationGeneratorFactory107()
         assert factory.surveys.count() == 5
 
-        factory = SurveyRelationGeneratorFactory107(excludes={'farmer_id': '9910001011'})
+        factory = SurveyRelationGeneratorFactory107(
+            excludes={"farmer_id": "9910001011"}
+        )
         assert factory.surveys.count() == 4
 
     def testRelationCount(self):

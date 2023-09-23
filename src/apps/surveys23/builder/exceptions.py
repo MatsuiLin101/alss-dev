@@ -15,4 +15,6 @@ class CreateModelError(Exception):
 
 class SurveyAlreadyExists(Exception):
     def __init__(self):
-        super().__init__("Survey already exists, if you want to delete it while building, set `delete_exist=True`.")
+        super().__init__(
+            "Survey already exists, if you want to delete it while building, set `delete_exist=True`."
+        )

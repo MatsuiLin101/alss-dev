@@ -62,7 +62,7 @@ from apps.surveys22.models import (
     ApplyResult,
     Month,
     BuilderFile,
-    PRODUCT_TYPE_CHOICES
+    PRODUCT_TYPE_CHOICES,
 )
 
 from apps.surveys22.serializers import (
@@ -111,7 +111,7 @@ from apps.surveys22.serializers import (
     SurveySimpleSerializer,
 )
 
-logger = logging.getLogger('django.request')
+logger = logging.getLogger("django.request")
 
 
 class Surveys2022Index(LoginRequiredMixin, TemplateView):
@@ -134,12 +134,20 @@ class Surveys2022Index(LoginRequiredMixin, TemplateView):
 
         # ui elements render objects
         context["contracts"] = Contract.objects.all()
-        context["crop_products"] = Product.objects.filter(type=PRODUCT_TYPE_CHOICES.crop)
+        context["crop_products"] = Product.objects.filter(
+            type=PRODUCT_TYPE_CHOICES.crop
+        )
         context["crop_losses"] = Loss.objects.filter(type=PRODUCT_TYPE_CHOICES.crop)
         context["crop_units"] = Unit.objects.filter(type=PRODUCT_TYPE_CHOICES.crop)
-        context["livestock_products"] = Product.objects.filter(type=PRODUCT_TYPE_CHOICES.animal)
-        context["livestock_losses"] = Loss.objects.filter(type=PRODUCT_TYPE_CHOICES.animal)
-        context["livestock_units"] = Unit.objects.filter(type=PRODUCT_TYPE_CHOICES.animal)
+        context["livestock_products"] = Product.objects.filter(
+            type=PRODUCT_TYPE_CHOICES.animal
+        )
+        context["livestock_losses"] = Loss.objects.filter(
+            type=PRODUCT_TYPE_CHOICES.animal
+        )
+        context["livestock_units"] = Unit.objects.filter(
+            type=PRODUCT_TYPE_CHOICES.animal
+        )
         context["education_levels"] = EducationLevel.objects.all()
         context["farmer_work_days"] = FarmerWorkDay.objects.all()
         context["genders"] = Gender.objects.all()
@@ -233,7 +241,7 @@ class SurveyViewSet(ModelViewSet):
         return Survey.objects.get(id=pk)
 
     def get_permissions(self):
-        if self.request.method in ['GET', 'PUT', 'PATCH']:
+        if self.request.method in ["GET", "PUT", "PATCH"]:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
@@ -256,7 +264,7 @@ class SurveyViewSet(ModelViewSet):
             serializer.save()
             return JsonResponse(data=serializer.data)
         except (ValidationError, Exception):
-            logger.exception('Update survey data failed.', exc_info=True)
+            logger.exception("Update survey data failed.", exc_info=True)
             raise
 
 

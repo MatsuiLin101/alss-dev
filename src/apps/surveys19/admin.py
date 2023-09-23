@@ -57,15 +57,24 @@ from .models import (
 
 
 class StratifyResource(ModelResource):
-    management_type = Field(attribute='management_type', column_name=_('Management Type'))
-    code = Field(attribute='code', column_name=_('Code'))
-    population = Field(attribute='population', column_name=_('Population(Statistic)'))
-    sample_count = Field(column_name=_('Sample Count'))
-    magnification_factor = Field(column_name=_('Magnification Factor'))
+    management_type = Field(
+        attribute="management_type", column_name=_("Management Type")
+    )
+    code = Field(attribute="code", column_name=_("Code"))
+    population = Field(attribute="population", column_name=_("Population(Statistic)"))
+    sample_count = Field(column_name=_("Sample Count"))
+    magnification_factor = Field(column_name=_("Magnification Factor"))
 
     class Meta:
         model = Stratify
-        fields = ('management_type', 'code', 'population', 'sample_count', 'magnification_factor', 'note')
+        fields = (
+            "management_type",
+            "code",
+            "population",
+            "sample_count",
+            "magnification_factor",
+            "note",
+        )
 
     def dehydrate_sample_count(self, obj):
         return obj.sample_count
@@ -74,22 +83,22 @@ class StratifyResource(ModelResource):
         try:
             return obj.magnification_factor
         except ZeroDivisionError:
-            return '-'
+            return "-"
 
     def dehydrate_note(self, obj):
         if obj.sample_count == 0:
-            return f'併入{obj.sibling.code}層'
-        return ''
+            return f"併入{obj.sibling.code}層"
+        return ""
 
 
 class FarmerStatResource(ModelResource):
-    survey = Field(attribute='survey', column_name=_('Farmer ID'))
-    stratify = Field(attribute='stratify', column_name=_('Stratify'))
+    survey = Field(attribute="survey", column_name=_("Farmer ID"))
+    stratify = Field(attribute="stratify", column_name=_("Stratify"))
 
     class Meta:
         model = FarmerStat
-        fields = ('farmer_id', 'stratify')
-        ordering = ('stratify__code',)
+        fields = ("farmer_id", "stratify")
+        ordering = ("stratify__code",)
 
 
 class ProductFilter(SimpleListFilter):
@@ -171,23 +180,24 @@ class SurveyAdmin(admin.ModelAdmin):
         return queryset, use_distinct
 
     class Media:
-        """Django suit 的 DateFilter 需要引用的外部資源 """
-        js = ['/admin/jsi18n/']
+        """Django suit 的 DateFilter 需要引用的外部資源"""
+
+        js = ["/admin/jsi18n/"]
 
 
 class StratifyAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = StratifyResource
     list_display = (
-        'management_type',
-        'is_hire',
-        'code',
-        'population',
-        'sample_count',
-        'magnification_factor',
-        'note',
+        "management_type",
+        "is_hire",
+        "code",
+        "population",
+        "sample_count",
+        "magnification_factor",
+        "note",
     )
-    readonly_fields = ('sample_count', 'magnification_factor', 'note')
-    ordering = ('code',)
+    readonly_fields = ("sample_count", "magnification_factor", "note")
+    ordering = ("code",)
 
     def sample_count(self, obj):
         return obj.sample_count
@@ -196,27 +206,27 @@ class StratifyAdmin(ExportMixin, admin.ModelAdmin):
         try:
             return obj.magnification_factor
         except ZeroDivisionError:
-            return '-'
+            return "-"
 
     def note(self, obj):
         if obj.sample_count == 0:
-            return f'併入{obj.sibling.code}層'
-        return ''
+            return f"併入{obj.sibling.code}層"
+        return ""
 
-    sample_count.short_description = _('Sample Count')
-    magnification_factor.short_description = _('Magnification Factor')
-    note.short_description = _('Note')
+    sample_count.short_description = _("Sample Count")
+    magnification_factor.short_description = _("Magnification Factor")
+    note.short_description = _("Note")
 
 
 class FarmerStatAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = FarmerStatResource
     list_display = (
-        'survey',
-        'stratify',
+        "survey",
+        "stratify",
     )
     search_fields = ("survey__farmer_id",)
-    list_filter = ('stratify',)
-    ordering = ('stratify__code',)
+    list_filter = ("stratify",)
+    ordering = ("stratify__code",)
 
 
 admin.site.register(Survey, SurveyAdmin)

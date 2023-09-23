@@ -9,22 +9,56 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('surveys19', '0004_auto_20190417_2022'),
+        ("surveys19", "0004_auto_20190417_2022"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BuilderFile',
+            name="BuilderFile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('create_time', models.DateTimeField(auto_now_add=True, verbose_name='Create Time')),
-                ('token', models.TextField(blank=True, null=True, verbose_name='Token String')),
-                ('datafile', models.FileField(blank=True, null=True, upload_to='surveys19/builders/', verbose_name='DataFile')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='surveys19_files', to=settings.AUTH_USER_MODEL, verbose_name='User')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "create_time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Create Time"),
+                ),
+                (
+                    "token",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Token String"
+                    ),
+                ),
+                (
+                    "datafile",
+                    models.FileField(
+                        blank=True,
+                        null=True,
+                        upload_to="surveys19/builders/",
+                        verbose_name="DataFile",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="surveys19_files",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'BuilderFile',
-                'verbose_name_plural': 'BuilderFile',
+                "verbose_name": "BuilderFile",
+                "verbose_name_plural": "BuilderFile",
             },
         ),
     ]

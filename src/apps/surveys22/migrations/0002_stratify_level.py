@@ -6,14 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('surveys22', '0001_initial'),
+        ("surveys22", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stratify',
-            name='level',
-            field=models.PositiveIntegerField(choices=[(1, 'Small'), (2, 'Middle'), (3, 'Large')], default=1, verbose_name='Management Level'),
+            model_name="stratify",
+            name="level",
+            field=models.PositiveIntegerField(
+                choices=[(1, "Small"), (2, "Middle"), (3, "Large")],
+                default=1,
+                verbose_name="Management Level",
+            ),
             preserve_default=False,
         ),
     ]

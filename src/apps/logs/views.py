@@ -13,7 +13,11 @@ from rest_framework.exceptions import ValidationError
 
 from config.permissions import IsSuperUser
 from apps.logs.models import ReviewLog
-from .serializers import ReviewLogSerializer, ReviewLogListSerializer, ReviewLogUpdateSerializer
+from .serializers import (
+    ReviewLogSerializer,
+    ReviewLogListSerializer,
+    ReviewLogUpdateSerializer,
+)
 
 
 logger = logging.getLogger("django.request")
@@ -53,31 +57,31 @@ def query_by_args(request, **kwargs):
     total = queryset.count()
 
     if search_value:
-        if app_label == 'surveys18':
+        if app_label == "surveys18":
             queryset = queryset.filter(
                 Q(surveys18__farmer_id__icontains=search_value)
                 | Q(user__full_name__icontains=search_value)
                 | Q(user__email__icontains=search_value)
             )
-        elif app_label == 'surveys19':
+        elif app_label == "surveys19":
             queryset = queryset.filter(
                 Q(surveys19__farmer_id__icontains=search_value)
                 | Q(user__full_name__icontains=search_value)
                 | Q(user__email__icontains=search_value)
             )
-        elif app_label == 'surveys20':
+        elif app_label == "surveys20":
             queryset = queryset.filter(
                 Q(surveys20__farmer_id__icontains=search_value)
                 | Q(user__full_name__icontains=search_value)
                 | Q(user__email__icontains=search_value)
             )
-        elif app_label == 'surveys22':
+        elif app_label == "surveys22":
             queryset = queryset.filter(
                 Q(surveys22__farmer_id__icontains=search_value)
                 | Q(user__full_name__icontains=search_value)
                 | Q(user__email__icontains=search_value)
             )
-        elif app_label == 'surveys23':
+        elif app_label == "surveys23":
             queryset = queryset.filter(
                 Q(surveys23__farmer_id__icontains=search_value)
                 | Q(user__full_name__icontains=search_value)
@@ -85,7 +89,7 @@ def query_by_args(request, **kwargs):
             )
 
     count = queryset.count()
-    queryset = queryset.order_by(order_column)[start: start + length]
+    queryset = queryset.order_by(order_column)[start : start + length]
     return {"items": queryset, "count": count, "total": total, "draw": draw}
 
 
@@ -95,20 +99,20 @@ class ReviewLogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update']:
+        if self.action in ["create", "update"]:
             return ReviewLogUpdateSerializer
-        if self.action == 'list':
+        if self.action == "list":
             return ReviewLogListSerializer
         return ReviewLogSerializer
 
     def get_permissions(self):
-        if self.request.method in ['GET', 'POST', 'PUT', 'PATCH']:
+        if self.request.method in ["GET", "POST", "PUT", "PATCH"]:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsSuperUser]
         return [permission() for permission in permission_classes]
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def datatable(self, request):
         result = dict()
         params = request.query_params
@@ -135,7 +139,9 @@ class ReviewLogViewSet(viewsets.ModelViewSet):
                 app_label=app_label, model=model
             ).first()
             data["content_type"] = content_type.id
-            obj = ReviewLog.objects.filter(user=request.user, object_id=object_id, content_type=content_type).first()
+            obj = ReviewLog.objects.filter(
+                user=request.user, object_id=object_id, content_type=content_type
+            ).first()
 
             serializer = ReviewLogUpdateSerializer(obj, data=data, partial=True)
             serializer.is_valid(raise_exception=True)

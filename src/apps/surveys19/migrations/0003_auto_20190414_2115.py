@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('surveys19', '0002_product_management_type'),
+        ("surveys19", "0002_product_management_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='farmerworkday',
-            name='max_day',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Max Day'),
+            model_name="farmerworkday",
+            name="max_day",
+            field=models.IntegerField(blank=True, null=True, verbose_name="Max Day"),
         ),
         migrations.AddField(
-            model_name='farmerworkday',
-            name='min_day',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Min Day'),
+            model_name="farmerworkday",
+            name="min_day",
+            field=models.IntegerField(blank=True, null=True, verbose_name="Min Day"),
         ),
     ]

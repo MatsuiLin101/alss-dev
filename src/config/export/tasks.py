@@ -8,7 +8,14 @@ from django.core.mail import EmailMessage
 from django.utils.crypto import get_random_string
 
 from config import celery_app as app
-from . import full_data, statistics, yearly_compare_statistics, examinations, raw_data, farmer_stat
+from . import (
+    full_data,
+    statistics,
+    yearly_compare_statistics,
+    examinations,
+    raw_data,
+    farmer_stat,
+)
 
 
 @app.task
@@ -20,14 +27,14 @@ def async_export_full_data(year, email):
         111: full_data.SurveyRelationGeneratorFactory111,
     }
     try:
-        factory = factory_map.get(year)(excludes={'note__icontains': '無效戶'})
+        factory = factory_map.get(year)(excludes={"note__icontains": "無效戶"})
         row_generator = factory.export_generator()
 
         file_name = f"{year}_Full_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-        csv_path = f'{file_name}.csv'
-        zip_path = f'{file_name}.zip'
+        csv_path = f"{file_name}.csv"
+        zip_path = f"{file_name}.zip"
 
-        with open(csv_path, 'w', encoding="utf-8", newline="") as file:
+        with open(csv_path, "w", encoding="utf-8", newline="") as file:
             writer = csv.writer(file)
             for row in row_generator:
                 writer.writerow(row)
@@ -35,21 +42,21 @@ def async_export_full_data(year, email):
         password = get_random_string(length=24)
         pyminizip.compress(csv_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{year}調查表匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{year}調查表匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{year}調查表.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{year}調查表.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{year}調查表匯出失敗',
+            f"{year}調查表匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:
@@ -69,31 +76,33 @@ def async_export_statistics(year, email):
     }
     try:
         exporter = exporter_map.get(year)()
-        file_name = f"{year}_Statistic_Report_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        file_name = (
+            f"{year}_Statistic_Report_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        )
 
-        file_path = f'{file_name}.xlsx'
-        zip_path = f'{file_name}.zip'
+        file_path = f"{file_name}.xlsx"
+        zip_path = f"{file_name}.zip"
 
         exporter(file_path)
 
         password = get_random_string(length=24)
         pyminizip.compress(file_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{year}平台統計結果表式匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{year}平台統計結果表式匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{year}平台統計結果表式.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{year}平台統計結果表式.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{year}平台統計結果表式匯出失敗',
+            f"{year}平台統計結果表式匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:
@@ -110,29 +119,29 @@ def async_export_yearly_compare_statistics(y1, y2, email):
 
         file_name = f"{y1}_{y2}_Compare_Statistic_Report_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
 
-        file_path = f'{file_name}.xlsx'
-        zip_path = f'{file_name}.zip'
+        file_path = f"{file_name}.xlsx"
+        zip_path = f"{file_name}.zip"
 
         exporter(file_path)
 
         password = get_random_string(length=24)
         pyminizip.compress(file_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{y1}-{y2}年結果表匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{y1}-{y2}年結果表匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{y1}-{y2}年結果表.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{y1}-{y2}年結果表.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{y1}-{y2}年結果表匯出失敗',
+            f"{y1}-{y2}年結果表匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:
@@ -148,6 +157,7 @@ def async_export_examination_work_hours(year, email):
     import apps.surveys20.models
     import apps.surveys22.models
     import apps.surveys23.models
+
     models_map = {
         107: apps.surveys19.models,
         108: apps.surveys20.models,
@@ -163,10 +173,10 @@ def async_export_examination_work_hours(year, email):
         row_generator = exporter(models.Survey, models.Product)()
 
         file_name = f"{year}_WorkHour_Examination_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-        csv_path = f'{file_name}.csv'
-        zip_path = f'{file_name}.zip'
+        csv_path = f"{file_name}.csv"
+        zip_path = f"{file_name}.zip"
 
-        with open(csv_path, 'w+', encoding="utf-8", newline="") as file:
+        with open(csv_path, "w+", encoding="utf-8", newline="") as file:
             writer = csv.writer(file)
             for row in row_generator:
                 writer.writerow(row)
@@ -174,21 +184,21 @@ def async_export_examination_work_hours(year, email):
         password = get_random_string(length=24)
         pyminizip.compress(csv_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{year}工時檢誤匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{year}工時檢誤匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{year}工時檢誤.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{year}工時檢誤.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{year}工時檢誤匯出失敗',
+            f"{year}工時檢誤匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:
@@ -206,29 +216,31 @@ def async_export_raw_data(year, email):
     }
     try:
         exporter = exporter_map.get(year)()
-        file_name = f"{year}_RawData_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-        file_path = f'{file_name}.xlsx'
-        zip_path = f'{file_name}.zip'
+        file_name = (
+            f"{year}_RawData_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        )
+        file_path = f"{file_name}.xlsx"
+        zip_path = f"{file_name}.zip"
 
         exporter(file_path)
         password = get_random_string(length=24)
         pyminizip.compress(file_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{year}原始資料匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{year}原始資料匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{year}原始資料.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{year}原始資料.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{year}原始資料匯出失敗',
+            f"{year}原始資料匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:
@@ -246,29 +258,31 @@ def async_export_farmer_stat(year, email):
     }
     try:
         exporter = exporter_map.get(year)()
-        file_name = f"{year}_FarmerStat_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-        file_path = f'{file_name}.xlsx'
-        zip_path = f'{file_name}.zip'
+        file_name = (
+            f"{year}_FarmerStat_Export_{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        )
+        file_path = f"{file_name}.xlsx"
+        zip_path = f"{file_name}.zip"
 
         exporter(file_path, sheet_name="農戶統計")
         password = get_random_string(length=24)
         pyminizip.compress(file_path, "", zip_path, password, 5)
 
-        with open(zip_path, 'rb') as zip_file:
+        with open(zip_path, "rb") as zip_file:
             mail = EmailMessage(
-                f'{year}農戶統計匯出完成',
-                f'匯出結果如附件，解壓縮密碼請輸入：{password}',
+                f"{year}農戶統計匯出完成",
+                f"匯出結果如附件，解壓縮密碼請輸入：{password}",
                 settings.DEFAULT_FROM_EMAIL,
-                [email]
+                [email],
             )
-            mail.attach(f'{year}農戶統計.zip', zip_file.read(), 'application/zip')
+            mail.attach(f"{year}農戶統計.zip", zip_file.read(), "application/zip")
             mail.send()
     except Exception as e:
         EmailMessage(
-            f'{year}農戶統計匯出失敗',
+            f"{year}農戶統計匯出失敗",
             f"系統發生錯誤，請通知管理員處理。\n{e}",
             settings.DEFAULT_FROM_EMAIL,
-            [email]
+            [email],
         ).send()
     finally:
         try:

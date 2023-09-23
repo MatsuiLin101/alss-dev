@@ -5,12 +5,12 @@ from .surveys22 import StatisticsQueryHelper110, StatisticsExporter110
 
 
 __all__ = [
-    'StatisticsQueryHelper106',
-    'StatisticsExporter106',
-    'StatisticsQueryHelper107',
-    'StatisticsExporter107',
-    'StatisticsQueryHelper108',
-    'StatisticsExporter108',
-    'StatisticsQueryHelper110',
-    'StatisticsExporter110',
+    "StatisticsQueryHelper106",
+    "StatisticsExporter106",
+    "StatisticsQueryHelper107",
+    "StatisticsExporter107",
+    "StatisticsQueryHelper108",
+    "StatisticsExporter108",
+    "StatisticsQueryHelper110",
+    "StatisticsExporter110",
 ]

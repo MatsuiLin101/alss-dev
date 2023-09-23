@@ -129,7 +129,11 @@ class Surveys2018Index(LoginRequiredMixin, TemplateView):
         }
         context["ui"] = json.dumps(ui)
         context["fid"] = json.dumps(
-            list(Survey.objects.filter(page=1).values_list("farmer_id", flat=True).distinct())
+            list(
+                Survey.objects.filter(page=1)
+                .values_list("farmer_id", flat=True)
+                .distinct()
+            )
         )
 
         return context
@@ -160,7 +164,7 @@ class SurveyViewSet(ModelViewSet):
     search_fields = ["farmer_id"]
 
     def get_permissions(self):
-        if self.request.method in ['GET', 'PUT', 'PATCH']:
+        if self.request.method in ["GET", "PUT", "PATCH"]:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
@@ -179,7 +183,11 @@ class SurveyViewSet(ModelViewSet):
     def get_object(self, pk):
         return Survey.objects.get(id=pk)
 
-    @action(methods=["GET"], detail=False, serializer_class=serializers.SurveySimpleSerializer)
+    @action(
+        methods=["GET"],
+        detail=False,
+        serializer_class=serializers.SurveySimpleSerializer,
+    )
     def simple_list(self, request):
         return super().list(request)
 
@@ -196,7 +204,7 @@ class SurveyViewSet(ModelViewSet):
             serializer.save()
             return JsonResponse(data=serializer.data)
         except (ValidationError, Exception):
-            logger.exception('Update survey data failed.', exc_info=True)
+            logger.exception("Update survey data failed.", exc_info=True)
             raise
 
 

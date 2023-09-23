@@ -1,4 +1,9 @@
-from .exceptions import SignError, StringLengthError, CreateModelError, SurveyAlreadyExists
+from .exceptions import (
+    SignError,
+    StringLengthError,
+    CreateModelError,
+    SurveyAlreadyExists,
+)
 from django.contrib.contenttypes.models import ContentType
 
 from apps.surveys22.models import (
@@ -158,10 +163,10 @@ class Builder(object):
         str_ch = ""
         for x in string:
             if (
-                    (ord(x) > 47 and ord(x) < 58)
-                    or (ord(x) > 64 and ord(x) < 91)
-                    or (ord(x) > 96 and ord(x) < 123)
-               ):
+                (ord(x) > 47 and ord(x) < 58)
+                or (ord(x) > 64 and ord(x) < 91)
+                or (ord(x) > 96 and ord(x) < 123)
+            ):
                 cnt = cnt + 1
                 str_en_num += x
             else:
@@ -175,12 +180,12 @@ class Builder(object):
             farmer_id = string[0:12]
             total_pages = int(string[12:14])
             page = int(string[14:16])
-            if len(self.string[0]) > 16 or string.count('/') == 2:
+            if len(self.string[0]) > 16 or string.count("/") == 2:
                 self.is_first_page = False
                 name = string[16:23].replace("#", "")
-                interviewee_relationship_str = string.split('/')[1]
-                interviewee_relationship = interviewee_relationship_str.split('#')[0]
-                ori_class_str = string.split('/')[2]
+                interviewee_relationship_str = string.split("/")[1]
+                interviewee_relationship = interviewee_relationship_str.split("#")[0]
+                ori_class_str = string.split("/")[2]
                 ori_class = int(ori_class_str[10:12])
                 string = self.string[-1]
                 note = string.split("#")[0]
@@ -205,7 +210,9 @@ class Builder(object):
 
         # dup
         exists = Survey.objects.filter(
-            page=page, farmer_id=farmer_id, readonly=readonly,
+            page=page,
+            farmer_id=farmer_id,
+            readonly=readonly,
         ).all()
 
         if exists:
@@ -749,7 +756,7 @@ class Builder(object):
             else:
                 try:
                     for i in range(0, (len(string) - 4), 5):
-                        no_salary_str = string[i: i + 5]
+                        no_salary_str = string[i : i + 5]
                         month_str = no_salary_str[0:2]
                         month = Month.objects.filter(value=month_str).first()
                         count = int(no_salary_str[2:])
@@ -784,7 +791,7 @@ class Builder(object):
             if len(string) > 0:
                 try:
                     for i in range(0, len(string), 21):
-                        long_term_lack_str = string[i: i + 21]
+                        long_term_lack_str = string[i : i + 21]
                         work_type_str = long_term_lack_str[0:2]
                         work_type = WorkType.objects.filter(code=work_type_str).first()
                         count = int(long_term_lack_str[2:5])
@@ -819,7 +826,7 @@ class Builder(object):
                 try:
                     num = int(cnt / 24)
                     for i in range(0, num):
-                        token = str_en_num[i * 24: i * 24 + 24]
+                        token = str_en_num[i * 24 : i * 24 + 24]
                         product_str = token[0:3]
                         name = str_ch.split("#")[i]
                         product = Product.objects.filter(code=product_str).first()
@@ -875,7 +882,7 @@ class Builder(object):
                     apply_str = string[3:6]
                     for i in range(3):
                         if apply_str[i] == "1":
-                            result = ApplyResult.objects.filter(id=i+1).first()
+                            result = ApplyResult.objects.filter(id=i + 1).first()
                             if result:
                                 apply = Apply.objects.create(
                                     subsidy=self.subsidy, result=result
@@ -885,7 +892,7 @@ class Builder(object):
                     reason_str = string[7:14]
                     for i in range(6):
                         if reason_str[i] == "1":
-                            reason = RefuseReason.objects.filter(id=i+1).first()
+                            reason = RefuseReason.objects.filter(id=i + 1).first()
                             if reason:
                                 refuse = Refuse.objects.create(
                                     subsidy=self.subsidy, reason=reason
@@ -897,7 +904,7 @@ class Builder(object):
                             refuse = Refuse.objects.create(
                                 subsidy=self.subsidy,
                                 reason=reason,
-                                extra=str_ch if str_ch else None
+                                extra=str_ch if str_ch else None,
                             )
                             self.refuse.append(refuse)
 

@@ -36,8 +36,7 @@ class Builder(object):
         self.population = []
 
         self.string = [
-            x.replace(u"\u3000", u"").replace(" ", "").strip()
-            for x in string.split(",")
+            x.replace("\u3000", "").replace(" ", "").strip() for x in string.split(",")
         ]
 
         if len(self.string) != 58:

@@ -22,7 +22,10 @@ class ContentObjectRelatedField(RelatedField):
         """
         Serialize content objects to a simple textual representation.
         """
-        if any(isinstance(value, cls) for cls in (Survey18, Survey19, Survey20, Survey22, Survey23)):
+        if any(
+            isinstance(value, cls)
+            for cls in (Survey18, Survey19, Survey20, Survey22, Survey23)
+        ):
             return value.farmer_id
         raise Exception("Unexpected type of content object")
 
@@ -37,9 +40,7 @@ class ReviewLogListSerializer(ModelSerializer):
         return instance.user.full_name or instance.user.email
 
     def get_update_time(self, instance):
-        return timezone.localtime(instance.update_time).strftime(
-            "%Y/%m/%d %H:%M:%S"
-        )
+        return timezone.localtime(instance.update_time).strftime("%Y/%m/%d %H:%M:%S")
 
     class Meta:
         model = ReviewLog
@@ -90,7 +91,7 @@ class ReviewLogUpdateSerializer(ModelSerializer):
                 object_id=object_id,
                 initial_errors=initial_errors,
                 current_errors=current_errors,
-                exception_errors=exception_errors
+                exception_errors=exception_errors,
             )
             return instance
 

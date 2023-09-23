@@ -445,7 +445,6 @@ class BusinessSerializer(ModelSerializer):
 
 
 class SurveySimpleSerializer(ModelSerializer):
-
     class Meta:
         model = Survey
         fields = "__all__"
@@ -826,8 +825,10 @@ class SurveySerializer(ModelSerializer):
                     for obj in item["number_workers"]:
                         if "id" in obj.keys():
                             # Update included in the request
-                            number_worker_qs = long_term_hire_qs.first().number_workers.filter(
-                                id=obj["id"]
+                            number_worker_qs = (
+                                long_term_hire_qs.first().number_workers.filter(
+                                    id=obj["id"]
+                                )
                             )
                             if number_worker_qs:
                                 number_worker_qs.update(
@@ -907,8 +908,10 @@ class SurveySerializer(ModelSerializer):
                     for obj in item["number_workers"]:
                         if "id" in obj.keys():
                             # Update included in the request
-                            number_worker_qs = short_term_hire_qs.first().number_workers.filter(
-                                id=obj["id"]
+                            number_worker_qs = (
+                                short_term_hire_qs.first().number_workers.filter(
+                                    id=obj["id"]
+                                )
                             )
                             if number_worker_qs:
                                 number_worker_qs.update(

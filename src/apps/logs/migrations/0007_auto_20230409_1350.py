@@ -7,13 +7,24 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('logs', '0006_auto_20220408_1159'),
+        ("logs", "0006_auto_20220408_1159"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='reviewlog',
-            name='content_type',
-            field=models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'surveys18'), ('model', 'survey')), models.Q(('app_label', 'surveys19'), ('model', 'survey')), models.Q(('app_label', 'surveys20'), ('model', 'survey')), models.Q(('app_label', 'surveys22'), ('model', 'survey')), models.Q(('app_label', 'surveys23'), ('model', 'survey')), _connector='OR'), on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType'),
+            model_name="reviewlog",
+            name="content_type",
+            field=models.ForeignKey(
+                limit_choices_to=models.Q(
+                    models.Q(("app_label", "surveys18"), ("model", "survey")),
+                    models.Q(("app_label", "surveys19"), ("model", "survey")),
+                    models.Q(("app_label", "surveys20"), ("model", "survey")),
+                    models.Q(("app_label", "surveys22"), ("model", "survey")),
+                    models.Q(("app_label", "surveys23"), ("model", "survey")),
+                    _connector="OR",
+                ),
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.ContentType",
+            ),
         ),
     ]

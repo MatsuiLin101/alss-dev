@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('logs', '0004_auto_20200426_0148'),
+        ("logs", "0004_auto_20200426_0148"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='reviewlog',
-            name='exception_errors',
-            field=models.IntegerField(default=0, verbose_name='Exception Error Count'),
+            model_name="reviewlog",
+            name="exception_errors",
+            field=models.IntegerField(default=0, verbose_name="Exception Error Count"),
         ),
     ]

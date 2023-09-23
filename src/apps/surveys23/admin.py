@@ -60,32 +60,41 @@ from .models import (
 def display_note(obj):
     if obj.sample_count == 0:
         if obj.sibling.sample_count > 0:
-            return f'併入{obj.sibling.code}層'
+            return f"併入{obj.sibling.code}層"
         elif obj.level == MANAGEMENT_LEVEL.small:
             if obj.upper_sibling.sample_count == 0:
                 # 連上層都沒有就併入上層的 sibling
-                return f'併入{obj.upper_sibling.sibling.code}層'
-            return f'併入{obj.upper_sibling.code}層'
+                return f"併入{obj.upper_sibling.sibling.code}層"
+            return f"併入{obj.upper_sibling.code}層"
         elif obj.level == MANAGEMENT_LEVEL.large:
             if obj.lower_sibling.sample_count == 0:
                 # 連下層都沒有就併入下層的 sibling
-                return f'併入{obj.lower_sibling.sibling.code}層'
-            return f'併入{obj.lower_sibling.code}層'
+                return f"併入{obj.lower_sibling.sibling.code}層"
+            return f"併入{obj.lower_sibling.code}層"
         else:
-            return f'特殊情況須額外處理'
-    return ''
+            return f"特殊情況須額外處理"
+    return ""
 
 
 class StratifyResource(ModelResource):
-    management_type = Field(attribute='management_type', column_name=_('Management Type'))
-    code = Field(attribute='code', column_name=_('Code'))
-    population = Field(attribute='population', column_name=_('Population(Statistic)'))
-    sample_count = Field(column_name=_('Sample Count'))
-    magnification_factor = Field(column_name=_('Magnification Factor'))
+    management_type = Field(
+        attribute="management_type", column_name=_("Management Type")
+    )
+    code = Field(attribute="code", column_name=_("Code"))
+    population = Field(attribute="population", column_name=_("Population(Statistic)"))
+    sample_count = Field(column_name=_("Sample Count"))
+    magnification_factor = Field(column_name=_("Magnification Factor"))
 
     class Meta:
         model = Stratify
-        fields = ('management_type', 'code', 'population', 'sample_count', 'magnification_factor', 'note')
+        fields = (
+            "management_type",
+            "code",
+            "population",
+            "sample_count",
+            "magnification_factor",
+            "note",
+        )
 
     def dehydrate_sample_count(self, obj):
         return obj.sample_count
@@ -94,20 +103,20 @@ class StratifyResource(ModelResource):
         try:
             return obj.magnification_factor
         except ZeroDivisionError:
-            return '-'
+            return "-"
 
     def dehydrate_note(self, obj):
         return display_note(obj)
 
 
 class FarmerStatResource(ModelResource):
-    survey = Field(attribute='survey', column_name=_('Farmer ID'))
-    stratify = Field(attribute='stratify', column_name=_('Stratify'))
+    survey = Field(attribute="survey", column_name=_("Farmer ID"))
+    stratify = Field(attribute="stratify", column_name=_("Stratify"))
 
     class Meta:
         model = FarmerStat
-        fields = ('farmer_id', 'stratify')
-        ordering = ('stratify__code',)
+        fields = ("farmer_id", "stratify")
+        ordering = ("stratify__code",)
 
 
 class ProductFilter(SimpleListFilter):
@@ -189,24 +198,25 @@ class SurveyAdmin(admin.ModelAdmin):
         return queryset, use_distinct
 
     class Media:
-        """Django suit 的 DateFilter 需要引用的外部資源 """
-        js = ['/admin/jsi18n/']
+        """Django suit 的 DateFilter 需要引用的外部資源"""
+
+        js = ["/admin/jsi18n/"]
 
 
 class StratifyAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = StratifyResource
     list_display = (
-        'management_type',
-        'is_hire',
-        'code',
-        'population',
-        'sample_count',
-        'level',
-        'magnification_factor',
-        'note',
+        "management_type",
+        "is_hire",
+        "code",
+        "population",
+        "sample_count",
+        "level",
+        "magnification_factor",
+        "note",
     )
-    readonly_fields = ('sample_count', 'magnification_factor', 'note')
-    ordering = ('code',)
+    readonly_fields = ("sample_count", "magnification_factor", "note")
+    ordering = ("code",)
 
     def sample_count(self, obj):
         return obj.sample_count
@@ -215,38 +225,39 @@ class StratifyAdmin(ExportMixin, admin.ModelAdmin):
         try:
             return obj.magnification_factor
         except ZeroDivisionError:
-            return '-'
+            return "-"
 
     def note(self, obj):
         return display_note(obj)
 
-    sample_count.short_description = _('Sample Count')
-    magnification_factor.short_description = _('Magnification Factor')
-    note.short_description = _('Note')
+    sample_count.short_description = _("Sample Count")
+    magnification_factor.short_description = _("Magnification Factor")
+    note.short_description = _("Note")
 
 
 class FarmerStatAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = FarmerStatResource
     list_display = (
-        'survey',
-        'stratify',
+        "survey",
+        "stratify",
     )
     search_fields = ("survey__farmer_id",)
-    list_filter = ('stratify',)
-    ordering = ('stratify__code',)
+    list_filter = ("stratify",)
+    ordering = ("stratify__code",)
 
 
 class BuilderFileAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
-        'short_token',
-        'create_time',
+        "user",
+        "short_token",
+        "create_time",
     )
     search_fields = ("token",)
 
     def short_token(self, obj):
-        return (obj.token[:100] + '...') if len(obj.token) > 100 else obj.token
-    short_token.short_description = 'Token'
+        return (obj.token[:100] + "...") if len(obj.token) > 100 else obj.token
+
+    short_token.short_description = "Token"
 
 
 admin.site.register(Survey, SurveyAdmin)

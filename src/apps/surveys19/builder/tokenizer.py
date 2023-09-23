@@ -1,4 +1,9 @@
-from .exceptions import SignError, StringLengthError, CreateModelError, SurveyAlreadyExists
+from .exceptions import (
+    SignError,
+    StringLengthError,
+    CreateModelError,
+    SurveyAlreadyExists,
+)
 from django.contrib.contenttypes.models import ContentType
 
 from apps.surveys19.models import (
@@ -190,7 +195,9 @@ class Builder(object):
 
         # dup
         exists = Survey.objects.filter(
-            page=page, farmer_id=farmer_id, readonly=readonly,
+            page=page,
+            farmer_id=farmer_id,
+            readonly=readonly,
         ).all()
 
         if exists:

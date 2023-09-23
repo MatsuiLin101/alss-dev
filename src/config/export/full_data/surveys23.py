@@ -5,10 +5,7 @@ from enum import Enum
 from collections import OrderedDict
 from django.db.models import Q
 
-from apps.surveys23.models import (
-    Survey,
-    AgeScope
-)
+from apps.surveys23.models import Survey, AgeScope
 
 logging.getLogger(__file__).setLevel(logging.INFO)
 
@@ -110,9 +107,12 @@ class SurveyRelationGeneratorFactory111:
     """A highlevel class controls how to export all surveys."""
 
     def __init__(self, filters={}, excludes={}, limit=None):
-        farmer_ids = Survey.objects.filter(readonly=False, page=1).filter(
-            reduce(operator.and_, [Q(**filters), ~Q(**excludes)])
-        ).values("farmer_id").distinct()
+        farmer_ids = (
+            Survey.objects.filter(readonly=False, page=1)
+            .filter(reduce(operator.and_, [Q(**filters), ~Q(**excludes)]))
+            .values("farmer_id")
+            .distinct()
+        )
         self.surveys = (
             Survey.objects.filter(readonly=False, farmer_id__in=farmer_ids)
             .order_by("farmer_id", "page")
@@ -477,7 +477,9 @@ class SurveyExportor:
             self.survey.address_match.match,
             self.survey.address_match.address,
             self.survey.farm_location.city + self.survey.farm_location.town,
-            self.survey.farm_location.code.code if self.survey.farm_location.code else "",
+            self.survey.farm_location.code.code
+            if self.survey.farm_location.code
+            else "",
         ]
 
     def main_income_source_generate(self):
@@ -564,7 +566,8 @@ class SurveyExportor:
             "1"
             if list(
                 filter(
-                    lambda refuse: refuse.method.id == method_id and refuse.reason.id == 0,
+                    lambda refuse: refuse.method.id == method_id
+                    and refuse.reason.id == 0,
                     self.survey.subsidy.refuses.all(),
                 )
             )

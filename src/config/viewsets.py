@@ -3,9 +3,8 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 
 class StandardViewSet(ModelViewSet):
-
     def get_permissions(self):
-        if self.request.method in ['GET']:
+        if self.request.method in ["GET"]:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]

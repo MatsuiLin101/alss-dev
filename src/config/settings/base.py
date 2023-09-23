@@ -61,7 +61,7 @@ INSTALLED_APPS = [
 # ------------------------------------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -175,7 +175,7 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles", "media-root")
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Fixtures
 
@@ -214,25 +214,30 @@ LOGGING = {
         },
     },
     "loggers": {
-        '': {
-            'handlers': ['console'],
+        "": {
+            "handlers": ["console"],
         },
-        'django': {
-            'handlers': ['console'],
-            'propagate': False,
+        "django": {
+            "handlers": ["console"],
+            "propagate": False,
         },
-        'django.request': {
-            'handlers': ['console', 'mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
+        "django.request": {
+            "handlers": ["console", "mail_admins"],
+            "level": "ERROR",
+            "propagate": False,
         },
     },
 }
 
 # Sentry
 
-SENTRY_DSN = 'https://2e878ab38ea0468f870435702d667330@o1194684.ingest.sentry.io/6317549'
-sentry_sdk.init(SENTRY_DSN, traces_sample_rate=1.0,)
+SENTRY_DSN = (
+    "https://2e878ab38ea0468f870435702d667330@o1194684.ingest.sentry.io/6317549"
+)
+sentry_sdk.init(
+    SENTRY_DSN,
+    traces_sample_rate=1.0,
+)
 
 
 # Crispy
@@ -248,56 +253,56 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
 }
 
 
 # Celery
 
-CELERY_BROKER_URL = 'redis://redis:6379/10'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/10'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = "redis://redis:6379/10"
+CELERY_RESULT_BACKEND = "redis://redis:6379/10"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 
 CELERY_IMPORTS = (
-    'apps.surveys19.tasks',
-    'apps.surveys20.tasks',
+    "apps.surveys19.tasks",
+    "apps.surveys20.tasks",
 )
 
 # DJANGO SUIT
 # ------------------------------------------------------------------------------
 # See: https://django-suit.readthedocs.io/en/develop/configuration.html#customization
 SUIT_CONFIG = {
-    'ADMIN_NAME': "勞動力調查平台",
-    'SEARCH_URL': 'admin:surveys19_survey_changelist',
-    'HEADER_DATE_FORMAT': 'l, Y F j',
-    'HEADER_TIME_FORMAT': 'H:i',
-    'LIST_PER_PAGE': 50,
-    'CONFIRM_UNSAVED_CHANGES': True,
-    'MENU_EXCLUDE': ('sites',),
+    "ADMIN_NAME": "勞動力調查平台",
+    "SEARCH_URL": "admin:surveys19_survey_changelist",
+    "HEADER_DATE_FORMAT": "l, Y F j",
+    "HEADER_TIME_FORMAT": "H:i",
+    "LIST_PER_PAGE": 50,
+    "CONFIRM_UNSAVED_CHANGES": True,
+    "MENU_EXCLUDE": ("sites",),
 }
 
 # DRF YASG
-LOGIN_URL = 'users:login'
-LOGOUT_URL = 'users:logout'
+LOGIN_URL = "users:login"
+LOGOUT_URL = "users:logout"
 SWAGGER_SETTINGS = {
-    'DEFAULT_FIELD_INSPECTORS': [
-        'drf_yasg.inspectors.CamelCaseJSONFilter',
-        'drf_yasg.inspectors.InlineSerializerInspector',
-        'drf_yasg.inspectors.RelatedFieldInspector',
-        'drf_yasg.inspectors.ChoiceFieldInspector',
-        'drf_yasg.inspectors.FileFieldInspector',
-        'drf_yasg.inspectors.DictFieldInspector',
-        'drf_yasg.inspectors.SimpleFieldInspector',
-        'drf_yasg.inspectors.StringDefaultFieldInspector',
+    "DEFAULT_FIELD_INSPECTORS": [
+        "drf_yasg.inspectors.CamelCaseJSONFilter",
+        "drf_yasg.inspectors.InlineSerializerInspector",
+        "drf_yasg.inspectors.RelatedFieldInspector",
+        "drf_yasg.inspectors.ChoiceFieldInspector",
+        "drf_yasg.inspectors.FileFieldInspector",
+        "drf_yasg.inspectors.DictFieldInspector",
+        "drf_yasg.inspectors.SimpleFieldInspector",
+        "drf_yasg.inspectors.StringDefaultFieldInspector",
     ],
 }
 
 # Django Simple Captcha
-CAPTCHA_CHALLENGE_FUNCT = 'config.utils.random_number_challenge'
+CAPTCHA_CHALLENGE_FUNCT = "config.utils.random_number_challenge"
 CAPTCHA_FONT_SIZE = 36
 CAPTCHA_IMAGE_SIZE = (130, 40)

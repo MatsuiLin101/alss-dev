@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('surveys19', '0008_auto_20190507_1422'),
+        ("surveys19", "0008_auto_20190507_1422"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='builderfile',
-            name='delete_exist',
+            model_name="builderfile",
+            name="delete_exist",
             field=models.BooleanField(default=False),
         ),
     ]

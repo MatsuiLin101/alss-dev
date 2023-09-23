@@ -30,11 +30,13 @@ from apps.logs.models import ReviewLog
 
 YES_NO_CHOICES = Choices((0, "No"), (1, "Yes"))
 
-PRODUCT_TYPE_CHOICES = Choices((1, 'crop', _('Crop')), (2, 'animal', _('Animal')))
+PRODUCT_TYPE_CHOICES = Choices((1, "crop", _("Crop")), (2, "animal", _("Animal")))
 
-STRATIFY_WITH_CHOICES = Choices((1, 'field', _('Field')), (2, 'revenue', _('Revenue')))
+STRATIFY_WITH_CHOICES = Choices((1, "field", _("Field")), (2, "revenue", _("Revenue")))
 
-REGION_CHOICES = Choices((1, _("North")), (2, _('Central')), (3, _('South')), (4, _('East')))
+REGION_CHOICES = Choices(
+    (1, _("North")), (2, _("Central")), (3, _("South")), (4, _("East"))
+)
 
 NUMBER_WORKERS_CHOICES = Q(app_label="surveys19", model="longtermhire") | Q(
     app_label="surveys19", model="shorttermhire"
@@ -172,7 +174,9 @@ class CityTownCode(Model):
     city = CharField(max_length=20, null=True, blank=True, verbose_name=_("City"))
     town = CharField(max_length=20, null=True, blank=True, verbose_name=_("Town"))
     code = CharField(max_length=20, null=True, blank=True, verbose_name=_("Code"))
-    region = PositiveIntegerField(null=True, blank=True, choices=REGION_CHOICES, verbose_name=_('Region'))
+    region = PositiveIntegerField(
+        null=True, blank=True, choices=REGION_CHOICES, verbose_name=_("Region")
+    )
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,
@@ -405,8 +409,10 @@ class ManagementType(Model):
 
     code = IntegerField(verbose_name=_("Code"))
     name = CharField(max_length=50, verbose_name=_("Name"))
-    type = IntegerField(choices=PRODUCT_TYPE_CHOICES, verbose_name=_('Product Type'))
-    stratify_with = IntegerField(choices=STRATIFY_WITH_CHOICES, verbose_name=_('Stratify With'))
+    type = IntegerField(choices=PRODUCT_TYPE_CHOICES, verbose_name=_("Product Type"))
+    stratify_with = IntegerField(
+        choices=STRATIFY_WITH_CHOICES, verbose_name=_("Stratify With")
+    )
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,
@@ -594,7 +600,13 @@ class Product(Model):
     code = CharField(max_length=50, verbose_name=_("Code"))
     min_hour = FloatField(null=True, blank=True, verbose_name=_("Min Hour"))
     max_hour = FloatField(null=True, blank=True, verbose_name=_("Max Hour"))
-    parent = ForeignKey('self', null=True, blank=True, on_delete=CASCADE, verbose_name=_('Parent Product'))
+    parent = ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=CASCADE,
+        verbose_name=_("Parent Product"),
+    )
     type = ForeignKey(
         "surveys19.ProductType",
         null=True,
@@ -618,7 +630,10 @@ class Product(Model):
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Product")
-        ordering = ('id', 'code',)
+        ordering = (
+            "id",
+            "code",
+        )
 
     def __str__(self):
         return str(self.name)
@@ -1519,21 +1534,26 @@ class BuilderFile(Model):
 
 class Stratify(Model):
     """
-       field=公畝;revenue=萬元
+    field=公畝;revenue=萬元
     """
+
     management_type = ForeignKey(
         "surveys19.ManagementType",
         on_delete=CASCADE,
         related_name="stratifies",
         verbose_name=_("Management Type"),
     )
-    is_hire = BooleanField(verbose_name=_('Is Hire'))
-    min_field = FloatField(null=True, blank=True, verbose_name=_('Min Field'))
-    max_field = FloatField(null=True, blank=True, verbose_name=_('Max Field'))
-    min_revenue = PositiveIntegerField(null=True, blank=True, verbose_name=_('Min Revenue'))
-    max_revenue = PositiveIntegerField(null=True, blank=True, verbose_name=_('Max Revenue'))
-    code = PositiveIntegerField(db_index=True, verbose_name=_('Code'))
-    population = PositiveIntegerField(verbose_name=_('Population(Statistic)'))
+    is_hire = BooleanField(verbose_name=_("Is Hire"))
+    min_field = FloatField(null=True, blank=True, verbose_name=_("Min Field"))
+    max_field = FloatField(null=True, blank=True, verbose_name=_("Max Field"))
+    min_revenue = PositiveIntegerField(
+        null=True, blank=True, verbose_name=_("Min Revenue")
+    )
+    max_revenue = PositiveIntegerField(
+        null=True, blank=True, verbose_name=_("Max Revenue")
+    )
+    code = PositiveIntegerField(db_index=True, verbose_name=_("Code"))
+    population = PositiveIntegerField(verbose_name=_("Population(Statistic)"))
 
     class Meta:
         verbose_name = _("Stratify")
@@ -1545,6 +1565,7 @@ class Stratify(Model):
     @property
     def sibling(self):
         import operator
+
         return Stratify.objects.get(
             management_type=self.management_type,
             min_field=self.min_field,
@@ -1563,7 +1584,9 @@ class Stratify(Model):
         # 各層母體數 / 各層樣本數
         if self.sibling.sample_count == 0:
             # 檢查同一規模是否有樣本數，若無須併層
-            return (self.population + self.sibling.population) / (self.sample_count + self.sibling.sample_count)
+            return (self.population + self.sibling.population) / (
+                self.sample_count + self.sibling.sample_count
+            )
         return self.population / self.sample_count
 
 
@@ -1580,8 +1603,8 @@ class FarmerStat(Model):
         related_name="farmer_stats",
         verbose_name=_("Stratify"),
     )
-    create_time = AutoCreatedField(_('Create Time'))
-    update_time = AutoLastModifiedField(_('Update Time'))
+    create_time = AutoCreatedField(_("Create Time"))
+    update_time = AutoLastModifiedField(_("Update Time"))
 
     class Meta:
         verbose_name = _("Farmer Stat")
@@ -1595,14 +1618,14 @@ class FarmerStat(Model):
     def resolve_all(cls):
         # Filter surveys has valid management type
         valid_management_type_survey_ids = list(
-            Survey.objects.annotate(m_count=Count('management_types')).filter(m_count=1).values_list('id', flat=True)
+            Survey.objects.annotate(m_count=Count("management_types"))
+            .filter(m_count=1)
+            .values_list("id", flat=True)
         )
 
         # Query surveys
-        survey_qs = Survey.objects.exclude(note__icontains='無效戶').filter(
-            readonly=False,
-            page=1,
-            id__in=valid_management_type_survey_ids
+        survey_qs = Survey.objects.exclude(note__icontains="無效戶").filter(
+            readonly=False, page=1, id__in=valid_management_type_survey_ids
         )
 
         # Iter through surveys
@@ -1617,7 +1640,7 @@ class FarmerStat(Model):
                     )
                 )
             except Stratify.DoesNotExist:
-                print(f'Cannot find stratify for survey {survey}.')
+                print(f"Cannot find stratify for survey {survey}.")
 
         # Bulk operation
         cls.objects.all().delete()
@@ -1626,13 +1649,18 @@ class FarmerStat(Model):
     @staticmethod
     def get_stratify(survey: Survey):
         management_type = survey.management_types.first()
-        survey_ids = Survey.objects.filter(readonly=False, farmer_id=survey.farmer_id).values_list('id', flat=True)
+        survey_ids = Survey.objects.filter(
+            readonly=False, farmer_id=survey.farmer_id
+        ).values_list("id", flat=True)
         if management_type.stratify_with == STRATIFY_WITH_CHOICES.field:
             # 同一耕作地編號種植面積取最大值，不同耕作地編號種植面積加總
-            land_areas = CropMarketing.objects.filter(
-                survey__id__in=survey_ids
-            ).values('land_number').order_by().annotate(max_value=Max('land_area'))
-            total_area = sum(d['max_value'] for d in land_areas)
+            land_areas = (
+                CropMarketing.objects.filter(survey__id__in=survey_ids)
+                .values("land_number")
+                .order_by()
+                .annotate(max_value=Max("land_area"))
+            )
+            total_area = sum(d["max_value"] for d in land_areas)
             return Stratify.objects.get(
                 management_type=management_type,
                 min_field__lte=total_area,

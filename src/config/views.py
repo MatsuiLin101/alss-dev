@@ -29,10 +29,10 @@ class SessionTimeout(TemplateView):
 
 
 class SessionViewSet(ViewSet):
-    http_method_names = ['get']
+    http_method_names = ["get"]
     permission_classes = [IsAuthenticated]
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def keep_alive(self, request):
         """Extend session by reset the max age."""
         request.session.set_expiry(settings.SESSION_COOKIE_AGE)
@@ -40,42 +40,42 @@ class SessionViewSet(ViewSet):
 
 
 class ExportViewSet(ViewSet):
-    http_method_names = ['get']
+    http_method_names = ["get"]
     permission_classes = [IsAdminUser]
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def full_data(self, request):
-        year = int(request.query_params.get('year'))
+        year = int(request.query_params.get("year"))
         async_export_full_data.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def statistic(self, request):
-        year = int(request.query_params.get('year'))
+        year = int(request.query_params.get("year"))
         async_export_statistics.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def statistic_compare(self, request):
-        y1 = int(request.query_params.get('y1'))
-        y2 = int(request.query_params.get('y2'))
+        y1 = int(request.query_params.get("y1"))
+        y2 = int(request.query_params.get("y2"))
         async_export_yearly_compare_statistics.delay(y1, y2, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def work_hours_examination(self, request):
-        year = int(request.query_params.get('year'))
+        year = int(request.query_params.get("year"))
         async_export_examination_work_hours.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def raw_data(self, request):
-        year = int(request.query_params.get('year'))
+        year = int(request.query_params.get("year"))
         async_export_raw_data.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=["GET"], detail=False)
     def farmer_stat(self, request):
-        year = int(request.query_params.get('year'))
+        year = int(request.query_params.get("year"))
         async_export_farmer_stat.delay(year, request.user.email)
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
