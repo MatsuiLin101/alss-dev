@@ -202,6 +202,7 @@ def async_export_examination_work_hours(year, email):
 def async_export_raw_data(year, email):
     exporter_map = {
         110: raw_data.RawDataExporter110,
+        111: raw_data.RawDataExporter111,
     }
     try:
         exporter = exporter_map.get(year)()
@@ -241,6 +242,7 @@ def async_export_raw_data(year, email):
 def async_export_farmer_stat(year, email):
     exporter_map = {
         110: farmer_stat.FarmerStatExporter110,
+        111: farmer_stat.FarmerStatExporter111,
     }
     try:
         exporter = exporter_map.get(year)()
