@@ -8,6 +8,8 @@ from .statistics import (
     StatisticsQueryHelper106,
     StatisticsQueryHelper107,
     StatisticsQueryHelper108,
+    StatisticsQueryHelper110,
+    StatisticsQueryHelper111,
 )
 
 
@@ -16,6 +18,8 @@ class YearlyCompareStatisticsExporter:
         106: StatisticsQueryHelper106,
         107: StatisticsQueryHelper107,
         108: StatisticsQueryHelper108,
+        110: StatisticsQueryHelper110,
+        111: StatisticsQueryHelper111,
     }
 
     def __init__(self, y1, y2):
@@ -64,6 +68,8 @@ class YearlyCompareStatisticsExporter:
             106: {1: 7, 2: 8, 3: 10, 4: 9, 5: 11, 6: 12, 7: 14, 8: 13, 9: 15, 10: 15},
             107: {1: 7, 2: 8, 3: 10, 4: 9, 5: 11, 6: 12, 7: 14, 8: 13, 9: 15, 10: 15},
             108: {1: 7, 2: 8, 3: 10, 4: 9, 5: 11, 6: 12, 7: 13, 8: 15, 9: 15, 10: 14},
+            110: {1: 7, 2: 8, 3: 10, 4: 9, 5: 11, 6: 12, 7: 13, 8: 15, 9: 15, 10: 14},
+            111: {1: 7, 2: 8, 3: 10, 4: 9, 5: 11, 6: 12, 7: 13, 8: 15, 9: 15, 10: 14},
         }
         survey = helper.survey_map.get(farmer_id)
         management_type = survey.management_types.first()
