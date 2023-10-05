@@ -831,13 +831,12 @@ class RawDataExporter111:
         qs = (
             self.survey_qs.filter(page=1)
             .prefetch_related("subsidy__refuses", "subsidy__refuses__reason")
-            .values("farmer_id", "subsidy__refuses__reason")
+            .filter(subsidy__refuses__method=method.id)
             .annotate(
                 field_a=F("farmer_id"),
                 field_b=F("subsidy__refuses__reason"),
                 count=Count("subsidy__refuses"),
             )
-            .filter(subsidy__refuses__method=method.id)
             .filter(count__gt=0)
             .order_by("farmer_id")
         )
