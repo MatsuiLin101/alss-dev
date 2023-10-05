@@ -1,6 +1,7 @@
 import os
 import csv
 import pyminizip
+import traceback
 from datetime import datetime
 
 from django.conf import settings
@@ -54,7 +55,7 @@ def async_export_full_data(year, email):
     except Exception as e:
         EmailMessage(
             f"{year}調查表匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()
@@ -101,7 +102,7 @@ def async_export_statistics(year, email):
     except Exception as e:
         EmailMessage(
             f"{year}平台統計結果表式匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()
@@ -140,7 +141,7 @@ def async_export_yearly_compare_statistics(y1, y2, email):
     except Exception as e:
         EmailMessage(
             f"{y1}-{y2}年結果表匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()
@@ -197,7 +198,7 @@ def async_export_examination_work_hours(year, email):
     except Exception as e:
         EmailMessage(
             f"{year}工時檢誤匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()
@@ -239,7 +240,7 @@ def async_export_raw_data(year, email):
     except Exception as e:
         EmailMessage(
             f"{year}原始資料匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()
@@ -281,7 +282,7 @@ def async_export_farmer_stat(year, email):
     except Exception as e:
         EmailMessage(
             f"{year}農戶統計匯出失敗",
-            f"系統發生錯誤，請通知管理員處理。\n{e}",
+            f"系統發生錯誤，請通知管理員處理。\n{traceback.format_exc()}",
             settings.DEFAULT_FROM_EMAIL,
             [email],
         ).send()

@@ -839,6 +839,7 @@ class RawDataExporter111:
             )
             .filter(count__gt=0)
             .order_by("farmer_id")
+            .values("field_a", "field_b")
         )
 
         self.write_rows_by_queryset(sheet_name=sheet_name, column_counts=2, queryset=qs)
