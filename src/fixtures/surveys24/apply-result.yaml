@@ -1,0 +1,14 @@
+- model: surveys24.ApplyResult
+  pk: 1
+  fields:
+    name: 有申請到-有緩解人力需求
+
+- model: surveys24.ApplyResult
+  pk: 2
+  fields:
+    name: 有申請到-沒有緩解人力需求
+
+- model: surveys24.ApplyResult
+  pk: 3
+  fields:
+    name: 沒有申請到
