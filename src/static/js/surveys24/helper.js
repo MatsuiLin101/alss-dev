@@ -106,8 +106,8 @@ var SurveyHelper = {
         this.Alert = new Helper.Alert($('.alert-danger[name="survey"]'));
         this.Hire.Setup();
         this.Lack.Setup();
+        this.FarmOutsource.Setup();
         this.MainIncomeSource.Setup();
-        this.HeardApp.Setup();
 
         this.FarmerName.Bind();
         this.IntervieweeRelationship.Bind();
@@ -116,9 +116,9 @@ var SurveyHelper = {
         this.Address.Bind();
         this.Hire.Bind();
         this.Lack.Bind();
+        this.FarmOutsource.Bind();
         this.Note.Bind();
         this.MainIncomeSource.Bind();
-        this.HeardApp.Bind();
     },
     Reset: function () {
         if (this.Alert) { this.Alert.reset(); }
@@ -132,9 +132,9 @@ var SurveyHelper = {
         this.Address.Reset();
         this.Hire.Reset();
         this.Lack.Reset();
+        this.FarmOutsource.Reset();
         this.Note.Reset();
         this.MainIncomeSource.Reset();
-        this.HeardApp.Reset();
     },
     Set: function (obj) {
         this.Investigator.Set(obj);
@@ -147,9 +147,9 @@ var SurveyHelper = {
         this.Address.Set(obj);
         this.Hire.Set(obj);
         this.Lack.Set(obj);
+        this.FarmOutsource.Set(obj);
         this.Note.Set(obj);
         this.MainIncomeSource.Set(obj);
-        this.HeardApp.Set(obj);
     },
     Investigator: {
         Container: $('#panel1 input[name="investigator"]'),
@@ -473,6 +473,60 @@ var SurveyHelper = {
             },
         },
     },
+    FarmOutsource: {
+        Alert: null,
+        Setup: function(){
+            this.Alert = new Helper.Alert($('.alert-danger[name="farmoutsource"]'));
+        },
+        Container: $('#panel4 input[name="farmoutsource"]'),
+        Bind: function(){
+            this.Container.unbind('change.ns1').on('change.ns1', function(){
+                if(CloneData) {
+                    var field = $(this).data('field');
+                    if(field == 'hasfarmoutsource')
+                        CloneData[MainSurveyId].has_farm_outsource = this.checked;
+                    else if(field == 'nonhasfarmoutsource')
+                        CloneData[MainSurveyId].non_has_farm_outsource = this.checked;
+
+                    if(Helper.LogHandler.ValidationActive){
+                        SurveyHelper.FarmOutsource.Validation.Empty.Validate();
+                        SurveyHelper.FarmOutsource.Validation.Duplicate.Validate();
+                    }
+                }
+            })
+        },
+        Set: function (obj) {
+            this.Container.filter('[data-field="hasfarmoutsource"]').prop('checked', obj.has_farm_outsource);
+            this.Container.filter('[data-field="nonhasfarmoutsource"]').prop('checked', obj.non_has_farm_outsource);
+
+            if(Helper.LogHandler.ValidationActive){
+                SurveyHelper.FarmOutsource.Validation.Empty.Validate();
+                SurveyHelper.FarmOutsource.Validation.Duplicate.Validate();
+            }
+        },
+        Reset: function(){
+            if (this.Alert) { this.Alert.reset(); }
+            this.Container.prop('checked', false);
+        },
+        Validation: {
+            Empty: {
+                Guids: Helper.Guid.CreateMulti(),
+                Validate: function(){
+                    var con = SurveyHelper.FarmOutsource.Container.filter(':checked').length == 0;
+                    var msg = '不可漏填此問項';
+                    Helper.LogHandler.Log(con, SurveyHelper.FarmOutsource.Alert, msg, this.Guids[0], null, false);
+                },
+            },
+            Duplicate: {
+                Guids: Helper.Guid.CreateMulti(),
+                Validate: function(){
+                    var con = SurveyHelper.FarmOutsource.Container.filter(':checked').length > 1;
+                    var msg = '有無委託農事及畜牧服務業者不得重複勾選';
+                    Helper.LogHandler.Log(con, SurveyHelper.FarmOutsource.Alert, msg, this.Guids[0], null, false);
+                },
+            },
+        },
+    },
     Note: {
         Container: $('#panel1 textarea[name="note"]'),
         Bind: function(){
@@ -626,62 +680,6 @@ var SurveyHelper = {
                     var con = SurveyHelper.MainIncomeSource.Container.filter(':checked').length > 1;
                     var msg = '全年主要淨收入來源情形不得重複勾選';
                     Helper.LogHandler.Log(con, SurveyHelper.MainIncomeSource.Alert, msg, this.Guids[0], null, false);
-                },
-            },
-        },
-    },
-    HeardApp: {
-        Alert: null,
-        Setup: function(){
-            this.Alert = new Helper.Alert($('.alert-danger[name="heardapp"]'));
-        },
-        Container: $('#panel4 input[name="heardapp"]'),
-        Bind: function(){
-            this.Container.unbind('change.ns1').on('change.ns1', function(){
-                if(CloneData) {
-                    var field = $(this).data('field');
-                    if(field == 'heardapp')
-                        CloneData[MainSurveyId].subsidy.heard_app = this.checked;
-                    else if(field == 'noneheardapp')
-                        CloneData[MainSurveyId].subsidy.none_heard_app = this.checked;
-
-                    if(Helper.LogHandler.ValidationActive){
-                        SurveyHelper.HeardApp.Validation.Empty.Validate();
-                        SurveyHelper.HeardApp.Validation.Duplicate.Validate();
-                        SubsidyHelper.Validation.Empty.Validate();
-                    }
-                }
-            })
-        },
-        Set: function (obj) {
-            this.Container.filter('[data-field="heardapp"]').prop('checked', obj.subsidy.heard_app);
-            this.Container.filter('[data-field="noneheardapp"]').prop('checked', obj.subsidy.none_heard_app);
-
-            if(Helper.LogHandler.ValidationActive){
-                SurveyHelper.HeardApp.Validation.Empty.Validate();
-                SurveyHelper.HeardApp.Validation.Duplicate.Validate();
-                SubsidyHelper.Validation.Empty.Validate();
-            }
-        },
-        Reset: function(){
-            if (this.Alert) { this.Alert.reset(); }
-            this.Container.prop('checked', false);
-        },
-        Validation: {
-            Empty: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var con = SurveyHelper.HeardApp.Container.filter(':checked').length == 0;
-                    var msg = '不可漏填此問項';
-                    Helper.LogHandler.Log(con, SurveyHelper.HeardApp.Alert, msg, this.Guids[0], null, false);
-                },
-            },
-            Duplicate: {
-                Guids: Helper.Guid.CreateMulti(),
-                Validate: function(){
-                    var con = SurveyHelper.HeardApp.Container.filter(':checked').length > 1;
-                    var msg = '是否有使用「農業人力資源平台系統」或「缺工好幫手APP」不得重複勾選';
-                    Helper.LogHandler.Log(con, SurveyHelper.HeardApp.Alert, msg, this.Guids[0], null, false);
                 },
             },
         },

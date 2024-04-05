@@ -490,6 +490,8 @@ class SurveySerializer(ModelSerializer):
         instance.note = validated_data["note"]
         instance.hire = validated_data["hire"]
         instance.non_hire = validated_data["non_hire"]
+        instance.has_farm_outsource = validated_data["has_farm_outsource"]
+        instance.non_has_farm_outsource = validated_data["non_has_farm_outsource"]
         instance.investigator = validated_data["investigator"]
         instance.reviewer = validated_data["reviewer"]
         instance.main_income_source = validated_data["main_income_source"]
@@ -1075,8 +1077,6 @@ class SurveySerializer(ModelSerializer):
         if validated_data["subsidy"]:
             subsidy = validated_data["subsidy"]
             # Update
-            instance.subsidy.heard_app = subsidy["heard_app"]
-            instance.subsidy.none_heard_app = subsidy["none_heard_app"]
             """Apply"""
             apply_ids = [item["id"] for item in subsidy["applies"] if "id" in item]
             # Delete not included in the request

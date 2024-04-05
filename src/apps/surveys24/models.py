@@ -47,6 +47,10 @@ MANAGEMENT_LEVEL = Choices(
     (1, "small", _("Small")), (2, "middle", _("Middle")), (3, "large", _("Large"))
 )
 
+FOREIGN_LABOR_HIRE_TYPE = Choices(
+    (1, "long_term", _("Long Term")), (2, "short_term", _("Short Term"))
+)
+
 
 class Survey(Model):
     """
@@ -70,7 +74,8 @@ class Survey(Model):
     non_main_income_source = BooleanField(
         default=False, verbose_name=_("Non Main Income Source")
     )
-    # TODO: known_subsidy, non_known_subsidy should be removed and use virtual property to decide.
+    # TODO: known_subsidy, non_known_subsidy uses virtual property to decide. (in Subsidy)
+    # Currently only stores the value from builder, not edited by UI.
     known_subsidy = BooleanField(default=False, verbose_name=_("Known Subsidy"))
     non_known_subsidy = BooleanField(default=False, verbose_name=_("Non Known Subsidy"))
     hire = BooleanField(default=False, verbose_name=_("Hire"))
@@ -78,6 +83,8 @@ class Survey(Model):
     lacks = ManyToManyField(
         "surveys24.Lack", blank=True, related_name="surveys", verbose_name=_("Lack")
     )
+    has_farm_outsource = BooleanField(default=False, verbose_name=_("Has Farm Outsource"))
+    non_has_farm_outsource = BooleanField(default=False, verbose_name=_("Non Has Farm Outsource"))
     management_types = ManyToManyField(
         "surveys24.ManagementType",
         blank=True,
@@ -1222,7 +1229,7 @@ class NumberWorkers(Model):
 
 class Lack(Model):
     """
-    Table 3.2.1
+    Table 3.3.1
     Has yaml
     """
 
@@ -1248,7 +1255,7 @@ class LongTermLack(Model):
     """
     Changed 107
     Add avg_lack_day field
-    Table 3.2.2
+    Table 3.3.3
     """
 
     survey = ForeignKey(
@@ -1294,7 +1301,7 @@ class ShortTermLack(Model):
     Changed 107
     Add avg_lack_day field
     Add name field for product name
-    Table 3.2.3
+    Table 3.3.4
     """
 
     survey = ForeignKey(
@@ -1372,9 +1379,9 @@ class WorkType(Model):
 
 class Subsidy(Model):
     """
-    Table 3.3.1, 3.3.2
+    Table 4
     New fields: heard_app, non_heard_app (3.3.2)
-    Removed fields: has_subsidy, none_subsidy
+    Removed fields: has_subsidy, none_subsidy, heard_app, none_heard_app
     """
 
     survey = OneToOneField(
@@ -1383,8 +1390,6 @@ class Subsidy(Model):
         on_delete=CASCADE,
         verbose_name=_("Survey"),
     )
-    heard_app = BooleanField(default=False, verbose_name=_("Heard App"))
-    none_heard_app = BooleanField(default=False, verbose_name=_("None Heard App"))
     update_time = DateTimeField(
         auto_now=True,
         auto_now_add=False,
@@ -1417,7 +1422,7 @@ class Subsidy(Model):
 class ApplyMethod(Model):
     """
     (New table added in 23)
-    Table 3.3.1
+    Table 4.1
     Has yaml
     """
 
@@ -1437,7 +1442,7 @@ class ApplyMethod(Model):
 
 class Apply(Model):
     """
-    Table 3.3.1
+    Table 4.1
     New field: method.
     """
 
@@ -1481,7 +1486,7 @@ class Apply(Model):
 
 class ApplyResult(Model):
     """
-    Table 3.3.1
+    Table 4.1
     Has yaml
     """
 
@@ -1504,7 +1509,7 @@ class ApplyResult(Model):
 
 class Refuse(Model):
     """
-    Table 3.3.1
+    Table 4.1
     New field: method.
     """
 
@@ -1549,7 +1554,7 @@ class Refuse(Model):
 
 class RefuseReason(Model):
     """
-    Table 3.3.1
+    Table 4.1
     Has yaml
     """
 
@@ -1813,3 +1818,44 @@ class FarmerStat(Model):
                 )
             else:
                 raise ValueError(f"Survey {survey}'s annual income is missing.")
+
+
+class ForeignLaborHire(Model):
+    """
+    (New table added in 24)
+    Table 4.2
+    """
+
+    survey = ForeignKey(
+        "surveys24.Survey",
+        related_name="foreign_labor_hires",
+        on_delete=CASCADE,
+        verbose_name=_("Survey"),
+    )
+    month = ForeignKey(
+        "surveys24.Month",
+        null=True,
+        blank=True,
+        on_delete=CASCADE,
+        verbose_name=_("Month"),
+    )
+    count = IntegerField(null=True, blank=True, verbose_name=_("Number Of People"))
+    avg_work_day = FloatField(null=True, blank=True, verbose_name=_("Average Work Day"))
+    hire_type = PositiveIntegerField(
+        choices=FOREIGN_LABOR_HIRE_TYPE, verbose_name=_("Hire Type")
+    )
+    update_time = DateTimeField(
+        auto_now=True,
+        auto_now_add=False,
+        null=True,
+        blank=True,
+        verbose_name=_("Updated"),
+    )
+
+    class Meta:
+        verbose_name = _("ForeignLaborHire")
+        verbose_name_plural = _("ForeignLaborHire")
+        ordering = ("month",)
+
+    def __str__(self):
+        return str(self.survey)
