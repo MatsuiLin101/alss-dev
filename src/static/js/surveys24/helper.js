@@ -38,6 +38,7 @@ var Reset = function () {
     LongTermLackHelper.Reset();
     ShortTermLackHelper.Reset();
     SubsidyHelper.Reset();
+    ForeignLaborHireHelper.Reset();
 }
 var Set = function (data, surveyId) {
     if (data.page == 1) {
@@ -52,6 +53,7 @@ var Set = function (data, surveyId) {
         if(data.short_term_hires) ShortTermHireHelper.Set(data.short_term_hires);
         if(data.no_salary_hires) NoSalaryHireHelper.Set(data.no_salary_hires);
         if(data.subsidy) SubsidyHelper.Set(data.subsidy);
+        if(data.foreign_labor_hires) ForeignLaborHireHelper.Set(data.foreign_labor_hires);
     }
     /* need setting survey surveyId to locate which obj */
     if(data.crop_marketings) CropMarketingHelper.Set(data.crop_marketings, surveyId);
@@ -98,6 +100,7 @@ var Setup = function(globalUI){
     ShortTermHireHelper.Setup(globalUI.shorttermhire);
     ShortTermLackHelper.Setup(globalUI.shorttermlack);
     NoSalaryHireHelper.Setup(globalUI.nosalaryhire);
+    ForeignLaborHireHelper.Setup(globalUI.foreignlaborhire);
 }
 
 var SurveyHelper = {
@@ -3684,6 +3687,161 @@ var SubsidyHelper = {
                     Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg,
                                           SubsidyHelper.Validation.Duplicate.Guids[i + 3], null, false);
                 });
+            },
+        },
+    },
+}
+
+var ForeignLaborHireHelper = {
+    Alert: null,
+    Setup: function(row){
+        this.Alert = new Helper.Alert($('.alert-danger[name="foreignlaborhire"]'));
+        var $row = $(row);
+        $row.find('select[name="month"]');
+        this.ForeignLaborHire.Bind($row);
+        this.Adder.Bind();
+        this.ForeignLaborHire.$Row = $row;
+        Helper.BindCreateIndex(this.ForeignLaborHire.Container);
+    },
+    Reset: function () {
+        if (this.Alert) { this.Alert.reset(); }
+        this.ForeignLaborHire.Reset();
+    },
+    Set: function(array){
+        this.ForeignLaborHire.Set(array);
+        if(Helper.LogHandler.ValidationActive){
+            ForeignLaborHireHelper.ForeignLaborHire.Container.find('tr').each(function(){
+                ForeignLaborHireHelper.Validation.Required.Validate($(this));
+                ForeignLaborHireHelper.Validation.AvgWorkDay.Validate($(this));
+            })
+        }
+    },
+    ForeignLaborHire: {
+        Object: {
+            New: function(surveyId, guid){
+                guid = guid || null;
+                return {
+                    survey: surveyId,
+                    guid: guid ? guid : Helper.Guid.Create(),
+                }
+            },
+            Filter: function(guid){
+                var objects = CloneData[MainSurveyId].foreign_labor_hires.filter(function(obj){
+                    return obj.guid === guid;
+                })
+                if(objects.length > 0) return objects[0]
+                else return null
+            },
+        },
+        Container: $('#panel4 table[name="foreignlaborhire"] > tbody'),
+        Set: function (array) {
+            array.forEach(function(foreign_labor_hire, i){
+                var $row = ForeignLaborHireHelper.ForeignLaborHire.$Row.clone(true, true);
+                $row.find('select[name="month"]').selectpicker('val', foreign_labor_hire.month);
+                $row.find('input[name="count"]').val(foreign_labor_hire.count);
+                $row.find('input[name="avgworkday"]').val(foreign_labor_hire.avg_work_day);
+                $row.find('select[name="foreignlaborhiretype"]').selectpicker('val', foreign_labor_hire.hire_type);
+
+                foreign_labor_hire.guid = Helper.Guid.Create();
+                $row.attr('data-guid', foreign_labor_hire.guid);
+
+                ForeignLaborHireHelper.ForeignLaborHire.Container.append($row);
+            })
+            this.Container[0].refreshIndex();
+        },
+        Reset: function() {
+            this.Container.html('');
+        },
+        Bind: function($row){
+            Helper.BindIntegerOnly($row.find('[name="count"]'));
+            Helper.BindFloatOnly($row.find('[name="avgworkday"]'));
+            $row.find('button[name="remove"]').click(function(){
+                $tr = $(this).closest('tr');
+                $nextAll = $tr.nextAll();
+                if(CloneData){
+                    $.when($.Deferred(Helper.Dialog.DeleteRow)).then(function(){
+                        CloneData[MainSurveyId].foreign_labor_hires = CloneData[MainSurveyId].foreign_labor_hires.filter(function(obj){
+                            return obj.guid != $tr.data('guid');
+                        })
+                        $tr.remove();
+                        ForeignLaborHireHelper.ForeignLaborHire.Container[0].refreshIndex();
+                        if(Helper.LogHandler.ValidationActive){
+                            Helper.LogHandler.DeleteRow(ForeignLaborHireHelper.Alert, $tr, $nextAll);
+                            SurveyHelper.Hire.Validation.HireExist.Validate();
+                        }
+                    })
+                }
+            })
+            $row.find('select, input').change(function(){
+                if(CloneData){
+                    $tr = $(this).closest('tr');
+                    var guid = $tr.data('guid');
+                    /* trigger change before set attribute to dom should return */
+                    if(!guid){
+                        return;
+                    }
+                    var obj = ForeignLaborHireHelper.ForeignLaborHire.Object.Filter(guid);
+
+                    obj.month = parseInt($tr.find('[name="month"]').val());
+                    obj.count = parseInt($tr.find('[name="count"]').val());
+                    obj.hire_type = parseInt($tr.find('[name="foreignlaborhiretype"]').val());
+                    obj.avg_work_day = parseFloat($tr.find('[name="avgworkday"]').val());
+
+                    if(Helper.LogHandler.ValidationActive){
+                        ForeignLaborHireHelper.Validation.Required.Validate($tr);
+                        ForeignLaborHireHelper.Validation.AvgWorkDay.Validate($tr);
+                        SurveyHelper.Hire.Validation.HireExist.Validate();
+                        CropMarketingHelper.Validation.WorkHourRange.Validate();
+                    }
+                }
+            })
+            return $row;
+        },
+    },
+    Adder: {
+        Container: $('.js-add-row[name="foreignlaborhire"]'),
+        Bind: function(){
+            this.Container.unbind('click.ns1').on('click.ns1', function(){
+                if(CloneData && MainSurveyId){
+                    obj = ForeignLaborHireHelper.ForeignLaborHire.Object.New(MainSurveyId);
+                    CloneData[MainSurveyId].foreign_labor_hires.push(obj);
+
+                    $row = ForeignLaborHireHelper.ForeignLaborHire.$Row.clone(true, true);
+                    $row.attr('data-guid', obj.guid);
+                    $row.find('select').selectpicker();
+                    $row.attr('data-survey-id', MainSurveyId);
+                    ForeignLaborHireHelper.ForeignLaborHire.Container.append($row);
+                    ForeignLaborHireHelper.ForeignLaborHire.Container[0].refreshIndex();
+                    if(Helper.LogHandler.ValidationActive){
+                        ForeignLaborHireHelper.Validation.Required.Validate($row);
+                    }
+                }
+            })
+        },
+    },
+    Validation: {
+        Required: {
+            Guids: Helper.Guid.CreateMulti(1),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = ForeignLaborHireHelper.ForeignLaborHire.Container.find('tr').index($row) + 1;
+                function makeString(name){
+                    return '第<i class="row-index">{0}</i>列{1}不可空白'.format(index, name)
+                }
+                Helper.LogHandler.Log(!$row.find('[name="month"]').val(), ForeignLaborHireHelper.Alert, makeString('月份'), this.Guids[0], guid, false);
+                Helper.LogHandler.Log(!$row.find('[name="count"]').val(), ForeignLaborHireHelper.Alert, makeString('人數'), this.Guids[1], guid, false);
+                Helper.LogHandler.Log(!$row.find('[name="avgworkday"]').val(), ForeignLaborHireHelper.Alert, makeString('平均每月工作日數'), this.Guids[3], guid, false);
+            },
+        },
+        AvgWorkDay: {
+            Guids: Helper.Guid.CreateMulti(1),
+            Validate: function($row){
+                var guid = $row.data('guid');
+                var index = ForeignLaborHireHelper.ForeignLaborHire.Container.find('tr').index($row) + 1;
+                var avgWorkDay = $row.find('[name="avgworkday"]').val();
+                var con = avgWorkDay > 30;
+                var msg = '第<i class="row-index">{0}</i>列每月工作日數應小於30日'.format(index);
+                Helper.LogHandler.Log(con, ForeignLaborHireHelper.Alert, msg, this.Guids[0], guid, false);
             },
         },
     },

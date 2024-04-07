@@ -64,6 +64,7 @@ from apps.surveys24.models import (
     Month,
     BuilderFile,
     PRODUCT_TYPE_CHOICES,
+    FOREIGN_LABOR_HIRE_TYPE,
 )
 
 from apps.surveys24.serializers import (
@@ -160,6 +161,7 @@ class Surveys2024Index(LoginRequiredMixin, TemplateView):
         context["citytowncodes"] = CityTownCode.objects.all()
         context["apply_results"] = ApplyResult.objects.all()
         context["apply_methods"] = ApplyMethod.objects.all()
+        context["foreign_labor_hire_types"] = dict(FOREIGN_LABOR_HIRE_TYPE)
 
         # ui elements
         ui = {
@@ -185,6 +187,9 @@ class Surveys2024Index(LoginRequiredMixin, TemplateView):
             "nosalaryhire": render_to_string(
                 "surveys24/row-ui/no-salary-hire.html", context
             ),
+            "foreignlaborhire": render_to_string(
+                "surveys24/row-ui/foreign-labor-hire.html", context
+            )
         }
         context["ui"] = json.dumps(ui)
         context["fid"] = json.dumps(

@@ -465,8 +465,6 @@
   pk: 1
   fields:
     survey: 1
-    heard_app: False
-    none_heard_app: True
 
 - model: surveys24.Refuse
   pk: 1
@@ -489,3 +487,12 @@
     subsidy: 1
     result: 3
     method: 1
+
+- model: surveys24.ForeignLaborHire
+  pk: 1
+  fields:
+    survey: 1
+    hire_type: 1
+    count: 1
+    month: 2
+    avg_work_day: 15

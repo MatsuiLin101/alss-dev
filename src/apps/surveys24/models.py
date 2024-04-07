@@ -48,7 +48,7 @@ MANAGEMENT_LEVEL = Choices(
 )
 
 FOREIGN_LABOR_HIRE_TYPE = Choices(
-    (1, "long_term", _("Long Term")), (2, "short_term", _("Short Term"))
+    (1, "long_term_labor", _("Long Term Labor")), (2, "short_term_labor", _("Short Term Labor"))
 )
 
 
