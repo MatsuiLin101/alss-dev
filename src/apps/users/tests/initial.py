@@ -21,8 +21,8 @@ def create_groups():
         logger.info(f"""User groups have been created: '後台管理員'.""")
 
     for year, app in zip(
-        (106, 107, 108, 110, 111),
-        ("surveys18", "surveys19", "surveys20", "surveys22", "surveys23"),
+        (106, 107, 108, 110, 111, 112),
+        ("surveys18", "surveys19", "surveys20", "surveys22", "surveys23", "surveys24"),
     ):
         editor_group_name = f"{year}年審表員"
 
