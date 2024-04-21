@@ -8,7 +8,7 @@ class ModelTestCase(TestCase):
         setup_fixtures()
 
     def setUp(self):
-        self.string = "9800500100020202+++F01肉豬#300009000000050000000G02白肉雞#400100000000097500013+016209331000000000000010+++++++"
+        self.string = "9800500100020202+++F01肉豬#300009000000050000000G02白肉雞#400100000000097500013+016209331000000000000010++++++++"
         self.builder = Builder(self.string)
         self.builder.build_survey()
 
@@ -44,4 +44,4 @@ class ModelTestCase(TestCase):
         self.assertEqual(self.builder.population[0].birth_year, 93)
         self.assertEqual(self.builder.population[0].education_level.name, "國(初)中")
         self.assertEqual(self.builder.population[0].farmer_work_day.code, 1)
-        self.assertEqual(self.builder.population[0].life_style.name, "學生")
+        self.assertEqual(self.builder.population[0].life_style.name, "求學或準備升學")
