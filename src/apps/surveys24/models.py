@@ -117,6 +117,9 @@ class Survey(Model):
     )
 
     review_logs = GenericRelation(ReviewLog, related_query_name="surveys24")
+    # new field add in 24
+    is_invalid = BooleanField(default=False, verbose_name=_("Is Invalid"))
+    invalid_reason = TextField(null=True, blank=True, verbose_name=_("Invalid Reason"))
 
     class Meta:
         verbose_name = _("Survey")
