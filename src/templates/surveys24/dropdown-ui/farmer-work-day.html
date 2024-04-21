@@ -2,6 +2,6 @@
     {% for farmer_work_day in farmer_work_days %}
     <option value="{{ farmer_work_day.id }}"
             data-min-day="{{ farmer_work_day.min_day }}"
-            data-max-day="{{ farmer_work_day.max_day }}">{{ farmer_work_day.name }}</option>
+            data-max-day="{{ farmer_work_day.max_day }}">{{ farmer_work_day.code }}.{{ farmer_work_day.name }}</option>
     {% endfor %}
 </select>
