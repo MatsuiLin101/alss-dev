@@ -542,16 +542,18 @@ var SurveyHelper = {
             hasRiceProduct: {
                 Guids: Helper.Guid.CreateMulti(),
                 Validate: function(){
-                    var con = false;
+                    var hasCrop = false;
                     CropMarketingHelper.CropMarketing.Container.find('tr').each(function(){
                         var $product = $(this).find('[name="product"] > option[data-name]:selected');
                         if($product.length == 0) return true; // continue
                         code = $product.data('code');
                         if(code == 102 || code == 103){
-                            con = true;
+                            hasCrop = true;
                             return false;  // break
                         }
                     })
+                    var notChecked = SurveyHelper.FarmOutsource.Container.filter('[data-field="nonhasfarmoutsource"]').filter(':checked').length == 1;
+                    var con = notChecked && hasCrop;
                     var msg = '【問項3.3】:若【問項1.4】中有種稻作(作物代碼102或103者)，請確認是否有委託代耕';
                     Helper.LogHandler.Log(con, SurveyHelper.FarmOutsource.Info, msg, this.Guids[0], null, false);
                 },
@@ -1391,7 +1393,7 @@ var ManagementTypeHelper = {
 
                 if(highestObj){
                     var con = checkedManagementType.length == 1 && highestObj['id'] != checkedManagementTypeId;
-                    var msg = '全年主要經營型態應與【問項1.5及1.6】各作物(畜禽)代碼對應的經營類別銷售額總計最高者({0})相符'.format(highestObj['name']);
+                    var msg = '全年主要經營型態應與【問項1.4及1.5】各作物(畜禽)代碼對應的經營類別銷售額總計最高者({0})相符'.format(highestObj['name']);
                     Helper.LogHandler.Log(con, ManagementTypeHelper.Alert, msg, this.Guids[0]);
                 }
             },
@@ -3590,6 +3592,8 @@ var SubsidyHelper = {
         if(Helper.LogHandler.ValidationActive){
             SubsidyHelper.Validation.Empty.Validate();
             SubsidyHelper.Validation.Duplicate.Validate();
+            SubsidyHelper.Validation.HasLack.Validate();
+            SubsidyHelper.Validation.HasForeignLabor.Validate();
         }
     },
     Reset: function(){
@@ -3801,18 +3805,24 @@ var SubsidyHelper = {
             }
         },
         HasForeignLabor: {
-            Guids: Helper.Guid.CreateMulti(),
+            Guids: Helper.Guid.CreateMulti(1),
             Validate: function(){
-                var hasReason1Apply = SubsidyHelper.Container.Apply
+                var hasResult1Apply = SubsidyHelper.Container.Apply
+                                       .filter('[data-method-id="2"]')
                                        .filter('[data-result-id="1"]')
                                        .filter(':checked').length > 0;
-                var hasReason2Apply = SubsidyHelper.Container.Apply
+                var hasResult2Apply = SubsidyHelper.Container.Apply
+                                       .filter('[data-method-id="2"]')
                                        .filter('[data-result-id="2"]')
                                        .filter(':checked').length > 0;
                 var hasForeignLabor = ForeignLaborHireHelper.ForeignLaborHire.Container.find('tr').length > 0;
-                var con = !hasForeignLabor && (hasReason1Apply || hasReason2Apply);
-                var msg = '【問項4.1】「有申請」農業外籍移工，【問項4.2 貴戶112年農業外籍移工僱用情形】不應為空白。';
+                var con = !hasForeignLabor && (hasResult1Apply || hasResult2Apply);
+                var msg = '【問項4.1】「有申請」農業外籍移工，【問項4.2】不應為空白。';
                 Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[0], null, false);
+
+                var con = hasForeignLabor && !(hasResult1Apply || hasResult2Apply);
+                var msg = '【問項4.2】有僱用農業外籍移工，【問項4.1】申請農業外籍移工應句選「有申請到」'
+                Helper.LogHandler.Log(con, SubsidyHelper.Alert, msg, this.Guids[1], null, false);
             }
         }
     },
@@ -3840,6 +3850,7 @@ var ForeignLaborHireHelper = {
                 ForeignLaborHireHelper.Validation.Required.Validate($(this));
                 ForeignLaborHireHelper.Validation.AvgWorkDay.Validate($(this));
             })
+            SubsidyHelper.Validation.HasForeignLabor.Validate();
         }
     },
     ForeignLaborHire: {
@@ -3919,6 +3930,7 @@ var ForeignLaborHireHelper = {
                         ForeignLaborHireHelper.Validation.AvgWorkDay.Validate($tr);
                         SurveyHelper.Hire.Validation.HireExist.Validate();
                         CropMarketingHelper.Validation.WorkHourRange.Validate();
+                        SubsidyHelper.Validation.HasForeignLabor.Validate();
                     }
                 }
             })

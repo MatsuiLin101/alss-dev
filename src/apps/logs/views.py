@@ -87,6 +87,12 @@ def query_by_args(request, **kwargs):
                 | Q(user__full_name__icontains=search_value)
                 | Q(user__email__icontains=search_value)
             )
+        elif app_label == "surveys24":
+            queryset = queryset.filter(
+                Q(surveys24__farmer_id__icontains=search_value)
+                | Q(user__full_name__icontains=search_value)
+                | Q(user__email__icontains=search_value)
+            )
 
     count = queryset.count()
     queryset = queryset.order_by(order_column)[start : start + length]

@@ -1140,7 +1140,7 @@ class SurveySerializer(ModelSerializer):
         ]
         # Delete not included in the request
         for obj in instance.foreign_labor_hires.all():
-            if obj.id not in foreign_labor_hires:
+            if obj.id not in foreign_labor_hire_ids:
                 obj.delete()
         for item in validated_data["foreign_labor_hires"]:
             if "id" in item.keys():
